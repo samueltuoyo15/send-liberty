@@ -6,7 +6,10 @@ import cors from "cors";
 import globalErrorHandler from "./middlewares/global.error.handler"
 import { disconnectRedis } from "./common/config/redis.config"
 import logger from "./common/logger/logger";
-
+import authRoutes from "./routes/auth.route";
+import urlVersioning from "./middlewares/url.versioning";
+import { requestLogger, addTimestamp } from "./middlewares/request.logger";
+import cookieParser from "cookie-parser";
 const app: Application = express()
 
 app.use(helmet());
@@ -15,8 +18,15 @@ app.use(cors({
   methods: ["GET", "POST", "PUT", "PATCH", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization"]
 }))
+app.use(cookieParser())
 app.use(express.json())
 app.use(urlencoded({ extended: true }))
+app.use(requestLogger)
+app.use(addTimestamp)
+
+app.use(urlVersioning("v1"))
+app.use("/api/v1/auth", authRoutes);
+
 app.use(globalErrorHandler)
 
 
