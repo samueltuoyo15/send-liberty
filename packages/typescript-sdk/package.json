@@ -1,0 +1,28 @@
+{
+  "name": "@send-liberty/sdk",
+  "version": "0.1.0",
+  "description": "Official TypeScript SDK for the SendLiberty Gmail OAuth Email Relay API",
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "files": ["dist"],
+  "scripts": {
+    "build": "tsup src/index.ts --format esm,cjs --dts --clean",
+    "dev": "tsup src/index.ts --format esm,cjs --dts --watch",
+    "typecheck": "tsc --noEmit"
+  },
+  "keywords": ["email", "gmail", "oauth", "api", "sdk", "nodemailer", "nigeria"],
+  "author": "Samuel Tuoyo",
+  "license": "MIT",
+  "devDependencies": {
+    "tsup": "^8.4.0",
+    "typescript": "^5.9.3"
+  }
+}

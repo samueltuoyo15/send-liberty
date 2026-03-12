@@ -125,6 +125,8 @@ export type GmailSendOptions = {
     cc?: string | string[];
     bcc?: string | string[];
     from?: string;
+    attachments?: Array<{ filename: string; content: string; contentType?: string; encoding?: string }>;
+    headers?: Record<string, string>;
 };
 
 export const sendGmailEmail = async (userId: string, options: GmailSendOptions) => {
@@ -154,6 +156,8 @@ export const sendGmailEmail = async (userId: string, options: GmailSendOptions) 
             replyTo: options.replyTo,
             cc: options.cc,
             bcc: options.bcc,
+            attachments: options.attachments,
+            headers: options.headers,
         });
 
         await db.insert(email_logs).values({

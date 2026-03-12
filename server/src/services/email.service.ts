@@ -18,6 +18,8 @@ export type SendEmailOptions = {
     cc?: string | string[];
     bcc?: string | string[];
     from?: string;
+    attachments?: Array<{ filename: string; content: string; contentType?: string; encoding?: string }>;
+    headers?: Record<string, string>;
 };
 
 export const sendEmail = async (userId: string, options: SendEmailOptions) => {

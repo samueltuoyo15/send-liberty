@@ -1,5 +1,9 @@
 {
-	"dependencies": {
-		"googleapis": "^171.4.0"
-	}
+  "name": "send-liberty-monorepo",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev:server": "pnpm --filter server run start:dev",
+    "build:sdk": "pnpm --filter @send-liberty/sdk run build"
+  }
 }

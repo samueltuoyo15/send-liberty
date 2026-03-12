@@ -70,6 +70,8 @@ export type SmtpSendOptions = {
     replyTo?: string;
     cc?: string | string[];
     bcc?: string | string[];
+    attachments?: Array<{ filename: string; content: string; contentType?: string; encoding?: string }>;
+    headers?: Record<string, string>;
 };
 
 export const sendSmtpEmail = async (userId: string, options: SmtpSendOptions) => {
@@ -95,6 +97,8 @@ export const sendSmtpEmail = async (userId: string, options: SmtpSendOptions) =>
             replyTo: options.replyTo,
             cc: options.cc,
             bcc: options.bcc,
+            attachments: options.attachments,
+            headers: options.headers,
         });
 
         await db.insert(email_logs).values({
