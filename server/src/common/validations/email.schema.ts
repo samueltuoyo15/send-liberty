@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 const emailOrArray = z.union([
-    z.string().email(),
+    z.email(),
     z.array(z.string().email()).min(1),
 ]);
 
