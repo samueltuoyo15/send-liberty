@@ -8,7 +8,7 @@ import { generateAccessToken, generateRefreshToken } from "../common/utils/gener
 export const register = async (email: string, password: string, display_name?: string, avatar?: string) => {
     const userExists = await db.select().from(users).where(eq(users.email, email));
 
-    if (userExists) throw new AppError("User already exists", 409)
+    if (userExists.length > 0) throw new AppError("User already exists", 409)
 
     const password_hash = await argon2.hash(password);
 
