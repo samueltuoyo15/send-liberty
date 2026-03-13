@@ -4,8 +4,9 @@ export const modeEnum = pgEnum("mode", ["test_mode", "live_mode"])
 
 export const users = pgTable("users", {
     id: uuid("id").defaultRandom().primaryKey(),
-    email: varchar("email", { length: 255 }).notNull().unique(),
-    password_hash: varchar("password_hash", { length: 255 }).notNull(),
+    github_id: varchar("github_id", { length: 50 }).notNull().unique(),
+    github_username: varchar("github_username", { length: 100 }),
+    email: varchar("email", { length: 255 }).unique(),
     display_name: varchar("display_name", { length: 80 }),
     avatar: text("avatar"),
     default_reply_to: varchar("default_reply_to", { length: 255 }),

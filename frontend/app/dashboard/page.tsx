@@ -22,15 +22,22 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
+import { Skeleton } from "@/components/ui/skeleton";
+import { useMe } from "@/hooks/useAuth";
+import { useApiKeys } from "@/hooks/useApiKeys";
+import { useGmailAccounts } from "@/hooks/useGmailAccounts";
+import { useEmailLogs } from "@/hooks/useEmailLogs";
 
 export default function DashboardPage() {
-  const emailLogs = [
-    { id: "msg_1A2b3C", to: "hello@startup.com", subject: "Welcome to our platform!", status: "Delivered", date: "Today, 10:24 AM" },
-    { id: "msg_9X8y7Z", to: "admin@corp.inc", subject: "Weekly Report", status: "Delivered", date: "Yesterday, 3:12 PM" },
-    { id: "msg_4M5n6P", to: "user@invalid.domain", subject: "Password Reset", status: "Failed", date: "Mar 10, 11:30 AM" },
-    { id: "msg_2Q3r4S", to: "contact@agency.co", subject: "New Lead Notification", status: "Delivered", date: "Mar 09, 8:00 AM" },
-    { id: "msg_7T8u9V", to: "support@app.io", subject: "Ticket #9921 Created", status: "Delivered", date: "Mar 08, 10:00 AM" },
-  ];
+  const { data: user, isLoading: isLoadingUser } = useMe();
+  const { data: apiKeys, isLoading: isLoadingKeys } = useApiKeys();
+  const { data: gmailAccounts, isLoading: isLoadingAccounts } = useGmailAccounts();
+  const { data: logsData, isLoading: isLoadingLogs } = useEmailLogs(1, 5);
+
+  const activeKeysCount = apiKeys?.filter(k => k.status === "active").length || 0;
+  const connectedGmailsCount = gmailAccounts?.filter(g => g.connected).length || 0;
+  const emailLogs = logsData || [];
+  const creditPercentage = user ? Math.min(100, (user.credits / 1000) * 100) : 0; // Or whatever max scale
 
   return (
     <div className="space-y-8 max-w-[1200px] mx-auto">
@@ -75,13 +82,25 @@ export default function DashboardPage() {
               <FileText className="w-4 h-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="text-4xl font-black tracking-tighter text-primary">142 <span className="text-lg text-muted-foreground font-semibold">credits</span></div>
-              <div className="pt-4">
-                <div className="w-full bg-muted rounded-full h-2 overflow-hidden flex">
-                  <div className="bg-primary h-full" style={{ width: '71%' }} />
+              {isLoadingUser ? (
+                <div className="space-y-3">
+                  <Skeleton className="h-10 w-24" />
+                  <Skeleton className="h-2 w-full mt-4" />
+                  <Skeleton className="h-3 w-32" />
                 </div>
-                <p className="text-xs text-muted-foreground mt-2 font-medium">Pay as you go • No expiration</p>
-              </div>
+              ) : (
+                <>
+                  <div className="text-4xl font-black tracking-tighter text-primary">
+                    {user?.credits || 0} <span className="text-lg text-muted-foreground font-semibold">credits</span>
+                  </div>
+                  <div className="pt-4">
+                    <div className="w-full bg-muted rounded-full h-2 overflow-hidden flex">
+                      <div className="bg-primary h-full transition-all duration-1000" style={{ width: `${creditPercentage}%` }} />
+                    </div>
+                    <p className="text-xs text-muted-foreground mt-2 font-medium">Pay as you go • No expiration</p>
+                  </div>
+                </>
+              )}
             </CardContent>
           </Card>
         </motion.div>
@@ -97,10 +116,19 @@ export default function DashboardPage() {
               <Key className="w-4 h-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="text-4xl font-black tracking-tighter">2</div>
-              <p className="text-sm text-muted-foreground mt-3 font-medium flex items-center gap-1">
-                <CheckCircle2 className="w-3 h-3 text-foreground" /> All keys are active
-              </p>
+              {isLoadingKeys ? (
+                <div className="space-y-3">
+                  <Skeleton className="h-10 w-16" />
+                  <Skeleton className="h-3 w-3/4" />
+                </div>
+              ) : (
+                <>
+                  <div className="text-4xl font-black tracking-tighter">{activeKeysCount}</div>
+                  <p className="text-sm text-muted-foreground mt-3 font-medium flex items-center gap-1">
+                    <CheckCircle2 className="w-3 h-3 text-foreground" /> {activeKeysCount > 0 ? "Keys are active" : "No active keys"}
+                  </p>
+                </>
+              )}
             </CardContent>
           </Card>
         </motion.div>
@@ -116,10 +144,19 @@ export default function DashboardPage() {
               <Mail className="w-4 h-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="text-4xl font-black tracking-tighter">1</div>
-              <p className="text-sm text-muted-foreground mt-3 font-medium font-mono">
-                dev@start...com
-              </p>
+              {isLoadingAccounts ? (
+                <div className="space-y-3">
+                  <Skeleton className="h-10 w-12" />
+                  <Skeleton className="h-3 w-full" />
+                </div>
+              ) : (
+                <>
+                  <div className="text-4xl font-black tracking-tighter">{connectedGmailsCount}</div>
+                  <p className="text-sm text-muted-foreground mt-3 font-medium font-mono truncate">
+                    {connectedGmailsCount > 0 ? gmailAccounts?.find(g => g.connected)?.email : "None connected"}
+                  </p>
+                </>
+              )}
             </CardContent>
           </Card>
         </motion.div>
@@ -150,32 +187,48 @@ export default function DashboardPage() {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {emailLogs.map((log) => (
-                    <TableRow key={log.id} className="border-border transition-colors hover:bg-muted/40 group">
-                      <TableCell className="pl-6 py-4">
-                        <div className="flex flex-col">
-                          <span className="font-bold text-sm">{log.to}</span>
-                          <span className="text-xs text-muted-foreground mt-0.5 truncate max-w-[200px]">{log.subject}</span>
-                        </div>
-                      </TableCell>
-                      <TableCell>
-                        <Badge 
-                          variant={log.status === "Delivered" ? "outline" : "secondary"} 
-                          className={`
-                            font-semibold rounded-md tracking-wider text-[10px] border-border
-                            ${log.status === "Failed" ? "bg-destructive/10 text-destructive border-transparent" : "bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-500/10 dark:text-emerald-400 dark:border-emerald-500/20"}
-                          `}
-                        >
-                          {log.status === "Delivered" && <CheckCircle2 className="w-3 h-3 mr-1" />}
-                          {log.status === "Failed" && <XCircle className="w-3 h-3 mr-1" />}
-                          {log.status}
-                        </Badge>
-                      </TableCell>
-                      <TableCell className="text-sm text-muted-foreground font-medium text-right pr-6">
-                        {log.date}
+                  {isLoadingLogs ? (
+                    Array.from({ length: 3 }).map((_, i) => (
+                      <TableRow key={i}>
+                        <TableCell className="pl-6 py-4"><Skeleton className="h-8 w-full max-w-[200px]" /></TableCell>
+                        <TableCell><Skeleton className="h-5 w-16" /></TableCell>
+                        <TableCell className="pr-6"><Skeleton className="h-4 w-24 ml-auto" /></TableCell>
+                      </TableRow>
+                    ))
+                  ) : emailLogs.length === 0 ? (
+                    <TableRow>
+                      <TableCell colSpan={3} className="text-center py-8 text-muted-foreground">
+                        No email logs found.
                       </TableCell>
                     </TableRow>
-                  ))}
+                  ) : (
+                    emailLogs.map((log: any) => (
+                      <TableRow key={log.id} className="border-border transition-colors hover:bg-muted/40 group">
+                        <TableCell className="pl-6 py-4">
+                          <div className="flex flex-col">
+                            <span className="font-bold text-sm">{log.to}</span>
+                            <span className="text-xs text-muted-foreground mt-0.5 truncate max-w-[200px]">{log.subject}</span>
+                          </div>
+                        </TableCell>
+                        <TableCell>
+                          <Badge 
+                            variant={log.status === "sent" ? "outline" : "secondary"} 
+                            className={`
+                              font-semibold rounded-md tracking-wider text-[10px] border-border
+                              ${log.status === "failed" ? "bg-destructive/10 text-destructive border-transparent" : "bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-500/10 dark:text-emerald-400 dark:border-emerald-500/20"}
+                            `}
+                          >
+                            {log.status === "sent" && <CheckCircle2 className="w-3 h-3 mr-1" />}
+                            {log.status === "failed" && <XCircle className="w-3 h-3 mr-1" />}
+                            {log.status}
+                          </Badge>
+                        </TableCell>
+                        <TableCell className="text-sm text-muted-foreground font-medium text-right pr-6">
+                          {new Date(log.created_at).toLocaleDateString()} {new Date(log.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                        </TableCell>
+                      </TableRow>
+                    ))
+                  )}
                 </TableBody>
               </Table>
             </CardContent>

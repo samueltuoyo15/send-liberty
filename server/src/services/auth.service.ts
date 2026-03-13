@@ -1,37 +1,73 @@
 import db from "../drizzle/db";
 import { users } from "../drizzle/schema/users";
-import { eq } from "drizzle-orm"
-import argon2 from "argon2";
+import { eq } from "drizzle-orm";
 import { AppError } from "../middlewares/global.error.handler";
 import { generateAccessToken, generateRefreshToken } from "../common/utils/generate.token";
+import axios from "axios";
 
-export const register = async (email: string, password: string, display_name?: string, avatar?: string) => {
-    const userExists = await db.select().from(users).where(eq(users.email, email));
+const { GITHUB_CLIENT_ID, GITHUB_CLIENT_SECRET, FRONTEND_URL } = process.env;
 
-    if (userExists.length > 0) throw new AppError("User already exists", 409)
-
-    const password_hash = await argon2.hash(password);
-
-    const [user] = await db.insert(users).values({
-        email,
-        password_hash,
-        display_name,
-        avatar
-    }).returning();
-
-    const access_token = generateAccessToken(user.id, user.email, user.display_name)
-    return { user, access_token }
+export interface GithubProfile {
+    id: number;
+    login: string;
+    name: string | null;
+    email: string | null;
+    avatar_url: string;
 }
 
-export const login = async (email: string, password: string): Promise<{ access_token: string, refresh_token: string }> => {
-    const [user] = await db.select().from(users).where(eq(users.email, email));
-    if (!user) throw new AppError("Invalid email or password", 401);
 
-    const validPassword = await argon2.verify(user.password_hash, password);
-    if (!validPassword) throw new AppError("Invalid email or password", 401);
+export const getGithubProfile = async (code: string): Promise<GithubProfile> => {
+    const tokenRes = await axios.post(
+        "https://github.com/login/oauth/access_token",
+        {
+            client_id: GITHUB_CLIENT_ID,
+            client_secret: GITHUB_CLIENT_SECRET,
+            code,
+        },
+        { headers: { Accept: "application/json" } }
+    );
 
-    const access_token = generateAccessToken(user.id, user.email, user.display_name);
-    const refresh_token = generateRefreshToken(user.id, user.email, user.display_name);
+    const { access_token, error } = tokenRes.data;
+    if (error || !access_token) {
+        throw new AppError("Failed to exchange GitHub authorization code", 400);
+    }
 
-    return { access_token, refresh_token }
-}
+    const profileRes = await axios.get<GithubProfile>("https://api.github.com/user", {
+        headers: { Authorization: `Bearer ${access_token}` },
+    });
+
+    return profileRes.data;
+};
+
+/** Find existing user by github_id or create a new one, return JWT tokens */
+export const githubOAuthCallback = async (code: string) => {
+    const profile = await getGithubProfile(code);
+
+    const githubId = String(profile.id);
+
+    let [user] = await db.select().from(users).where(eq(users.github_id, githubId));
+
+    if (!user) {
+        // New user — create account
+        const [created] = await db.insert(users).values({
+            github_id: githubId,
+            github_username: profile.login,
+            email: profile.email ?? undefined,
+            display_name: profile.name ?? profile.login,
+            avatar: profile.avatar_url,
+        }).returning();
+        user = created;
+    } else {
+        // Update profile info in case username/avatar changed
+        await db.update(users).set({
+            github_username: profile.login,
+            avatar: profile.avatar_url,
+            updated_at: new Date(),
+        }).where(eq(users.id, user.id));
+    }
+
+    const access_token = generateAccessToken(user.id, user.email ?? "", user.display_name);
+    const refresh_token = generateRefreshToken(user.id, user.email ?? "", user.display_name);
+
+    return { user, access_token, refresh_token };
+};
