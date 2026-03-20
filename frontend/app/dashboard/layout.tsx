@@ -31,7 +31,7 @@ export default function DashboardLayout({
     { name: "Scheduled Emails", href: "/dashboard/scheduled", icon: FileText },
     { name: "Batch Sending", href: "/dashboard/batch", icon: Mail },
     { name: "API Keys", href: "/dashboard/keys", icon: Key },
-    { name: "Gmail Accounts", href: "/dashboard/accounts", icon: Mail },
+    { name: "Email Services", href: "/dashboard/services", icon: Mail },
     { name: "Email Logs", href: "/dashboard/logs", icon: FileText },
     { name: "Billing", href: "/dashboard/billing", icon: CreditCard },
     { name: "Settings", href: "/dashboard/settings", icon: Settings },
@@ -105,7 +105,7 @@ export default function DashboardLayout({
                 )}
                 <div className="flex flex-col">
                   <span className="text-sm font-bold leading-none">{user.display_name}</span>
-                  <span className="text-xs text-muted-foreground mt-1">{user.credits} Credits Left</span>
+                  <span className="text-xs text-muted-foreground mt-1">{user.credits} Emails Left</span>
                 </div>
               </>
             ) : null}

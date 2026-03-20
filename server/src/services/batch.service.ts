@@ -1,7 +1,6 @@
 import db from "../drizzle/db";
 import { batch_jobs } from "../drizzle/schema/batch_jobs";
-import { email_logs } from "../drizzle/schema/email.logs";
-import { eq, sql } from "drizzle-orm";
+import { eq } from "drizzle-orm";
 import { AppError } from "../middlewares/global.error.handler";
 import { addBatchEmailJobs, emailQueue } from "../common/queues/email.queue";
 import type { SendEmailOptions } from "./email.service";
@@ -26,7 +25,6 @@ const chunkArray = <T>(arr: T[], size: number): T[][] => {
     return chunks;
 };
 
-/** Create and enqueue a batch email job */
 export const scheduleBatch = async (
     userId: string,
     recipients: BatchRecipient[],
@@ -43,7 +41,6 @@ export const scheduleBatch = async (
     if (!recipients.length) throw new AppError("Recipients array cannot be empty", 400);
     if (recipients.length > 10000) throw new AppError("Maximum 10,000 recipients per batch", 400);
 
-    // Create batch job record
     const [batchJob] = await db.insert(batch_jobs).values({
         user_id: userId,
         name: name ?? `Batch ${new Date().toISOString()}`,
@@ -55,10 +52,7 @@ export const scheduleBatch = async (
         status: "pending",
     }).returning();
 
-    // Chunk recipients
     const chunks = chunkArray(recipients, batchSize);
-
-    // Map to BullMQ payloads
     const chunkPayloads = chunks.map((chunk, i) =>
         chunk.map((r) => ({
             userId,
@@ -80,14 +74,12 @@ export const scheduleBatch = async (
     return { ...batchJob, jobIds };
 };
 
-/** List a user's batch jobs */
 export const getBatchJobs = async (userId: string) => {
     return db.select().from(batch_jobs)
         .where(eq(batch_jobs.user_id, userId))
         .orderBy(batch_jobs.created_at);
 };
 
-/** Get a single batch job's details */
 export const getBatchJob = async (userId: string, batchJobId: string) => {
     const [job] = await db.select().from(batch_jobs)
         .where(eq(batch_jobs.id, batchJobId));
@@ -96,7 +88,6 @@ export const getBatchJob = async (userId: string, batchJobId: string) => {
     return job;
 };
 
-/** Cancel an in-flight or pending batch job */
 export const cancelBatchJob = async (userId: string, batchJobId: string) => {
     const [job] = await db.select().from(batch_jobs).where(eq(batch_jobs.id, batchJobId));
 
@@ -105,7 +96,6 @@ export const cancelBatchJob = async (userId: string, batchJobId: string) => {
         throw new AppError("Batch job cannot be cancelled at this stage", 400);
     }
 
-    // Remove all queued jobs
     if (job.job_ids) {
         const ids: string[] = JSON.parse(job.job_ids);
         await Promise.allSettled(

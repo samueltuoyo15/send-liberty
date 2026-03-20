@@ -1,33 +1,52 @@
 "use client";
 
-import { CreditCard, Check, Zap } from "lucide-react";
+import { CreditCard, Check, Zap, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useMe } from "@/hooks/useAuth";
-import { useCreditPackages, useInitializePayment } from "@/hooks/usePayments";
+import { useCreditPackages, useInitializePayment, useVerifyPayment } from "@/hooks/usePayments";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useState, useEffect } from "react";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { usePaystackPayment } from "react-paystack";
 import { useRouter, useSearchParams } from "next/navigation";
 
 export default function BillingPage() {
   const { data: user, isLoading, refetch } = useMe();
   const { data: packages, isLoading: isLoadingPackages } = useCreditPackages();
   const { mutate: initializePayment, isPending: isInitializing } = useInitializePayment();
+  const { mutate: verifyPayment, isPending: isVerifying } = useVerifyPayment();
   const [showPackages, setShowPackages] = useState(false);
   const [selectedPackage, setSelectedPackage] = useState<any>(null);
+  const [verificationStatus, setVerificationStatus] = useState<"idle" | "verifying" | "success" | "error">("idle");
   const router = useRouter();
   const searchParams = useSearchParams();
 
   const creditPercentage = user ? Math.min(100, (user.credits / user.monthly_limit) * 100) : 0;
 
   useEffect(() => {
-    const payment = searchParams.get("payment");
-    if (payment === "success") {
-      refetch();
-      router.replace("/dashboard/billing");
+    const reference = searchParams.get("reference");
+    
+    if (reference && verificationStatus === "idle") {
+      setVerificationStatus("verifying");
+      
+      verifyPayment(reference, {
+        onSuccess: () => {
+          setVerificationStatus("success");
+          refetch();
+          setTimeout(() => {
+            router.replace("/dashboard/billing");
+            setVerificationStatus("idle");
+          }, 2000);
+        },
+        onError: () => {
+          setVerificationStatus("error");
+          setTimeout(() => {
+            router.replace("/dashboard/billing");
+            setVerificationStatus("idle");
+          }, 3000);
+        },
+      });
     }
-  }, [searchParams, refetch, router]);
+  }, [searchParams, verifyPayment, refetch, router, verificationStatus]);
 
   const handleBuyCredits = (pkg: any) => {
     setSelectedPackage(pkg);
@@ -38,12 +57,52 @@ export default function BillingPage() {
     });
   };
 
+  if (verificationStatus === "verifying") {
+    return (
+      <div className="flex items-center justify-center min-h-[60vh]">
+        <div className="text-center space-y-4">
+          <Loader2 className="w-12 h-12 animate-spin mx-auto text-primary" />
+          <h2 className="text-2xl font-bold">Verifying Payment...</h2>
+          <p className="text-muted-foreground">Please wait while we confirm your payment</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (verificationStatus === "success") {
+    return (
+      <div className="flex items-center justify-center min-h-[60vh]">
+        <div className="text-center space-y-4">
+          <div className="w-16 h-16 bg-emerald-100 dark:bg-emerald-900/20 rounded-full flex items-center justify-center mx-auto">
+            <Check className="w-8 h-8 text-emerald-600 dark:text-emerald-400" />
+          </div>
+          <h2 className="text-2xl font-bold">Payment Successful!</h2>
+          <p className="text-muted-foreground">Your emails have been added to your account</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (verificationStatus === "error") {
+    return (
+      <div className="flex items-center justify-center min-h-[60vh]">
+        <div className="text-center space-y-4">
+          <div className="w-16 h-16 bg-destructive/10 rounded-full flex items-center justify-center mx-auto">
+            <span className="text-3xl">❌</span>
+          </div>
+          <h2 className="text-2xl font-bold">Payment Verification Failed</h2>
+          <p className="text-muted-foreground">Please contact support if you were charged</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-3xl font-bold tracking-tight">Billing & Credits</h1>
+        <h1 className="text-3xl font-bold tracking-tight">Billing & Emails</h1>
         <p className="text-muted-foreground mt-1">
-          Purchase credits once and use them anytime. No subscriptions, no expiry.
+          Buy emails once and use them anytime. No subscriptions, no expiry.
         </p>
       </div>
 
@@ -72,7 +131,7 @@ export default function BillingPage() {
               <div className="space-y-4 mb-6">
                 <div className="flex items-center gap-3 text-sm">
                   <Check className="w-4 h-4 text-primary" />
-                  <span>Buy credits once, use anytime</span>
+                  <span>Buy emails once, use anytime</span>
                 </div>
                 <div className="flex items-center gap-3 text-sm">
                   <Check className="w-4 h-4 text-primary" />
@@ -80,11 +139,11 @@ export default function BillingPage() {
                 </div>
                 <div className="flex items-center gap-3 text-sm">
                   <Check className="w-4 h-4 text-primary" />
-                  <span>Credits never expire</span>
+                  <span>Emails never expire</span>
                 </div>
                 <div className="flex items-center gap-3 text-sm">
                   <Check className="w-4 h-4 text-primary" />
-                  <span>1 Gmail Account included</span>
+                  <span>Gmail: 500/day • SMTP: Unlimited</span>
                 </div>
               </div>
               
@@ -92,7 +151,7 @@ export default function BillingPage() {
                 <div className="bg-primary h-2 rounded-full transition-all" style={{ width: `${creditPercentage}%` }}></div>
               </div>
               <p className="text-xs text-muted-foreground mb-6">
-                {user?.credits || 0} credits available
+                {user?.credits || 0} emails available
               </p>
             </>
           )}
@@ -103,7 +162,7 @@ export default function BillingPage() {
             disabled={isInitializing}
           >
             <Zap className="w-4 h-4 mr-2" />
-            Buy More Credits
+            Buy More Emails
           </Button>
         </div>
 
@@ -114,7 +173,7 @@ export default function BillingPage() {
               <div className="w-6 h-6 rounded-full bg-primary/10 text-primary flex items-center justify-center text-xs font-bold shrink-0">1</div>
               <div>
                 <h4 className="font-semibold text-foreground mb-1">Choose a Package</h4>
-                <p>Select the number of credits you need. Larger packages offer better value.</p>
+                <p>Select how many emails you need. Larger packages offer better value.</p>
               </div>
             </div>
             <div className="flex gap-3">
@@ -128,7 +187,7 @@ export default function BillingPage() {
               <div className="w-6 h-6 rounded-full bg-primary/10 text-primary flex items-center justify-center text-xs font-bold shrink-0">3</div>
               <div>
                 <h4 className="font-semibold text-foreground mb-1">Use Anytime</h4>
-                <p>Your credits are added instantly and never expire. Use them whenever you need.</p>
+                <p>Your emails are added instantly and never expire. Use them whenever you need.</p>
               </div>
             </div>
           </div>
@@ -138,9 +197,9 @@ export default function BillingPage() {
       <Dialog open={showPackages} onOpenChange={setShowPackages}>
         <DialogContent className="max-w-2xl">
           <DialogHeader>
-            <DialogTitle>Choose Your Credit Package</DialogTitle>
+            <DialogTitle>Choose Your Email Package</DialogTitle>
             <DialogDescription>
-              One-time payment. Credits never expire. Use them at your own pace.
+              One-time payment. Emails never expire. Use them at your own pace.
             </DialogDescription>
           </DialogHeader>
           {isLoadingPackages ? (
@@ -159,8 +218,8 @@ export default function BillingPage() {
                   onClick={() => handleBuyCredits(pkg)}
                 >
                   <div className="text-center">
-                    <div className="text-3xl font-black text-primary mb-1">{pkg.credits}</div>
-                    <div className="text-xs text-muted-foreground mb-3">Credits</div>
+                    <div className="text-3xl font-black text-primary mb-1">{pkg.credits.toLocaleString()}</div>
+                    <div className="text-xs text-muted-foreground mb-3">Emails</div>
                     <div className="text-2xl font-bold mb-1">₦{pkg.amountNGN.toLocaleString()}</div>
                     <div className="text-xs text-muted-foreground mb-4">One-time payment</div>
                     <Button className="w-full" size="sm" disabled={isInitializing}>

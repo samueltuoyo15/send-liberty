@@ -92,7 +92,7 @@ export default function DashboardPage() {
         >
           <Card className="h-full border-border bg-card shadow-sm hover:shadow-md transition-shadow">
             <CardHeader className="pb-2 flex flex-row items-center justify-between">
-              <CardTitle className="text-sm font-bold text-muted-foreground">Credit Balance</CardTitle>
+              <CardTitle className="text-sm font-bold text-muted-foreground">Email Balance</CardTitle>
               <FileText className="w-4 h-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
@@ -105,7 +105,7 @@ export default function DashboardPage() {
               ) : (
                 <>
                   <div className="text-4xl font-black tracking-tighter text-primary">
-                    {user?.credits || 0} <span className="text-lg text-muted-foreground font-semibold">credits</span>
+                    {user?.credits || 0} <span className="text-lg text-muted-foreground font-semibold">emails</span>
                   </div>
                   <div className="pt-4">
                     <div className="w-full bg-muted rounded-full h-2 overflow-hidden flex">

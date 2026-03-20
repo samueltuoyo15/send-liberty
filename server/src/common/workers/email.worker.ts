@@ -1,5 +1,4 @@
 import { Worker, Job } from "bullmq";
-import { redis } from "../config/redis.config";
 import { sendGmailEmail } from "../../services/gmail.service";
 import { sendSmtpEmail } from "../../services/smtp.service";
 import db from "../../drizzle/db";
@@ -13,71 +12,118 @@ import { eq, sql } from "drizzle-orm";
 import logger from "../logger/logger";
 import type { EmailJobPayload } from "../queues/email.queue";
 
-const processEmail = async (userId: string, payload: EmailJobPayload) => {
-    const [user] = await db.select().from(users).where(eq(users.id, userId));
-    if (!user) throw new Error("User not found");
+const { REDIS_HOST, REDIS_PORT, REDIS_PASSWORD } = process.env;
 
-    const service = payload.service;
-    let result: { messageId: string | null | undefined };
-
-    if (service === "smtp") {
-        result = await sendSmtpEmail(userId, payload);
-    } else {
-        const [gmailAccount] = await db.select().from(gmail_accounts).where(eq(gmail_accounts.user_id, userId));
-        if (gmailAccount?.connected) {
-            result = await sendGmailEmail(userId, payload);
-        } else {
+const selectEmailProvider = async (userId: string, requestedService?: "gmail" | "smtp") => {
+    switch (requestedService) {
+        case "smtp":
+            return "smtp";
+        
+        case "gmail": {
+            const [gmailAccount] = await db.select().from(gmail_accounts).where(eq(gmail_accounts.user_id, userId));
+            if (!gmailAccount?.connected) throw new Error("Gmail not connected");
+            return "gmail";
+        }
+        
+        default: {
+            const [gmailAccount] = await db.select().from(gmail_accounts).where(eq(gmail_accounts.user_id, userId));
+            if (gmailAccount?.connected) return "gmail";
+            
             const [smtpAccount] = await db.select().from(smtp_config).where(eq(smtp_config.user_id, userId));
-            if (smtpAccount) {
-                result = await sendSmtpEmail(userId, payload);
-            } else {
-                throw new Error("No email provider configured");
-            }
+            if (smtpAccount) return "smtp";
+            
+            throw new Error("No email provider configured");
         }
     }
+};
 
-    // Log the successful send
+const sendEmailViaProvider = async (provider: "gmail" | "smtp", userId: string, payload: EmailJobPayload) => {
+    switch (provider) {
+        case "gmail":
+            return await sendGmailEmail(userId, payload);
+        case "smtp":
+            return await sendSmtpEmail(userId, payload);
+        default:
+            throw new Error(`Unknown provider: ${provider}`);
+    }
+};
+
+const logEmail = async (userId: string, payload: EmailJobPayload, status: "sent" | "failed", messageId?: string | null, error?: string) => {
     await db.insert(email_logs).values({
         user_id: userId,
         to: Array.isArray(payload.to) ? payload.to.join(", ") : payload.to,
         subject: payload.subject,
-        status: "sent",
-        service_type: service === "smtp" ? "smtp" : "gmail",
-        message_id: result.messageId ?? null,
-    });
+        status,
+        service_type: payload.service === "smtp" ? "smtp" : "gmail",
+        message_id: messageId ?? null,
+        error_message: error,
+    }).catch(() => {});
+};
 
-    // Deduct credit
+const deductCredit = async (userId: string) => {
     await db.update(users)
-        .set({ credits: sql`${users.credits} - 1`, monthly_usage: sql`${users.monthly_usage} + 1`, updated_at: new Date() })
+        .set({ 
+            credits: sql`${users.credits} - 1`, 
+            monthly_usage: sql`${users.monthly_usage} + 1`, 
+            updated_at: new Date() 
+        })
         .where(eq(users.id, userId));
+};
 
+const updateScheduledEmail = async (scheduledEmailId: string, status: "sent" | "failed", attempts: number, error?: string) => {
+    await db.update(scheduled_emails)
+        .set({
+            status,
+            attempts,
+            error_message: error,
+            updated_at: new Date(),
+        })
+        .where(eq(scheduled_emails.id, scheduledEmailId))
+        .catch(() => {});
+};
+
+const updateBatchJob = async (batchJobId: string, type: "sent" | "failed") => {
+    const field = type === "sent" ? batch_jobs.sent_count : batch_jobs.failed_count;
+    
+    await db.update(batch_jobs)
+        .set({
+            [type === "sent" ? "sent_count" : "failed_count"]: sql`${field} + 1`,
+            updated_at: new Date(),
+        })
+        .where(eq(batch_jobs.id, batchJobId))
+        .catch(() => {});
+};
+
+const processEmail = async (jobData: EmailJobPayload) => {
+    const { userId } = jobData;
+    const [user] = await db.select().from(users).where(eq(users.id, userId));
+    if (!user) throw new Error("User not found");
+
+    const provider = await selectEmailProvider(userId, jobData.service);
+    const result = await sendEmailViaProvider(provider, userId, jobData);
+    
+    await logEmail(userId, jobData, "sent", result.messageId);
+    await deductCredit(userId);
+    
     return result;
 };
 
 export const emailWorker = new Worker<EmailJobPayload>(
     "email-jobs",
     async (job: Job<EmailJobPayload>) => {
-        const { userId, scheduledEmailId, batchJobId, batchChunkIndex, ...payload } = job.data;
+        const { userId, scheduledEmailId, batchJobId } = job.data;
+        
         logger.info(`Processing email job ${job.id} for user ${userId}`);
 
         try {
-            const result = await processEmail(userId, { userId, ...payload });
+            const result = await processEmail(job.data);
 
-            // Update scheduled email status if applicable
             if (scheduledEmailId) {
-                await db.update(scheduled_emails).set({
-                    status: "sent",
-                    attempts: (job.attemptsMade ?? 0) + 1,
-                    updated_at: new Date(),
-                }).where(eq(scheduled_emails.id, scheduledEmailId));
+                await updateScheduledEmail(scheduledEmailId, "sent", (job.attemptsMade ?? 0) + 1);
             }
 
-            // Update batch job progress
             if (batchJobId) {
-                await db.update(batch_jobs).set({
-                    sent_count: sql`${batch_jobs.sent_count} + 1`,
-                    updated_at: new Date(),
-                }).where(eq(batch_jobs.id, batchJobId));
+                await updateBatchJob(batchJobId, "sent");
             }
 
             return result;
@@ -85,21 +131,18 @@ export const emailWorker = new Worker<EmailJobPayload>(
             const errMsg = error instanceof Error ? error.message : String(error);
             logger.error(`Email job ${job.id} failed: ${errMsg}`);
 
-            // Log failed email
-            await db.insert(email_logs).values({
-                user_id: userId,
-                to: Array.isArray(payload.to) ? payload.to.join(", ") : payload.to,
-                subject: payload.subject,
-                status: "failed",
-                service_type: payload.service === "smtp" ? "smtp" : "gmail",
-                error_message: errMsg,
-            }).catch(() => {});
+            const failedPayload: EmailJobPayload = { ...job.data, userId };
+            await logEmail(userId, failedPayload, "failed", null, errMsg);
 
-            throw error; // re-throw so BullMQ retries
+            throw error;
         }
     },
     {
-        connection: redis,
+        connection: {
+            host: REDIS_HOST,
+            port: Number(REDIS_PORT),
+            password: REDIS_PASSWORD || undefined,
+        },
         concurrency: 5,
     }
 );
@@ -111,21 +154,12 @@ emailWorker.on("completed", (job) => {
 emailWorker.on("failed", async (job, err) => {
     logger.error(`Email job ${job?.id} permanently failed: ${err.message}`);
 
-    // Mark scheduled email as failed after all retries exhausted
     if (job?.data.scheduledEmailId) {
-        await db.update(scheduled_emails).set({
-            status: "failed",
-            error_message: err.message,
-            updated_at: new Date(),
-        }).where(eq(scheduled_emails.id, job.data.scheduledEmailId)).catch(() => {});
+        await updateScheduledEmail(job.data.scheduledEmailId, "failed", job.attemptsMade, err.message);
     }
 
-    // Increment batch failed count
     if (job?.data.batchJobId) {
-        await db.update(batch_jobs).set({
-            failed_count: sql`${batch_jobs.failed_count} + 1`,
-            updated_at: new Date(),
-        }).where(eq(batch_jobs.id, job.data.batchJobId)).catch(() => {});
+        await updateBatchJob(job.data.batchJobId, "failed");
     }
 });
 

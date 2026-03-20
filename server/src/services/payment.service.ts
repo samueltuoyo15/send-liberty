@@ -1,4 +1,4 @@
-import Paystack from "paystack-api";
+import axios from "axios";
 import db from "../drizzle/db";
 import { users } from "../drizzle/schema/users";
 import { eq } from "drizzle-orm";
@@ -11,13 +11,19 @@ if (!PAYSTACK_SECRET_KEY) {
     throw new Error("PAYSTACK_SECRET_KEY is not defined");
 }
 
-const paystack = Paystack(PAYSTACK_SECRET_KEY);
+const paystackClient = axios.create({
+    baseURL: "https://api.paystack.co",
+    headers: {
+        Authorization: `Bearer ${PAYSTACK_SECRET_KEY}`,
+        "Content-Type": "application/json",
+    },
+});
 
 export const CREDIT_PACKAGES = {
-    "100": { credits: 100, amount: 50000 },
-    "500": { credits: 500, amount: 225000 },
-    "1000": { credits: 1000, amount: 400000 },
-    "2500": { credits: 2500, amount: 900000 },
+    "1000": { credits: 1000, amount: 50000 },
+    "5000": { credits: 5000, amount: 225000 },
+    "10000": { credits: 10000, amount: 400000 },
+    "25000": { credits: 25000, amount: 900000 },
 };
 
 export const initializePayment = async (userId: string, packageId: keyof typeof CREDIT_PACKAGES) => {
@@ -29,7 +35,7 @@ export const initializePayment = async (userId: string, packageId: keyof typeof 
 
     if (!user.email) throw new AppError("Email is required for payment", 400);
 
-    const response = await paystack.transaction.initialize({
+    const response = await paystackClient.post("/transaction/initialize", {
         email: user.email,
         amount: pkg.amount,
         metadata: {
@@ -37,24 +43,24 @@ export const initializePayment = async (userId: string, packageId: keyof typeof 
             packageId,
             credits: pkg.credits,
         },
-        callback_url: `${process.env.FRONTEND_URL}/dashboard/billing?payment=success`,
+        callback_url: `${process.env.FRONTEND_URL}/dashboard/billing?reference={{reference}}`,
     });
 
     return {
-        authorization_url: response.data.authorization_url,
-        access_code: response.data.access_code,
-        reference: response.data.reference,
+        authorization_url: response.data.data.authorization_url,
+        access_code: response.data.data.access_code,
+        reference: response.data.data.reference,
     };
 };
 
 export const verifyPayment = async (reference: string) => {
-    const response = await paystack.transaction.verify(reference);
+    const response = await paystackClient.get(`/transaction/verify/${reference}`);
 
-    if (response.data.status !== "success") {
+    if (response.data.data.status !== "success") {
         throw new AppError("Payment verification failed", 400);
     }
 
-    const { userId, credits } = response.data.metadata as { userId: string; credits: number };
+    const { userId, credits } = response.data.data.metadata as { userId: string; credits: number };
 
     const [user] = await db.select().from(users).where(eq(users.id, userId));
     if (!user) throw new AppError("User not found", 404);
@@ -68,7 +74,7 @@ export const verifyPayment = async (reference: string) => {
         .where(eq(users.id, userId))
         .returning();
 
-    logger.info({ userId, credits, reference }, "Credits added successfully");
+    logger.info({ userId, credits, reference }, "Emails added successfully");
 
     return updated;
 };
@@ -92,6 +98,6 @@ export const handleWebhook = async (event: any) => {
             })
             .where(eq(users.id, userId));
 
-        logger.info({ userId, credits, reference }, "Credits added via webhook");
+        logger.info({ userId, credits, reference }, "Emails added via webhook");
     }
 };

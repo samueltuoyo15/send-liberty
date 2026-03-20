@@ -19,9 +19,9 @@ export const users = pgTable("users", {
   avatar: text("avatar"),
   default_reply_to: varchar("default_reply_to", { length: 255 }),
   mode: modeEnum("mode").default("test_mode").notNull(),
-  credits: integer("credits").default(50).notNull(),
+  credits: integer("credits").default(500).notNull(),
   monthly_usage: integer("monthly_usage").default(0).notNull(),
-  monthly_limit: integer("monthly_limit").default(50).notNull(),
+  monthly_limit: integer("monthly_limit").default(500).notNull(),
   reset_date: timestamp("reset_date", { withTimezone: true })
     .defaultNow()
     .notNull(),
