@@ -1,8 +1,10 @@
+"use client";
+
 import { Github } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 export default function LoginPage() {
-  const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080/api/v1";
+  const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
   const handleLogin = () => {
     window.location.href = `${API_URL}/auth/github`;
