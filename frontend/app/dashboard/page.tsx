@@ -7,12 +7,10 @@ import {
   FileText,
   CheckCircle2,
   XCircle,
-  Plus,
-  RefreshCw,
-  MoreHorizontal
+  RefreshCw
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Table,
   TableBody,
@@ -24,20 +22,25 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useMe } from "@/hooks/useAuth";
-import { useApiKeys } from "@/hooks/useApiKeys";
-import { useGmailAccounts } from "@/hooks/useGmailAccounts";
+import { useApiKeys, useGenerateApiKey } from "@/hooks/useApiKeys";
+import { useGmailAccounts, useConnectGmail } from "@/hooks/useGmailAccounts";
 import { useEmailLogs } from "@/hooks/useEmailLogs";
+import { useState } from "react";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 
 export default function DashboardPage() {
-  const { data: user, isLoading: isLoadingUser } = useMe();
+  const { data: user, isLoading: isLoadingUser, refetch: refetchUser } = useMe();
   const { data: apiKeys, isLoading: isLoadingKeys } = useApiKeys();
   const { data: gmailAccounts, isLoading: isLoadingAccounts } = useGmailAccounts();
-  const { data: logsData, isLoading: isLoadingLogs } = useEmailLogs(1, 5);
+  const { data: logsData, isLoading: isLoadingLogs, refetch: refetchLogs } = useEmailLogs(1, 5);
+  const { mutate: generateKey, isPending: isGenerating } = useGenerateApiKey();
+  const { mutate: connectGmail, isPending: isConnecting } = useConnectGmail();
+  const [newKeyDialog, setNewKeyDialog] = useState<{ key: string; hint: string } | null>(null);
 
   const activeKeysCount = apiKeys?.filter(k => k.status === "active").length || 0;
   const connectedGmailsCount = gmailAccounts?.filter(g => g.connected).length || 0;
   const emailLogs = logsData || [];
-  const creditPercentage = user ? Math.min(100, (user.credits / 1000) * 100) : 0; // Or whatever max scale
+  const creditPercentage = user ? Math.min(100, (user.credits / 10000) * 100) : 0;
 
   return (
     <div className="space-y-8 max-w-[1200px] mx-auto">
@@ -57,11 +60,22 @@ export default function DashboardPage() {
           animate={{ opacity: 1, x: 0 }}
           className="flex flex-wrap items-center gap-3"
         >
-          <Button className="rounded-md shadow-md font-bold group">
+          <Button 
+            className="rounded-md shadow-md font-bold group" 
+            onClick={() => connectGmail()}
+            disabled={isConnecting || connectedGmailsCount > 0}
+          >
             <Mail className="w-4 h-4 mr-2" />
-            Connect Gmail
+            {connectedGmailsCount > 0 ? "Gmail Connected" : "Connect Gmail"}
           </Button>
-          <Button variant="secondary" className="rounded-md shadow-sm font-bold border border-border">
+          <Button 
+            variant="secondary" 
+            className="rounded-md shadow-sm font-bold border border-border"
+            onClick={() => generateKey(undefined, {
+              onSuccess: (data) => setNewKeyDialog({ key: data.key, hint: data.key_hint })
+            })}
+            disabled={isGenerating}
+          >
             <Key className="w-4 h-4 mr-2" />
             Generate Key
           </Button>
@@ -173,7 +187,12 @@ export default function DashboardPage() {
           <Card className="border-border shadow-sm">
             <CardHeader className="flex flex-row items-center justify-between pb-4">
               <CardTitle className="text-lg font-bold">Recent Email Logs</CardTitle>
-              <Button variant="ghost" size="sm" className="font-semibold h-8 w-8 p-0">
+              <Button 
+                variant="ghost" 
+                size="sm" 
+                className="font-semibold h-8 w-8 p-0"
+                onClick={() => refetchLogs()}
+              >
                 <RefreshCw className="w-4 h-4" />
               </Button>
             </CardHeader>
@@ -278,6 +297,34 @@ export default function DashboardPage() {
           </Card>
         </motion.div>
       </div>
+
+      <Dialog open={!!newKeyDialog} onOpenChange={() => setNewKeyDialog(null)}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>API Key Generated</DialogTitle>
+            <DialogDescription>
+              Save this key now. You won't be able to see it again.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div>
+              <label className="text-sm font-medium mb-2 block">Your API Key</label>
+              <div className="font-mono bg-muted p-3 rounded text-sm break-all border border-border">
+                {newKeyDialog?.key}
+              </div>
+            </div>
+            <Button 
+              className="w-full" 
+              onClick={() => {
+                navigator.clipboard.writeText(newKeyDialog?.key || "");
+                setNewKeyDialog(null);
+              }}
+            >
+              Copy & Close
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

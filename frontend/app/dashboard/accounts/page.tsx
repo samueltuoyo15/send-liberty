@@ -3,10 +3,13 @@
 import { Mail, CheckCircle2, XCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useGmailAccounts } from "@/hooks/useGmailAccounts";
+import { useGmailAccounts, useConnectGmail, useDisconnectGmail } from "@/hooks/useGmailAccounts";
 
 export default function AccountsPage() {
   const { data: accounts, isLoading } = useGmailAccounts();
+  const { mutate: connectGmail, isPending: isConnecting } = useConnectGmail();
+  const { mutate: disconnectGmail, isPending: isDisconnecting } = useDisconnectGmail();
+
   return (
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
@@ -16,7 +19,11 @@ export default function AccountsPage() {
             Connect and manage the Gmail accounts used for sending emails.
           </p>
         </div>
-        <Button className="font-semibold shadow-md">
+        <Button 
+          className="font-semibold shadow-md" 
+          onClick={() => connectGmail()}
+          disabled={isConnecting || (accounts && accounts.length > 0 && accounts[0].connected)}
+        >
           <Mail className="w-4 h-4 mr-2" />
           Connect New Account
         </Button>
@@ -32,7 +39,14 @@ export default function AccountsPage() {
           <Mail className="w-12 h-12 mx-auto mb-4 opacity-50" />
           <h3 className="text-lg font-medium text-foreground mb-1">No accounts connected</h3>
           <p className="max-w-sm mx-auto mb-6">Connect a Gmail account to start sending emails on its behalf.</p>
-          <Button variant="outline" className="font-medium shadow-sm">Connect Account</Button>
+          <Button 
+            variant="outline" 
+            className="font-medium shadow-sm" 
+            onClick={() => connectGmail()}
+            disabled={isConnecting}
+          >
+            Connect Account
+          </Button>
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -54,7 +68,21 @@ export default function AccountsPage() {
                   Added on {new Date(account.created_at).toLocaleDateString()}
                 </p>
               </div>
-              <Button variant="outline" size="sm" className="mt-2 sm:mt-0 self-start sm:self-center">Manage</Button>
+              {account.connected && (
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  className="mt-2 sm:mt-0 self-start sm:self-center"
+                  onClick={() => {
+                    if (confirm("Disconnect this Gmail account? You can reconnect it later.")) {
+                      disconnectGmail();
+                    }
+                  }}
+                  disabled={isDisconnecting}
+                >
+                  Disconnect
+                </Button>
+              )}
             </div>
           ))}
         </div>

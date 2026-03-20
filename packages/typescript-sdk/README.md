@@ -1,104 +1,244 @@
-# `@send-liberty/sdk`
+# SendLiberty TypeScript SDK
 
-Official TypeScript SDK for the **SendLiberty** Gmail OAuth Email Relay API.
+Official TypeScript/JavaScript SDK for SendLiberty - Email API with Gmail and Custom Domain support.
 
-## Install
+## Installation
 
 ```bash
-npm install @send-liberty/sdk
+npm install @sendliberty/sdk
 # or
-pnpm add @send-liberty/sdk
+yarn add @sendliberty/sdk
+# or
+pnpm add @sendliberty/sdk
 ```
 
 ## Quick Start
 
-```ts
-import SendLiberty from "@send-liberty/sdk";
+```typescript
+import SendLiberty from '@sendliberty/sdk';
 
-const mailer = new SendLiberty({
-  auth: { apiKey: "sl_xxxxxxxx_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx" },
-  service: "gmail",
+const client = new SendLiberty({
+  auth: {
+    apiKey: 'your_api_key_here'
+  }
 });
 
-await mailer.send({
-  to: "user@gmail.com",
-  subject: "Welcome!",
-  text: "Hello from SendLiberty",
-  html: "<p>Hello from <b>SendLiberty</b></p>",
+await client.send({
+  to: 'user@example.com',
+  subject: 'Hello from SendLiberty',
+  html: '<h1>Welcome!</h1>',
 });
 ```
 
-## Constructor
+## Using Custom Domain (Like Resend)
 
-```ts
-new SendLiberty(config: SendLibertyConfig)
+### 1. Configure SMTP in Dashboard
+
+Go to your SendLiberty dashboard and add your SMTP settings:
+- Host: smtp.yourdomain.com
+- Port: 587
+- Username: your-smtp-username
+- Password: your-smtp-password
+- From Email: noreply@yourdomain.com
+
+### 2. Send from Your Domain
+
+```typescript
+const client = new SendLiberty({
+  auth: {
+    apiKey: 'your_api_key_here'
+  },
+  service: 'smtp'
+});
+
+await client.send({
+  from: 'noreply@yourdomain.com',
+  to: 'customer@example.com',
+  subject: 'Order Confirmation',
+  html: '<p>Your order has been confirmed!</p>',
+});
 ```
 
-| Option | Type | Required | Description |
-|--------|------|----------|-------------|
-| `auth.apiKey` | `string` | ✅ | Your API key — get it from the dashboard |
-| `service` | `"gmail" \| "smtp"` | — | Default: `"gmail"`. Override per-send by passing `service` in `send()` |
-| `baseUrl` | `string` | — | Override API base URL. Default: `https://api.sendliberty.com` |
+## Configuration Options
 
-## `mailer.send(options)`
+```typescript
+const client = new SendLiberty({
+  auth: {
+    apiKey: 'your_api_key_here'
+  },
+  service: 'gmail' | 'smtp',
+  baseUrl: 'https://api.sendliberty.com'
+});
+```
 
-```ts
-await mailer.send({
-  to: "user@example.com",             // string | string[]
-  subject: "Subject here",
-  text: "Plain text version",          // optional if html provided
-  html: "<p>HTML version</p>",         // optional if text provided
-  replyTo: "support@app.com",          // optional
-  cc: ["admin@app.com"],               // optional — string | string[]
-  bcc: ["log@app.com"],                // optional — string | string[]
-  from: "Support <support@app.com>",   // optional — defaults to your Gmail address
-  attachments: [                        // optional — max 10
+## Send Email
+
+### Basic Email
+
+```typescript
+await client.send({
+  to: 'user@example.com',
+  subject: 'Hello',
+  text: 'Plain text email',
+  html: '<p>HTML email</p>',
+});
+```
+
+### Multiple Recipients
+
+```typescript
+await client.send({
+  to: ['user1@example.com', 'user2@example.com'],
+  cc: 'manager@example.com',
+  bcc: ['admin@example.com'],
+  subject: 'Team Update',
+  html: '<p>Important update</p>',
+});
+```
+
+### With Attachments
+
+```typescript
+await client.send({
+  to: 'user@example.com',
+  subject: 'Invoice',
+  html: '<p>Please find your invoice attached</p>',
+  attachments: [
     {
-      filename: "invoice.pdf",
-      content: pdfBuffer,               // Buffer or base64 string
-      contentType: "application/pdf",
-    },
+      filename: 'invoice.pdf',
+      content: Buffer.from('...'),
+      contentType: 'application/pdf',
+    }
   ],
-  headers: {                            // optional — custom email headers
-    "X-Priority": "1",
+});
+```
+
+### Custom Headers
+
+```typescript
+await client.send({
+  to: 'user@example.com',
+  subject: 'Newsletter',
+  html: '<p>Monthly newsletter</p>',
+  headers: {
+    'X-Campaign-ID': 'newsletter-2024-01',
+    'X-Priority': '1',
   },
 });
 ```
 
-### Returns
+## Scheduled Emails
 
-```ts
-{
-  success: boolean;
-  messageId: string | null;
-}
+```typescript
+await client.send({
+  to: 'user@example.com',
+  subject: 'Reminder',
+  html: '<p>This is your reminder</p>',
+  scheduledAt: new Date('2024-12-31T10:00:00Z'),
+});
+```
+
+## Batch Sending
+
+```typescript
+const recipients = [
+  { to: 'user1@example.com', subject: 'Hello User 1', html: '<p>Hi User 1</p>' },
+  { to: 'user2@example.com', subject: 'Hello User 2', html: '<p>Hi User 2</p>' },
+];
+
+await client.sendBatch({
+  recipients,
+  batchSize: 10,
+  batchDelayMs: 1000,
+});
 ```
 
 ## Error Handling
 
-```ts
-import { SendLibertyError } from "@send-liberty/sdk";
+```typescript
+import { SendLibertyError } from '@sendliberty/sdk';
 
 try {
-  await mailer.send({ ... });
-} catch (err) {
-  if (err instanceof SendLibertyError) {
-    console.error(err.message);   // human-readable message
-    console.error(err.status);    // HTTP status code (401, 429, 500 etc.)
+  await client.send({
+    to: 'user@example.com',
+    subject: 'Test',
+    html: '<p>Test</p>',
+  });
+} catch (error) {
+  if (error instanceof SendLibertyError) {
+    console.error('SendLiberty Error:', error.message);
+    console.error('Status Code:', error.statusCode);
   }
 }
 ```
 
-## Common Errors
+## Service Selection
 
-| Status | Meaning |
-|--------|---------|
-| `401` | Invalid or revoked API key |
-| `400` | Gmail not connected or SMTP not configured |
-| `429` | Rate limit or monthly quota exceeded |
-| `500` | Send failed (check email logs in dashboard) |
+### Gmail (Default)
+Uses your connected Gmail account:
 
-## Environment Notes
+```typescript
+const client = new SendLiberty({
+  auth: { apiKey: 'your_api_key' },
+  service: 'gmail'
+});
+```
 
-The SDK uses the native `fetch` API — available in Node.js 18+, Bun, Deno, and all modern browsers.
-For Node.js < 18 add `node-fetch` and pass it as a polyfill.
+### SMTP (Custom Domain)
+Uses your configured SMTP server:
+
+```typescript
+const client = new SendLiberty({
+  auth: { apiKey: 'your_api_key' },
+  service: 'smtp'
+});
+```
+
+### Auto-Select
+If you don't specify a service, SendLiberty will:
+1. Use Gmail if connected
+2. Fall back to SMTP if configured
+3. Return error if neither is available
+
+## TypeScript Support
+
+Full TypeScript support with type definitions included:
+
+```typescript
+import SendLiberty, { SendOptions, SendResult } from '@sendliberty/sdk';
+
+const options: SendOptions = {
+  to: 'user@example.com',
+  subject: 'Test',
+  html: '<p>Test</p>',
+};
+
+const result: SendResult = await client.send(options);
+```
+
+## API Reference
+
+### `SendLiberty`
+
+#### Constructor
+```typescript
+new SendLiberty(config: SendLibertyConfig)
+```
+
+#### Methods
+
+##### `send(options: SendOptions): Promise<SendResult>`
+Send a single email.
+
+##### `sendBatch(options: BatchOptions): Promise<BatchResult>`
+Send multiple emails in batches.
+
+## Support
+
+- Documentation: https://docs.sendliberty.com
+- Email: support@sendliberty.com
+- GitHub: https://github.com/sendliberty/sdk
+
+## License
+
+MIT

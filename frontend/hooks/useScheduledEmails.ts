@@ -33,3 +33,15 @@ export function useCancelScheduledEmail() {
     },
   });
 }
+
+export function useRescheduleEmail() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async ({ id, scheduledAt }: { id: string; scheduledAt: string }) => {
+      await api.patch(`/email/scheduled/${id}/reschedule`, { scheduledAt });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["scheduled-emails"] });
+    },
+  });
+}

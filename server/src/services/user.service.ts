@@ -7,6 +7,7 @@ export const getProfile = async (userId: string) => {
     const [user] = await db.select({
         id: users.id,
         email: users.email,
+        github_username: users.github_username,
         display_name: users.display_name,
         avatar: users.avatar,
         default_reply_to: users.default_reply_to,
@@ -31,10 +32,14 @@ export const updateProfile = async (
         .returning({
             id: users.id,
             email: users.email,
+            github_username: users.github_username,
             display_name: users.display_name,
             avatar: users.avatar,
             default_reply_to: users.default_reply_to,
             mode: users.mode,
+            credits: users.credits,
+            monthly_usage: users.monthly_usage,
+            monthly_limit: users.monthly_limit,
         });
 
     if (!updated) throw new AppError("User not found", 404);
@@ -45,7 +50,13 @@ export const switchMode = async (userId: string, mode: "test_mode" | "live_mode"
     const [updated] = await db.update(users)
         .set({ mode, updated_at: new Date() })
         .where(eq(users.id, userId))
-        .returning({ id: users.id, mode: users.mode });
+        .returning({
+            id: users.id,
+            mode: users.mode,
+            credits: users.credits,
+            monthly_usage: users.monthly_usage,
+            monthly_limit: users.monthly_limit,
+        });
 
     if (!updated) throw new AppError("User not found", 404);
     return updated;

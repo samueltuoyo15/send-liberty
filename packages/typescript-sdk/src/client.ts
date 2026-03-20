@@ -1,12 +1,12 @@
 import { request } from "./http";
-import type { SendLibertyConfig, SendOptions, SendResult, Service } from "./types";
+import type { SendLibertyConfig, SendOptions, SendResult, Service, BatchOptions, BatchResult } from "./types";
 import { SendLibertyError } from "./error";
 
 const DEFAULT_BASE_URL = "https://api.sendliberty.com";
 
 export class SendLiberty {
     private readonly apiKey: string;
-    private readonly service: Service;
+    private readonly service?: Service;
     private readonly baseUrl: string;
 
     constructor(config: SendLibertyConfig) {
@@ -14,7 +14,7 @@ export class SendLiberty {
             throw new SendLibertyError("API key is required in auth.apiKey", 400);
         }
         this.apiKey = config.auth.apiKey;
-        this.service = config.service ?? "gmail";
+        this.service = config.service;
         this.baseUrl = config.baseUrl ?? DEFAULT_BASE_URL;
     }
 
@@ -55,6 +55,29 @@ export class SendLiberty {
                 from: options.from,
                 attachments,
                 headers: options.headers,
+                scheduledAt: options.scheduledAt,
+                maxRetries: options.maxRetries,
+            },
+        });
+    }
+
+    async sendBatch(options: BatchOptions): Promise<BatchResult> {
+        if (!options.recipients || options.recipients.length === 0) {
+            throw new SendLibertyError("recipients array is required and cannot be empty", 400);
+        }
+
+        return request<BatchResult>({
+            method: "POST",
+            path: "/api/v1/email/batch",
+            apiKey: this.apiKey,
+            baseUrl: this.baseUrl,
+            body: {
+                recipients: options.recipients,
+                batchSize: options.batchSize,
+                batchDelayMs: options.batchDelayMs,
+                maxRetries: options.maxRetries,
+                scheduledAt: options.scheduledAt,
+                name: options.name,
             },
         });
     }

@@ -11,6 +11,17 @@ export interface BatchJob {
   created_at: string;
 }
 
+export interface BatchRecipient {
+  to: string;
+  subject: string;
+  text?: string;
+  html?: string;
+  cc?: string;
+  bcc?: string;
+  replyTo?: string;
+  from?: string;
+}
+
 export function useBatchJobs() {
   return useQuery({
     queryKey: ["batch-jobs"],
@@ -18,7 +29,6 @@ export function useBatchJobs() {
       const res = await api.get<never, { success: boolean; data: BatchJob[] }>("/email/batch");
       return res.data;
     },
-    // Poll every 5 seconds if there are running jobs
     refetchInterval: (query) => {
       const jobs = query.state.data;
       const hasRunning = jobs?.some((job: BatchJob) => job.status === "running" || job.status === "pending");
@@ -32,6 +42,26 @@ export function useCancelBatchJob() {
   return useMutation({
     mutationFn: async (id: string) => {
       await api.delete(`/email/batch/${id}`);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["batch-jobs"] });
+    },
+  });
+}
+
+export function useSendBatchEmail() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async (data: {
+      recipients: BatchRecipient[];
+      name?: string;
+      batchSize?: number;
+      batchDelayMs?: number;
+      maxRetries?: number;
+      scheduledAt?: string;
+    }) => {
+      const res = await api.post<never, { success: boolean; data: BatchJob }>("/email/batch", data);
+      return res.data;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["batch-jobs"] });

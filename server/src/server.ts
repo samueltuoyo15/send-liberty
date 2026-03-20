@@ -11,10 +11,12 @@ import smtpRoutes from "./routes/smtp.route";
 import emailRoutes from "./routes/email.route";
 import apiKeyRoutes from "./routes/api-key.route";
 import userRoutes from "./routes/user.route";
+import paymentRoutes from "./routes/payment.route";
 import urlVersioning from "./middlewares/url.versioning";
 import { requestLogger, addTimestamp } from "./middlewares/request.logger";
 import { ipRateLimiter } from "./middlewares/rate-limiter";
 import cookieParser from "cookie-parser";
+import { initCreditResetJob, stopCreditResetJob } from "./common/jobs/credit-reset.job";
 
 const app: Application = express();
 
@@ -43,6 +45,7 @@ app.use("/api/v1/smtp", smtpRoutes);
 app.use("/api/v1/email", emailRoutes);
 app.use("/api/v1/keys", apiKeyRoutes);
 app.use("/api/v1/users", userRoutes);
+app.use("/api/v1/payments", paymentRoutes);
 
 app.use(globalErrorHandler);
 
@@ -50,6 +53,9 @@ const startServer = async () => {
     const PORT = process.env.PORT || 8080;
 
     try {
+        await initCreditResetJob();
+        logger.info("Credit reset job initialized");
+
         app.listen(PORT, () => logger.info(`Server running on port ${PORT}`));
     } catch (error) {
         logger.error(`Failed to start server ${error}`);
@@ -60,12 +66,14 @@ const startServer = async () => {
 startServer();
 
 process.on("unhandledRejection", async (reason, promise) => {
+    await stopCreditResetJob();
     await disconnectRedis();
     console.error("unhandled rejection", promise, "reason:", reason);
     process.exit(1);
 });
 
-process.on("uncaughtException", (error) => {
+process.on("uncaughtException", async (error) => {
+    await stopCreditResetJob();
     console.error("uncaughtException", error);
     process.exit(1);
 });
