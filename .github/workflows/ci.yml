@@ -2,9 +2,9 @@ name: SendLiberty CI/CD
 
 on:
   push:
-    branches: [ "main", "master" ]
+    branches: ["main"]
   pull_request:
-    branches: [ "main", "master" ]
+    branches: ["main"]
 
 jobs:
   build:
@@ -28,11 +28,5 @@ jobs:
     - name: Install Dependencies
       run: pnpm install --frozen-lockfile
 
-    - name: Build SDK
-      run: pnpm --filter @send-liberty/sdk run build
-
     - name: Build Server
       run: pnpm --filter server run build
-
-    - name: Build Frontend
-      run: pnpm --filter frontend run build
