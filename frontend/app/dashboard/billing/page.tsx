@@ -77,7 +77,7 @@ export default function BillingPage() {
             <Check className="w-8 h-8 text-emerald-600 dark:text-emerald-400" />
           </div>
           <h2 className="text-2xl font-bold">Payment Successful!</h2>
-          <p className="text-muted-foreground">Your emails have been added to your account</p>
+          <p className="text-muted-foreground">Your credits have been added to your account</p>
         </div>
       </div>
     );
@@ -100,9 +100,9 @@ export default function BillingPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-3xl font-bold tracking-tight">Billing & Emails</h1>
+        <h1 className="text-3xl font-bold tracking-tight">Billing</h1>
         <p className="text-muted-foreground mt-1">
-          Buy emails once and use them anytime. No subscriptions, no expiry.
+          Purchase email credits to send emails through SendLiberty.
         </p>
       </div>
 
@@ -131,7 +131,7 @@ export default function BillingPage() {
               <div className="space-y-4 mb-6">
                 <div className="flex items-center gap-3 text-sm">
                   <Check className="w-4 h-4 text-primary" />
-                  <span>Buy emails once, use anytime</span>
+                  <span>Pay once, use anytime</span>
                 </div>
                 <div className="flex items-center gap-3 text-sm">
                   <Check className="w-4 h-4 text-primary" />
@@ -139,7 +139,7 @@ export default function BillingPage() {
                 </div>
                 <div className="flex items-center gap-3 text-sm">
                   <Check className="w-4 h-4 text-primary" />
-                  <span>Emails never expire</span>
+                  <span>Credits never expire</span>
                 </div>
                 <div className="flex items-center gap-3 text-sm">
                   <Check className="w-4 h-4 text-primary" />
@@ -151,7 +151,7 @@ export default function BillingPage() {
                 <div className="bg-primary h-2 rounded-full transition-all" style={{ width: `${creditPercentage}%` }}></div>
               </div>
               <p className="text-xs text-muted-foreground mb-6">
-                {user?.credits || 0} emails available
+                {user?.credits || 0} email credits remaining
               </p>
             </>
           )}
@@ -162,7 +162,7 @@ export default function BillingPage() {
             disabled={isInitializing}
           >
             <Zap className="w-4 h-4 mr-2" />
-            Buy More Emails
+            Purchase Credits
           </Button>
         </div>
 
@@ -197,9 +197,9 @@ export default function BillingPage() {
       <Dialog open={showPackages} onOpenChange={setShowPackages}>
         <DialogContent className="max-w-2xl">
           <DialogHeader>
-            <DialogTitle>Choose Your Email Package</DialogTitle>
+            <DialogTitle>Choose Your Credit Package</DialogTitle>
             <DialogDescription>
-              One-time payment. Emails never expire. Use them at your own pace.
+              One-time payment. Credits never expire. 1 credit = 1 email sent.
             </DialogDescription>
           </DialogHeader>
           {isLoadingPackages ? (
@@ -219,11 +219,11 @@ export default function BillingPage() {
                 >
                   <div className="text-center">
                     <div className="text-3xl font-black text-primary mb-1">{pkg.credits.toLocaleString()}</div>
-                    <div className="text-xs text-muted-foreground mb-3">Emails</div>
+                    <div className="text-xs text-muted-foreground mb-3">Email Credits</div>
                     <div className="text-2xl font-bold mb-1">₦{pkg.amountNGN.toLocaleString()}</div>
                     <div className="text-xs text-muted-foreground mb-4">One-time payment</div>
                     <Button className="w-full" size="sm" disabled={isInitializing}>
-                      {isInitializing && selectedPackage?.id === pkg.id ? "Processing..." : "Buy Now"}
+                      {isInitializing && selectedPackage?.id === pkg.id ? "Processing..." : "Purchase"}
                     </Button>
                   </div>
                 </div>

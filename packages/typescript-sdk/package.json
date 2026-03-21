@@ -12,17 +12,30 @@
       "types": "./dist/index.d.ts"
     }
   },
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "build": "tsup src/index.ts --format esm,cjs --dts --clean",
     "dev": "tsup src/index.ts --format esm,cjs --dts --watch",
     "typecheck": "tsc --noEmit"
   },
-  "keywords": ["email", "gmail", "oauth", "api", "sdk", "nodemailer", "nigeria"],
+  "keywords": [
+    "email",
+    "gmail",
+    "oauth",
+    "api",
+    "sdk",
+    "nodemailer",
+    "nigeria"
+  ],
   "author": "Samuel Tuoyo",
   "license": "MIT",
   "devDependencies": {
     "tsup": "^8.4.0",
     "typescript": "^5.9.3"
+  },
+  "dependencies": {
+    "axios": "^1.13.6"
   }
 }

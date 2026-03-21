@@ -1,21 +1,15 @@
 import { request } from "./http";
-import type { SendLibertyConfig, SendOptions, SendResult, Service, BatchOptions, BatchResult } from "./types";
+import type { SendOptions, SendResult, BatchOptions, BatchResult } from "./types";
 import { SendLibertyError } from "./error";
-
-const DEFAULT_BASE_URL = "https://api.sendliberty.com";
 
 export class SendLiberty {
     private readonly apiKey: string;
-    private readonly service?: Service;
-    private readonly baseUrl: string;
 
-    constructor(config: SendLibertyConfig) {
-        if (!config.auth?.apiKey) {
-            throw new SendLibertyError("API key is required in auth.apiKey", 400);
+    constructor(apiKey: string) {
+        if (!apiKey) {
+            throw new SendLibertyError("API key is required", 400);
         }
-        this.apiKey = config.auth.apiKey;
-        this.service = config.service;
-        this.baseUrl = config.baseUrl ?? DEFAULT_BASE_URL;
+        this.apiKey = apiKey;
     }
 
     async send(options: SendOptions): Promise<SendResult> {
@@ -42,9 +36,8 @@ export class SendLiberty {
             method: "POST",
             path: "/api/v1/email/send",
             apiKey: this.apiKey,
-            baseUrl: this.baseUrl,
             body: {
-                service: this.service,
+                service: options.service,
                 to: options.to,
                 subject: options.subject,
                 text: options.text,
@@ -70,7 +63,6 @@ export class SendLiberty {
             method: "POST",
             path: "/api/v1/email/batch",
             apiKey: this.apiKey,
-            baseUrl: this.baseUrl,
             body: {
                 recipients: options.recipients,
                 batchSize: options.batchSize,

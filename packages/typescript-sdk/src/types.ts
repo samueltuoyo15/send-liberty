@@ -8,6 +8,7 @@ export type Attachment = {
 };
 
 export type SendOptions = {
+    service?: Service;
     to: string | string[];
     subject: string;
     text?: string;
@@ -57,12 +58,4 @@ export type BatchResult = {
         total_count: number;
         status: string;
     };
-};
-
-export type SendLibertyConfig = {
-    auth: {
-        apiKey: string;
-    };
-    service?: Service;
-    baseUrl?: string;
 };

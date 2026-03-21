@@ -86,18 +86,9 @@ export default function KeysPage() {
               <div>
                 <div className="text-xs text-muted-foreground mb-1 uppercase tracking-wider font-semibold">Key Hint</div>
                 <div className="font-mono bg-muted p-2 rounded text-sm flex items-center justify-between border border-border">
-                  <span>••••••••{key.key_hint}</span>
-                  <Button 
-                    variant="ghost" 
-                    size="icon" 
-                    className="h-6 w-6 opacity-0 group-hover:opacity-100 transition-opacity"
-                    onClick={() => {
-                      navigator.clipboard.writeText(`••••••••${key.key_hint}`);
-                    }}
-                  >
-                    <Copy className="h-3 w-3" />
-                  </Button>
+                  <span className="text-muted-foreground">••••••••{key.key_hint}</span>
                 </div>
+                <p className="text-xs text-muted-foreground mt-1">Full key is only shown once during creation</p>
               </div>
               <div className="text-xs text-muted-foreground mt-auto pt-2 border-t border-border flex items-center justify-between">
                 <span>Created {new Date(key.created_at).toLocaleDateString()}</span>
@@ -155,9 +146,9 @@ export default function KeysPage() {
       <Dialog open={!!newKeyDialog} onOpenChange={() => setNewKeyDialog(null)}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>API Key Generated</DialogTitle>
+            <DialogTitle>API Key Generated Successfully</DialogTitle>
             <DialogDescription>
-              Save this key now. You won't be able to see it again.
+              Copy this key now. For security reasons, you won't be able to see it again.
             </DialogDescription>
           </DialogHeader>
           <div className="space-y-4">
@@ -171,6 +162,7 @@ export default function KeysPage() {
               className="w-full" 
               onClick={() => {
                 navigator.clipboard.writeText(newKeyDialog?.key || "");
+                alert("API key copied to clipboard!");
                 setNewKeyDialog(null);
               }}
             >

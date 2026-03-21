@@ -105,7 +105,7 @@ export default function DashboardLayout({
                 )}
                 <div className="flex flex-col">
                   <span className="text-sm font-bold leading-none">{user.display_name}</span>
-                  <span className="text-xs text-muted-foreground mt-1">{user.credits} Emails Left</span>
+                  <span className="text-xs text-muted-foreground mt-1">{user.credits} Credits Left</span>
                 </div>
               </>
             ) : null}
