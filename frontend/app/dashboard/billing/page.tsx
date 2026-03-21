@@ -9,7 +9,7 @@ import { useState, useEffect } from "react";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { useRouter, useSearchParams } from "next/navigation";
 
-export default function BillingPage() {
+function BillingContent() {
   const { data: user, isLoading, refetch } = useMe();
   const { data: packages, isLoading: isLoadingPackages } = useCreditPackages();
   const { mutate: initializePayment, isPending: isInitializing } = useInitializePayment();
@@ -234,4 +234,18 @@ export default function BillingPage() {
       </Dialog>
     </div>
   );
+}
+
+import { Suspense } from "react";
+
+export default function BillingPage() {
+  return (
+    <Suspense fallback={
+      <div className="flex items-center justify-center min-h-[60vh]">
+        <Loader2 className="w-12 h-12 animate-spin mx-auto text-primary" />
+      </div>
+    }>
+      <BillingContent />
+    </Suspense>
+  )
 }

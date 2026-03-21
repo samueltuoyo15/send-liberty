@@ -23,7 +23,7 @@ router.get("/logs", requireAuth, getEmailLogsHandler);
 router.get("/scheduled", requireAuth, getScheduledEmailsHandler);
 router.delete("/scheduled/:id", requireAuth, cancelScheduledEmailHandler);
 router.patch("/scheduled/:id/reschedule", requireAuth, rescheduleEmailHandler);
-router.post("/batch", requireAuth, sendBatchEmailHandler);
+router.post("/batch", ipRateLimiter, requireApiKey, apiSendRateLimiter, sendBatchEmailHandler);
 router.get("/batch", requireAuth, getBatchJobsHandler);
 router.get("/batch/:id", requireAuth, getBatchJobHandler);
 router.delete("/batch/:id", requireAuth, cancelBatchJobHandler);

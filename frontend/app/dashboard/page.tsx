@@ -27,6 +27,7 @@ import { useGmailAccounts, useConnectGmail } from "@/hooks/useGmailAccounts";
 import { useEmailLogs } from "@/hooks/useEmailLogs";
 import { useState } from "react";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { toast } from "sonner";
 
 export default function DashboardPage() {
   const { data: user, isLoading: isLoadingUser, refetch: refetchUser } = useMe();
@@ -62,7 +63,11 @@ export default function DashboardPage() {
         >
           <Button 
             className="rounded-md shadow-md font-bold group" 
-            onClick={() => connectGmail()}
+            onClick={() => {
+              const promise = connectGmail();
+              // toast.promise if that supported returning a promise, or just:
+              toast.info("Redirecting to Gmail...");
+            }}
             disabled={isConnecting || connectedGmailsCount > 0}
           >
             <Mail className="w-4 h-4 mr-2" />
@@ -71,9 +76,18 @@ export default function DashboardPage() {
           <Button 
             variant="secondary" 
             className="rounded-md shadow-sm font-bold border border-border"
-            onClick={() => generateKey(undefined, {
-              onSuccess: (data) => setNewKeyDialog({ key: data.key, hint: data.key_hint })
-            })}
+            onClick={() => {
+              toast.loading("Generating API key...", { id: "keygen" });
+              generateKey(undefined, {
+                onSuccess: (data) => {
+                  toast.success("API Key generated successfully!", { id: "keygen" });
+                  setNewKeyDialog({ key: data.key, hint: data.key_hint });
+                },
+                onError: (error) => {
+                  toast.error("Failed to generate key: " + error.message, { id: "keygen" });
+                }
+              });
+            }}
             disabled={isGenerating}
           >
             <Key className="w-4 h-4 mr-2" />
@@ -90,7 +104,7 @@ export default function DashboardPage() {
           transition={{ delay: 0.1 }}
           className="md:col-span-1"
         >
-          <Card className="h-full border-border bg-card shadow-sm hover:shadow-md transition-shadow">
+          <Card className="h-full border-border bg-card shadow-none hover:border-slate-300 transition-colors">
             <CardHeader className="pb-2 flex flex-row items-center justify-between">
               <CardTitle className="text-sm font-bold text-muted-foreground">Credit Balance</CardTitle>
               <FileText className="w-4 h-4 text-muted-foreground" />
@@ -124,7 +138,7 @@ export default function DashboardPage() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
         >
-          <Card className="h-full border-border bg-card shadow-sm">
+          <Card className="h-full border-border bg-card shadow-none">
             <CardHeader className="pb-2 flex flex-row items-center justify-between">
               <CardTitle className="text-sm font-bold text-muted-foreground">Active API Keys</CardTitle>
               <Key className="w-4 h-4 text-muted-foreground" />
@@ -152,7 +166,7 @@ export default function DashboardPage() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3 }}
         >
-          <Card className="h-full border-border bg-card shadow-sm">
+          <Card className="h-full border-border bg-card shadow-none">
             <CardHeader className="pb-2 flex flex-row items-center justify-between">
               <CardTitle className="text-sm font-bold text-muted-foreground">Connected Gmails</CardTitle>
               <Mail className="w-4 h-4 text-muted-foreground" />
@@ -184,7 +198,7 @@ export default function DashboardPage() {
            transition={{ delay: 0.4 }}
            className="lg:col-span-2"
         >
-          <Card className="border-border shadow-sm">
+          <Card className="border-border shadow-none">
             <CardHeader className="flex flex-row items-center justify-between pb-4">
               <CardTitle className="text-lg font-bold">Recent Email Logs</CardTitle>
               <Button 
@@ -261,7 +275,7 @@ export default function DashboardPage() {
           transition={{ delay: 0.5 }}
           className="space-y-6"
         >
-          <Card className="border-border shadow-sm">
+          <Card className="border-border shadow-none">
             <CardHeader className="pb-3">
               <CardTitle className="text-sm font-bold uppercase tracking-widest text-muted-foreground">Setup Guide</CardTitle>
             </CardHeader>
@@ -317,6 +331,7 @@ export default function DashboardPage() {
               className="w-full" 
               onClick={() => {
                 navigator.clipboard.writeText(newKeyDialog?.key || "");
+                toast.success("API Key copied to clipboard!");
                 setNewKeyDialog(null);
               }}
             >

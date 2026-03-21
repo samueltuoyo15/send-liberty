@@ -20,8 +20,7 @@ export const gmailCallbackHandler = async (req: Request, res: Response, next: Ne
         }
 
         const { gmailEmail } = await handleCallback(code, userId);
-        // Redirect to frontend with success
-        const frontendUrl = process.env.FRONTEND_URL || "http://localhost:3000";
+        const frontendUrl = process.env.FRONTEND_URL
         res.redirect(`${frontendUrl}/dashboard?gmail_connected=true&email=${gmailEmail}`);
     } catch (error) {
         next(error);

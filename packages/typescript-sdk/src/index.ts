@@ -9,4 +9,5 @@ export type {
     BatchRecipient,
     Attachment,
     Service,
+    ClientOptions,
 } from "./types";

@@ -1,34 +1,19 @@
 import axios, { AxiosError } from "axios";
 import { SendLibertyError } from "./error";
 
-const FRONTEND_URL = "http://localhost:3000";
-
-let cachedServerUrl: string = "";
-
-const getServerUrl = async (): Promise<string> => {
-    if (cachedServerUrl) {
-        return cachedServerUrl;
-    }
-
-    try {
-        const response = await axios.get(`${FRONTEND_URL}/api/get-server-url`);
-        cachedServerUrl = response.data.domain || "http://localhost:8080";
-        return cachedServerUrl;
-    } catch {
-        return "http://localhost:8080";
-    }
-};
+const DEFAULT_BASE_URL = "https://send-liberty-production.up.railway.app";
 
 type RequestOptions = {
     method: string;
     path: string;
     apiKey: string;
+    baseUrl?: string;
     body?: unknown;
 };
 
 export const request = async <T>(opts: RequestOptions): Promise<T> => {
-    const serverUrl = await getServerUrl();
-    
+    const serverUrl = opts.baseUrl || DEFAULT_BASE_URL;
+
     try {
         const response = await axios({
             method: opts.method,

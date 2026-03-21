@@ -1,5 +1,9 @@
 export type Service = "gmail" | "smtp";
 
+export type ClientOptions = {
+    baseUrl?: string;
+};
+
 export type Attachment = {
     filename: string;
     content: string | Buffer;

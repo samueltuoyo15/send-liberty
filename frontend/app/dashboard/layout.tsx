@@ -53,8 +53,8 @@ export default function DashboardLayout({
       <aside className={`fixed inset-y-0 left-0 z-50 w-64 transform flex-col border-r border-border bg-background transition-transform duration-200 ease-in-out md:static md:translate-x-0 md:flex ${isMobileMenuOpen ? "translate-x-0 flex" : "-translate-x-full hidden md:flex"}`}>
         <div className="flex h-16 items-center justify-between px-6 mb-2">
           <div className="flex items-center gap-3">
-            <div className="flex h-8 w-8 items-center justify-center rounded bg-primary text-primary-foreground shadow-sm">
-              <Mail className="h-4 w-4" />
+            <div className="flex h-8 w-8 items-center justify-center rounded bg-white overflow-hidden shadow-sm">
+              <img src="/logo.png" alt="Logo" className="h-full w-full object-cover" />
             </div>
             <span className="text-xl font-bold tracking-tight text-primary">SendLiberty</span>
           </div>
@@ -85,7 +85,7 @@ export default function DashboardLayout({
         </nav>
         
         <div className="p-4 mt-auto">
-          <div className="flex items-center gap-3 rounded-xl border border-border bg-card p-3 shadow-sm hover:shadow transition-all cursor-pointer">
+          <div className="flex items-center gap-3 rounded-xl border border-border bg-card p-3 shadow-none hover:border-slate-300 transition-all cursor-pointer">
             {isLoading ? (
               <div className="flex items-center gap-3 w-full">
                 <Skeleton className="h-9 w-9 rounded-full" />

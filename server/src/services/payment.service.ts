@@ -43,7 +43,7 @@ export const initializePayment = async (userId: string, packageId: keyof typeof 
             packageId,
             credits: pkg.credits,
         },
-        callback_url: `${process.env.FRONTEND_URL}/dashboard/billing?reference={{reference}}`,
+        callback_url: `${process.env.FRONTEND_URL}/dashboard/billing`,
     });
 
     return {
