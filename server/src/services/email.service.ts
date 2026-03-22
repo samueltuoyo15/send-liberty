@@ -24,7 +24,6 @@ export type SendEmailOptions = {
     headers?: Record<string, string>;
 };
 
-/** Immediately send a single email (used by worker + direct API calls for non-scheduled) */
 export const sendEmail = async (userId: string, options: SendEmailOptions) => {
     const [user] = await db.select().from(users).where(eq(users.id, userId));
     if (!user) throw new AppError("User not found", 404);
@@ -62,14 +61,12 @@ export const sendEmail = async (userId: string, options: SendEmailOptions) => {
     return result;
 };
 
-/** Schedule an email to be sent at a future time, with optional retry */
 export const scheduleEmail = async (
     userId: string,
     options: SendEmailOptions,
     scheduledAt: Date,
     maxRetries = 3
 ) => {
-    // Insert pending record first to get an ID
     const [scheduled] = await db.insert(scheduled_emails).values({
         user_id: userId,
         to: JSON.stringify(options.to),
@@ -96,19 +93,16 @@ export const scheduleEmail = async (
         { delay: delayMs, attempts: maxRetries }
     );
 
-    // Save job ID for cancellation
     await db.update(scheduled_emails).set({ job_id: job.id }).where(eq(scheduled_emails.id, scheduled.id));
 
     return scheduled;
 };
 
-/** List scheduled emails for a user */
 export const getScheduledEmails = async (userId: string, status?: string) => {
     const query = db.select().from(scheduled_emails).where(eq(scheduled_emails.user_id, userId));
     return query.orderBy(scheduled_emails.scheduled_at);
 };
 
-/** Cancel a pending scheduled email */
 export const cancelScheduledEmail = async (userId: string, scheduledEmailId: string) => {
     const [scheduled] = await db.select().from(scheduled_emails)
         .where(eq(scheduled_emails.id, scheduledEmailId));
@@ -120,7 +114,6 @@ export const cancelScheduledEmail = async (userId: string, scheduledEmailId: str
         throw new AppError("Only pending scheduled emails can be cancelled", 400);
     }
 
-    // Remove from BullMQ
     if (scheduled.job_id) {
         const { emailQueue } = await import("../common/queues/email.queue");
         const job = await emailQueue.getJob(scheduled.job_id);
@@ -133,7 +126,6 @@ export const cancelScheduledEmail = async (userId: string, scheduledEmailId: str
     return { success: true };
 };
 
-/** Reschedule an existing pending email */
 export const rescheduleEmail = async (userId: string, scheduledEmailId: string, newScheduledAt: Date) => {
     const [scheduled] = await db.select().from(scheduled_emails)
         .where(eq(scheduled_emails.id, scheduledEmailId));
@@ -141,7 +133,6 @@ export const rescheduleEmail = async (userId: string, scheduledEmailId: string, 
     if (!scheduled || scheduled.user_id !== userId) throw new AppError("Scheduled email not found", 404);
     if (scheduled.status !== "pending") throw new AppError("Only pending emails can be rescheduled", 400);
 
-    // Remove old job
     if (scheduled.job_id) {
         const { emailQueue } = await import("../common/queues/email.queue");
         const oldJob = await emailQueue.getJob(scheduled.job_id);

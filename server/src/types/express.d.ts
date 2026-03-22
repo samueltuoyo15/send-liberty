@@ -1,4 +1,3 @@
-// Global Express type augmentation — adds `user` to Request
 declare global {
     namespace Express {
         interface Request {

@@ -9,7 +9,6 @@ import { AppError } from "../middlewares/global.error.handler";
 const KEY_PREFIX_LENGTH = 8;
 
 export const generateApiKey = async (userId: string, label?: string) => {
-    // Generate a random 32-byte key and encode it as hex (64 chars) prefixed
     const rawKey = crypto.randomBytes(32).toString("hex");
     const prefix = `sl_${rawKey.substring(0, KEY_PREFIX_LENGTH)}`;
     const fullKey = `${prefix}_${rawKey.substring(KEY_PREFIX_LENGTH)}`;
@@ -25,7 +24,6 @@ export const generateApiKey = async (userId: string, label?: string) => {
         })
         .returning();
 
-    // Return the raw full key ONCE — it won't be visible again
     return { key: fullKey, id: record.id, prefix: record.key_prefix, label: record.label };
 };
 
@@ -58,16 +56,12 @@ export const deleteApiKey = async (userId: string, keyId: string) => {
     await db.delete(api_keys).where(eq(api_keys.id, keyId));
 };
 
-/** Verify an API key and return the associated user. Updates last_used_at. */
 export const verifyApiKey = async (rawKey: string) => {
-    // The prefix is the first part before the second underscore group
-    // Format: sl_XXXXXXXX_YYYYYY...
     const parts = rawKey.split("_");
     if (parts.length < 3) throw new AppError("Invalid API key format", 401);
 
     const prefix = `${parts[0]}_${parts[1]}`;
 
-    // Find by prefix
     const candidates = await db.select().from(api_keys).where(
         and(eq(api_keys.key_prefix, prefix), eq(api_keys.revoked, false))
     );
@@ -75,12 +69,10 @@ export const verifyApiKey = async (rawKey: string) => {
     for (const candidate of candidates) {
         const valid = await argon2.verify(candidate.hashed_key, rawKey);
         if (valid) {
-            // Update last_used_at
             await db.update(api_keys)
                 .set({ last_used_at: new Date() })
                 .where(eq(api_keys.id, candidate.id));
 
-            // Fetch user
             const [user] = await db.select().from(users).where(eq(users.id, candidate.user_id));
             if (!user) throw new AppError("API key user not found", 401);
 

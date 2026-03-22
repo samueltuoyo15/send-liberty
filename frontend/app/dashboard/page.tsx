@@ -65,7 +65,6 @@ export default function DashboardPage() {
             className="rounded-md shadow-md font-bold group" 
             onClick={() => {
               const promise = connectGmail();
-              // toast.promise if that supported returning a promise, or just:
               toast.info("Redirecting to Gmail...");
             }}
             disabled={isConnecting || connectedGmailsCount > 0}

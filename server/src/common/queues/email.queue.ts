@@ -14,7 +14,6 @@ export interface EmailJobPayload {
     from?: string;
     attachments?: Array<{ filename: string; content: string; contentType?: string; encoding?: string }>;
     headers?: Record<string, string>;
-    // For scheduled/tracked jobs
     scheduledEmailId?: string;
     batchJobId?: string;
     batchChunkIndex?: number;
