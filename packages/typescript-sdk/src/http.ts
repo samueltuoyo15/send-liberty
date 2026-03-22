@@ -1,7 +1,6 @@
 import axios, { AxiosError } from "axios";
 import { SendLibertyError } from "./error";
 
-const DEFAULT_BASE_URL = "https://send-liberty-production.up.railway.app";
 
 type RequestOptions = {
     method: string;
