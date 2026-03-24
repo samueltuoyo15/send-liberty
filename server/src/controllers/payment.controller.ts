@@ -17,7 +17,8 @@ export const initializePaymentHandler = async (req: Request, res: Response, next
 export const verifyPaymentHandler = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const { reference } = req.params;
-        const user = await verifyPayment(reference);
+        const referenceStr = Array.isArray(reference) ? reference[0] : reference;
+        const user = await verifyPayment(referenceStr);
         res.status(200).json({ success: true, message: "Payment verified and credits added", data: user });
     } catch (error) {
         next(error);
@@ -31,7 +32,10 @@ export const webhookHandler = async (req: Request, res: Response, next: NextFunc
             .update(JSON.stringify(req.body))
             .digest("hex");
 
-        if (hash !== req.headers["x-paystack-signature"]) {
+        const signature = req.headers["x-paystack-signature"];
+        const signatureStr = Array.isArray(signature) ? signature[0] : signature;
+
+        if (hash !== signatureStr) {
             return res.status(400).json({ success: false, message: "Invalid signature" });
         }
 

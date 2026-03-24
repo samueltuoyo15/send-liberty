@@ -19,8 +19,8 @@ export interface EmailJobPayload {
     batchChunkIndex?: number;
 }
 
-export const emailQueue = new Queue<EmailJobPayload>("email-jobs", {
-    connection: redis,
+export const emailQueue = new Queue<EmailJobPayload, any, string>("email-jobs", {
+    connection: redis as any,
     defaultJobOptions: {
         removeOnComplete: 100,
         removeOnFail: 500,

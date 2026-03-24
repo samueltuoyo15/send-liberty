@@ -13,6 +13,9 @@ export const requireApiKey = async (req: Request, res: Response, next: NextFunct
 
     try {
         const user = await verifyApiKey(rawKey);
+        if (!user) {
+            return next(new AppError("Invalid API key", 401));
+        }
         req.user = { id: user.id, email: user.email, display_name: user.display_name };
         next();
     } catch (error) {

@@ -1,14 +1,37 @@
 "use client";
 
-import { Github } from "lucide-react";
+import { Github, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useMe } from "@/hooks/useAuth";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 
 export default function LoginPage() {
   const API_URL = process.env.NEXT_PUBLIC_API_URL;
+  const { data: user, isLoading } = useMe();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (!isLoading && user) {
+      router.push("/dashboard");
+    }
+  }, [isLoading, user, router]);
 
   const handleLogin = () => {
     window.location.href = `${API_URL}/auth/github`;
   };
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-background">
+        <Loader2 className="w-8 h-8 animate-spin text-primary" />
+      </div>
+    );
+  }
+
+  if (user) {
+    return null;
+  }
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-background px-4">
