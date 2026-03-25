@@ -1,4 +1,3 @@
-import nodemailer from "nodemailer";
 import { google } from "googleapis";
 import db from "../drizzle/db";
 import { gmail_accounts } from "../drizzle/schema/gmail.accounts";
@@ -133,31 +132,37 @@ export const sendGmailEmail = async (userId: string, options: GmailSendOptions) 
     const account = await getGmailAccount(userId);
     const accessToken = await refreshAccessTokenIfNeeded(account);
 
-    const transporter = nodemailer.createTransport({
-        service: "gmail",
-        auth: {
-            type: "OAuth2",
-            user: account.gmail_email,
-            clientId: GOOGLE_CLIENT_ID,
-            clientSecret: GOOGLE_CLIENT_SECRET,
-            accessToken,
-        },
-    });
+    const oauth2Client = createOAuthClient();
+    oauth2Client.setCredentials({ access_token: accessToken });
+
+    const gmail = google.gmail({ version: "v1", auth: oauth2Client });
 
     const toAddress = Array.isArray(options.to) ? options.to.join(", ") : options.to;
+    const ccAddress = options.cc ? (Array.isArray(options.cc) ? options.cc.join(", ") : options.cc) : undefined;
+    const bccAddress = options.bcc ? (Array.isArray(options.bcc) ? options.bcc.join(", ") : options.bcc) : undefined;
+
+    const messageParts = [
+        `From: ${options.from ?? account.gmail_email}`,
+        `To: ${toAddress}`,
+        ccAddress ? `Cc: ${ccAddress}` : "",
+        bccAddress ? `Bcc: ${bccAddress}` : "",
+        options.replyTo ? `Reply-To: ${options.replyTo}` : "",
+        `Subject: ${options.subject}`,
+        "MIME-Version: 1.0",
+        'Content-Type: text/html; charset="UTF-8"',
+        "",
+        options.html || options.text || "",
+    ].filter(Boolean);
+
+    const message = messageParts.join("\r\n");
+    const encodedMessage = Buffer.from(message).toString("base64").replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
 
     try {
-        const info = await transporter.sendMail({
-            from: options.from ?? account.gmail_email,
-            to: toAddress,
-            subject: options.subject,
-            text: options.text,
-            html: options.html,
-            replyTo: options.replyTo,
-            cc: options.cc,
-            bcc: options.bcc,
-            attachments: options.attachments,
-            headers: options.headers,
+        const result = await gmail.users.messages.send({
+            userId: "me",
+            requestBody: {
+                raw: encodedMessage,
+            },
         });
 
         await db.insert(email_logs).values({
@@ -166,10 +171,10 @@ export const sendGmailEmail = async (userId: string, options: GmailSendOptions) 
             subject: options.subject,
             status: "sent",
             service_type: "gmail",
-            message_id: info.messageId,
+            message_id: result.data.id || undefined,
         });
 
-        return { messageId: info.messageId };
+        return { messageId: result.data.id || null };
     } catch (err: any) {
         await db.insert(email_logs).values({
             user_id: userId,
