@@ -4,3 +4,4 @@ node_modules/
 dist/
 migrations/
 CUSTOM_DOMAIN_SETUP.md
+*.zip

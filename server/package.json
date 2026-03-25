@@ -3,7 +3,6 @@
   "version": "1.0.0",
   "description": "",
   "main": "dist/server.js",
-  "type": "module",
   "scripts": {
     "start:dev": "dotenvx run -- tsx watch src/server.ts",
     "build": "tsc",

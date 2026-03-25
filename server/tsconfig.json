@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "target": "es2022",
-    "module": "esnext",
+    "module": "commonjs",
     "rootDir": "./src",
     "moduleResolution": "node",
     "outDir": "./dist",
