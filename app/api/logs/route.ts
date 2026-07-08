@@ -19,7 +19,7 @@ export async function GET(req: NextRequest) {
         .sort({ createdAt: -1 })
         .skip(skip)
         .limit(limit)
-        .select("to subject status provider messageId error createdAt")
+        .select("from to subject status provider messageId error apiKeyId createdAt")
         .lean(),
       EmailLog.countDocuments({ userId: new mongoose.Types.ObjectId(user.id) }),
     ]);

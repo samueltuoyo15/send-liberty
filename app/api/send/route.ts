@@ -129,6 +129,7 @@ export async function POST(req: NextRequest) {
       bcc,
       from,
       attachments,
+      apiKeyId: apiKeyId || undefined,
     });
 
     return NextResponse.json({

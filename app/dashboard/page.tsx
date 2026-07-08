@@ -475,7 +475,15 @@ export default function DashboardPage() {
                         <TableCell className="pl-6 py-4">
                           <div className="flex flex-col">
                             <span className="font-bold text-sm text-[#1d2b3e]">{redactEmail(log.to)}</span>
-                            <span className="text-xs text-[#1d2b3e]/75 mt-0.5 truncate max-w-[200px]">{log.subject}</span>
+                            <span className="text-xs text-[#1d2b3e]/75 mt-0.5 flex items-center gap-1.5">
+                              {log.from && (
+                                <>
+                                  <span className="bg-[#1d2b3e]/10 px-1.5 py-0.5 rounded text-[10px] font-mono text-[#1d2b3e]/90">From: {redactEmail(log.from)}</span>
+                                  <span className="opacity-30">•</span>
+                                </>
+                              )}
+                              <span className="truncate max-w-[160px]" title={log.subject}>{log.subject}</span>
+                            </span>
                           </div>
                         </TableCell>
                         <TableCell>

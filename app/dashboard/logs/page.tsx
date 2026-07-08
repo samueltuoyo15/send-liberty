@@ -82,7 +82,15 @@ export default function LogsPage() {
                 <tr key={log.id} className="hover:bg-muted/30 transition-colors">
                   <td className="px-6 py-4">
                     <div className="font-semibold text-foreground">{redactEmail(log.to)}</div>
-                    <div className="text-muted-foreground text-xs mt-0.5 truncate max-w-[300px]">{log.subject}</div>
+                    <div className="text-xs text-muted-foreground mt-0.5 flex items-center gap-1.5">
+                      {log.from && (
+                        <>
+                          <span className="bg-surface-container-low px-1.5 py-0.5 rounded text-[10px] font-mono">From: {redactEmail(log.from)}</span>
+                          <span className="text-secondary/30">•</span>
+                        </>
+                      )}
+                      <span className="truncate max-w-[200px]" title={log.subject}>{log.subject}</span>
+                    </div>
                   </td>
                   <td className="px-6 py-4">
                     <Badge 

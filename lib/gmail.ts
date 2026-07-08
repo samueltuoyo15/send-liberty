@@ -4,6 +4,7 @@ import { connectDB } from "./db";
 import GmailAccount from "@/models/GmailAccount";
 import EmailLog from "@/models/EmailLog";
 import MailComposer from "nodemailer/lib/mail-composer";
+import mongoose from "mongoose";
 
 const { GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, GMAIL_CALLBACK_URL } = process.env;
 
@@ -72,6 +73,7 @@ export type GmailSendOptions = {
   cc?: string | string[];
   bcc?: string | string[];
   from?: string;
+  apiKeyId?: string | mongoose.Types.ObjectId;
   attachments?: {
     filename: string;
     content: string; // Base64
@@ -193,6 +195,7 @@ export async function sendGmailEmail(
 
     await EmailLog.create({
       userId,
+      apiKeyId: options.apiKeyId,
       from: senderEmail,
       to: toAddress,
       subject: options.subject,
@@ -206,6 +209,7 @@ export async function sendGmailEmail(
     const errMsg = err instanceof Error ? err.message : "Unknown error";
     await EmailLog.create({
       userId,
+      apiKeyId: options.apiKeyId,
       from: senderEmail,
       to: toAddress,
       subject: options.subject,
