@@ -431,7 +431,9 @@ export default function DashboardPage() {
               <Table>
                 <TableHeader className="bg-[#1d2b3e]/5 border-y border-[#1d2b3e]/10">
                   <TableRow className="border-[#1d2b3e]/10 hover:bg-transparent">
-                    <TableHead className="font-label-sm font-bold pl-6 text-[#1d2b3e]">To / Subject</TableHead>
+                    <TableHead className="font-label-sm font-bold pl-6 text-[#1d2b3e]">From</TableHead>
+                    <TableHead className="font-label-sm font-bold text-[#1d2b3e]">To</TableHead>
+                    <TableHead className="font-label-sm font-bold text-[#1d2b3e]">Subject</TableHead>
                     <TableHead className="font-label-sm font-bold text-[#1d2b3e]">Status</TableHead>
                     <TableHead className="font-label-sm font-bold text-right pr-6 text-[#1d2b3e]">Date</TableHead>
                   </TableRow>
@@ -440,14 +442,16 @@ export default function DashboardPage() {
                   {isLoadingLogs || isFetchingLogs ? (
                     Array.from({ length: 3 }).map((_, i) => (
                       <TableRow key={i} className="border-[#1d2b3e]/10">
-                        <TableCell className="pl-6 py-4"><Skeleton className="h-8 w-full max-w-[200px] bg-[#1d2b3e]/10" /></TableCell>
+                        <TableCell className="pl-6 py-4"><Skeleton className="h-5 w-24 bg-[#1d2b3e]/10" /></TableCell>
+                        <TableCell><Skeleton className="h-5 w-24 bg-[#1d2b3e]/10" /></TableCell>
+                        <TableCell><Skeleton className="h-5 w-32 bg-[#1d2b3e]/10" /></TableCell>
                         <TableCell><Skeleton className="h-5 w-16 bg-[#1d2b3e]/10" /></TableCell>
-                        <TableCell className="pr-6"><Skeleton className="h-4 w-24 ml-auto bg-[#1d2b3e]/10" /></TableCell>
+                        <TableCell className="pr-6"><Skeleton className="h-4 w-20 ml-auto bg-[#1d2b3e]/10" /></TableCell>
                       </TableRow>
                     ))
                   ) : emailLogs.length === 0 ? (
                     <TableRow>
-                      <TableCell colSpan={3} className="text-center py-10">
+                      <TableCell colSpan={5} className="text-center py-10">
                         <div className="flex flex-col items-center justify-center max-w-[380px] mx-auto space-y-2.5">
                           <HugeiconsIcon icon={FileTypeIcon} size={40} color='currentColor' strokeWidth={1.5} className="text-[#1d2b3e] opacity-40 mb-0.5" />
                           <h4 className="text-base font-headline-md font-bold text-[#1d2b3e]">No email logs found</h4>
@@ -456,14 +460,14 @@ export default function DashboardPage() {
                           </p>
                           <div className="pt-1 flex items-center gap-2.5">
                             <Link href="/docs/send">
-                              <Button variant="outline" size="sm" className="rounded-lg font-label-sm border border-[#1d2b3e]/30 bg-white text-[#1d2b3e] shadow-xs hover:bg-[#1d2b3e]/5 px-3.5 h-8">
-                                View API Docs
-                              </Button>
+                               <Button variant="outline" size="sm" className="rounded-lg font-label-sm border border-[#1d2b3e]/30 bg-white text-[#1d2b3e] shadow-xs hover:bg-[#1d2b3e]/5 px-3.5 h-8">
+                                 View API Docs
+                               </Button>
                             </Link>
                             <Link href="/dashboard/keys?generate=true">
-                              <Button size="sm" className="rounded-lg font-label-sm bg-[#1d2b3e] hover:bg-[#1d2b3e]/90 text-white shadow-sm px-3.5 h-8">
-                                Get API Key
-                              </Button>
+                               <Button size="sm" className="rounded-lg font-label-sm bg-[#1d2b3e] hover:bg-[#1d2b3e]/90 text-white shadow-sm px-3.5 h-8">
+                                 Get API Key
+                               </Button>
                             </Link>
                           </div>
                         </div>
@@ -472,19 +476,14 @@ export default function DashboardPage() {
                   ) : (
                     emailLogs.map((log: any) => (
                       <TableRow key={log.id} className="border-[#1d2b3e]/10 transition-colors hover:bg-[#1d2b3e]/5 group">
-                        <TableCell className="pl-6 py-4">
-                          <div className="flex flex-col">
-                            <span className="font-bold text-sm text-[#1d2b3e]">{redactEmail(log.to)}</span>
-                            <span className="text-xs text-[#1d2b3e]/75 mt-0.5 flex items-center gap-1.5">
-                              {log.from && (
-                                <>
-                                  <span className="bg-[#1d2b3e]/10 px-1.5 py-0.5 rounded text-[10px] font-mono text-[#1d2b3e]/90">From: {redactEmail(log.from)}</span>
-                                  <span className="opacity-30">•</span>
-                                </>
-                              )}
-                              <span className="truncate max-w-[160px]" title={log.subject}>{log.subject}</span>
-                            </span>
-                          </div>
+                        <TableCell className="pl-6 py-4 font-mono text-xs text-[#1d2b3e]/70 whitespace-nowrap">
+                          {log.from ? redactEmail(log.from) : "—"}
+                        </TableCell>
+                        <TableCell className="py-4 font-bold text-sm text-[#1d2b3e] whitespace-nowrap">
+                          {redactEmail(log.to)}
+                        </TableCell>
+                        <TableCell className="py-4 text-xs text-[#1d2b3e]/75 truncate max-w-[150px]" title={log.subject}>
+                          {log.subject}
                         </TableCell>
                         <TableCell>
                           <Badge 

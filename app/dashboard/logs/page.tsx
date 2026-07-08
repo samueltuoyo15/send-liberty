@@ -39,7 +39,9 @@ export default function LogsPage() {
         <table className="w-full text-sm text-left">
           <thead className="bg-surface-container-low border-b border-outline-variant text-secondary font-label-sm">
             <tr>
-              <th className="px-6 py-4">To / Subject</th>
+              <th className="px-6 py-4">From</th>
+              <th className="px-6 py-4">To</th>
+              <th className="px-6 py-4">Subject</th>
               <th className="px-6 py-4">Status</th>
               <th className="px-6 py-4 text-right">Date</th>
             </tr>
@@ -48,14 +50,16 @@ export default function LogsPage() {
             {isLoading ? (
               Array.from({ length: 5 }).map((_, i) => (
                 <tr key={i}>
-                  <td className="px-6 py-4"><Skeleton className="h-8 w-full max-w-[200px]" /></td>
-                  <td className="px-6 py-4"><Skeleton className="h-5 w-20" /></td>
+                  <td className="px-6 py-4"><Skeleton className="h-5 w-28" /></td>
+                  <td className="px-6 py-4"><Skeleton className="h-5 w-28" /></td>
+                  <td className="px-6 py-4"><Skeleton className="h-5 w-full max-w-[150px]" /></td>
+                  <td className="px-6 py-4"><Skeleton className="h-5 w-16" /></td>
                   <td className="px-6 py-4"><Skeleton className="h-4 w-24 ml-auto" /></td>
                 </tr>
               ))
             ) : logs.length === 0 ? (
               <tr>
-                <td colSpan={3} className="px-6 py-16 text-center">
+                <td colSpan={5} className="px-6 py-16 text-center">
                   <div className="flex flex-col items-center justify-center max-w-[420px] mx-auto space-y-3">
                     <HugeiconsIcon icon={FileTypeIcon} size={48} color='currentColor' strokeWidth={1.5} className="text-primary-sendliberty opacity-50 mb-1" />
                     <h3 className="text-lg font-headline-md font-bold text-on-background">No email logs found</h3>
@@ -80,17 +84,14 @@ export default function LogsPage() {
             ) : (
               logs.map((log: any) => (
                 <tr key={log.id} className="hover:bg-muted/30 transition-colors">
-                  <td className="px-6 py-4">
-                    <div className="font-semibold text-foreground">{redactEmail(log.to)}</div>
-                    <div className="text-xs text-muted-foreground mt-0.5 flex items-center gap-1.5">
-                      {log.from && (
-                        <>
-                          <span className="bg-surface-container-low px-1.5 py-0.5 rounded text-[10px] font-mono">From: {redactEmail(log.from)}</span>
-                          <span className="text-secondary/30">•</span>
-                        </>
-                      )}
-                      <span className="truncate max-w-[200px]" title={log.subject}>{log.subject}</span>
-                    </div>
+                  <td className="px-6 py-4 font-mono text-xs text-muted-foreground whitespace-nowrap">
+                    {log.from ? redactEmail(log.from) : "—"}
+                  </td>
+                  <td className="px-6 py-4 font-semibold text-foreground whitespace-nowrap">
+                    {redactEmail(log.to)}
+                  </td>
+                  <td className="px-6 py-4 text-muted-foreground truncate max-w-[200px]" title={log.subject}>
+                    {log.subject}
                   </td>
                   <td className="px-6 py-4">
                     <Badge 
