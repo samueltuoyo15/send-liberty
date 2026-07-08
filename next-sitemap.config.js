@@ -1,5 +1,5 @@
 const config = {
-  siteUrl: 'https://send-liberty.vercel.app', 
+  siteUrl: 'https://sendliberty.xyz', 
   generateRobotsTxt: true, 
   exclude: ['/api/*', '/login'], 
   changefreq: 'daily', 

@@ -245,6 +245,17 @@ System.out.println(response.body());`
           </pre>
         </div>
 
+        <div className="p-5 rounded-xl border border-outline-variant bg-[#1d2b3e]/[0.02] mt-8 space-y-2">
+          <h4 className="font-bold text-[#1d2b3e] text-base">Authentication Headers</h4>
+          <p className="text-sm text-[#75777d]">
+            You can authenticate your requests with SendLiberty in two ways:
+          </p>
+          <ul className="list-disc pl-5 text-sm text-[#75777d] space-y-2">
+            <li><strong>Authorization Header:</strong> Send your API key as a Bearer token: <code>Authorization: Bearer YOUR_API_KEY</code></li>
+            <li><strong>Custom x-api-key Header:</strong> If your HTTP client or environment makes Bearer auth difficult, pass it directly: <code>x-api-key: YOUR_API_KEY</code></li>
+          </ul>
+        </div>
+
         <h3 className="text-xl font-bold text-primary-sendliberty mt-8 mb-4">Request Body Parameters</h3>
         <ul className="list-disc pl-5 space-y-4 text-[#75777d]">
           <li><strong>from</strong> (string, optional): The connected Gmail email address you want to send this email from (e.g. <code>mysecondgmail@gmail.com</code>). If not supplied, it defaults to your first connected Gmail account.</li>

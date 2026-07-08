@@ -9,7 +9,7 @@ Disallow: /dashboard/*
 Disallow: /login
 
 # Host
-Host: https://send-liberty.vercel.app
+Host: https://sendliberty.xyz
 
 # Sitemaps
-Sitemap: https://send-liberty.vercel.app/sitemap.xml
+Sitemap: https://sendliberty.xyz/sitemap.xml

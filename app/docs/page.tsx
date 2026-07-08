@@ -260,7 +260,7 @@ System.out.println(response.body());`;
           Basic Usage
         </h2>
         <p className="text-secondary leading-relaxed">
-          To send an email, make a secure HTTP <code>POST</code> request containing your API Key in the headers and the email details in the JSON body.
+          To send an email, make a secure HTTP <code>POST</code> request containing your API Key in the headers and the email details in the JSON body. You can authenticate using the standard <code>Authorization: Bearer YOUR_API_KEY</code> header, or the custom <code>x-api-key: YOUR_API_KEY</code> header.
         </p>
         
         <div className="relative group rounded-lg overflow-hidden border border-outline-variant bg-[#1d2b3e]">
@@ -296,10 +296,11 @@ System.out.println(response.body());`;
                onClick={copyCode}
                className="p-1 hover:bg-[#2d3b4e] rounded-md transition-colors cursor-pointer text-white/40 hover:text-white shrink-0 ml-4"
              >
-               {copied 
-                 ? <HugeiconsIcon icon={CheckmarkCircle01Icon} size={14} color='currentColor' strokeWidth={1.5} className="text-emerald-400" />
-                 : <HugeiconsIcon icon={Copy01Icon} size={14} color='currentColor' strokeWidth={1.5} />
-               }
+                {copied ? (
+                  <HugeiconsIcon icon={CheckmarkCircle01Icon} className="w-3.5 h-3.5 text-emerald-400" />
+                ) : (
+                  <HugeiconsIcon icon={Copy01Icon} className="w-3.5 h-3.5" />
+                )}
              </button>
            </div>
            <div className="p-5 overflow-x-auto">
