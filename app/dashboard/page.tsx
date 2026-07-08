@@ -300,7 +300,7 @@ export default function DashboardPage() {
                           </Badge>
                         </TableCell>
                         <TableCell className="text-sm text-[#1d2b3e]/80 font-medium text-right pr-6">
-                          {new Date(log.created_at).toLocaleDateString()} {new Date(log.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                          {new Date(log.createdAt).toLocaleDateString()} {new Date(log.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                         </TableCell>
                       </TableRow>
                     ))

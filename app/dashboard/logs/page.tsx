@@ -97,7 +97,7 @@ export default function LogsPage() {
                     </Badge>
                   </td>
                   <td className="px-6 py-4 text-right text-muted-foreground whitespace-nowrap">
-                    {new Date(log.created_at).toLocaleDateString()} {new Date(log.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                    {new Date(log.createdAt).toLocaleDateString()} {new Date(log.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                   </td>
                 </tr>
               ))
