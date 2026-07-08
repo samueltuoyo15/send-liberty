@@ -34,10 +34,12 @@ import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetFo
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { toast } from "sonner";
 import { redactEmail } from "@/utils/redact";
+import { useAnalytics } from "@/hooks/useAnalytics";
 
 export default function DashboardPage() {
   const { data: user, isLoading: isLoadingUser, refetch: refetchUser } = useMe();
   const { data: apiKeys, isLoading: isLoadingKeys } = useApiKeys();
+  const { data: analytics, isLoading: isLoadingAnalytics, refetch: refetchAnalytics } = useAnalytics();
   const { data: gmailAccounts, isLoading: isLoadingAccounts } = useGmailAccounts();
   const { data: logsData, isLoading: isLoadingLogs, refetch: refetchLogs, isFetching: isFetchingLogs } = useEmailLogs(1, 5);
   const { mutate: connectGmail, isPending: isConnecting } = useConnectGmail();
@@ -48,6 +50,9 @@ export default function DashboardPage() {
   const connectedGmailsCount = gmailAccounts?.filter(g => g.connected).length || 0;
   const emailLogs = Array.isArray(logsData?.data) ? logsData.data : [];
   const totalEmailsSent = logsData?.meta?.total ?? 0;
+  const volume = analytics?.volume ?? [];
+  const caps = analytics?.caps ?? [];
+  const maxVal = Math.max(...volume.map(d => d.sent + d.failed), 10);
 
   useEffect(() => {
     if (!isLoadingAccounts && connectedGmailsCount > 0) {
@@ -194,6 +199,202 @@ export default function DashboardPage() {
                         : `${connectedGmailsCount} accounts connected`}
                   </p>
                 </>
+              )}
+            </CardContent>
+          </Card>
+        </motion.div>
+      </div>
+
+      {/* Analytics Section */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-stretch">
+        {/* Sending Volume Bar Chart */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.3 }}
+          className="lg:col-span-2 flex flex-col"
+        >
+          <Card className="h-full flex flex-col border-[#1d2b3e]/15 bg-[#1d2b3e]/[0.02] shadow-none rounded-xl overflow-hidden hover:bg-[#1d2b3e]/[0.04] transition-colors">
+            <CardHeader className="flex flex-row items-center justify-between pb-3">
+              <div>
+                <CardTitle className="text-lg font-headline-md font-bold text-[#1d2b3e]">Send Volume</CardTitle>
+                <p className="text-xs text-secondary mt-0.5">Email relay traffic for the last 7 days</p>
+              </div>
+              <div className="flex items-center gap-4 text-xs font-semibold text-[#1d2b3e]/85">
+                <div className="flex items-center gap-1.5">
+                  <span className="w-2.5 h-2.5 rounded bg-indigo-500"></span>
+                  <span>Sent</span>
+                </div>
+                <div className="flex items-center gap-1.5">
+                  <span className="w-2.5 h-2.5 rounded bg-rose-500"></span>
+                  <span>Failed</span>
+                </div>
+              </div>
+            </CardHeader>
+            <CardContent className="flex-1 p-6 pt-2 flex flex-col justify-between">
+              {isLoadingAnalytics ? (
+                <div className="h-[220px] flex items-center justify-center">
+                  <Skeleton className="w-full h-full rounded-lg bg-[#1d2b3e]/10" />
+                </div>
+              ) : (
+                <div className="w-full relative">
+                  <svg viewBox="0 0 600 220" className="w-full h-auto overflow-visible">
+                    {/* Horizontal Grid Lines */}
+                    <line x1="50" y1="40" x2="560" y2="40" stroke="#1d2b3e" strokeWidth="1" strokeDasharray="3 3" opacity="0.1" />
+                    <line x1="50" y1="110" x2="560" y2="110" stroke="#1d2b3e" strokeWidth="1" strokeDasharray="3 3" opacity="0.1" />
+                    <line x1="50" y1="180" x2="560" y2="180" stroke="#1d2b3e" strokeWidth="1.5" opacity="0.15" />
+
+                    {/* Y-Axis Value Labels */}
+                    <text x="35" y="44" className="text-[10px] font-bold font-mono fill-[#1d2b3e]/65 text-right">{maxVal}</text>
+                    <text x="35" y="114" className="text-[10px] font-bold font-mono fill-[#1d2b3e]/65 text-right">{Math.round(maxVal / 2)}</text>
+                    <text x="35" y="184" className="text-[10px] font-bold font-mono fill-[#1d2b3e]/65 text-right">0</text>
+
+                    {/* Render Columns */}
+                    {volume.map((day, idx) => {
+                      const colWidth = 510 / 7;
+                      const colCenter = 60 + idx * colWidth + colWidth / 2;
+                      
+                      // Scale factor (140px max height)
+                      const scale = 140 / maxVal;
+                      const sentHeight = day.sent * scale;
+                      const failedHeight = day.failed * scale;
+                      
+                      // Positions
+                      const sentY = 180 - sentHeight;
+                      const failedY = sentY - failedHeight;
+                      const barWidth = 24;
+
+                      return (
+                        <g key={day.date} className="group/bar cursor-pointer">
+                          {/* Background Hover Highlight Column */}
+                          <rect
+                            x={colCenter - colWidth / 2}
+                            y="20"
+                            width={colWidth}
+                            height="170"
+                            fill="#1d2b3e"
+                            opacity="0"
+                            className="hover:opacity-[0.03] transition-opacity duration-200"
+                            rx="8"
+                          />
+
+                          {/* Sent Bar (Indigo) */}
+                          {day.sent > 0 && (
+                            <rect
+                              x={colCenter - barWidth / 2}
+                              y={sentY}
+                              width={barWidth}
+                              height={sentHeight}
+                              fill="#4f46e5"
+                              rx={day.failed > 0 ? 0 : 4}
+                            />
+                          )}
+
+                          {/* Failed Bar (Rose) */}
+                          {day.failed > 0 && (
+                            <rect
+                              x={colCenter - barWidth / 2}
+                              y={failedY}
+                              width={barWidth}
+                              height={failedHeight}
+                              fill="#ef4444"
+                              rx="4"
+                            />
+                          )}
+
+                          {/* Date Label */}
+                          <text
+                            x={colCenter}
+                            y="198"
+                            textAnchor="middle"
+                            className="text-[10px] font-bold font-mono fill-[#1d2b3e]/60"
+                          >
+                            {day.label}
+                          </text>
+
+                          {/* Value Tooltip Hover Box (Custom SVG overlay) */}
+                          <g className="opacity-0 group-hover/bar:opacity-100 transition-opacity duration-200 pointer-events-none">
+                            <rect
+                              x={colCenter - 45}
+                              y={Math.min(failedY - 45, 120)}
+                              width="90"
+                              height="35"
+                              fill="#1d2b3e"
+                              rx="6"
+                            />
+                            <text
+                              x={colCenter}
+                              y={Math.min(failedY - 28, 137)}
+                              textAnchor="middle"
+                              className="text-[9px] font-bold fill-white font-mono"
+                            >
+                              Sent: {day.sent} | Fail: {day.failed}
+                            </text>
+                          </g>
+                        </g>
+                      );
+                    })}
+                  </svg>
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        </motion.div>
+
+        {/* Daily Cap Progress meters */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.35 }}
+          className="flex flex-col"
+        >
+          <Card className="h-full flex flex-col border-[#1d2b3e]/15 bg-[#1d2b3e]/[0.02] shadow-none rounded-xl overflow-hidden hover:bg-[#1d2b3e]/[0.04] transition-colors">
+            <CardHeader className="pb-3">
+              <CardTitle className="text-lg font-headline-md font-bold text-[#1d2b3e]">Daily Cap Usage</CardTitle>
+              <p className="text-xs text-secondary mt-0.5">Google daily relay limits per connected account</p>
+            </CardHeader>
+            <CardContent className="flex-1 p-6 pt-2 flex flex-col justify-center space-y-4">
+              {isLoadingAnalytics ? (
+                <div className="space-y-4">
+                  <Skeleton className="h-12 w-full rounded-lg bg-[#1d2b3e]/10" />
+                  <Skeleton className="h-12 w-full rounded-lg bg-[#1d2b3e]/10" />
+                </div>
+              ) : caps.length === 0 ? (
+                <div className="text-center py-6 text-sm text-secondary italic">
+                  No Gmail accounts connected.
+                </div>
+              ) : (
+                caps.map((account) => {
+                  const pct = Math.min((account.sentCount / account.limit) * 100, 100);
+                  const isHigh = pct >= 80;
+                  return (
+                    <div key={account.email} className="space-y-2">
+                      <div className="flex justify-between items-center text-xs">
+                        <span className="font-bold text-[#1d2b3e]">{redactEmail(account.email)}</span>
+                        <span className="font-bold font-mono text-secondary">
+                          {account.sentCount} / {account.limit}
+                        </span>
+                      </div>
+                      
+                      {/* Progress Bar */}
+                      <div className="w-full h-2.5 rounded-full bg-[#1d2b3e]/10 overflow-hidden">
+                        <div
+                          className={`h-full rounded-full transition-all duration-500 ${
+                            isHigh ? "bg-rose-500" : "bg-[#1d2b3e]"
+                          }`}
+                          style={{ width: `${pct}%` }}
+                        />
+                      </div>
+                      
+                      <div className="flex justify-between items-center text-[10px] text-secondary font-medium">
+                        <span>Resetting daily</span>
+                        <span className="font-bold uppercase tracking-wider text-[9px]">
+                          {account.limit === 2000 ? "Workspace" : "Gmail Personal"}
+                        </span>
+                      </div>
+                    </div>
+                  );
+                })
               )}
             </CardContent>
           </Card>

@@ -123,9 +123,15 @@ export default function Home() {
               Send transactional emails with just your gmail account from any hosting environment, even where port 25, 465, or 587 are strictly blocked. No more server configuration headaches.
             </p>
             <div className="flex flex-col sm:flex-row gap-md pt-md">
-              <Link href="/login" className="bg-primary-sendliberty hover:bg-primary-sendliberty/90 text-white px-xl py-lg rounded-xl font-label-sm text-label-sm transition-transform active:scale-95 shadow-sm text-center w-full sm:w-auto inline-block">
-                Get Started Free
-              </Link>
+              {!isLoading && user ? (
+                <Link href="/dashboard" className="bg-primary-sendliberty hover:bg-primary-sendliberty/90 text-white px-xl py-lg rounded-xl font-label-sm text-label-sm transition-transform active:scale-95 shadow-sm text-center w-full sm:w-auto inline-block">
+                  Go to Dashboard
+                </Link>
+              ) : (
+                <Link href="/login" className="bg-primary-sendliberty hover:bg-primary-sendliberty/90 text-white px-xl py-lg rounded-xl font-label-sm text-label-sm transition-transform active:scale-95 shadow-sm text-center w-full sm:w-auto inline-block">
+                  Get Started Free
+                </Link>
+              )}
               <Link href="/docs" className="border border-white text-white px-xl py-lg rounded-xl font-label-sm text-label-sm transition-transform active:scale-95 hover:bg-white/10 text-center w-full sm:w-auto inline-block">
                 Read Documentation
               </Link>
@@ -633,15 +639,32 @@ var req = HttpRequest.newBuilder()
         </section>
 
         {/* CTA Section */}
-        <section className="w-full bg-primary-sendliberty py-xl md:py-32 mt-xl">
-          <div className="max-w-5xl mx-auto px-margin-mobile md:px-margin-desktop text-center">
+        <section
+          className="w-full relative py-xl md:py-32 mt-xl overflow-hidden"
+          style={{
+            backgroundImage: "linear-gradient(rgba(29, 43, 62, 0.75), rgba(29, 43, 62, 0.75)), url('/forest_background/forest-background.png')",
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+          }}
+        >
+          {/* Blur blobs for premium aesthetic */}
+          <div className="absolute top-1/2 left-1/4 -translate-y-1/2 w-64 h-64 bg-indigo-500/20 rounded-full blur-3xl pointer-events-none" />
+          <div className="absolute top-1/2 right-1/4 -translate-y-1/2 w-64 h-64 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none" />
+          
+          <div className="relative z-10 max-w-5xl mx-auto px-margin-mobile md:px-margin-desktop text-center">
             <h2 className="font-headline-lg text-headline-lg text-white mb-lg">Stop fighting your hosting provider.</h2>
             <p className="font-body-lg text-body-lg text-white/80 mb-xl max-w-2xl mx-auto">
               Join a couple of developers who have simplified their email delivery pipeline. Start sending in seconds.
             </p>
-            <Link href="/login" className="bg-white text-primary-sendliberty hover:bg-gray-100 px-xl py-lg rounded-xl font-label-sm text-label-sm transition-transform active:scale-95 shadow-sm inline-block">
-              Create Free Account
-            </Link>
+            {!isLoading && user ? (
+              <Link href="/dashboard" className="bg-white text-primary-sendliberty hover:bg-gray-100 px-xl py-lg rounded-xl font-label-sm text-label-sm transition-transform active:scale-95 shadow-sm inline-block">
+                Go to Dashboard
+              </Link>
+            ) : (
+              <Link href="/login" className="bg-white text-primary-sendliberty hover:bg-gray-100 px-xl py-lg rounded-xl font-label-sm text-label-sm transition-transform active:scale-95 shadow-sm inline-block">
+                Create Free Account
+              </Link>
+            )}
           </div>
         </section>
       </main>
