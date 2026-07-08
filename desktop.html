@@ -1,0 +1,263 @@
+<!DOCTYPE html><html class="light" lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>SendLiberty | Bypass SMTP Restrictions</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "surface-container": "#eceef0",
+                    "on-tertiary-container": "#c3a881",
+                    "background": "#f7f9fb",
+                    "secondary-fixed-dim": "#b7c8e1",
+                    "on-primary-fixed": "#0d1c2f",
+                    "secondary-container": "#d0e1fb",
+                    "primary-fixed": "#d5e3fd",
+                    "error": "#ba1a1a",
+                    "surface-container-low": "#f2f4f6",
+                    "surface-dim": "#d8dadc",
+                    "on-secondary-fixed-variant": "#38485d",
+                    "on-background": "#191c1e",
+                    "surface": "#f7f9fb",
+                    "on-tertiary": "#ffffff",
+                    "outline": "#75777d",
+                    "primary-container": "#334155",
+                    "secondary-fixed": "#d3e4fe",
+                    "on-primary-fixed-variant": "#3a485c",
+                    "surface-container-high": "#e6e8ea",
+                    "secondary": "#505f76",
+                    "on-secondary-fixed": "#0b1c30",
+                    "outline-variant": "#c5c6cd",
+                    "inverse-on-surface": "#eff1f3",
+                    "on-surface-variant": "#44474c",
+                    "on-error-container": "#93000a",
+                    "inverse-primary": "#b9c7e0",
+                    "primary-fixed-dim": "#b9c7e0",
+                    "on-secondary-container": "#54647a",
+                    "on-surface": "#191c1e",
+                    "inverse-surface": "#2d3133",
+                    "error-container": "#ffdad6",
+                    "surface-variant": "#e0e3e5",
+                    "on-primary-container": "#9eadc5",
+                    "tertiary-fixed-dim": "#dfc299",
+                    "tertiary-fixed": "#fcdeb3",
+                    "on-primary": "#ffffff",
+                    "on-tertiary-fixed-variant": "#574424",
+                    "surface-bright": "#f7f9fb",
+                    "primary": "#1d2b3e",
+                    "surface-tint": "#515f74",
+                    "on-error": "#ffffff",
+                    "tertiary": "#38270a",
+                    "on-secondary": "#ffffff",
+                    "surface-container-lowest": "#ffffff",
+                    "on-tertiary-fixed": "#281901",
+                    "surface-container-highest": "#e0e3e5",
+                    "tertiary-container": "#503d1e"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "sm": "12px",
+                    "margin-mobile": "16px",
+                    "xl": "32px",
+                    "lg": "24px",
+                    "xs": "8px",
+                    "gutter": "24px",
+                    "margin-desktop": "48px",
+                    "md": "16px",
+                    "base": "4px"
+            },
+            "fontFamily": {
+                    "headline-md": ["Plus Jakarta Sans"],
+                    "label-xs": ["Plus Jakarta Sans"],
+                    "body-md": ["Plus Jakarta Sans"],
+                    "headline-lg": ["Plus Jakarta Sans"],
+                    "label-sm": ["Plus Jakarta Sans"],
+                    "body-lg": ["Plus Jakarta Sans"],
+                    "headline-lg-mobile": ["Plus Jakarta Sans"]
+            },
+            "fontSize": {
+                    "headline-md": ["24px", {"lineHeight": "1.3", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                    "label-xs": ["12px", {"lineHeight": "1.2", "letterSpacing": "0.03em", "fontWeight": "700"}],
+                    "body-md": ["16px", {"lineHeight": "1.5", "letterSpacing": "0", "fontWeight": "400"}],
+                    "headline-lg": ["36px", {"lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "label-sm": ["14px", {"lineHeight": "1.4", "letterSpacing": "0.01em", "fontWeight": "600"}],
+                    "body-lg": ["18px", {"lineHeight": "1.6", "letterSpacing": "0", "fontWeight": "400"}],
+                    "headline-lg-mobile": ["28px", {"lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "700"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #f7f9fb;
+            color: #191c1e;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .custom-code-block {
+            background-color: #1d2b3e;
+            color: #d5e3fd;
+            border-radius: 12px;
+            padding: 24px;
+            font-family: 'Courier New', Courier, monospace;
+            border: 1px solid #c5c6cd;
+        }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen">
+<!-- TopNavBar -->
+<header class="w-full top-0 sticky z-50 bg-surface border-b border-outline-variant">
+<nav class="flex justify-between items-center px-margin-mobile md:px-margin-desktop py-md max-w-7xl mx-auto">
+<div class="font-headline-md text-headline-md font-bold text-primary">SendLiberty</div>
+<div class="hidden md:flex items-center gap-xl">
+<a class="font-body-md text-body-md text-secondary hover:text-primary transition-colors duration-200" href="#">Features</a>
+<a class="font-body-md text-body-md text-secondary hover:text-primary transition-colors duration-200" href="#">API Docs</a>
+<a class="font-body-md text-body-md text-secondary hover:text-primary transition-colors duration-200" href="#">Pricing</a>
+</div>
+<div class="flex items-center gap-md">
+<button class="hidden sm:block font-label-sm text-label-sm text-primary transition-transform active:scale-95 px-lg py-sm">Sign In</button>
+<button class="bg-primary-container text-on-primary-container px-lg py-sm rounded-xl font-label-sm text-label-sm transition-transform active:scale-95">Sign Up</button>
+</div>
+</nav>
+</header>
+<main class="flex-grow">
+<!-- Hero Section -->
+<section class="max-w-7xl mx-auto px-margin-mobile md:px-margin-desktop py-xl md:py-32 grid md:grid-cols-2 gap-xl items-center" style="background-image: linear-gradient(rgba(29, 43, 62, 0.7), rgba(29, 43, 62, 0.7)), url('https://lh3.googleusercontent.com/aida-public/AB6AXuAQg0wr9f31EDwbxhZkz3RsuCUtXgqM2Nvz3A6pYu4f0ZdO_ACAo6XKSDaveLdnMTPORkgyvoNCYvK2250i94FBeHgQb_pI_JvVxASZ9F6L2LjhxlNGljchyl30bOpwLjtWAvGQU-1est1G1_c_5jFHiPk34F1V0ARb8SomXAhg_WMvbHq9Eo0yAXNpt-ad1eP9MatUHyAicWLfcNcjRDANdTCGViVKkJZaE2ljxvt_dHb0vMPfFolsENtT1XwD1iIFwmFTSIOE3ps'); background-size: cover; background-position: center;">
+<div class="space-y-lg">
+<h1 class="font-headline-lg-mobile md:font-headline-lg text-headline-lg-mobile md:text-headline-lg text-white">
+                    Bypass SMTP Restrictions
+                </h1>
+<p class="font-body-lg text-body-lg max-w-lg text-white">
+                  Send emails with just your gmail account from any hosting environment, even where port 25, 465, or 587 are strictly blocked. No more server configuration headaches.
+                </p>
+<div class="flex flex-wrap gap-md pt-md">
+<button class="bg-primary text-white px-xl py-lg rounded-xl font-label-sm text-label-sm transition-transform active:scale-95 shadow-sm">Get Started Free</button>
+<button class="border border-white text-white px-xl py-lg rounded-xl font-label-sm text-label-sm transition-transform active:scale-95 hover:bg-white/10">
+                        Read Documentation
+                    </button>
+</div>
+</div>
+<div class="custom-code-block overflow-hidden shadow-sm border-outline-variant">
+<div class="flex gap-xs mb-md">
+<div class="w-3 h-3 rounded-full bg-red-400"></div>
+<div class="w-3 h-3 rounded-full bg-yellow-400"></div>
+<div class="w-3 h-3 rounded-full bg-green-400"></div>
+</div>
+<pre class="text-sm overflow-x-auto"><code><span class="text-on-tertiary-container">fetch</span>(<span class="text-secondary-fixed-dim">'https://api.sendliberty.com/v1/send'</span>, {
+  method: <span class="text-secondary-fixed-dim">'POST'</span>,
+  headers: {
+    <span class="text-secondary-fixed-dim">'Authorization'</span>: <span class="text-secondary-fixed-dim">'Bearer YOUR_KEY'</span>,
+    <span class="text-secondary-fixed-dim">'Content-Type'</span>: <span class="text-secondary-fixed-dim">'application/json'</span>
+  },
+  body: <span class="text-on-tertiary-container">JSON</span>.<span class="text-on-tertiary-container">stringify</span>({
+    to: <span class="text-secondary-fixed-dim">'user@example.com'</span>,
+    subject: <span class="text-secondary-fixed-dim">'Hello via Webhook!'</span>,
+    html: <span class="text-secondary-fixed-dim">'&lt;p&gt;No SMTP needed.&lt;/p&gt;'</span>
+  })
+});</code></pre>
+</div>
+</section>
+<!-- Features Bento Grid -->
+<section class="py-xl md:py-32 bg-primary-container">
+<div class="max-w-7xl mx-auto px-margin-mobile md:px-margin-desktop">
+<div class="grid grid-cols-1 md:grid-cols-4 gap-lg">
+<!-- Large Feature Card -->
+<div class="md:col-span-2 border border-outline-variant p-xl rounded-xl bg-primary/20">
+<span class="material-symbols-outlined text-primary text-4xl mb-md text-white">webhook</span>
+<h3 class="font-headline-md text-headline-md mb-sm text-white">Bypass Blocked Ports</h3>
+<p class="font-body-md text-body-md text-white">Host your apps on restricted clouds like AWS, DigitalOcean, or Shared Hosting without worrying about disabled mail functions.</p>
+</div>
+<!-- Regular Card -->
+<div class="border border-outline-variant p-xl rounded-xl bg-primary/20">
+<span class="material-symbols-outlined text-primary text-4xl mb-md text-white">dns</span>
+<h3 class="font-label-sm text-label-sm uppercase tracking-widest mb-sm text-white">Setup</h3>
+<p class="font-body-md text-body-md text-white">No DNS Configuration. Send instantly without complex MX or SPF record management.</p>
+</div>
+<!-- Regular Card -->
+<div class="border border-outline-variant p-xl rounded-xl bg-primary/20">
+<span class="material-symbols-outlined text-primary text-4xl mb-md text-white">api</span>
+<h3 class="font-label-sm text-label-sm uppercase tracking-widest mb-sm text-white">Modern</h3>
+<p class="font-body-md text-body-md text-white">Universal API. A single REST endpoint for all your email needs.</p>
+</div>
+<!-- Image Integration Card -->
+<div class="md:col-span-2 relative h-64 md:h-auto overflow-hidden rounded-xl border border-outline-variant group">
+<div class="absolute inset-0 z-0 transition-transform duration-700 group-hover:scale-105" data-alt="A high-end, minimalist architectural detail showing sharp, deep slate gray shadows and pristine white concrete planes under bright direct sunlight. The scene is professional, grounded, and clean, reflecting a high-contrast modern design aesthetic with perfect geometric alignment. No blurs or gradients, just pure sharp shapes and solid colors." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDnw8bH2IFtHCVDRA6W-KwT6_yuapqxq9Dc97vtn-iJac5CTLw9dPDHcRu-5rGIcqfkqcG9kZsR0ui6aZV4GPjium0pjFKhCCzgJnrHCY1JBsU0KWK8f3utSiHlBty52P3FWaXi8e3FYsZBI_WfVBvj5BbliJ0lVWtMWAouYmTYqW_CwC22uivzomECi45BkZGRJ0QBZuS8wKAMaYlguwol9vNRnJeQJoEMYxIioLFOkir5mIaqKpwxLFGh-wAJBdMIuQiE0j2zBKM')">
+</div>
+<div class="absolute inset-0 bg-primary/20 z-10"></div>
+<div class="relative z-20 p-xl h-full flex flex-col justify-end text-white">
+<h3 class="font-headline-md text-headline-md font-bold text-white">Reliable Infrastructure</h3>
+<p class="font-body-md text-body-md opacity-90 text-white">Enterprise-grade delivery for mission-critical mail.</p>
+</div>
+</div>
+<div class="md:col-span-2 border border-outline-variant p-xl rounded-xl flex items-center gap-xl bg-primary/20">
+<div class="hidden sm:block">
+<span class="material-symbols-outlined text-primary text-6xl text-white" style="font-variation-settings: 'FILL' 1;">security</span>
+</div>
+<div>
+<h3 class="font-headline-md text-headline-md mb-sm text-white">OAuth2 Secured</h3>
+<p class="font-body-md text-body-md text-white">Industry-standard security protocols ensure your data remains private and your credentials never leak.</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- CTA Section -->
+<section class="max-w-5xl mx-auto px-margin-mobile md:px-margin-desktop py-xl md:py-32 text-center">
+<h2 class="font-headline-lg text-headline-lg text-primary mb-lg">Stop fighting your hosting provider.</h2>
+<p class="font-body-lg text-body-lg text-on-surface-variant mb-xl max-w-2xl mx-auto">
+                Join thousands of developers who have simplified their email delivery pipeline. Start sending in less than 5 minutes.
+            </p>
+<button class="bg-primary-container text-on-primary-container px-xl py-lg rounded-xl font-label-sm text-label-sm transition-transform active:scale-95 shadow-sm">
+                Create Free Account
+            </button>
+</section>
+</main>
+<!-- Footer -->
+<footer class="w-full mt-auto bg-surface-container border-t border-outline-variant">
+<div class="flex flex-col md:flex-row justify-between items-center px-margin-mobile md:px-margin-desktop py-xl gap-md max-w-7xl mx-auto">
+<div class="flex flex-col gap-xs">
+<div class="font-headline-md text-headline-md font-bold text-primary">SendLiberty</div>
+<p class="font-label-sm text-label-sm text-on-surface-variant">© 2024 SendLiberty. All rights reserved.</p>
+</div>
+<div class="flex flex-wrap justify-center gap-md">
+<a class="font-label-sm text-label-sm text-on-surface-variant hover:text-primary transition-colors underline" href="#">Documentation</a>
+<a class="font-label-sm text-label-sm text-on-surface-variant hover:text-primary transition-colors underline" href="#">Privacy Policy</a>
+<a class="font-label-sm text-label-sm text-on-surface-variant hover:text-primary transition-colors underline" href="#">Terms of Service</a>
+<a class="font-label-sm text-label-sm text-on-surface-variant hover:text-primary transition-colors underline" href="#">Security</a>
+<a class="font-label-sm text-label-sm text-on-surface-variant hover:text-primary transition-colors underline" href="#">Status</a>
+</div>
+</div>
+</footer>
+<script>
+        // Micro-interaction for code block line highlighting or subtle effects
+        document.addEventListener('DOMContentLoaded', () => {
+            const codeBlock = document.querySelector('.custom-code-block');
+            codeBlock.addEventListener('mouseenter', () => {
+                codeBlock.classList.add('border-primary');
+                codeBlock.classList.remove('border-outline-variant');
+            });
+            codeBlock.addEventListener('mouseleave', () => {
+                codeBlock.classList.remove('border-primary');
+                codeBlock.classList.add('border-outline-variant');
+            });
+        });
+    </script>
+
+
+
+
+</body></html>
