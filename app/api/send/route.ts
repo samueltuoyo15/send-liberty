@@ -33,7 +33,7 @@ export async function POST(req: NextRequest) {
 
     if (!rawKey) {
       return NextResponse.json(
-        { success: false, message: "API key required. Pass it in the x-api-key header." },
+        { success: false, message: "API key required. Pass it in the x-api-key header or Bearer Token Authorization." },
         { status: 401 }
       );
     }

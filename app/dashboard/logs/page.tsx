@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useEmailLogs } from "@/hooks/useEmailLogs";
+import { redactEmail } from "@/utils/redact";
 
 export default function LogsPage() {
   const [page, setPage] = useState(1);
@@ -80,7 +81,7 @@ export default function LogsPage() {
               logs.map((log: any) => (
                 <tr key={log.id} className="hover:bg-muted/30 transition-colors">
                   <td className="px-6 py-4">
-                    <div className="font-semibold text-foreground">{log.to}</div>
+                    <div className="font-semibold text-foreground">{redactEmail(log.to)}</div>
                     <div className="text-muted-foreground text-xs mt-0.5 truncate max-w-[300px]">{log.subject}</div>
                   </td>
                   <td className="px-6 py-4">

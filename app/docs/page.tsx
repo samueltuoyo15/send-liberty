@@ -249,7 +249,7 @@ System.out.println(response.body());`;
            </div>
            <div className="p-5 rounded-xl border border-outline-variant/60 bg-white">
               <h3 className="font-bold text-primary-sendliberty mb-2">API-First Design</h3>
-              <p className="text-sm text-secondary">Send emails instantly from any cloud platform (Railway, Render) with a single HTTP POST request.</p>
+              <p className="text-sm text-secondary">Send transactional emails instantly from any cloud platform (Railway, Render) with a single HTTP POST request.</p>
            </div>
         </div>
       </div>

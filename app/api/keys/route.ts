@@ -16,7 +16,17 @@ export async function GET(req: NextRequest) {
       .sort({ createdAt: -1 })
       .lean();
 
-    return NextResponse.json({ success: true, data: keys });
+    const formattedKeys = keys.map((key: any) => ({
+      id: key._id.toString(),
+      name: key.name,
+      keyPrefix: key.keyPrefix,
+      revoked: key.revoked,
+      allowedOrigins: key.allowedOrigins,
+      lastUsedAt: key.lastUsedAt,
+      createdAt: key.createdAt,
+    }));
+
+    return NextResponse.json({ success: true, data: formattedKeys });
   } catch (err) {
     if (err instanceof Response) return err;
     console.error("/api/keys GET error:", err);

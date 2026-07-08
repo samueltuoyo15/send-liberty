@@ -24,8 +24,8 @@ export default function GmailOAuthPage() {
           <li>Navigate to your SendLiberty dashboard <Link href="/dashboard/accounts" className="text-indigo-600 hover:text-indigo-700 underline font-semibold">Gmail Accounts</Link> tab.</li>
           <li>Click the <Link href="/dashboard/accounts" className="text-indigo-600 hover:text-indigo-700 underline font-semibold">Connect New Account</Link> button.</li>
           <li>You will be securely redirected to Google's consent screen.</li>
-          <li>Select the account you want to send emails from.</li>
-          <li>Grant SendLiberty permission to send emails on your behalf.</li>
+          <li>Select the account you want to send transactional emails from.</li>
+          <li>Grant SendLiberty permission to send transactional emails on your behalf.</li>
           <li>You will be redirected back to the dashboard. Your account is now active!</li>
         </ol>
       </div>

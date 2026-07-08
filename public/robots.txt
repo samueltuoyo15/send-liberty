@@ -1,0 +1,15 @@
+# *
+User-agent: *
+Allow: /
+
+# *
+User-agent: *
+Disallow: /api/*
+Disallow: /dashboard/*
+Disallow: /login
+
+# Host
+Host: https://send-liberty.vercel.app
+
+# Sitemaps
+Sitemap: https://send-liberty.vercel.app/sitemap.xml

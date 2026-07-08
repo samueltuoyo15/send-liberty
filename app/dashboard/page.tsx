@@ -33,16 +33,7 @@ import confetti from "canvas-confetti";
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetFooter } from "@/components/ui/sheet";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { toast } from "sonner";
-
-function redactEmail(email?: string): string {
-  if (!email) return "None connected";
-  const [localPart, domain] = email.split("@");
-  if (!localPart || !domain) return email;
-  if (localPart.length <= 2) {
-    return `${localPart[0]}***@${domain}`;
-  }
-  return `${localPart[0]}***${localPart[localPart.length - 1]}@${domain}`;
-}
+import { redactEmail } from "@/utils/redact";
 
 export default function DashboardPage() {
   const { data: user, isLoading: isLoadingUser, refetch: refetchUser } = useMe();
@@ -215,7 +206,7 @@ export default function DashboardPage() {
            initial={{ opacity: 0, y: 20 }}
            animate={{ opacity: 1, y: 0 }}
            transition={{ delay: 0.4 }}
-           className="lg:col-span-2 flex flex-col"
+           className={`${totalEmailsSent > 0 ? "lg:col-span-3" : "lg:col-span-2"} flex flex-col`}
         >
           <Card className="h-full flex flex-col border-[#1d2b3e]/15 bg-[#1d2b3e]/[0.02] shadow-none rounded-xl overflow-hidden hover:bg-[#1d2b3e]/[0.04] transition-colors">
             <CardHeader className="flex flex-row items-center justify-between pb-4">
@@ -282,7 +273,7 @@ export default function DashboardPage() {
                       <TableRow key={log.id} className="border-[#1d2b3e]/10 transition-colors hover:bg-[#1d2b3e]/5 group">
                         <TableCell className="pl-6 py-4">
                           <div className="flex flex-col">
-                            <span className="font-bold text-sm text-[#1d2b3e]">{log.to}</span>
+                            <span className="font-bold text-sm text-[#1d2b3e]">{redactEmail(log.to)}</span>
                             <span className="text-xs text-[#1d2b3e]/75 mt-0.5 truncate max-w-[200px]">{log.subject}</span>
                           </div>
                         </TableCell>
@@ -312,66 +303,68 @@ export default function DashboardPage() {
         </motion.div>
 
         {/* Action Widgets */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.5 }}
-          className="flex flex-col"
-        >
-          <Card className="h-full flex flex-col border-[#1d2b3e]/15 bg-[#1d2b3e]/[0.02] shadow-none rounded-xl hover:bg-[#1d2b3e]/[0.04] transition-colors">
-            <CardHeader className="pb-3">
-              <CardTitle className="text-xs font-label-xs uppercase tracking-wider text-[#1d2b3e]/80">Setup Guide</CardTitle>
-            </CardHeader>
-            <CardContent className="flex-1 flex flex-col justify-center pb-6 px-6 space-y-0 gap-1">
-              {/* Step 1 */}
-              <div className="flex gap-4 items-start">
-                <div className="flex flex-col items-center shrink-0">
-                  <div className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold transition-colors duration-300 z-10 ${
-                    connectedGmailsCount > 0 ? "bg-[#1d2b3e] text-white" : "border border-[#1d2b3e]/35 bg-white text-[#1d2b3e]"
-                  }`}>
-                    1
+        {totalEmailsSent === 0 && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.5 }}
+            className="flex flex-col"
+          >
+            <Card className="h-full flex flex-col border-[#1d2b3e]/15 bg-[#1d2b3e]/[0.02] shadow-none rounded-xl hover:bg-[#1d2b3e]/[0.04] transition-colors">
+              <CardHeader className="pb-3">
+                <CardTitle className="text-xs font-label-xs uppercase tracking-wider text-[#1d2b3e]/80">Setup Guide</CardTitle>
+              </CardHeader>
+              <CardContent className="flex-1 flex flex-col justify-center pb-6 px-6 space-y-0 gap-1">
+                {/* Step 1 */}
+                <div className="flex gap-4 items-start">
+                  <div className="flex flex-col items-center shrink-0">
+                    <div className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold transition-colors duration-300 z-10 ${
+                      connectedGmailsCount > 0 ? "bg-[#1d2b3e] text-white" : "border border-[#1d2b3e]/35 bg-white text-[#1d2b3e]"
+                    }`}>
+                      1
+                    </div>
+                    <div className={`w-0.5 h-10 my-1 transition-colors duration-300 ${connectedGmailsCount > 0 ? "bg-[#1d2b3e]" : "bg-[#1d2b3e]/20"}`} />
                   </div>
-                  <div className={`w-0.5 h-10 my-1 transition-colors duration-300 ${connectedGmailsCount > 0 ? "bg-[#1d2b3e]" : "bg-[#1d2b3e]/20"}`} />
+                  <div className="pt-0.5">
+                    <h4 className={`font-bold text-sm transition-colors duration-300 ${connectedGmailsCount > 0 ? "text-[#1d2b3e]" : "text-[#1d2b3e]/80"}`}>Connect Gmail</h4>
+                    <p className="text-xs text-[#1d2b3e]/70 mt-0.5 leading-snug">Authorize your Google account for sending.</p>
+                  </div>
                 </div>
-                <div className="pt-0.5">
-                  <h4 className={`font-bold text-sm transition-colors duration-300 ${connectedGmailsCount > 0 ? "text-[#1d2b3e]" : "text-[#1d2b3e]/80"}`}>Connect Gmail</h4>
-                  <p className="text-xs text-[#1d2b3e]/70 mt-0.5 leading-snug">Authorize your Google account for sending.</p>
-                </div>
-              </div>
 
-              {/* Step 2 */}
-              <div className="flex gap-4 items-start">
-                <div className="flex flex-col items-center shrink-0">
-                  <div className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold transition-colors duration-300 z-10 ${
-                    activeKeysCount > 0 ? "bg-[#1d2b3e] text-white" : "border border-[#1d2b3e]/35 bg-white text-[#1d2b3e]"
-                  }`}>
-                    2
+                {/* Step 2 */}
+                <div className="flex gap-4 items-start">
+                  <div className="flex flex-col items-center shrink-0">
+                    <div className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold transition-colors duration-300 z-10 ${
+                      activeKeysCount > 0 ? "bg-[#1d2b3e] text-white" : "border border-[#1d2b3e]/35 bg-white text-[#1d2b3e]"
+                    }`}>
+                      2
+                    </div>
+                    <div className={`w-0.5 h-10 my-1 transition-colors duration-300 ${activeKeysCount > 0 ? "bg-[#1d2b3e]" : "bg-[#1d2b3e]/20"}`} />
                   </div>
-                  <div className={`w-0.5 h-10 my-1 transition-colors duration-300 ${activeKeysCount > 0 ? "bg-[#1d2b3e]" : "bg-[#1d2b3e]/20"}`} />
+                  <div className="pt-0.5">
+                    <h4 className={`font-bold text-sm transition-colors duration-300 ${activeKeysCount > 0 ? "text-[#1d2b3e]" : "text-[#1d2b3e]/80"}`}>Get API Key</h4>
+                    <p className="text-xs text-[#1d2b3e]/70 mt-0.5 leading-snug">Generate a secret key to authenticate your requests.</p>
+                  </div>
                 </div>
-                <div className="pt-0.5">
-                  <h4 className={`font-bold text-sm transition-colors duration-300 ${activeKeysCount > 0 ? "text-[#1d2b3e]" : "text-[#1d2b3e]/80"}`}>Get API Key</h4>
-                  <p className="text-xs text-[#1d2b3e]/70 mt-0.5 leading-snug">Generate a secret key to authenticate your requests.</p>
-                </div>
-              </div>
 
-              {/* Step 3 */}
-              <div className="flex gap-4 items-start">
-                <div className="flex flex-col items-center shrink-0">
-                  <div className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold transition-colors duration-300 z-10 ${
-                    totalEmailsSent > 0 ? "bg-[#1d2b3e] text-white" : "border border-[#1d2b3e]/35 bg-white text-[#1d2b3e]"
-                  }`}>
-                    3
+                {/* Step 3 */}
+                <div className="flex gap-4 items-start">
+                  <div className="flex flex-col items-center shrink-0">
+                    <div className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold transition-colors duration-300 z-10 ${
+                      totalEmailsSent > 0 ? "bg-[#1d2b3e] text-white" : "border border-[#1d2b3e]/35 bg-white text-[#1d2b3e]"
+                    }`}>
+                      3
+                    </div>
+                  </div>
+                  <div className="pt-0.5">
+                    <h4 className={`font-bold text-sm transition-colors duration-300 ${totalEmailsSent > 0 ? "text-[#1d2b3e]" : "text-[#1d2b3e]/80"}`}>Send transactional emails</h4>
+                    <p className="text-xs text-[#1d2b3e]/70 mt-0.5 leading-snug">Use our REST API to send transactional emails seamlessly.</p>
                   </div>
                 </div>
-                <div className="pt-0.5">
-                  <h4 className={`font-bold text-sm transition-colors duration-300 ${totalEmailsSent > 0 ? "text-[#1d2b3e]" : "text-[#1d2b3e]/80"}`}>Send Emails</h4>
-                  <p className="text-xs text-[#1d2b3e]/70 mt-0.5 leading-snug">Use our REST API to send emails seamlessly.</p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        </motion.div>
+              </CardContent>
+            </Card>
+          </motion.div>
+        )}
       </div>
 
       {/* Generated Key Slide-over Drawer */}

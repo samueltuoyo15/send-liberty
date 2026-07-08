@@ -84,11 +84,20 @@ export async function sendGmailEmail(
   options: GmailSendOptions
 ): Promise<{ messageId: string | null }> {
   await connectDB();
+
+  let lookupEmail = options.from;
+  if (lookupEmail && lookupEmail.includes("<")) {
+    const match = lookupEmail.match(/<([^>]+)>/);
+    if (match) {
+      lookupEmail = match[1].trim();
+    }
+  }
+
   let account;
-  if (options.from) {
-    account = await GmailAccount.findOne({ userId, gmailEmail: options.from });
+  if (lookupEmail) {
+    account = await GmailAccount.findOne({ userId, gmailEmail: lookupEmail });
     if (!account) {
-      throw new Error(`Gmail account '${options.from}' is not connected. Please go to your SendLiberty dashboard, connect this Gmail account, and try again.`);
+      throw new Error(`Gmail account '${lookupEmail}' is not connected. Please go to your SendLiberty dashboard, connect this Gmail account, and try again.`);
     }
   } else {
     account = await GmailAccount.findOne({ userId });
@@ -98,7 +107,7 @@ export async function sendGmailEmail(
   }
   if (!account.connected) throw new Error(`Gmail account '${account.gmailEmail}' is disconnected. Please reconnect.`);
 
-  const senderEmail = options.from ?? account.gmailEmail;
+  const senderEmail = account.gmailEmail;
   const oneDayAgo = new Date(Date.now() - 24 * 60 * 60 * 1000);
   const sentCount = await EmailLog.countDocuments({
     from: senderEmail,
@@ -153,7 +162,7 @@ export async function sendGmailEmail(
     : undefined;
 
   const mailOptions = {
-    from: options.from ?? account.gmailEmail,
+    from: options.from ?? senderEmail,
     to: toAddress,
     cc: ccAddress,
     bcc: bccAddress,

@@ -1,14 +1,14 @@
 # SendLiberty - Email Relay API
 
-If you've ever battled with blocked SMTP ports on cloud hosts like Railway or Render, or just wanted to send emails without all the complex DNS setup, SendLiberty is for you. This project gives you a super simple REST API to send transactional and batch emails using your connected Gmail account, or even custom SMTP, all secured via OAuth2. It's built to get your emails delivered without the usual hosting headaches.
+If you've ever battled with blocked SMTP ports on cloud hosts like Railway or Render, or just wanted to send transactional emails without all the complex DNS setup, SendLiberty is for you. This project gives you a super simple REST API to send transactional and batch emails using your connected Gmail account, or even custom SMTP, all secured via OAuth2. It's built to get your emails delivered without the usual hosting headaches.
 
 ## Features
 
 Here's what SendLiberty brings to the table:
 
-*   **Bypass Blocked Ports**: Send emails from *any* hosting environment, even those that strictly block traditional SMTP ports (25, 465, 587). SendLiberty routes your emails through your connected Google account using OAuth2, ensuring delivery without port restrictions.
+*   **Bypass Blocked Ports**: Send transactional emails from *any* hosting environment, even those that strictly block traditional SMTP ports (25, 465, 587). SendLiberty routes your emails through your connected Google account using OAuth2, ensuring delivery without port restrictions.
 
-*   **Zero DNS Setup**: Forget about configuring MX records, SPF, or DKIM. Connect your Google account, generate an API key, and you're ready to send emails instantly.
+*   **Zero DNS Setup**: Forget about configuring MX records, SPF, or DKIM. Connect your Google account, generate an API key, and you're ready to send transactional emails instantly.
 
 *   **Simple REST API**: A single, straightforward POST endpoint handles all your email sending needs. Integrate it into any language or framework with minimal effort.
 
@@ -108,7 +108,7 @@ flowchart LR
     NextJsServer -- "User Mgmt, API Key Mgmt, Gmail Account Mgmt, Email Logging" --> MongoDB
     NextJsServer -- "User Login / Connect Gmail" --> GoogleOAuth
     NextJsServer -- "User Login" --> GithubOAuth
-    NextJsServer -- "Send Emails" --> GmailAPI
+    NextJsServer -- "Send transactional emails" --> GmailAPI
     MongoDB -- "Store Users, API Keys, Gmail Account Tokens, Email Logs" --> NextJsServer
     GoogleOAuth -- "User Info, Tokens" --> NextJsServer
     GithubOAuth -- "User Info, Tokens" --> NextJsServer
@@ -182,13 +182,13 @@ Once you've installed and started the project, you can:
     Navigate to `http://localhost:3000/login` to sign up or log in using your GitHub or Google account. This will authenticate you and redirect you to the dashboard.
 
 2.  **Connect a Gmail Account**:
-    From your dashboard, go to the "Gmail Accounts" section. Click "Connect New Account" to link a Gmail account. This will authorize SendLiberty to send emails on your behalf via secure OAuth2.
+    From your dashboard, go to the "Gmail Accounts" section. Click "Connect New Account" to link a Gmail account. This will authorize SendLiberty to send transactional emails on your behalf via secure OAuth2.
 
 3.  **Generate an API Key**:
     Head over to the "API Keys" section in your dashboard. Generate a new API key. **Make sure to copy the full API key when it's displayed, as it won't be shown again for security reasons.** You can also specify allowed origins to restrict where your API key can be used.
 
-4.  **Send Emails via API**:
-    Use the API key you generated to send emails from your applications. Here are some examples:
+4.  **Send transactional emails via API**:
+    Use the API key you generated to send transactional emails from your applications. Here are some examples:
 
     **cURL**
     ```bash

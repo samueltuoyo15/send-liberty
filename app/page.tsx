@@ -10,6 +10,7 @@ export default function Home() {
   const { data: user, isLoading } = useMe();
   const [apiUrl, setApiUrl] = useState("https://api.sendliberty.com");
   const [activeTab, setActiveTab] = useState<"curl" | "js" | "python" | "go" | "rust" | "php" | "net" | "java">("curl");
+  const [isExpanded, setIsExpanded] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -25,7 +26,7 @@ export default function Home() {
   }, []);
 
   return (
-    <SEO title="Bypass SMTP Restrictions" description="Bypass SMTP blocks on Railway, Render and other restricted hosting clouds. Send emails via Google OAuth2 with zero DNS configuration.">
+    <SEO title="Bypass SMTP Restrictions" description="Bypass SMTP blocks on Railway, Render and other restricted hosting clouds. Send transactional emails via Google OAuth2 with zero DNS configuration.">
       <div className="flex flex-col min-h-screen bg-background-sendliberty text-on-background font-body-md">
       {/* TopNavBar */}
       <header 
@@ -119,7 +120,7 @@ export default function Home() {
               Bypass SMTP Restrictions
             </h1>
             <p className="font-body-lg text-body-lg max-w-[500px] text-white/90 leading-relaxed">
-              Send emails with just your gmail account from any hosting environment, even where port 25, 465, or 587 are strictly blocked. No more server configuration headaches.
+              Send transactional emails with just your gmail account from any hosting environment, even where port 25, 465, or 587 are strictly blocked. No more server configuration headaches.
             </p>
             <div className="flex flex-col sm:flex-row gap-md pt-md">
               <Link href="/login" className="bg-primary-sendliberty hover:bg-primary-sendliberty/90 text-white px-xl py-lg rounded-xl font-label-sm text-label-sm transition-transform active:scale-95 shadow-sm text-center w-full sm:w-auto inline-block">
@@ -167,7 +168,8 @@ export default function Home() {
             </div>
             <pre className="text-sm overflow-auto max-h-[360px] leading-relaxed text-[#c0caf5] p-md custom-scrollbar">
               {activeTab === "curl" && (
-                `curl -X POST ${apiUrl}/api/send \\
+                isExpanded ? (
+                  `curl -X POST ${apiUrl}/api/send \\
   -H "Authorization: Bearer YOUR_KEY" \\
   -H "Content-Type: application/json" \\
   -d '{
@@ -182,9 +184,21 @@ export default function Home() {
       { "filename": "invoice.pdf", "content": "base64..." }
     ]
   }'`
+                ) : (
+                  `curl -X POST ${apiUrl}/api/send \\
+  -H "Authorization: Bearer YOUR_KEY" \\
+  -H "Content-Type: application/json" \\
+  -d '{
+    "from": "sender@gmail.com",
+    "to": "user@example.com",
+    "subject": "Hello via Webhook!",
+    "html": "<p>No SMTP needed.</p>"
+  }'`
+                )
               )}
               {activeTab === "js" && (
-                `await fetch('${apiUrl}/api/send', {
+                isExpanded ? (
+                  `await fetch('${apiUrl}/api/send', {
   method: 'POST',
   headers: {
     'Authorization': 'Bearer YOUR_KEY',
@@ -203,9 +217,25 @@ export default function Home() {
     ]
   })
 });`
+                ) : (
+                  `await fetch('${apiUrl}/api/send', {
+  method: 'POST',
+  headers: {
+    'Authorization': 'Bearer YOUR_KEY',
+    'Content-Type': 'application/json'
+  },
+  body: JSON.stringify({
+    from: 'sender@gmail.com',
+    to: 'user@example.com',
+    subject: 'Hello via Webhook!',
+    html: '<p>No SMTP needed.</p>'
+  })
+});`
+                )
               )}
               {activeTab === "python" && (
-                `import requests
+                isExpanded ? (
+                  `import requests
 
 url = "${apiUrl}/api/send"
 headers = {
@@ -226,9 +256,27 @@ payload = {
 }
 
 res = requests.post(url, json=payload, headers=headers)`
+                ) : (
+                  `import requests
+
+url = "${apiUrl}/api/send"
+headers = {
+  "Authorization": "Bearer YOUR_KEY",
+  "Content-Type": "application/json"
+}
+payload = {
+  "from": "sender@gmail.com",
+  "to": "user@example.com",
+  "subject": "Hello via Webhook!",
+  "html": "<p>No SMTP needed.</p>"
+}
+
+res = requests.post(url, json=payload, headers=headers)`
+                )
               )}
               {activeTab === "go" && (
-                `package main
+                isExpanded ? (
+                  `package main
 
 import (
   "bytes"
@@ -255,9 +303,33 @@ func main() {
   
   http.DefaultClient.Do(req)
 }`
+                ) : (
+                  `package main
+
+import (
+  "bytes"
+  "encoding/json"
+  "net/http"
+)
+
+func main() {
+  payload, _ := json.Marshal(map[string]interface{}{
+    "from":    "sender@gmail.com",
+    "to":      "user@example.com",
+    "subject": "Hello via Webhook!",
+    "html":    "<p>No SMTP needed.</p>",
+  })
+  req, _ := http.NewRequest("POST", "${apiUrl}/api/send", bytes.NewBuffer(payload))
+  req.Header.Set("Authorization", "Bearer YOUR_KEY")
+  req.Header.Set("Content-Type", "application/json")
+  
+  http.DefaultClient.Do(req)
+}`
+                )
               )}
               {activeTab === "rust" && (
-                `use serde_json::json;
+                isExpanded ? (
+                  `use serde_json::json;
 
 #[tokio::main]
 async fn main() -> Result<(), reqwest::Error> {
@@ -283,9 +355,32 @@ async fn main() -> Result<(), reqwest::Error> {
     
   Ok(())
 }`
+                ) : (
+                  `use serde_json::json;
+
+#[tokio::main]
+async fn main() -> Result<(), reqwest::Error> {
+  let client = reqwest::Client::new();
+  let payload = json!({
+    "from": "sender@gmail.com",
+    "to": "user@example.com",
+    "subject": "Hello via Webhook!",
+    "html": "<p>No SMTP needed.</p>"
+  });
+  
+  client.post("${apiUrl}/api/send")
+    .header("Authorization", "Bearer YOUR_KEY")
+    .json(&payload)
+    .send()
+    .await?;
+    
+  Ok(())
+}`
+                )
               )}
               {activeTab === "php" && (
-                `<?php
+                isExpanded ? (
+                  `<?php
 $ch = curl_init('${apiUrl}/api/send');
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 curl_setopt($ch, CURLOPT_POST, true);
@@ -307,9 +402,28 @@ curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode([
 ]));
 
 curl_exec($ch);`
+                ) : (
+                  `<?php
+$ch = curl_init('${apiUrl}/api/send');
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+curl_setopt($ch, CURLOPT_POST, true);
+curl_setopt($ch, CURLOPT_HTTPHEADER, [
+  'Authorization: Bearer YOUR_KEY',
+  'Content-Type: application/json'
+]);
+curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode([
+  'from' => 'sender@gmail.com',
+  'to' => 'user@example.com',
+  'subject' => 'Hello via Webhook!',
+  'html' => '<p>No SMTP needed.</p>'
+]));
+
+curl_exec($ch);`
+                )
               )}
               {activeTab === "net" && (
-                `var client = new HttpClient();
+                isExpanded ? (
+                  `var client = new HttpClient();
 client.DefaultRequestHeaders.Add("Authorization", "Bearer YOUR_KEY");
 
 var payload = new {
@@ -322,9 +436,21 @@ var payload = new {
   bcc = new[] { "audit@example.com" },
   attachments = new[] { new { filename = "invoice.pdf", content = "base64..." } }
 };`
+                ) : (
+                  `var client = new HttpClient();
+client.DefaultRequestHeaders.Add("Authorization", "Bearer YOUR_KEY");
+
+var payload = new {
+  from = "sender@gmail.com",
+  to = "user@example.com",
+  subject = "Hello via Webhook!",
+  html = "<p>No SMTP needed.</p>"
+};`
+                )
               )}
               {activeTab === "java" && (
-                `var client = HttpClient.newHttpClient();
+                isExpanded ? (
+                  `var client = HttpClient.newHttpClient();
 var payload = """
     {
       "from": "sender@gmail.com",
@@ -346,8 +472,34 @@ var req = HttpRequest.newBuilder()
   .header("Content-Type", "application/json")
   .POST(HttpRequest.BodyPublishers.ofString(payload))
   .build();`
+                ) : (
+                  `var client = HttpClient.newHttpClient();
+var payload = """
+    {
+      "from": "sender@gmail.com",
+      "to": "user@example.com",
+      "subject": "Hello via Webhook!",
+      "html": "<p>No SMTP needed.</p>"
+    }
+    """;
+
+var req = HttpRequest.newBuilder()
+  .uri(URI.create("${apiUrl}/api/send"))
+  .header("Authorization", "Bearer YOUR_KEY")
+  .header("Content-Type", "application/json")
+  .POST(HttpRequest.BodyPublishers.ofString(payload))
+  .build();`
+                )
               )}
             </pre>
+            <div className="flex justify-between items-center mt-xs pt-2.5 border-t border-[#2d3b4e]/60 text-xs px-md pb-md">
+              <button
+                onClick={() => setIsExpanded(!isExpanded)}
+                className="text-indigo-400 hover:text-indigo-300 font-semibold cursor-pointer flex items-center gap-1 transition-colors outline-none"
+              >
+                {isExpanded ? "Collapse Parameters ▲" : "Show All Parameters (CC, BCC, Attachments) ▼"}
+              </button>
+            </div>
           </div>
           </div>
         </section>
@@ -411,6 +563,70 @@ var req = HttpRequest.newBuilder()
                     We connect to your Google account via OAuth2. We never see or store your password, only an encrypted access token you can revoke at any time.
                   </p>
                 </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* FAQ Section */}
+        <section id="faq" className="py-xl md:py-32 bg-surface-container-low border-t border-outline-variant/60">
+          <div className="max-w-4xl mx-auto px-margin-mobile md:px-margin-desktop">
+            <div className="text-center mb-16 space-y-3">
+              <h2 className="font-headline-lg text-headline-lg text-primary-sendliberty">Frequently Asked Questions</h2>
+              <p className="font-body-lg text-body-lg text-on-surface-variant max-w-[600px] mx-auto">
+                Got questions about how SendLiberty is different from other transactional email sending platforms? We have answers.
+              </p>
+            </div>
+            
+            <div className="space-y-6">
+              <div className="p-6 rounded-2xl border border-outline-variant bg-white/70 hover:bg-white transition-colors duration-300">
+                <h3 className="font-bold text-base text-[#1d2b3e] mb-2 flex items-center gap-2">
+                  <span className="w-2 h-2 rounded-full bg-indigo-500"></span>
+                  Do I need to verify my domain or configure DNS records?
+                </h3>
+                <p className="text-sm text-secondary leading-relaxed pl-4">
+                  No! Because SendLiberty routes your email relay requests securely through your already verified, connected Google accounts, there is absolutely zero DNS configuration required. You do not need to add SPF, DKIM, MX, or TXT records to start sending immediately.
+                </p>
+              </div>
+
+              <div className="p-6 rounded-2xl border border-outline-variant bg-white/70 hover:bg-white transition-colors duration-300">
+                <h3 className="font-bold text-base text-[#1d2b3e] mb-2 flex items-center gap-2">
+                  <span className="w-2 h-2 rounded-full bg-emerald-500"></span>
+                  Will my emails land in the inbox?
+                </h3>
+                <p className="text-sm text-secondary leading-relaxed pl-4">
+                  Yes, absolutely. Because the emails are sent using Google's official, highly trusted outbound mail servers, they inherit the absolute highest deliverability rates out of the box, almost bypassing spam filters and avoiding blocked ports.
+                </p>
+              </div>
+
+              <div className="p-6 rounded-2xl border border-outline-variant bg-white/70 hover:bg-white transition-colors duration-300">
+                <h3 className="font-bold text-base text-[#1d2b3e] mb-2 flex items-center gap-2">
+                  <span className="w-2 h-2 rounded-full bg-pink-500"></span>
+                  How does this compare to the free tier of Resend, Mailgun, or SendGrid?
+                </h3>
+                <p className="text-sm text-secondary leading-relaxed pl-4">
+                  Other platforms limit you to only 100 free emails per day on their free plans and require strict domain verification. With SendLiberty, you can send up to <strong>500 emails/day</strong> per connected personal/product Gmail account, or up to <strong>2,000 emails/day</strong> per connected Google Workspace account.
+                </p>
+              </div>
+
+              <div className="p-6 rounded-2xl border border-outline-variant bg-white/70 hover:bg-white transition-colors duration-300">
+                <h3 className="font-bold text-base text-[#1d2b3e] mb-2 flex items-center gap-2">
+                  <span className="w-2 h-2 rounded-full bg-amber-500"></span>
+                  Can I send attachments and CC/BCC recipients?
+                </h3>
+                <p className="text-sm text-secondary leading-relaxed pl-4">
+                  Yes, our REST API supports complete transactional payloads. You can specify a custom Reply-To header, carbon copies (CC), blind carbon copies (BCC), and pass an array of base64-encoded attachments.
+                </p>
+              </div>
+              
+              <div className="p-6 rounded-2xl border border-outline-variant bg-white/70 hover:bg-white transition-colors duration-300">
+                <h3 className="font-bold text-base text-[#1d2b3e] mb-2 flex items-center gap-2">
+                  <span className="w-2 h-2 rounded-full bg-blue-500"></span>
+                  Is my Google account password secure?
+                </h3>
+                <p className="text-sm text-secondary leading-relaxed pl-4">
+                  We never see, ask for, or store your Google password. Authorization is done entirely through standard, secure Google OAuth2 credentials. We only store encrypted access and refresh tokens, which you can manually revoke from your Google Account settings page at any time.
+                </p>
               </div>
             </div>
           </div>
