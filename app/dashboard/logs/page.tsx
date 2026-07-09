@@ -228,7 +228,7 @@ export default function LogsPage() {
       </div>
 
       <Sheet open={!!selectedLog} onOpenChange={(open) => !open && setSelectedLog(null)}>
-        <SheetContent side="right" className="w-full sm:max-w-lg overflow-y-auto">
+        <SheetContent side="right">
           <SheetHeader className="pb-4 border-b border-outline-variant">
             <SheetTitle className="text-xl font-headline-md font-bold text-primary-sendliberty truncate pr-6" title={selectedLog?.subject}>
               {selectedLog?.subject || "Email Details"}
