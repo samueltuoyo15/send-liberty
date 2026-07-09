@@ -677,7 +677,7 @@ var req = HttpRequest.newBuilder()
             <p className="font-label-sm text-label-sm text-on-surface-variant">© {new Date().getFullYear()} SendLiberty. All rights reserved.</p>
           </div>
           <div className="flex flex-wrap justify-center gap-md">
-            <Link href="#docs" className="font-label-sm text-label-sm text-on-surface-variant hover:text-primary-sendliberty transition-colors underline">
+            <Link href="/docs" className="font-label-sm text-label-sm text-on-surface-variant hover:text-primary-sendliberty transition-colors underline">
               Documentation
             </Link>
             <Link href="/privacy-policy" className="font-label-sm text-label-sm text-on-surface-variant hover:text-primary-sendliberty transition-colors underline">
@@ -685,9 +685,6 @@ var req = HttpRequest.newBuilder()
             </Link>
             <Link href="/terms-of-service" className="font-label-sm text-label-sm text-on-surface-variant hover:text-primary-sendliberty transition-colors underline">
               Terms of Service
-            </Link>
-            <Link href="#" className="font-label-sm text-label-sm text-on-surface-variant hover:text-primary-sendliberty transition-colors underline">
-              Security
             </Link>
           </div>
         </div>

@@ -8,30 +8,82 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useEmailLogs } from "@/hooks/useEmailLogs";
+import { useGmailAccounts } from "@/hooks/useGmailAccounts";
 import { redactEmail } from "@/utils/redact";
 
 export default function LogsPage() {
   const [page, setPage] = useState(1);
-  const { data: logsData, isLoading } = useEmailLogs(page, 20);
+  const [search, setSearch] = useState("");
+  const [status, setStatus] = useState("");
+  const [fromEmail, setFromEmail] = useState("");
+
+  const { data: accounts } = useGmailAccounts();
+  const { data: logsData, isLoading } = useEmailLogs(page, 20, {
+    search,
+    status,
+    from: fromEmail,
+  });
   
   const logs = Array.isArray(logsData?.data) ? logsData.data : [];
   const meta = logsData?.meta ?? { total: 0, page, limit: 20, totalPages: 1 };
   const hasNextPage = logs.length === (meta.limit ?? 20);
+  
+  const isFiltered = !!(search || status || fromEmail);
+
   return (
     <div className="space-y-6">
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+      <div className="flex flex-col xl:flex-row justify-between items-start xl:items-center gap-4">
         <div>
           <h1 className="text-3xl font-headline-md font-bold tracking-tight text-primary-sendliberty">Email Logs</h1>
           <p className="text-secondary font-body-md mt-1">
             View the recent history of all emails sent via your API keys.
           </p>
         </div>
-        <div className="flex items-center gap-2 bg-surface-container-low border border-outline-variant rounded-lg px-3 h-10 shadow-xs focus-within:border-primary-sendliberty focus-within:bg-white transition-colors w-full sm:w-auto">
-          <HugeiconsIcon icon={Search01Icon} size={16} color='currentColor' strokeWidth={1.5} className="text-secondary" />
-          <input 
-            className="bg-transparent border-none outline-none text-sm px-2 placeholder:text-secondary w-full sm:w-64 font-mono" 
-            placeholder="Search by recipient or subject..." 
-          />
+        <div className="flex flex-col sm:flex-row items-center gap-3 w-full xl:w-auto">
+          {/* Search bar */}
+          <div className="flex items-center gap-2 bg-surface-container-low border border-outline-variant rounded-lg px-3 h-10 shadow-xs focus-within:border-primary-sendliberty focus-within:bg-white transition-colors w-full sm:w-72">
+            <HugeiconsIcon icon={Search01Icon} size={16} color='currentColor' strokeWidth={1.5} className="text-secondary" />
+            <input 
+              value={search}
+              onChange={(e) => {
+                setSearch(e.target.value);
+                setPage(1);
+              }}
+              className="bg-transparent border-none outline-none text-sm px-2 placeholder:text-secondary w-full font-sans" 
+              placeholder="Search recipient, from, or subject..." 
+            />
+          </div>
+
+          {/* Status selector */}
+          <select
+            value={status}
+            onChange={(e) => {
+              setStatus(e.target.value);
+              setPage(1);
+            }}
+            className="bg-surface-container-low border border-outline-variant rounded-lg px-3 h-10 text-sm outline-none text-secondary focus:border-primary-sendliberty focus:bg-white transition-colors w-full sm:w-40 cursor-pointer"
+          >
+            <option value="">All Statuses</option>
+            <option value="sent">Sent</option>
+            <option value="failed">Failed</option>
+          </select>
+
+          {/* From account selector */}
+          <select
+            value={fromEmail}
+            onChange={(e) => {
+              setFromEmail(e.target.value);
+              setPage(1);
+            }}
+            className="bg-surface-container-low border border-outline-variant rounded-lg px-3 h-10 text-sm outline-none text-secondary focus:border-primary-sendliberty focus:bg-white transition-colors w-full sm:w-56 cursor-pointer"
+          >
+            <option value="">All Senders</option>
+            {accounts?.map((acc: any) => (
+              <option key={acc.id} value={acc.email}>
+                {acc.email}
+              </option>
+            ))}
+          </select>
         </div>
       </div>
 
@@ -60,25 +112,49 @@ export default function LogsPage() {
             ) : logs.length === 0 ? (
               <tr>
                 <td colSpan={5} className="px-6 py-16 text-center">
-                  <div className="flex flex-col items-center justify-center max-w-[420px] mx-auto space-y-3">
-                    <HugeiconsIcon icon={FileTypeIcon} size={48} color='currentColor' strokeWidth={1.5} className="text-primary-sendliberty opacity-50 mb-1" />
-                    <h3 className="text-lg font-headline-md font-bold text-on-background">No email logs found</h3>
-                    <p className="text-sm text-secondary leading-relaxed">
-                      You haven't sent any emails yet. Send an email using our REST API or Quickstart guide to view logs here.
-                    </p>
-                    <div className="pt-2 flex flex-col sm:flex-row items-center gap-3">
-                      <Link href="/docs/send">
-                        <Button variant="outline" className="rounded-lg font-label-sm border border-outline-variant bg-surface-container-lowest text-primary-sendliberty shadow-xs hover:bg-surface-container-low px-4">
-                          View API Docs
+                  {isFiltered ? (
+                    <div className="flex flex-col items-center justify-center max-w-[420px] mx-auto space-y-3">
+                      <HugeiconsIcon icon={Search01Icon} size={48} color='currentColor' strokeWidth={1.5} className="text-primary-sendliberty opacity-50 mb-1" />
+                      <h3 className="text-lg font-headline-md font-bold text-on-background">No matching logs</h3>
+                      <p className="text-sm text-secondary leading-relaxed">
+                        We couldn't find any email logs matching your search terms or filter selections. Try clearing your filters.
+                      </p>
+                      <div className="pt-2">
+                        <Button 
+                          variant="outline" 
+                          className="rounded-lg font-label-sm border border-outline-variant bg-surface-container-lowest text-primary-sendliberty shadow-xs hover:bg-surface-container-low px-4"
+                          onClick={() => {
+                            setSearch("");
+                            setStatus("");
+                            setFromEmail("");
+                            setPage(1);
+                          }}
+                        >
+                          Clear Filters
                         </Button>
-                      </Link>
-                      <Link href="/dashboard/keys?generate=true">
-                        <Button className="rounded-lg font-label-sm bg-primary-sendliberty hover:bg-primary-sendliberty/90 text-white shadow-sm px-4">
-                          Get API Key
-                        </Button>
-                      </Link>
+                      </div>
                     </div>
-                  </div>
+                  ) : (
+                    <div className="flex flex-col items-center justify-center max-w-[420px] mx-auto space-y-3">
+                      <HugeiconsIcon icon={FileTypeIcon} size={48} color='currentColor' strokeWidth={1.5} className="text-primary-sendliberty opacity-50 mb-1" />
+                      <h3 className="text-lg font-headline-md font-bold text-on-background">No email logs found</h3>
+                      <p className="text-sm text-secondary leading-relaxed">
+                        You haven't sent any emails yet. Send an email using our REST API or Quickstart guide to view logs here.
+                      </p>
+                      <div className="pt-2 flex flex-col sm:flex-row items-center gap-3">
+                        <Link href="/docs/send">
+                          <Button variant="outline" className="rounded-lg font-label-sm border border-outline-variant bg-surface-container-lowest text-primary-sendliberty shadow-xs hover:bg-surface-container-low px-4">
+                            View API Docs
+                          </Button>
+                        </Link>
+                        <Link href="/dashboard/keys?generate=true">
+                          <Button className="rounded-lg font-label-sm bg-primary-sendliberty hover:bg-primary-sendliberty/90 text-white shadow-sm px-4">
+                            Get API Key
+                          </Button>
+                        </Link>
+                      </div>
+                    </div>
+                  )}
                 </td>
               </tr>
             ) : (

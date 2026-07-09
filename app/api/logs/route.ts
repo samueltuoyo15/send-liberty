@@ -12,16 +12,36 @@ export async function GET(req: NextRequest) {
     const limit = Math.min(100, Math.max(1, parseInt(searchParams.get("limit") ?? "20", 10)));
     const skip = (page - 1) * limit;
 
+    const search = searchParams.get("search")?.trim() ?? "";
+    const status = searchParams.get("status")?.trim() ?? "";
+    const from = searchParams.get("from")?.trim() ?? "";
+
     await connectDB();
 
+    const query: any = { userId: new mongoose.Types.ObjectId(user.id) };
+
+    if (status) {
+      query.status = status;
+    }
+    if (from) {
+      query.from = from;
+    }
+    if (search) {
+      query.$or = [
+        { to: { $regex: search, $options: "i" } },
+        { subject: { $regex: search, $options: "i" } },
+        { from: { $regex: search, $options: "i" } }
+      ];
+    }
+
     const [logs, total] = await Promise.all([
-      EmailLog.find({ userId: new mongoose.Types.ObjectId(user.id) })
+      EmailLog.find(query)
         .sort({ createdAt: -1 })
         .skip(skip)
         .limit(limit)
         .select("from to subject status provider messageId error apiKeyId createdAt")
         .lean(),
-      EmailLog.countDocuments({ userId: new mongoose.Types.ObjectId(user.id) }),
+      EmailLog.countDocuments(query),
     ]);
 
     return NextResponse.json({

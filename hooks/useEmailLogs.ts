@@ -12,14 +12,28 @@ export interface EmailLog {
   createdAt: string;
 }
 
-export function useEmailLogs(page = 1, limit = 20) {
+export interface EmailLogsFilters {
+  search?: string;
+  status?: string;
+  from?: string;
+}
+
+export function useEmailLogs(page = 1, limit = 20, filters?: EmailLogsFilters) {
   return useQuery({
-    queryKey: ["email-logs", page, limit],
+    queryKey: ["email-logs", page, limit, filters?.search, filters?.status, filters?.from],
     queryFn: async () => {
+      const params = new URLSearchParams({
+        page: page.toString(),
+        limit: limit.toString(),
+      });
+      if (filters?.search) params.append("search", filters.search);
+      if (filters?.status) params.append("status", filters.status);
+      if (filters?.from) params.append("from", filters.from);
+
       const res = await api.get<
         never,
         { success: boolean; data: EmailLog[]; meta: { page: number; limit: number; total: number; totalPages: number } }
-      >(`/logs?page=${page}&limit=${limit}`);
+      >(`/logs?${params.toString()}`);
       return res;
     },
   });
