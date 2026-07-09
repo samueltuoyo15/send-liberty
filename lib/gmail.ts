@@ -20,7 +20,7 @@ export function getGmailAuthUrl(userId: string): string {
   const oauth2Client = createOAuthClient();
   return oauth2Client.generateAuthUrl({
     access_type: "offline",
-    prompt: "consent",
+    prompt: "consent select_account",
     scope: ["https://www.googleapis.com/auth/gmail.send", "email"],
     state: userId,
   });
@@ -110,18 +110,19 @@ export async function sendGmailEmail(
   if (!account.connected) throw new Error(`Gmail account '${account.gmailEmail}' is disconnected. Please reconnect.`);
 
   const senderEmail = account.gmailEmail;
-  const oneDayAgo = new Date(Date.now() - 24 * 60 * 60 * 1000);
+  const startOfToday = new Date();
+  startOfToday.setUTCHours(0, 0, 0, 0);
   const sentCount = await EmailLog.countDocuments({
     from: senderEmail,
     status: "sent",
-    createdAt: { $gte: oneDayAgo }
+    createdAt: { $gte: startOfToday }
   });
 
   const isWorkspace = !senderEmail.endsWith("@gmail.com") && !senderEmail.endsWith("@googlemail.com");
   const limit = isWorkspace ? 2000 : 500;
 
   if (sentCount >= limit) {
-    throw new Error(`Daily limit reached: Connected Gmail '${senderEmail}' has already sent ${sentCount} of its ${limit} daily allowed emails in the last 24 hours.`);
+    throw new Error(`Daily limit reached: Connected Gmail '${senderEmail}' has already sent ${sentCount} of its ${limit} daily allowed emails today.`);
   }
 
   const bufferMs = 5 * 60 * 1000;

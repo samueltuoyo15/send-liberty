@@ -14,14 +14,15 @@ export async function GET(req: NextRequest) {
     // Fetch connected Gmail accounts
     const accounts = await GmailAccount.find({ userId });
     
-    // Fetch daily cap usage for each connected account
-    const oneDayAgo = new Date(Date.now() - 24 * 60 * 60 * 1000);
+    // Fetch daily cap usage for each connected account (resetting daily at UTC midnight)
+    const startOfToday = new Date();
+    startOfToday.setUTCHours(0, 0, 0, 0);
     const caps = await Promise.all(
       accounts.map(async (account) => {
         const sentCount = await EmailLog.countDocuments({
           from: account.gmailEmail,
           status: "sent",
-          createdAt: { $gte: oneDayAgo }
+          createdAt: { $gte: startOfToday }
         });
         const isWorkspace = !account.gmailEmail.endsWith("@gmail.com") && !account.gmailEmail.endsWith("@googlemail.com");
         const limit = isWorkspace ? 2000 : 500;
