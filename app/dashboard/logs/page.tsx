@@ -7,6 +7,7 @@ import { FileTypeIcon, Search01Icon, CheckmarkCircle01Icon, CancelCircleIcon } f
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { useEmailLogs } from "@/hooks/useEmailLogs";
 import { useGmailAccounts } from "@/hooks/useGmailAccounts";
 import { redactEmail } from "@/utils/redact";
@@ -16,6 +17,7 @@ export default function LogsPage() {
   const [search, setSearch] = useState("");
   const [status, setStatus] = useState("");
   const [fromEmail, setFromEmail] = useState("");
+  const [selectedLog, setSelectedLog] = useState<any | null>(null);
 
   const { data: accounts } = useGmailAccounts();
   const { data: logsData, isLoading } = useEmailLogs(page, 20, {
@@ -95,7 +97,8 @@ export default function LogsPage() {
               <th className="px-6 py-4">To</th>
               <th className="px-6 py-4">Subject</th>
               <th className="px-6 py-4">Status</th>
-              <th className="px-6 py-4 text-right">Date</th>
+              <th className="px-6 py-4">Date</th>
+              <th className="px-6 py-4 text-right">Action</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-border">
@@ -106,12 +109,13 @@ export default function LogsPage() {
                   <td className="px-6 py-4"><Skeleton className="h-5 w-28" /></td>
                   <td className="px-6 py-4"><Skeleton className="h-5 w-full max-w-[150px]" /></td>
                   <td className="px-6 py-4"><Skeleton className="h-5 w-16" /></td>
-                  <td className="px-6 py-4"><Skeleton className="h-4 w-24 ml-auto" /></td>
+                  <td className="px-6 py-4"><Skeleton className="h-4 w-24" /></td>
+                  <td className="px-6 py-4"><Skeleton className="h-8 w-12 ml-auto" /></td>
                 </tr>
               ))
             ) : logs.length === 0 ? (
               <tr>
-                <td colSpan={5} className="px-6 py-16 text-center">
+                <td colSpan={6} className="px-6 py-16 text-center">
                   {isFiltered ? (
                     <div className="flex flex-col items-center justify-center max-w-[420px] mx-auto space-y-3">
                       <HugeiconsIcon icon={Search01Icon} size={48} color='currentColor' strokeWidth={1.5} className="text-primary-sendliberty opacity-50 mb-1" />
@@ -182,8 +186,18 @@ export default function LogsPage() {
                       {log.status}
                     </Badge>
                   </td>
-                  <td className="px-6 py-4 text-right text-muted-foreground whitespace-nowrap">
+                  <td className="px-6 py-4 text-muted-foreground whitespace-nowrap">
                     {new Date(log.createdAt).toLocaleDateString()} {new Date(log.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                  </td>
+                  <td className="px-6 py-4 text-right">
+                    <Button 
+                      variant="outline" 
+                      size="sm"
+                      className="rounded-lg h-8 text-xs font-semibold border-outline-variant hover:bg-surface-container-low text-primary-sendliberty"
+                      onClick={() => setSelectedLog(log)}
+                    >
+                      View
+                    </Button>
                   </td>
                 </tr>
               ))
@@ -212,6 +226,110 @@ export default function LogsPage() {
           </div>
         </div>
       </div>
+
+      <Sheet open={!!selectedLog} onOpenChange={(open) => !open && setSelectedLog(null)}>
+        <SheetContent side="right" className="w-full sm:max-w-lg overflow-y-auto">
+          <SheetHeader className="pb-4 border-b border-outline-variant">
+            <SheetTitle className="text-xl font-headline-md font-bold text-primary-sendliberty truncate pr-6" title={selectedLog?.subject}>
+              {selectedLog?.subject || "Email Details"}
+            </SheetTitle>
+            <SheetDescription className="text-secondary text-sm">
+              Detailed metadata for this relay log.
+            </SheetDescription>
+          </SheetHeader>
+
+          {selectedLog && (
+            <div className="py-6 space-y-6">
+              {/* Status Header */}
+              <div className="flex items-center justify-between p-4 rounded-xl border border-outline-variant bg-surface-container-low/50">
+                <span className="text-sm font-semibold text-secondary">Delivery Status</span>
+                <Badge 
+                  variant={selectedLog.status === "sent" ? "outline" : "secondary"} 
+                  className={`
+                    font-semibold rounded-md tracking-wider text-[10px] border-border py-1 px-2.5
+                    ${selectedLog.status === "failed" ? "bg-destructive/10 text-destructive border-transparent" : "bg-emerald-50 text-emerald-700 border-emerald-200"}
+                  `}
+                >
+                  {selectedLog.status === "sent" && <HugeiconsIcon icon={CheckmarkCircle01Icon} size={12} color='currentColor' strokeWidth={1.5} className="mr-1" />}
+                  {selectedLog.status === "failed" && <HugeiconsIcon icon={CancelCircleIcon} size={12} color='currentColor' strokeWidth={1.5} className="mr-1" />}
+                  {selectedLog.status.toUpperCase()}
+                </Badge>
+              </div>
+
+              {/* Core Details Grid */}
+              <div className="space-y-4">
+                <h4 className="text-xs font-bold uppercase tracking-wider text-secondary">Relay Information</h4>
+                <div className="rounded-xl border border-outline-variant divide-y divide-outline-variant bg-surface-container-lowest overflow-hidden">
+                  
+                  {/* From */}
+                  <div className="p-4 flex flex-col gap-1">
+                    <span className="text-xs font-semibold text-secondary">From (Sender)</span>
+                    <span className="text-sm font-mono text-on-background break-all">
+                      {selectedLog.from ? redactEmail(selectedLog.from) : "—"}
+                    </span>
+                  </div>
+
+                  {/* To */}
+                  <div className="p-4 flex flex-col gap-1">
+                    <span className="text-xs font-semibold text-secondary">To (Recipient)</span>
+                    <span className="text-sm font-mono text-on-background break-all">
+                      {redactEmail(selectedLog.to)}
+                    </span>
+                  </div>
+
+                  {/* Date */}
+                  <div className="p-4 flex flex-col gap-1">
+                    <span className="text-xs font-semibold text-secondary">Timestamp</span>
+                    <span className="text-sm text-on-background">
+                      {new Date(selectedLog.createdAt).toLocaleDateString()} {new Date(selectedLog.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' })}
+                    </span>
+                  </div>
+
+                  {/* API Key ID */}
+                  {selectedLog.apiKeyId && (
+                    <div className="p-4 flex flex-col gap-1">
+                      <span className="text-xs font-semibold text-secondary">API Key ID</span>
+                      <span className="text-sm font-mono text-on-background select-all">
+                        {selectedLog.apiKeyId}
+                      </span>
+                    </div>
+                  )}
+
+                  {/* Provider */}
+                  <div className="p-4 flex flex-col gap-1">
+                    <span className="text-xs font-semibold text-secondary">Relay Provider</span>
+                    <span className="text-sm text-on-background flex items-center gap-1.5 capitalize font-medium">
+                      <span className="w-2 h-2 rounded-full bg-[#ea4335]"></span>
+                      {selectedLog.provider || "gmail"}
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Delivery Diagnostics (MessageId / Error message) */}
+              <div className="space-y-4">
+                <h4 className="text-xs font-bold uppercase tracking-wider text-secondary">Diagnostics</h4>
+                
+                {selectedLog.status === "sent" ? (
+                  <div className="p-4 rounded-xl border border-indigo-100 bg-indigo-50/20 space-y-1.5">
+                    <span className="text-xs font-semibold text-indigo-700 block">Upstream Message ID</span>
+                    <code className="text-xs font-mono text-indigo-900 bg-indigo-50/50 p-2 rounded border border-indigo-100/50 block break-all select-all">
+                      {selectedLog.messageId || "—"}
+                    </code>
+                  </div>
+                ) : (
+                  <div className="p-4 rounded-xl border border-destructive/20 bg-destructive/[0.01] space-y-1.5">
+                    <span className="text-xs font-semibold text-destructive block">Error Message</span>
+                    <div className="text-xs font-mono text-destructive bg-destructive/[0.02] p-3 rounded border border-destructive/10 leading-relaxed break-words whitespace-pre-wrap">
+                      {selectedLog.error || "An unknown SMTP transmission error occurred during relay dispatch."}
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+        </SheetContent>
+      </Sheet>
     </div>
   );
 }
