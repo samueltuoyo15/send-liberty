@@ -1,10 +1,12 @@
 "use client";
 
 import { HugeiconsIcon } from '@hugeicons/react';
-import { UserIcon, PencilEdit01Icon, FloppyDiskIcon, Logout01Icon } from '@hugeicons/core-free-icons';
+import { UserIcon, PencilEdit01Icon, FloppyDiskIcon, Logout01Icon, Delete02Icon } from '@hugeicons/core-free-icons';
 import { Button } from "@/components/ui/button";
 import { useMe, useUpdateProfile, useLogout } from "@/hooks/useAuth";
 import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { useMutation } from "@tanstack/react-query";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetFooter } from "@/components/ui/sheet";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
@@ -17,6 +19,19 @@ export default function SettingsPage() {
   const [editName, setEditName] = useState("");
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [signOutConfirmOpen, setSignOutConfirmOpen] = useState(false);
+  const [deleteAccountOpen, setDeleteAccountOpen] = useState(false);
+  const router = useRouter();
+
+  const { mutate: deleteAccount, isPending: isDeletingAccount } = useMutation({
+    mutationFn: async () => {
+      const res = await fetch("/api/user", { method: "DELETE" });
+      if (!res.ok) throw new Error("Failed to delete account");
+      return res.json();
+    },
+    onSuccess: () => {
+      router.push("/");
+    },
+  });
 
   const handleEditClick = () => {
     setEditName(user?.displayName || "");
@@ -108,6 +123,26 @@ export default function SettingsPage() {
             </Button>
           </div>
         </div>
+
+        <div className="rounded-xl border border-destructive/40 bg-destructive/[0.03] shadow-none p-6">
+          <div className="flex items-center gap-2 mb-4">
+            <HugeiconsIcon icon={Delete02Icon} size={20} color='currentColor' strokeWidth={1.5} className="text-destructive" />
+            <h3 className="font-headline-md font-bold text-lg text-destructive">Delete Account</h3>
+          </div>
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <p className="text-sm text-secondary leading-relaxed">
+              Permanently delete your account and all associated data, including connected Gmail accounts, email logs, and API keys. This action cannot be undone.
+            </p>
+            <Button 
+              variant="destructive"
+              size="lg"
+              className="rounded-lg font-label-sm whitespace-nowrap"
+              onClick={() => setDeleteAccountOpen(true)}
+            >
+              Delete Account
+            </Button>
+          </div>
+        </div>
       </div>
 
       {/* Edit Profile & Preferences Slide-over Drawer */}
@@ -189,6 +224,35 @@ export default function SettingsPage() {
               disabled={isLoggingOut}
             >
               {isLoggingOut ? "Signing out..." : "Sign Out"}
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Delete Account Confirmation Dialog */}
+      <Dialog open={deleteAccountOpen} onOpenChange={setDeleteAccountOpen}>
+        <DialogContent>
+          <DialogHeader className="mb-2">
+            <DialogTitle className="text-xl font-headline-md font-bold text-destructive">Delete Account</DialogTitle>
+            <DialogDescription className="text-secondary text-sm leading-relaxed mt-1">
+              This will permanently delete your SendLiberty account and all associated data — including connected Gmail accounts, email logs, and API keys. This action is <strong>irreversible</strong>.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="flex flex-row gap-3 mt-4 pt-4 border-t border-outline-variant/60">
+            <Button 
+              variant="outline" 
+              className="flex-1 rounded-lg font-label-sm border border-outline-variant hover:bg-surface-container-low" 
+              onClick={() => setDeleteAccountOpen(false)}
+              disabled={isDeletingAccount}
+            >
+              Cancel
+            </Button>
+            <Button 
+              className="flex-1 rounded-lg font-label-sm bg-destructive hover:bg-destructive/90 text-white" 
+              onClick={() => deleteAccount()}
+              disabled={isDeletingAccount}
+            >
+              {isDeletingAccount ? "Deleting..." : "Yes, Delete Everything"}
             </Button>
           </div>
         </DialogContent>

@@ -2,6 +2,9 @@ import { NextRequest, NextResponse } from "next/server";
 import { requireAuthUser } from "@/lib/auth";
 import { connectDB } from "@/lib/db";
 import User from "@/models/User";
+import GmailAccount from "@/models/GmailAccount";
+import EmailLog from "@/models/EmailLog";
+import ApiKey from "@/models/ApiKey";
 
 export async function GET(req: NextRequest) {
   try {
@@ -66,8 +69,15 @@ export async function DELETE(req: NextRequest) {
     const authUser = await requireAuthUser(req);
     await connectDB();
 
-    await User.findByIdAndDelete(authUser.id);
-    const response = NextResponse.json({ success: true, message: "Account deleted" });
+    // Delete all user data: Gmail credentials, email logs, API keys, and the account itself
+    await Promise.all([
+      GmailAccount.deleteMany({ userId: authUser.id }),
+      EmailLog.deleteMany({ userId: authUser.id }),
+      ApiKey.deleteMany({ userId: authUser.id }),
+      User.findByIdAndDelete(authUser.id),
+    ]);
+
+    const response = NextResponse.json({ success: true, message: "Account and all associated data deleted" });
     response.cookies.set("access_token", "", { maxAge: 0, path: "/" });
     return response;
   } catch (err) {

@@ -1,123 +1,114 @@
-# SendLiberty - Email Relay API
+# SendLiberty: Bypass SMTP Restrictions for Transactional Emails
 
-If you've ever battled with blocked SMTP ports on cloud hosts like Railway or Render, or just wanted to send transactional emails without all the complex DNS setup, SendLiberty is for you. This project gives you a super simple REST API to send transactional and batch emails using your connected Gmail account, or even custom SMTP, all secured via OAuth2. It's built to get your emails delivered without the usual hosting headaches.
+SendLiberty helps developers send transactional emails from any hosting environment, even those that block traditional SMTP ports. It lets you connect your Google account securely and send emails via a simple API, solving the headache of complex email server setup and ensuring reliable inbox delivery. You won't need to configure any DNS records or worry about SMTP blocks again.
+
+## Screenshots
+
+While there are no direct UI screenshots provided in the repository, you can see how the application looks and feels by visiting the [live demo](https://sendliberty.xyz/).
 
 ## Features
 
-Here's what SendLiberty brings to the table:
+### Secure Gmail Integration
 
-*   **Bypass Blocked Ports**: Send transactional emails from *any* hosting environment, even those that strictly block traditional SMTP ports (25, 465, 587). SendLiberty routes your emails through your connected Google account using OAuth2, ensuring delivery without port restrictions.
+Easily connect your personal or Google Workspace Gmail accounts using secure OAuth 2.0. SendLiberty only requests the minimum necessary permissions to send emails on your behalf, and your credentials are never stored directly. This approach ensures high deliverability, as emails are sent from a trusted Google server.
 
-*   **Zero DNS Setup**: Forget about configuring MX records, SPF, or DKIM. Connect your Google account, generate an API key, and you're ready to send transactional emails instantly.
+```mermaid
+sequenceDiagram
+    actor User
+    participant Frontend as "Web Client"
+    participant Backend as "API Server"
+    participant GoogleAuth as "Google OAuth"
+    participant Database as "MongoDB"
 
-*   **Simple REST API**: A single, straightforward POST endpoint handles all your email sending needs. Integrate it into any language or framework with minimal effort.
+    User->>Frontend: Clicks "Connect Gmail"
+    Frontend->>Backend: Request Gmail Auth URL
+    Backend->>GoogleAuth: Generate OAuth URL (scope: gmail.send)
+    GoogleAuth->>User: Presents Google Consent Screen
+    User->>GoogleAuth: Grants Permissions
+    GoogleAuth->>Backend: Redirect to Callback URL (with code)
+    Backend->>GoogleAuth: Exchange Code for Access/Refresh Tokens
+    GoogleAuth->>Backend: Returns Tokens
+    Backend->>Backend: Encrypt Tokens
+    Backend->>Database: Save Gmail Account (with encrypted tokens)
+    Backend->>Frontend: Redirect to Dashboard (Success)
+    Frontend->>User: Displays Connected Account
+```
 
-    ```mermaid
-    sequenceDiagram
-      actor YourApplication
-      participant SendLibertyAPI as "SendLiberty API"
-      participant AuthMiddleware as "Auth Middleware"
-      participant DB as "MongoDB"
-      participant GmailService as "Gmail Service"
-      participant GoogleOAuth as "Google OAuth"
-      participant GmailAPI as "Google Gmail API"
+### Effortless Email Sending via API
 
-      YourApplication->>SendLibertyAPI: POST /api/send (with API Key)
-      SendLibertyAPI->>AuthMiddleware: Verify API Key
-      AuthMiddleware->>DB: Fetch ApiKey by prefix & hash
-      DB-->>AuthMiddleware: ApiKey record
-      AuthMiddleware-->>SendLibertyAPI: Authorized userId & ApiKey details
-      SendLibertyAPI->>GmailService: Request to send email (to, subject, html, text, userId)
-      GmailService->>DB: Fetch GmailAccount for userId
-      DB-->>GmailService: Encrypted GmailAccount tokens
-      GmailService->>GoogleOAuth: Decrypt tokens & refresh if expired
-      GoogleOAuth-->>GmailService: Validated/Refreshed tokens
-      GmailService->>GmailAPI: Send email via authenticated Gmail account
-      GmailAPI-->>GmailService: Email sent (messageId)
-      GmailService->>DB: Log email status
-      DB-->>GmailService: Log success
-      GmailService-->>SendLibertyAPI: Success
-      SendLibertyAPI-->>YourApplication: Email Sent (messageId)
-    ```
+Send transactional emails with a single, straightforward REST API call. Whether you're sending welcome emails, password resets, or notifications, SendLiberty handles the delivery without needing any SMTP port configuration.
 
-*   **OAuth2 Secured Connections**: We use industry-standard OAuth2 for connecting your Google accounts. This means we never see or store your Google password, only an encrypted access token that you can revoke directly from your Google security settings at any time.
+```mermaid
+sequenceDiagram
+    participant DevApp as "Developer Application"
+    participant ApiServer as "API Server"
+    participant Database as "MongoDB"
+    participant GmailAPI as "Gmail API"
 
-    ```mermaid
-    sequenceDiagram
-      actor User
-      participant Browser
-      participant Next.jsApp as "SendLiberty Frontend"
-      participant Next.jsAPI as "SendLiberty API"
-      participant GoogleAuthService as "Google OAuth Provider"
-      participant MongoDB
+    DevApp->>ApiServer: POST /api/send (with API Key in header)
+    ApiServer->>ApiServer: Extract Key Prefix
+    ApiServer->>Database: Query API Key
+    Database->>ApiServer: Return Matching Keys
+    ApiServer->>ApiServer: Verify API Key Hash & Request Origin
+    ApiServer->>Database: Update API Key lastUsedAt
+    ApiServer->>Database: Fetch Gmail Account Credentials
+    Database->>ApiServer: Return Encrypted Gmail Tokens
+    ApiServer->>ApiServer: Decrypt Gmail Tokens
+    ApiServer->>GmailAPI: Send Email Request
+    GmailAPI->>ApiServer: Email Sent / Error Response
+    ApiServer->>Database: Log Email Details (status, to, subject)
+    ApiServer->>DevApp: Return Success / Error
+```
 
-      User->>Browser: Clicks "Connect Gmail"
-      Browser->>Next.jsApp: Navigates to /dashboard/accounts
-      Next.jsApp->>Next.jsAPI: GET /api/gmail/connect (requires auth token)
-      Next.jsAPI->>GoogleAuthService: Generate OAuth URL for User ID
-      GoogleAuthService-->>Next.jsAPI: OAuth URL
-      Next.jsAPI-->>Browser: Redirect to Google OAuth URL
-      Browser->>GoogleAuthService: User authenticates & grants permissions
-      GoogleAuthService-->>Browser: Redirect to /api/gmail/callback (with code & state=userId)
-      Browser->>Next.jsAPI: GET /api/gmail/callback (code, userId)
-      Next.jsAPI->>GoogleAuthService: Exchange code for tokens
-      GoogleAuthService-->>Next.jsAPI: Access & Refresh Tokens
-      Next.jsAPI->>Next.jsAPI: Encrypt tokens
-      Next.jsAPI->>MongoDB: Save/Update GmailAccount (userId, email, encrypted tokens)
-      MongoDB-->>Next.jsAPI: Account saved
-      Next.jsAPI-->>Browser: Redirect to /dashboard/accounts?gmail_connected=true
-      Browser->>Next.jsApp: Shows success message
-    ```
+### Flexible API Key Management
 
-*   **API Key Management**: Generate, revoke, and manage API keys directly from your dashboard. You can also restrict API keys to specific allowed origins for an extra layer of security.
+Generate and manage multiple API keys for different applications or environments. Each key can be configured with allowed origins, adding an extra layer of security. Easily revoke compromised keys directly from your dashboard.
 
-    ```mermaid
-    flowchart TD
-        User["User (Dashboard)"] -- "Request New API Key (name, allowedOrigins)" --> Next.jsApp["Next.js Frontend"]
-        Next.jsApp -- "POST /api/keys" --> Next.jsAPI["Next.js API Routes"]
-        Next.jsAPI -- "Generate Random Key" --> CryptoLib["crypto.randomBytes"]
-        Next.jsAPI -- "Hash Full Key" --> Argon2Lib["argon2.hash"]
-        Next.jsAPI -- "Store KeyHash, Prefix, Origins" --> MongoDB["MongoDB Database"]
-        MongoDB -- "Return apiKey._id" --> Next.jsAPI
-        Next.jsAPI -- "Return Full Raw Key (once only!)" --> Next.jsApp
-        Next.jsApp -- "Display Raw Key to User" --> User
-        User -- "Copy Key" --> ExternalApp["Your Application"]
-    ```
+### Real-time Analytics and Logging
 
-*   **Connected Gmail Account Management**: Easily connect multiple Gmail accounts and view their connection status. Disconnect accounts at any time, revoking access.
-
-*   **Email Logs**: Keep track of all emails sent through SendLiberty with detailed logs, including recipient, subject, status (sent/failed), and timestamps.
+Keep an eye on your email sending activity with a dashboard that provides daily cap usage for each connected Gmail account and a detailed log of all sent and failed emails over the last 7 days.
 
 ## System Architecture / Design
 
-SendLiberty operates as a robust email relay service, designed to be simple yet powerful. The frontend dashboard, built with Next.js and React, provides a user-friendly interface for managing accounts and API keys. All core logic and data persistence reside in the Next.js API routes, leveraging MongoDB for data storage and Google's OAuth2 and Gmail API for secure email sending.
+SendLiberty leverages a Next.js application for both its frontend dashboard and backend API routes. User authentication is handled via GitHub or Google OAuth, and connected Gmail accounts are used to relay emails through the Gmail API. All user and application data is persisted in a MongoDB database.
 
 ```mermaid
 flowchart LR
-    Client["Web Client (Next.js/React)"]
-    NextJsServer["Next.js API Server"]
+    User["Web Client / Dashboard"]
+    Developer["Developer Application"]
+    NextJSApp["Next.js Application"]
+    ApiRoutes["API Routes"]
     MongoDB[("MongoDB Database")]
-    GoogleOAuth["Google OAuth Service"]
-    GithubOAuth["GitHub OAuth Service"]
-    GmailAPI["Google Gmail API"]
+    GoogleAuth["Google OAuth2"]
+    GmailAPI["Gmail API"]
+    GitHubAuth["GitHub OAuth"]
 
-    Client -- "Authentication & Dashboard" --> NextJsServer
-    Client -- "OAuth Redirects" --> GoogleOAuth
-    Client -- "OAuth Redirects" --> GithubOAuth
+    User -- "Access Dashboard" --> NextJSApp
+    Developer -- "API Requests (with API Key)" --> ApiRoutes
+    NextJSApp -- "Backend Calls" --> ApiRoutes
+    
+    ApiRoutes -- "User Auth" --> GoogleAuth
+    ApiRoutes -- "User Auth" --> GitHubAuth
+    ApiRoutes -- "User Data" --> MongoDB
+    ApiRoutes -- "Gmail Connection & Send" --> GmailAPI
 
-    NextJsServer -- "User Mgmt, API Key Mgmt, Gmail Account Mgmt, Email Logging" --> MongoDB
-    NextJsServer -- "User Login / Connect Gmail" --> GoogleOAuth
-    NextJsServer -- "User Login" --> GithubOAuth
-    NextJsServer -- "Send transactional emails" --> GmailAPI
-    MongoDB -- "Store Users, API Keys, Gmail Account Tokens, Email Logs" --> NextJsServer
-    GoogleOAuth -- "User Info, Tokens" --> NextJsServer
-    GithubOAuth -- "User Info, Tokens" --> NextJsServer
-    GmailAPI -- "Email Sending Results" --> NextJsServer
+    GoogleAuth -- "Authentication" --> ApiRoutes
+    GitHubAuth -- "Authentication" --> ApiRoutes
+    GmailAPI -- "Email Relay" --> ApiRoutes
+
+    style User fill:#1e1b4b,stroke:#6366f1,stroke-width:2px,color:#fff
+    style Developer fill:#1e1b4b,stroke:#6366f1,stroke-width:2px,color:#fff
+    style NextJSApp fill:#2e1065,stroke:#8b5cf6,stroke-width:2px,color:#fff
+    style ApiRoutes fill:#2e1065,stroke:#8b5cf6,stroke-width:2px,color:#fff
+    style MongoDB fill:#022c22,stroke:#10b981,stroke-width:2px,color:#fff
+    style GoogleAuth fill:#451a03,stroke:#f59e0b,stroke-width:2px,color:#fff
+    style GmailAPI fill:#451a03,stroke:#f59e0b,stroke-width:2px,color:#fff
+    style GitHubAuth fill:#451a03,stroke:#f59e0b,stroke-width:2px,color:#fff
 ```
 
 ## Installation
 
-To get SendLiberty up and running locally, follow these steps:
+To get SendLiberty up and running on your local machine, follow these steps:
 
 1.  **Clone the Repository**:
     ```bash
@@ -130,184 +121,410 @@ To get SendLiberty up and running locally, follow these steps:
     npm install
     # or
     yarn install
-    # or
-    pnpm install
     ```
 
 3.  **Set Up Environment Variables**:
-    Create a `.env.local` file in the root of the project and populate it with the necessary environment variables from `.env.example`.
+    Create a `.env.local` file in the root of the project based on the `.env.example` file. You'll need to fill in your MongoDB connection string and OAuth credentials.
 
-    ```env
-    # MongoDB Connection String
+    ```
+    # MongoDB
     MONGODB_URI=mongodb+srv://<user>:<password>@cluster.mongodb.net/send-liberty?retryWrites=true&w=majority
 
-    # JWT Secret for session tokens (generate a strong random string)
+    # Auth
     JWT_SECRET=your_random_64_char_hex_string_here
-
-    # Encryption Key for Gmail tokens (must be a 64-char hex string - 32 bytes)
     ENCRYPTION_KEY=a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0a1b2
 
-    # Google OAuth credentials (for login AND Gmail connect)
+    # Google OAuth (for login AND Gmail connect same credentials)
     GOOGLE_CLIENT_ID=your_google_client_id
     GOOGLE_CLIENT_SECRET=your_google_client_secret
-    # This URL is used for Gmail send OAuth callback (must be configured in Google Cloud Console)
-    GOOGLE_CALLBACK_URL=https://yourdomain.vercel.app/api/gmail/callback
+    GOOGLE_CALLBACK_URL=http://localhost:3000/api/gmail/callback # For local dev
 
-    # GitHub OAuth credentials
+    # GitHub OAuth
     GITHUB_CLIENT_ID=your_github_client_id
     GITHUB_CLIENT_SECRET=your_github_client_secret
 
-    # Public URL for the application (e.g., your Vercel deployment URL)
+    # Public env vars (exposed to browser)
     NEXT_PUBLIC_APP_URL=http://localhost:3000
+    # NEXT_PUBLIC_PAYSTACK_PUBLIC_KEY=pk_live_... (if using Paystack)
     ```
 
-    **Important**: Replace placeholder values with your actual credentials. For `JWT_SECRET` and `ENCRYPTION_KEY`, use strong, randomly generated hexadecimal strings.
+    *   **MONGODB\_URI**: Your MongoDB connection string.
+    *   **JWT\_SECRET**: A long, random string for JWT signing. You can generate one with `node -e "console.log(crypto.randomBytes(32).toString('hex'))"`.
+    *   **ENCRYPTION\_KEY**: A 64-character hex string (32 bytes) for encrypting sensitive data like Gmail tokens. Generate with `node -e "console.log(crypto.randomBytes(32).toString('hex'))"`.
+    *   **GOOGLE\_CLIENT\_ID** / **GOOGLE\_CLIENT\_SECRET**: Obtain these from the Google Cloud Console for OAuth. Make sure to add `http://localhost:3000/api/auth/google/callback` and `http://localhost:3000/api/gmail/callback` to your authorized redirect URIs.
+    *   **GITHUB\_CLIENT\_ID** / **GITHUB\_CLIENT\_SECRET**: Obtain these from your GitHub OAuth Apps settings. Add `http://localhost:3000/api/auth/github/callback` to your authorized redirect URIs.
+    *   **NEXT\_PUBLIC\_APP\_URL**: The public URL of your application. Use `http://localhost:3000` for local development.
 
 4.  **Run the Development Server**:
     ```bash
     npm run dev
     # or
     yarn dev
-    # or
-    pnpm dev
     ```
-
-    The application will now be running at `http://localhost:3000`.
+    Open [http://localhost:3000](http://localhost:3000) in your browser to see the application.
 
 ## Usage
 
-Once you've installed and started the project, you can:
+Once your SendLiberty instance is running and you've connected a Gmail account and generated an API key from the dashboard, you can start sending emails via the `/api/send` endpoint.
 
-1.  **Sign Up / Log In**:
-    Navigate to `http://localhost:3000/login` to sign up or log in using your GitHub or Google account. This will authenticate you and redirect you to the dashboard.
+Here's how you can use the API in various languages:
 
-2.  **Connect a Gmail Account**:
-    From your dashboard, go to the "Gmail Accounts" section. Click "Connect New Account" to link a Gmail account. This will authorize SendLiberty to send transactional emails on your behalf via secure OAuth2.
+### cURL
 
-3.  **Generate an API Key**:
-    Head over to the "API Keys" section in your dashboard. Generate a new API key. **Make sure to copy the full API key when it's displayed, as it won't be shown again for security reasons.** You can also specify allowed origins to restrict where your API key can be used.
+```bash
+curl -X POST http://localhost:3000/api/send \
+  -H "Authorization: Bearer YOUR_SECRET_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "from": "sender@gmail.com",
+    "to": "user@example.com",
+    "subject": "Hello via SendLiberty Webhook!",
+    "html": "<p>This email was sent with <strong>SendLiberty</strong>, bypassing SMTP restrictions!</p>",
+    "text": "This email was sent with SendLiberty, bypassing SMTP restrictions!",
+    "replyTo": "support@yourdomain.com",
+    "cc": "anotheruser@example.com",
+    "bcc": ["audit@example.com"],
+    "attachments": [
+      {
+        "filename": "document.pdf",
+        "content": "JVBERi0xLjQKJcOkw7zD... (base64 encoded content)",
+        "type": "application/pdf"
+      }
+    ]
+  }'
+```
 
-4.  **Send transactional emails via API**:
-    Use the API key you generated to send transactional emails from your applications. Here are some examples:
+### JavaScript (fetch API)
 
-    **cURL**
-    ```bash
-    curl -X POST https://api.sendliberty.com/api/send \
-      -H "Authorization: Bearer YOUR_KEY" \
-      -H "Content-Type: application/json" \
-      -d '{
+```javascript
+const response = await fetch('http://localhost:3000/api/send', {
+  method: 'POST',
+  headers: {
+    'Authorization': 'Bearer YOUR_SECRET_API_KEY',
+    'Content-Type': 'application/json'
+  },
+  body: JSON.stringify({
+    from: 'sender@gmail.com',
+    to: 'user@example.com',
+    subject: 'Hello via SendLiberty Webhook!',
+    html: '<p>This email was sent with <strong>SendLiberty</strong>, bypassing SMTP restrictions!</p>',
+    text: 'This email was sent with SendLiberty, bypassing SMTP restrictions!',
+    replyTo: 'support@yourdomain.com',
+    cc: 'anotheruser@example.com',
+    bcc: ['audit@example.com'],
+    attachments: [
+      {
+        filename: 'document.pdf',
+        content: 'JVBERi0xLjQKJcOkw7zD... (base64 encoded content)',
+        type: 'application/pdf'
+      }
+    ]
+  })
+});
+
+const data = await response.json();
+console.log(data);
+```
+
+### Python (requests)
+
+```python
+import requests
+import json
+
+url = "http://localhost:3000/api/send"
+headers = {
+  "Authorization": "Bearer YOUR_SECRET_API_KEY",
+  "Content-Type": "application/json"
+}
+payload = {
+  "from": "sender@gmail.com",
+  "to": "user@example.com",
+  "subject": "Hello via SendLiberty Webhook!",
+  "html": "<p>This email was sent with <strong>SendLiberty</strong>, bypassing SMTP restrictions!</p>",
+  "text": "This email was sent with SendLiberty, bypassing SMTP restrictions!",
+  "replyTo": "support@yourdomain.com",
+  "cc": "anotheruser@example.com",
+  "bcc": ["audit@example.com"],
+  "attachments": [
+    {
+      "filename": "document.pdf",
+      "content": "JVBERi0xLjQKJcOkw7zD... (base64 encoded content)",
+      "type": "application/pdf"
+    }
+  ]
+}
+
+response = requests.post(url, headers=headers, data=json.dumps(payload))
+print(response.json())
+```
+
+### Go
+
+```go
+package main
+
+import (
+	"bytes"
+	"encoding/json"
+	"fmt"
+	"net/http"
+)
+
+func main() {
+	payload := map[string]interface{}{
+		"from":    "sender@gmail.com",
+		"to":      "user@example.com",
+		"subject": "Hello via SendLiberty Webhook!",
+		"html":    "<p>This email was sent with <strong>SendLiberty</strong>, bypassing SMTP restrictions!</p>",
+		"text":    "This email was sent with SendLiberty, bypassing SMTP restrictions!",
+		"replyTo": "support@yourdomain.com",
+		"cc":      "anotheruser@example.com",
+		"bcc":     []string{"audit@example.com"},
+		"attachments": []map[string]string{
+			{"filename": "document.pdf", "content": "JVBERi0xLjQKJcOkw7zD... (base64 encoded content)", "type": "application/pdf"},
+		},
+	}
+	jsonPayload, _ := json.Marshal(payload)
+
+	req, err := http.NewRequest("POST", "http://localhost:3000/api/send", bytes.NewBuffer(jsonPayload))
+	if err != nil {
+		fmt.Println("Error creating request:", err)
+		return
+	}
+	req.Header.Set("Authorization", "Bearer YOUR_SECRET_API_KEY")
+	req.Header.Set("Content-Type", "application/json")
+
+	client := &http.Client{}
+	resp, err := client.Do(req)
+	if err != nil {
+		fmt.Println("Error sending request:", err)
+		return
+	}
+	defer resp.Body.Close()
+
+	var result map[string]interface{}
+	json.NewDecoder(resp.Body).Decode(&result)
+	fmt.Println(result)
+}
+```
+
+### Rust
+
+```rust
+use serde_json::json;
+use reqwest::Client;
+
+#[tokio::main]
+async fn main() -> Result<(), Box<dyn std::error::Error>> {
+    let client = Client::new();
+    let payload = json!({
         "from": "sender@gmail.com",
         "to": "user@example.com",
-        "subject": "Hello via Webhook!",
-        "html": "<p>No SMTP needed.</p>",
+        "subject": "Hello via SendLiberty Webhook!",
+        "html": "<p>This email was sent with <strong>SendLiberty</strong>, bypassing SMTP restrictions!</p>",
+        "text": "This email was sent with SendLiberty, bypassing SMTP restrictions!",
         "replyTo": "support@yourdomain.com",
         "cc": "anotheruser@example.com",
         "bcc": ["audit@example.com"],
         "attachments": [
-          { "filename": "invoice.pdf", "content": "base64_encoded_content_here" }
+            {
+                "filename": "document.pdf",
+                "content": "JVBERi0xLjQKJcOkw7zD... (base64 encoded content)",
+                "type": "application/pdf"
+            }
         ]
-      }'
-    ```
-
-    **JavaScript (Fetch API)**
-    ```javascript
-    await fetch('https://api.sendliberty.com/api/send', {
-      method: 'POST',
-      headers: {
-        'Authorization': 'Bearer YOUR_KEY',
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        from: 'sender@gmail.com',
-        to: 'user@example.com',
-        subject: 'Hello via Webhook!',
-        html: '<p>No SMTP needed.</p>',
-        replyTo: 'support@yourdomain.com',
-        cc: 'anotheruser@example.com',
-        bcc: ['audit@example.com'],
-        attachments: [
-          { filename: 'invoice.pdf', content: 'base64_encoded_content_here' }
-        ]
-      })
     });
-    ```
 
-    **Python (Requests library)**
-    ```python
-    import requests
+    let res = client.post("http://localhost:3000/api/send")
+        .header("Authorization", "Bearer YOUR_SECRET_API_KEY")
+        .json(&payload)
+        .send()
+        .await?;
 
-    url = "https://api.sendliberty.com/api/send"
-    headers = {
-      "Authorization": "Bearer YOUR_KEY",
-      "Content-Type": "application/json"
+    let body = res.json::<serde_json::Value>().await?;
+    println!("{:?}", body);
+
+    Ok(())
+}
+```
+
+### PHP
+
+```php
+<?php
+$url = 'http://localhost:3000/api/send';
+$apiKey = 'YOUR_SECRET_API_KEY';
+
+$payload = [
+    'from' => 'sender@gmail.com',
+    'to' => 'user@example.com',
+    'subject' => 'Hello via SendLiberty Webhook!',
+    'html' => '<p>This email was sent with <strong>SendLiberty</strong>, bypassing SMTP restrictions!</p>',
+    'text' => 'This email was sent with SendLiberty, bypassing SMTP restrictions!',
+    'replyTo' => 'support@yourdomain.com',
+    'cc' => 'anotheruser@example.com',
+    'bcc' => ['audit@example.com'],
+    'attachments' => [
+        [
+            'filename' => 'document.pdf',
+            'content' => 'JVBERi0xLjQKJcOkw7zD... (base64 encoded content)',
+            'type' => 'application/pdf'
+        ]
+    ]
+];
+
+$ch = curl_init($url);
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+curl_setopt($ch, CURLOPT_POST, true);
+curl_setopt($ch, CURLOPT_HTTPHEADER, [
+    'Authorization: Bearer ' . $apiKey,
+    'Content-Type: application/json'
+]);
+curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($payload));
+
+$response = curl_exec($ch);
+if (curl_errno($ch)) {
+    echo 'cURL Error: ' . curl_error($ch);
+} else {
+    echo $response;
+}
+curl_close($ch);
+```
+
+### .NET (C# HttpClient)
+
+```csharp
+using System;
+using System.Net.Http;
+using System.Text;
+using System.Threading.Tasks;
+using Newtonsoft.Json; // Make sure to install Newtonsoft.Json
+
+public class EmailSender
+{
+    private static readonly HttpClient client = new HttpClient();
+
+    public static async Task Main(string[] args)
+    {
+        string apiUrl = "http://localhost:3000/api/send";
+        string apiKey = "YOUR_SECRET_API_KEY";
+
+        var payload = new
+        {
+            from = "sender@gmail.com",
+            to = "user@example.com",
+            subject = "Hello via SendLiberty Webhook!",
+            html = "<p>This email was sent with <strong>SendLiberty</strong>, bypassing SMTP restrictions!</p>",
+            text = "This email was sent with SendLiberty, bypassing SMTP restrictions!",
+            replyTo = "support@yourdomain.com",
+            cc = "anotheruser@example.com",
+            bcc = new[] { "audit@example.com" },
+            attachments = new[] {
+                new {
+                    filename = "document.pdf",
+                    content = "JVBERi0xLjQKJcOkw7zD... (base64 encoded content)",
+                    type = "application/pdf"
+                }
+            }
+        };
+
+        client.DefaultRequestHeaders.Add("Authorization", $"Bearer {apiKey}");
+        string jsonPayload = JsonConvert.SerializeObject(payload);
+        var content = new StringContent(jsonPayload, Encoding.UTF8, "application/json");
+
+        HttpResponseMessage response = await client.PostAsync(apiUrl, content);
+        response.EnsureSuccessStatusCode(); // Throws an exception if not successful
+        string responseBody = await response.Content.ReadAsStringAsync();
+        Console.WriteLine(responseBody);
     }
-    payload = {
-      "from": "sender@gmail.com",
-      "to": "user@example.com",
-      "subject": "Hello via Webhook!",
-      "html": "<p>No SMTP needed.</p>",
-      "replyTo": "support@yourdomain.com",
-      "cc": "anotheruser@example.com",
-      "bcc": ["audit@example.com"],
-      "attachments": [
-        { "filename": "invoice.pdf", "content": "base64_encoded_content_here" }
-      ]
+}
+```
+
+### Java (HttpClient)
+
+```java
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+
+public class EmailSender {
+
+    public static void main(String[] args) throws Exception {
+        HttpClient client = HttpClient.newHttpClient();
+        String apiUrl = "http://localhost:3000/api/send";
+        String apiKey = "YOUR_SECRET_API_KEY";
+
+        String jsonPayload = """
+            {
+              "from": "sender@gmail.com",
+              "to": "user@example.com",
+              "subject": "Hello via SendLiberty Webhook!",
+              "html": "<p>This email was sent with <strong>SendLiberty</strong>, bypassing SMTP restrictions!</p>",
+              "text": "This email was sent with SendLiberty, bypassing SMTP restrictions!",
+              "replyTo": "support@yourdomain.com",
+              "cc": "anotheruser@example.com",
+              "bcc": ["audit@example.com"],
+              "attachments": [
+                {
+                  "filename": "document.pdf",
+                  "content": "JVBERi0xLjQKJcOkw7zD... (base64 encoded content)",
+                  "type": "application/pdf"
+                }
+              ]
+            }
+            """;
+
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(apiUrl))
+                .header("Authorization", "Bearer " + apiKey)
+                .header("Content-Type", "application/json")
+                .POST(HttpRequest.BodyPublishers.ofString(jsonPayload))
+                .build();
+
+        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+        System.out.println(response.body());
     }
-
-    res = requests.post(url, json=payload, headers=headers)
-    ```
-
-    You can find more detailed API documentation on the `/docs` page (or your local `http://localhost:3000/docs`).
+}
+```
 
 ## Technologies Used
 
 | Technology         | Description                                     |
 | :----------------- | :---------------------------------------------- |
-| **Next.js**        | React framework for full-stack applications     |
-| **React**          | Frontend UI library                             |
-| **TypeScript**     | Statically typed JavaScript                     |
-| **MongoDB**        | NoSQL database for data storage                 |
-| **Mongoose**       | MongoDB object modeling for Node.js             |
-| **Google APIs**    | Integration with Google OAuth2 and Gmail API    |
-| **Argon2**         | Password hashing library                        |
-| **JWT**            | JSON Web Tokens for authentication              |
-| **Tailwind CSS**   | Utility-first CSS framework                     |
-| **TanStack Query** | Data fetching and caching library               |
-| **Hugeicons**      | React icon library                              |
-| **Sonner**         | Modern toast library                            |
-| **Framer Motion**  | Animation library for React                     |
+| **Next.js**        | React framework for production                  |
+| **React**          | Frontend library for building user interfaces   |
+| **TypeScript**     | Superset of JavaScript for type safety          |
+| **Node.js**        | JavaScript runtime for server-side logic        |
+| **MongoDB**        | NoSQL database for data persistence             |
+| **Mongoose**       | ODM for MongoDB and Node.js                     |
+| **`argon2`**       | Password hashing library                        |
+| **`jsonwebtoken`** | JWT for secure authentication                   |
+| **`googleapis`**   | Official Node.js client library for Google APIs |
+| **`axios`**        | Promise-based HTTP client for the browser and Node.js |
+| **`@tanstack/react-query`** | Powerful asynchronous state management for React |
+| **Tailwind CSS**   | Utility-first CSS framework for rapid UI development |
+| **Shadcn UI**      | Reusable UI components built with Tailwind CSS  |
+| **`sonner`**       | Accessible toast notifications                  |
+| **`canvas-confetti`** | For celebratory visual effects on milestones |
 
 ## Contributing
 
-We welcome contributions to SendLiberty! If you're interested in improving the project, here's how you can help:
-
-1.  **Fork the Repository**: Start by forking the `send-liberty` repository to your GitHub account.
-2.  **Clone Your Fork**: Clone your forked repository to your local machine.
-3.  **Create a New Branch**: Create a new branch for your feature or bug fix:
-    ```bash
-    git checkout -b feature/your-feature-name
-    ```
-4.  **Make Your Changes**: Implement your changes, following the existing code style and conventions.
-5.  **Test Your Changes**: Ensure your changes don't introduce any regressions and work as expected.
-6.  **Commit Your Changes**: Write a clear and concise commit message.
-    ```bash
-    git commit -m "feat: Add new awesome feature"
-    ```
-7.  **Push to Your Fork**: Push your branch to your forked repository:
-    ```bash
-    git push origin feature/your-feature-name
-    ```
-8.  **Open a Pull Request**: Submit a pull request from your fork to the `main` branch of the original `send-liberty` repository. Provide a detailed description of your changes.
-
-## License
-
-This project is licensed under the MIT License. See the repository for full details.
+We welcome contributions! If you're interested in improving SendLiberty, please feel free to fork the repository, make your changes, and submit a pull request. We appreciate all efforts to make this project better.
 
 ## Author Info
 
-*   **LinkedIn**: [samueltuoyo](https://linkedin.com/in/samueltuoyo)
-*   **X (Twitter)**: [TuoyoS26091](https://x.com/TuoyoS26091)
+*   **LinkedIn**: [Samuel Tuoyo](https://linkedin.com/in/samuel-tuoyo)
+*   **X (Twitter)**: [@TuoyoS26091](https://x.com/TuoyoS26091)
 
 ---
+
+[![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![Next.js](https://img.shields.io/badge/Next.js-000000?style=for-the-badge&logo=next.js&logoColor=white)](https://nextjs.org/)
+[![React](https://img.shields.io/badge/React-61DAFB?style=for-the-badge&logo=react&logoColor=black)](https://react.dev/)
+[![Node.js](https://img.shields.io/badge/Node.js-339933?style=for-the-badge&logo=node.js&logoColor=white)](https://nodejs.org/en)
+[![MongoDB](https://img.shields.io/badge/MongoDB-47A248?style=for-the-badge&logo=mongodb&logoColor=white)](https://www.mongodb.com/)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-06B6D4?style=for-the-badge&logo=tailwind-css&logoColor=white)](https://tailwindcss.com/)
 
 [![Readme was generated by Dokugen](https://img.shields.io/badge/Readme%20was%20generated%20by-Dokugen-brightgreen)](https://dokugen-readme.vercel.app)

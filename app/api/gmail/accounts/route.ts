@@ -4,6 +4,7 @@ import { connectDB } from "@/lib/db";
 import { createOAuthClient } from "@/lib/gmail";
 import { decrypt } from "@/lib/encryption";
 import GmailAccount from "@/models/GmailAccount";
+import EmailLog from "@/models/EmailLog";
 import mongoose from "mongoose";
 
 export async function GET(req: NextRequest) {
@@ -56,7 +57,10 @@ export async function DELETE(req: NextRequest) {
         await oauth2Client.revokeCredentials();
       } catch {}
 
-      await GmailAccount.deleteOne({ _id: account._id });
+      await Promise.all([
+        GmailAccount.deleteOne({ _id: account._id }),
+        EmailLog.deleteMany({ userId: new mongoose.Types.ObjectId(user.id), from: email }),
+      ]);
     } else {
       // Fallback: Disconnect all if no email specified
       const accounts = await GmailAccount.find({ userId: new mongoose.Types.ObjectId(user.id) }).lean();
@@ -67,7 +71,12 @@ export async function DELETE(req: NextRequest) {
           await oauth2Client.revokeCredentials();
         } catch {}
       }
-      await GmailAccount.deleteMany({ userId: new mongoose.Types.ObjectId(user.id) });
+      
+      const emails = accounts.map(a => a.gmailEmail);
+      await Promise.all([
+        GmailAccount.deleteMany({ userId: new mongoose.Types.ObjectId(user.id) }),
+        EmailLog.deleteMany({ userId: new mongoose.Types.ObjectId(user.id), from: { $in: emails } }),
+      ]);
     }
 
     return NextResponse.json({ success: true, message: "Gmail disconnected successfully" });
