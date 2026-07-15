@@ -235,7 +235,7 @@ export default function SettingsPage() {
           <DialogHeader className="mb-2">
             <DialogTitle className="text-xl font-headline-md font-bold text-destructive">Delete Account</DialogTitle>
             <DialogDescription className="text-secondary text-sm leading-relaxed mt-1">
-              This will permanently delete your SendLiberty account and all associated data — including connected Gmail accounts, email logs, and API keys. This action is <strong>irreversible</strong>.
+              This will permanently delete your SendLiberty account and all associated data, including connected Gmail accounts, email logs, and API keys. This action is <strong>irreversible</strong>.
             </DialogDescription>
           </DialogHeader>
           <div className="flex flex-row gap-3 mt-4 pt-4 border-t border-outline-variant/60">
