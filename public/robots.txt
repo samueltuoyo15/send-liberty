@@ -9,7 +9,7 @@ Disallow: /dashboard/*
 Disallow: /login
 
 # Host
-Host: https://sendliberty.xyz
+Host: https://sendlib.samueltuoyo.com
 
 # Sitemaps
-Sitemap: https://sendliberty.xyz/sitemap.xml
+Sitemap: https://sendlib.samueltuoyo.com/sitemap.xml

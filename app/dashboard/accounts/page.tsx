@@ -51,14 +51,14 @@ export default function AccountsPage() {
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-          <h1 className="text-3xl font-headline-md font-bold tracking-tight text-primary-sendliberty">Gmail Accounts</h1>
+          <h1 className="text-3xl font-headline-md font-bold tracking-tight text-primary-sendlib">Gmail Accounts</h1>
           <p className="text-secondary font-body-md mt-1">
             Connect and manage the Gmail accounts used for sending emails.
           </p>
         </div>
         <Button 
           size="lg"
-          className="rounded-lg font-label-sm bg-primary-sendliberty hover:bg-primary-sendliberty/90 text-white shadow-sm transition-all active:scale-95 cursor-pointer" 
+          className="rounded-lg font-label-sm bg-primary-sendlib hover:bg-primary-sendlib/90 text-white shadow-sm transition-all active:scale-95 cursor-pointer" 
           onClick={() => setConnectConfirmOpen(true)}
           disabled={isConnecting}
         >
@@ -70,7 +70,7 @@ export default function AccountsPage() {
       <div className="rounded-xl border border-indigo-100 bg-indigo-50/50 p-4">
         <div className="flex gap-3">
           <div className="flex-1">
-            <h3 className="font-semibold text-primary-sendliberty text-sm mb-1">Gmail Sending Limits</h3>
+            <h3 className="font-semibold text-primary-sendlib text-sm mb-1">Gmail Sending Limits</h3>
             <p className="text-sm text-secondary leading-relaxed">
               Standard Gmail accounts can send up to <span className="font-bold">500 emails per day</span>. Google Workspace custom domain accounts can send up to <span className="font-bold">2,000 emails per day</span>.
             </p>
@@ -156,7 +156,7 @@ export default function AccountsPage() {
       <Dialog open={successDialogOpen} onOpenChange={setSuccessDialogOpen}>
         <DialogContent className="sm:max-w-md">
           <DialogHeader className="mb-2">
-            <DialogTitle className="text-xl font-headline-md font-bold text-primary-sendliberty flex items-center gap-2">
+            <DialogTitle className="text-xl font-headline-md font-bold text-primary-sendlib flex items-center gap-2">
               <span>🎉</span> Gmail Connected!
             </DialogTitle>
             <DialogDescription className="text-secondary text-sm leading-relaxed mt-1">
@@ -173,7 +173,7 @@ export default function AccountsPage() {
             </Button>
             <Link href="/dashboard/keys" className="flex-1">
               <Button 
-                className="w-full rounded-lg font-label-sm bg-primary-sendliberty hover:bg-primary-sendliberty/90 text-white cursor-pointer" 
+                className="w-full rounded-lg font-label-sm bg-primary-sendlib hover:bg-primary-sendlib/90 text-white cursor-pointer" 
               >
                 Create API Key
               </Button>
@@ -185,9 +185,9 @@ export default function AccountsPage() {
       <Dialog open={connectConfirmOpen} onOpenChange={setConnectConfirmOpen}>
         <DialogContent className="sm:max-w-md">
           <DialogHeader className="mb-2">
-            <DialogTitle className="text-xl font-headline-md font-bold text-primary-sendliberty">Connect Gmail Account</DialogTitle>
+            <DialogTitle className="text-xl font-headline-md font-bold text-primary-sendlib">Connect Gmail Account</DialogTitle>
             <DialogDescription className="text-secondary text-sm leading-relaxed mt-1">
-              Connect your Google account via secure OAuth 2.0. SendLiberty will only request the narrow permissions required to relay transactional emails on your behalf, and your credentials are never seen or stored.
+              Connect your Google account via secure OAuth 2.0. SendLib will only request the narrow permissions required to relay transactional emails on your behalf, and your credentials are never seen or stored.
             </DialogDescription>
           </DialogHeader>
           <div className="flex flex-row gap-3 mt-4 pt-4 border-t border-outline-variant/60">
@@ -199,7 +199,7 @@ export default function AccountsPage() {
               Cancel
             </Button>
             <Button 
-              className="flex-1 rounded-lg font-label-sm bg-primary-sendliberty hover:bg-primary-sendliberty/90 text-white cursor-pointer" 
+              className="flex-1 rounded-lg font-label-sm bg-primary-sendlib hover:bg-primary-sendlib/90 text-white cursor-pointer" 
               onClick={() => {
                 setConnectConfirmOpen(false);
                 toast.loading("Redirecting to Google...", { id: "gmail-connect" });
@@ -219,7 +219,7 @@ export default function AccountsPage() {
           <DialogHeader className="mb-2">
             <DialogTitle className="text-xl font-headline-md font-bold text-destructive">Disconnect Gmail Account</DialogTitle>
             <DialogDescription className="text-secondary text-sm leading-relaxed mt-1">
-              Are you sure you want to disconnect **{disconnectEmail}**? SendLiberty will no longer be able to send transactional emails on behalf of this account.
+              Are you sure you want to disconnect **{disconnectEmail}**? SendLib will no longer be able to send transactional emails on behalf of this account.
             </DialogDescription>
           </DialogHeader>
           <div className="flex flex-row gap-3 mt-4 pt-4 border-t border-outline-variant/60">

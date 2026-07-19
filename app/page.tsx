@@ -8,7 +8,7 @@ import { useMe } from "@/hooks/useAuth";
 export default function Home() {
   const [isScrolled, setIsScrolled] = useState(false);
   const { data: user, isLoading } = useMe();
-  const [apiUrl, setApiUrl] = useState("https://api.sendliberty.com");
+  const [apiUrl, setApiUrl] = useState("https://api.sendlib.com");
   const [activeTab, setActiveTab] = useState<"curl" | "js" | "python" | "go" | "rust" | "php" | "net" | "java">("curl");
   const [isExpanded, setIsExpanded] = useState(false);
 
@@ -27,7 +27,7 @@ export default function Home() {
 
   return (
     <SEO title="Bypass SMTP Restrictions" description="Bypass SMTP blocks on Railway, Render and other restricted hosting clouds. Send transactional emails via Google OAuth2 with zero DNS configuration.">
-      <div className="flex flex-col min-h-screen bg-background-sendliberty text-on-background font-body-md">
+      <div className="flex flex-col min-h-screen bg-background-sendlib text-on-background font-body-md">
       {/* TopNavBar */}
       <header 
         className={`w-full fixed top-0 z-50 transition-all duration-300 border-b ${
@@ -43,16 +43,16 @@ export default function Home() {
           <Link 
             href="/" 
             className={`font-headline-md text-headline-md font-bold transition-colors duration-300 ${
-              isScrolled ? "text-primary-sendliberty" : "text-white"
+              isScrolled ? "text-primary-sendlib" : "text-white"
             }`}
           >
-            SendLiberty
+            SendLib
           </Link>
           <div className="hidden md:flex items-center gap-xl">
             <Link 
               href="#features" 
               className={`font-body-md text-body-md transition-colors duration-300 ${
-                isScrolled ? "text-secondary hover:text-primary-sendliberty" : "text-white/80 hover:text-white"
+                isScrolled ? "text-secondary hover:text-primary-sendlib" : "text-white/80 hover:text-white"
               }`}
             >
               Features
@@ -60,7 +60,7 @@ export default function Home() {
             <Link 
               href="/docs" 
               className={`font-body-md text-body-md transition-colors duration-300 ${
-                isScrolled ? "text-secondary hover:text-primary-sendliberty" : "text-white/80 hover:text-white"
+                isScrolled ? "text-secondary hover:text-primary-sendlib" : "text-white/80 hover:text-white"
               }`}
             >
               API Docs
@@ -72,8 +72,8 @@ export default function Home() {
                 href="/dashboard" 
                 className={`px-lg py-sm rounded-xl font-label-sm text-label-sm transition-all duration-300 active:scale-95 inline-block ${
                   isScrolled 
-                    ? "bg-primary-sendliberty text-white hover:bg-primary-sendliberty/90" 
-                    : "bg-white text-primary-sendliberty hover:bg-white/90"
+                    ? "bg-primary-sendlib text-white hover:bg-primary-sendlib/90" 
+                    : "bg-white text-primary-sendlib hover:bg-white/90"
                 }`}
               >
                 Dashboard
@@ -83,7 +83,7 @@ export default function Home() {
                 <Link 
                   href="/login" 
                   className={`hidden sm:block font-label-sm text-label-sm transition-all duration-300 active:scale-95 px-lg py-sm ${
-                    isScrolled ? "text-primary-sendliberty" : "text-white/80 hover:text-white"
+                    isScrolled ? "text-primary-sendlib" : "text-white/80 hover:text-white"
                   }`}
                 >
                   Login
@@ -92,8 +92,8 @@ export default function Home() {
                   href="/login" 
                   className={`px-lg py-sm rounded-xl font-label-sm text-label-sm transition-all duration-300 active:scale-95 inline-block ${
                     isScrolled 
-                      ? "bg-primary-sendliberty text-white hover:bg-primary-sendliberty/90" 
-                      : "bg-white text-primary-sendliberty hover:bg-white/90"
+                      ? "bg-primary-sendlib text-white hover:bg-primary-sendlib/90" 
+                      : "bg-white text-primary-sendlib hover:bg-white/90"
                   }`}
                 >
                   Sign Up
@@ -124,11 +124,11 @@ export default function Home() {
             </p>
             <div className="flex flex-col sm:flex-row gap-md pt-md">
               {!isLoading && user ? (
-                <Link href="/dashboard" className="bg-primary-sendliberty hover:bg-primary-sendliberty/90 text-white px-xl py-lg rounded-xl font-label-sm text-label-sm transition-transform active:scale-95 shadow-sm text-center w-full sm:w-auto inline-block">
+                <Link href="/dashboard" className="bg-primary-sendlib hover:bg-primary-sendlib/90 text-white px-xl py-lg rounded-xl font-label-sm text-label-sm transition-transform active:scale-95 shadow-sm text-center w-full sm:w-auto inline-block">
                   Go to Dashboard
                 </Link>
               ) : (
-                <Link href="/login" className="bg-primary-sendliberty hover:bg-primary-sendliberty/90 text-white px-xl py-lg rounded-xl font-label-sm text-label-sm transition-transform active:scale-95 shadow-sm text-center w-full sm:w-auto inline-block">
+                <Link href="/login" className="bg-primary-sendlib hover:bg-primary-sendlib/90 text-white px-xl py-lg rounded-xl font-label-sm text-label-sm transition-transform active:scale-95 shadow-sm text-center w-full sm:w-auto inline-block">
                   Get Started Free
                 </Link>
               )}
@@ -137,7 +137,7 @@ export default function Home() {
               </Link>
             </div>
           </div>
-          <div className="bg-primary-sendliberty text-primary-fixed rounded-xl p-lg font-mono border border-outline-variant hover:border-primary-sendliberty transition-colors overflow-hidden shadow-sm flex flex-col">
+          <div className="bg-primary-sendlib text-primary-fixed rounded-xl p-lg font-mono border border-outline-variant hover:border-primary-sendlib transition-colors overflow-hidden shadow-sm flex flex-col">
             <div className="flex justify-between items-center mb-md border-b border-[#2d3b4e] pb-3">
               <div className="flex gap-xs">
                 <div className="w-3 h-3 rounded-full bg-red-400"></div>
@@ -514,7 +514,7 @@ var req = HttpRequest.newBuilder()
         <section id="features" className="py-xl md:py-32 bg-surface">
           <div className="max-w-7xl mx-auto px-margin-mobile md:px-margin-desktop">
             <div className="text-center max-w-[640px] mx-auto mb-16 space-y-md">
-              <h2 className="font-headline-lg text-headline-lg text-primary-sendliberty">Features</h2>
+              <h2 className="font-headline-lg text-headline-lg text-primary-sendlib">Features</h2>
               <p className="font-body-lg text-body-lg text-on-surface-variant">
                 Everything you need to deliver mission-critical emails without blocked SMTP ports, domain verifications, or complex DNS configurations.
               </p>
@@ -525,7 +525,7 @@ var req = HttpRequest.newBuilder()
                 <span className="material-symbols-outlined text-[#6324f5] text-4xl mb-md">webhook</span>
                 <h3 className="font-headline-md text-headline-md mb-sm text-[#2e1065]">Bypass Blocked Ports</h3>
                 <p className="font-body-md text-body-md text-[#4c2d96] leading-relaxed">
-                  Railway, Render, and most free cloud hosts block outbound SMTP ports. SendLiberty relays through your connected Google account, no SMTP port required. Emails land in the inbox, not spam.
+                  Railway, Render, and most free cloud hosts block outbound SMTP ports. SendLib relays through your connected Google account, no SMTP port required. Emails land in the inbox, not spam.
                 </p>
               </div>
               {/* Regular Card */}
@@ -578,9 +578,9 @@ var req = HttpRequest.newBuilder()
         <section id="faq" className="py-xl md:py-32 bg-surface-container-low border-t border-outline-variant/60">
           <div className="max-w-4xl mx-auto px-margin-mobile md:px-margin-desktop">
             <div className="text-center mb-16 space-y-3">
-              <h2 className="font-headline-lg text-headline-lg text-primary-sendliberty">Frequently Asked Questions</h2>
+              <h2 className="font-headline-lg text-headline-lg text-primary-sendlib">Frequently Asked Questions</h2>
               <p className="font-body-lg text-body-lg text-on-surface-variant max-w-[600px] mx-auto">
-                Got questions about how SendLiberty is different from other transactional email sending platforms? We have answers.
+                Got questions about how SendLib is different from other transactional email sending platforms? We have answers.
               </p>
             </div>
             
@@ -591,7 +591,7 @@ var req = HttpRequest.newBuilder()
                   Do I need to verify my domain or configure DNS records?
                 </h3>
                 <p className="text-sm text-secondary leading-relaxed pl-4">
-                  No! Because SendLiberty routes your email relay requests securely through your already verified, connected Google accounts, there is absolutely zero DNS configuration required. You do not need to add SPF, DKIM, MX, or TXT records to start sending immediately.
+                  No! Because SendLib routes your email relay requests securely through your already verified, connected Google accounts, there is absolutely zero DNS configuration required. You do not need to add SPF, DKIM, MX, or TXT records to start sending immediately.
                 </p>
               </div>
 
@@ -611,7 +611,7 @@ var req = HttpRequest.newBuilder()
                   How does this compare to the free tier of Resend, Mailgun, or SendGrid?
                 </h3>
                 <p className="text-sm text-secondary leading-relaxed pl-4">
-                  Other platforms limit you to only 100 free emails per day on their free plans and require strict domain verification. With SendLiberty, you can send up to <strong>500 emails/day</strong> per connected personal/product Gmail account, or up to <strong>2,000 emails/day</strong> per connected Google Workspace account.
+                  Other platforms limit you to only 100 free emails per day on their free plans and require strict domain verification. With SendLib, you can send up to <strong>500 emails/day</strong> per connected personal/product Gmail account, or up to <strong>2,000 emails/day</strong> per connected Google Workspace account.
                 </p>
               </div>
 
@@ -657,11 +657,11 @@ var req = HttpRequest.newBuilder()
               Join a couple of developers who have simplified their email delivery pipeline. Start sending in seconds.
             </p>
             {!isLoading && user ? (
-              <Link href="/dashboard" className="bg-white text-primary-sendliberty hover:bg-gray-100 px-xl py-lg rounded-xl font-label-sm text-label-sm transition-transform active:scale-95 shadow-sm inline-block">
+              <Link href="/dashboard" className="bg-white text-primary-sendlib hover:bg-gray-100 px-xl py-lg rounded-xl font-label-sm text-label-sm transition-transform active:scale-95 shadow-sm inline-block">
                 Go to Dashboard
               </Link>
             ) : (
-              <Link href="/login" className="bg-white text-primary-sendliberty hover:bg-gray-100 px-xl py-lg rounded-xl font-label-sm text-label-sm transition-transform active:scale-95 shadow-sm inline-block">
+              <Link href="/login" className="bg-white text-primary-sendlib hover:bg-gray-100 px-xl py-lg rounded-xl font-label-sm text-label-sm transition-transform active:scale-95 shadow-sm inline-block">
                 Create Free Account
               </Link>
             )}
@@ -673,17 +673,17 @@ var req = HttpRequest.newBuilder()
       <footer className="w-full mt-auto bg-surface-container border-t border-outline-variant">
         <div className="flex flex-col md:flex-row justify-between items-center px-margin-mobile md:px-margin-desktop py-xl gap-md max-w-7xl mx-auto">
           <div className="flex flex-col gap-xs text-center md:text-left">
-            <div className="font-headline-md text-headline-md font-bold text-primary-sendliberty">SendLiberty</div>
-            <p className="font-label-sm text-label-sm text-on-surface-variant">© {new Date().getFullYear()} SendLiberty. All rights reserved.</p>
+            <div className="font-headline-md text-headline-md font-bold text-primary-sendlib">SendLib</div>
+            <p className="font-label-sm text-label-sm text-on-surface-variant">© {new Date().getFullYear()} SendLib. All rights reserved.</p>
           </div>
           <div className="flex flex-wrap justify-center gap-md">
-            <Link href="/docs" className="font-label-sm text-label-sm text-on-surface-variant hover:text-primary-sendliberty transition-colors underline">
+            <Link href="/docs" className="font-label-sm text-label-sm text-on-surface-variant hover:text-primary-sendlib transition-colors underline">
               Documentation
             </Link>
-            <Link href="/privacy-policy" className="font-label-sm text-label-sm text-on-surface-variant hover:text-primary-sendliberty transition-colors underline">
+            <Link href="/privacy-policy" className="font-label-sm text-label-sm text-on-surface-variant hover:text-primary-sendlib transition-colors underline">
               Privacy Policy
             </Link>
-            <Link href="/terms-of-service" className="font-label-sm text-label-sm text-on-surface-variant hover:text-primary-sendliberty transition-colors underline">
+            <Link href="/terms-of-service" className="font-label-sm text-label-sm text-on-surface-variant hover:text-primary-sendlib transition-colors underline">
               Terms of Service
             </Link>
           </div>

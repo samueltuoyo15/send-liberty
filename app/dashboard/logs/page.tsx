@@ -36,14 +36,14 @@ export default function LogsPage() {
     <div className="space-y-6">
       <div className="flex flex-col xl:flex-row justify-between items-start xl:items-center gap-4">
         <div>
-          <h1 className="text-3xl font-headline-md font-bold tracking-tight text-primary-sendliberty">Email Logs</h1>
+          <h1 className="text-3xl font-headline-md font-bold tracking-tight text-primary-sendlib">Email Logs</h1>
           <p className="text-secondary font-body-md mt-1">
             View the recent history of all emails sent via your API keys.
           </p>
         </div>
         <div className="flex flex-col sm:flex-row items-center gap-3 w-full xl:w-auto">
           {/* Search bar */}
-          <div className="flex items-center gap-2 bg-surface-container-low border border-outline-variant rounded-lg px-3 h-10 shadow-xs focus-within:border-primary-sendliberty focus-within:bg-white transition-colors w-full sm:w-72">
+          <div className="flex items-center gap-2 bg-surface-container-low border border-outline-variant rounded-lg px-3 h-10 shadow-xs focus-within:border-primary-sendlib focus-within:bg-white transition-colors w-full sm:w-72">
             <HugeiconsIcon icon={Search01Icon} size={16} color='currentColor' strokeWidth={1.5} className="text-secondary" />
             <input 
               value={search}
@@ -63,7 +63,7 @@ export default function LogsPage() {
               setStatus(e.target.value);
               setPage(1);
             }}
-            className="bg-surface-container-low border border-outline-variant rounded-lg px-3 h-10 text-sm outline-none text-secondary focus:border-primary-sendliberty focus:bg-white transition-colors w-full sm:w-40 cursor-pointer"
+            className="bg-surface-container-low border border-outline-variant rounded-lg px-3 h-10 text-sm outline-none text-secondary focus:border-primary-sendlib focus:bg-white transition-colors w-full sm:w-40 cursor-pointer"
           >
             <option value="">All Statuses</option>
             <option value="sent">Sent</option>
@@ -77,7 +77,7 @@ export default function LogsPage() {
               setFromEmail(e.target.value);
               setPage(1);
             }}
-            className="bg-surface-container-low border border-outline-variant rounded-lg px-3 h-10 text-sm outline-none text-secondary focus:border-primary-sendliberty focus:bg-white transition-colors w-full sm:w-56 cursor-pointer"
+            className="bg-surface-container-low border border-outline-variant rounded-lg px-3 h-10 text-sm outline-none text-secondary focus:border-primary-sendlib focus:bg-white transition-colors w-full sm:w-56 cursor-pointer"
           >
             <option value="">All Senders</option>
             {accounts?.map((acc: any) => (
@@ -118,7 +118,7 @@ export default function LogsPage() {
                 <td colSpan={6} className="px-6 py-16 text-center">
                   {isFiltered ? (
                     <div className="flex flex-col items-center justify-center max-w-[420px] mx-auto space-y-3">
-                      <HugeiconsIcon icon={Search01Icon} size={48} color='currentColor' strokeWidth={1.5} className="text-primary-sendliberty opacity-50 mb-1" />
+                      <HugeiconsIcon icon={Search01Icon} size={48} color='currentColor' strokeWidth={1.5} className="text-primary-sendlib opacity-50 mb-1" />
                       <h3 className="text-lg font-headline-md font-bold text-on-background">No matching logs</h3>
                       <p className="text-sm text-secondary leading-relaxed">
                         We couldn't find any email logs matching your search terms or filter selections. Try clearing your filters.
@@ -126,7 +126,7 @@ export default function LogsPage() {
                       <div className="pt-2">
                         <Button 
                           variant="outline" 
-                          className="rounded-lg font-label-sm border border-outline-variant bg-surface-container-lowest text-primary-sendliberty shadow-xs hover:bg-surface-container-low px-4"
+                          className="rounded-lg font-label-sm border border-outline-variant bg-surface-container-lowest text-primary-sendlib shadow-xs hover:bg-surface-container-low px-4"
                           onClick={() => {
                             setSearch("");
                             setStatus("");
@@ -140,19 +140,19 @@ export default function LogsPage() {
                     </div>
                   ) : (
                     <div className="flex flex-col items-center justify-center max-w-[420px] mx-auto space-y-3">
-                      <HugeiconsIcon icon={FileTypeIcon} size={48} color='currentColor' strokeWidth={1.5} className="text-primary-sendliberty opacity-50 mb-1" />
+                      <HugeiconsIcon icon={FileTypeIcon} size={48} color='currentColor' strokeWidth={1.5} className="text-primary-sendlib opacity-50 mb-1" />
                       <h3 className="text-lg font-headline-md font-bold text-on-background">No email logs found</h3>
                       <p className="text-sm text-secondary leading-relaxed">
                         You haven't sent any emails yet. Send an email using our REST API or Quickstart guide to view logs here.
                       </p>
                       <div className="pt-2 flex flex-col sm:flex-row items-center gap-3">
                         <Link href="/docs/send">
-                          <Button variant="outline" className="rounded-lg font-label-sm border border-outline-variant bg-surface-container-lowest text-primary-sendliberty shadow-xs hover:bg-surface-container-low px-4">
+                          <Button variant="outline" className="rounded-lg font-label-sm border border-outline-variant bg-surface-container-lowest text-primary-sendlib shadow-xs hover:bg-surface-container-low px-4">
                             View API Docs
                           </Button>
                         </Link>
                         <Link href="/dashboard/keys?generate=true">
-                          <Button className="rounded-lg font-label-sm bg-primary-sendliberty hover:bg-primary-sendliberty/90 text-white shadow-sm px-4">
+                          <Button className="rounded-lg font-label-sm bg-primary-sendlib hover:bg-primary-sendlib/90 text-white shadow-sm px-4">
                             Get API Key
                           </Button>
                         </Link>
@@ -193,7 +193,7 @@ export default function LogsPage() {
                     <Button 
                       variant="outline" 
                       size="sm"
-                      className="rounded-lg h-8 text-xs font-semibold border-outline-variant hover:bg-surface-container-low text-primary-sendliberty"
+                      className="rounded-lg h-8 text-xs font-semibold border-outline-variant hover:bg-surface-container-low text-primary-sendlib"
                       onClick={() => setSelectedLog(log)}
                     >
                       View
@@ -230,7 +230,7 @@ export default function LogsPage() {
       <Sheet open={!!selectedLog} onOpenChange={(open) => !open && setSelectedLog(null)}>
         <SheetContent side="right">
           <SheetHeader className="pb-4 border-b border-outline-variant">
-            <SheetTitle className="text-xl font-headline-md font-bold text-primary-sendliberty truncate pr-6" title={selectedLog?.subject}>
+            <SheetTitle className="text-xl font-headline-md font-bold text-primary-sendlib truncate pr-6" title={selectedLog?.subject}>
               {selectedLog?.subject || "Email Details"}
             </SheetTitle>
             <SheetDescription className="text-secondary text-sm">

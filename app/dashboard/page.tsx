@@ -56,7 +56,7 @@ export default function DashboardPage() {
 
   useEffect(() => {
     if (!isLoadingAccounts && connectedGmailsCount > 0) {
-      const seen = localStorage.getItem("sendliberty_confetti_step1_seen");
+      const seen = localStorage.getItem("sendlib_confetti_step1_seen");
       if (!seen) {
         confetti({
           particleCount: 300,
@@ -64,7 +64,7 @@ export default function DashboardPage() {
           origin: { y: 0.6 }
         });
         setMilestoneDialogOpen(true);
-        localStorage.setItem("sendliberty_confetti_step1_seen", "true");
+        localStorage.setItem("sendlib_confetti_step1_seen", "true");
       }
     }
   }, [isLoadingAccounts, connectedGmailsCount]);
@@ -78,7 +78,7 @@ export default function DashboardPage() {
           animate={{ opacity: 1, x: 0 }}
           className="space-y-1"
         >
-          <h1 className="text-3xl font-headline-md font-bold tracking-tight text-primary-sendliberty">Overview</h1>
+          <h1 className="text-3xl font-headline-md font-bold tracking-tight text-primary-sendlib">Overview</h1>
           <p className="text-secondary font-body-md mt-1">Your API relay service is active and running.</p>
         </motion.div>
         
@@ -89,7 +89,7 @@ export default function DashboardPage() {
         >
           <Button 
             size="lg"
-            className="rounded-lg font-label-sm bg-primary-sendliberty hover:bg-primary-sendliberty/90 text-white shadow-sm transition-all active:scale-95 group" 
+            className="rounded-lg font-label-sm bg-primary-sendlib hover:bg-primary-sendlib/90 text-white shadow-sm transition-all active:scale-95 group" 
             onClick={() => {
               setConnectConfirmOpen(true);
             }}
@@ -102,7 +102,7 @@ export default function DashboardPage() {
             <Button 
               size="lg"
               variant="outline" 
-              className="rounded-lg font-label-sm border border-outline-variant bg-white text-primary-sendliberty shadow-xs hover:bg-surface-container-low transition-all active:scale-95"
+              className="rounded-lg font-label-sm border border-outline-variant bg-white text-primary-sendlib shadow-xs hover:bg-surface-container-low transition-all active:scale-95"
             >
               <HugeiconsIcon icon={Key01Icon} size={16} color='currentColor' strokeWidth={1.5} />
               <span className="ml-2">Generate Key</span>
@@ -456,7 +456,7 @@ export default function DashboardPage() {
                           <HugeiconsIcon icon={FileTypeIcon} size={40} color='currentColor' strokeWidth={1.5} className="text-[#1d2b3e] opacity-40 mb-0.5" />
                           <h4 className="text-base font-headline-md font-bold text-[#1d2b3e]">No email logs found</h4>
                           <p className="text-xs text-[#1d2b3e]/80 leading-relaxed">
-                            Sent emails will appear here automatically once you send through the SendLiberty API.
+                            Sent emails will appear here automatically once you send through the SendLib API.
                           </p>
                           <div className="pt-1 flex items-center gap-2.5">
                             <Link href="/docs/send">
@@ -579,7 +579,7 @@ export default function DashboardPage() {
       <Sheet open={!!newKeyDialog} onOpenChange={() => setNewKeyDialog(null)}>
         <SheetContent side="right" className="w-full sm:max-w-md border-l border-outline-variant p-6 bg-surface-container-lowest">
           <SheetHeader className="p-0 mb-6">
-            <SheetTitle className="text-xl font-headline-md font-bold text-primary-sendliberty">API Key Generated</SheetTitle>
+            <SheetTitle className="text-xl font-headline-md font-bold text-primary-sendlib">API Key Generated</SheetTitle>
             <SheetDescription className="text-secondary text-sm">
               Copy your new secret key below. For security reasons, you won't be able to view it again.
             </SheetDescription>
@@ -587,14 +587,14 @@ export default function DashboardPage() {
           <div className="space-y-5">
             <div>
               <label className="text-sm font-label-sm font-semibold text-on-background mb-2 block">Your API Key</label>
-              <div className="font-mono bg-surface-container-low p-3.5 rounded-lg text-sm break-all border border-outline-variant text-primary-sendliberty selection:bg-primary-sendliberty selection:text-white">
+              <div className="font-mono bg-surface-container-low p-3.5 rounded-lg text-sm break-all border border-outline-variant text-primary-sendlib selection:bg-primary-sendlib selection:text-white">
                 {newKeyDialog?.key}
               </div>
             </div>
           </div>
           <SheetFooter className="p-0 mt-6 pt-4 border-t border-outline-variant">
             <Button 
-              className="w-full rounded-lg font-label-sm bg-primary-sendliberty hover:bg-primary-sendliberty/90 text-white py-2.5" 
+              className="w-full rounded-lg font-label-sm bg-primary-sendlib hover:bg-primary-sendlib/90 text-white py-2.5" 
               onClick={() => {
                 navigator.clipboard.writeText(newKeyDialog?.key || "");
                 toast.success("API Key copied to clipboard!");
@@ -612,9 +612,9 @@ export default function DashboardPage() {
       <Dialog open={connectConfirmOpen} onOpenChange={setConnectConfirmOpen}>
         <DialogContent className="sm:max-w-md">
           <DialogHeader className="mb-2">
-            <DialogTitle className="text-xl font-headline-md font-bold text-primary-sendliberty">Connect Gmail Account</DialogTitle>
+            <DialogTitle className="text-xl font-headline-md font-bold text-primary-sendlib">Connect Gmail Account</DialogTitle>
             <DialogDescription className="text-secondary text-sm leading-relaxed mt-1">
-              Connect your Google account via secure OAuth 2.0. SendLiberty will only request the narrow permissions required to relay transactional emails on your behalf, and your credentials are never seen or stored.
+              Connect your Google account via secure OAuth 2.0. SendLib will only request the narrow permissions required to relay transactional emails on your behalf, and your credentials are never seen or stored.
             </DialogDescription>
           </DialogHeader>
           <div className="flex flex-row gap-3 mt-4 pt-4 border-t border-outline-variant/60">
@@ -626,7 +626,7 @@ export default function DashboardPage() {
               Cancel
             </Button>
             <Button 
-              className="flex-1 rounded-lg font-label-sm bg-primary-sendliberty hover:bg-primary-sendliberty/90 text-white" 
+              className="flex-1 rounded-lg font-label-sm bg-primary-sendlib hover:bg-primary-sendlib/90 text-white" 
               onClick={() => {
                 setConnectConfirmOpen(false);
                 toast.loading("Redirecting to Google...", { id: "gmail-connect" });
@@ -644,7 +644,7 @@ export default function DashboardPage() {
       <Dialog open={milestoneDialogOpen} onOpenChange={setMilestoneDialogOpen}>
         <DialogContent className="sm:max-w-md">
           <DialogHeader className="mb-2">
-            <DialogTitle className="text-xl font-headline-md font-bold text-primary-sendliberty flex items-center gap-2">
+            <DialogTitle className="text-xl font-headline-md font-bold text-primary-sendlib flex items-center gap-2">
               <span>🎉</span> Step 1 Complete!
             </DialogTitle>
             <DialogDescription className="text-secondary text-sm leading-relaxed mt-1">
@@ -661,7 +661,7 @@ export default function DashboardPage() {
             </Button>
             <Link href="/dashboard/keys" className="flex-1">
               <Button 
-                className="w-full rounded-lg font-label-sm bg-primary-sendliberty hover:bg-primary-sendliberty/90 text-white cursor-pointer" 
+                className="w-full rounded-lg font-label-sm bg-primary-sendlib hover:bg-primary-sendlib/90 text-white cursor-pointer" 
               >
                 Go to API Keys
               </Button>

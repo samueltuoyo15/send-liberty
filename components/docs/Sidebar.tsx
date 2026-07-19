@@ -48,8 +48,8 @@ export function DocsSidebar() {
                       href={link.href}
                       className={`flex items-center gap-3 px-3 py-2 rounded-md text-[14px] font-medium transition-colors ${
                         isActive
-                          ? "bg-primary-sendliberty/10 text-primary-sendliberty font-bold"
-                          : "text-[#505f76] hover:bg-primary-sendliberty/5 hover:text-primary-sendliberty"
+                          ? "bg-primary-sendlib/10 text-primary-sendlib font-bold"
+                          : "text-[#505f76] hover:bg-primary-sendlib/5 hover:text-primary-sendlib"
                       }`}
                     >
                       <HugeiconsIcon 
@@ -57,7 +57,7 @@ export function DocsSidebar() {
                         size={16} 
                         color='currentColor' 
                         strokeWidth={1.5} 
-                        className={isActive ? "text-primary-sendliberty" : "text-[#75777d]"}
+                        className={isActive ? "text-primary-sendlib" : "text-[#75777d]"}
                       />
                       {link.name}
                     </Link>

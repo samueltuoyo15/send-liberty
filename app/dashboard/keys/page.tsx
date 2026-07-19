@@ -52,14 +52,14 @@ function KeysContent() {
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-          <h1 className="text-3xl font-headline-md font-bold tracking-tight text-primary-sendliberty">API Keys</h1>
+          <h1 className="text-3xl font-headline-md font-bold tracking-tight text-primary-sendlib">API Keys</h1>
           <p className="text-secondary font-body-md mt-1">
             Manage your API keys for authenticating requests.
           </p>
         </div>
         <Button 
           size="lg"
-          className="rounded-lg font-label-sm bg-primary-sendliberty hover:bg-primary-sendliberty/90 text-white shadow-sm transition-all active:scale-95" 
+          className="rounded-lg font-label-sm bg-primary-sendlib hover:bg-primary-sendlib/90 text-white shadow-sm transition-all active:scale-95" 
           onClick={() => setGenerateDialog(true)}
           disabled={isGenerating}
         >
@@ -95,7 +95,7 @@ function KeysContent() {
                         <HugeiconsIcon icon={Key01Icon} size={40} color='currentColor' strokeWidth={1.5} className="text-[#4a358c] opacity-40 mb-0.5" />
                         <h4 className="text-base font-headline-md font-bold text-[#2c1075]">No API keys found</h4>
                         <p className="text-xs text-[#4a358c]/80 leading-relaxed">
-                          You haven't generated any API keys yet. Create one to start using the SendLiberty API.
+                          You haven't generated any API keys yet. Create one to start using the SendLib API.
                         </p>
                         <div className="pt-1">
                           <Button 
@@ -176,7 +176,7 @@ function KeysContent() {
       <Sheet open={generateDialog} onOpenChange={setGenerateDialog}>
         <SheetContent side="right">
           <SheetHeader className="p-0 mb-6">
-            <SheetTitle className="text-xl font-headline-md font-bold text-primary-sendliberty">Generate New API Key</SheetTitle>
+            <SheetTitle className="text-xl font-headline-md font-bold text-primary-sendlib">Generate New API Key</SheetTitle>
             <SheetDescription className="text-secondary text-sm">
               Give your API key a label to help identify where it is used (e.g. Production Backend, Staging Server).
             </SheetDescription>
@@ -191,7 +191,7 @@ function KeysContent() {
                 value={keyLabel}
                 onChange={(e) => setKeyLabel(e.target.value)}
                 onKeyDown={(e) => e.key === "Enter" && handleGenerate()}
-                className="h-10 rounded-lg border border-outline-variant bg-surface-container-low px-3 text-sm focus-visible:border-primary-sendliberty"
+                className="h-10 rounded-lg border border-outline-variant bg-surface-container-low px-3 text-sm focus-visible:border-primary-sendlib"
               />
               <div className="flex justify-between mt-1.5 text-xs">
                 <span className={keyLabel.length > 25 ? "text-destructive font-bold" : "text-secondary font-medium"}>
@@ -210,7 +210,7 @@ function KeysContent() {
                 placeholder="e.g.&#10;localhost:3000&#10;myapp.com&#10;sub.myapp.com"
                 value={allowedOriginsText}
                 onChange={(e) => setAllowedOriginsText(e.target.value)}
-                className="w-full rounded-lg border border-outline-variant bg-surface-container-low p-3 text-sm focus-visible:border-primary-sendliberty outline-none min-h-[100px] font-mono placeholder:font-sans leading-relaxed"
+                className="w-full rounded-lg border border-outline-variant bg-surface-container-low p-3 text-sm focus-visible:border-primary-sendlib outline-none min-h-[100px] font-mono placeholder:font-sans leading-relaxed"
               />
               <div className="flex justify-between mt-1.5 text-xs">
                 <span className={allowedOriginsText.length > 200 ? "text-destructive font-bold" : "text-secondary font-medium"}>
@@ -230,7 +230,7 @@ function KeysContent() {
               Cancel
             </Button>
             <Button 
-              className="flex-1 rounded-lg font-label-sm bg-primary-sendliberty hover:bg-primary-sendliberty/90 text-white" 
+              className="flex-1 rounded-lg font-label-sm bg-primary-sendlib hover:bg-primary-sendlib/90 text-white" 
               onClick={handleGenerate} 
               disabled={isGenerating || keyLabel.length > 25 || allowedOriginsText.length > 200}
             >
@@ -244,7 +244,7 @@ function KeysContent() {
       <Sheet open={!!newKeyDialog} onOpenChange={() => setNewKeyDialog(null)}>
         <SheetContent side="right">
           <SheetHeader className="p-0 mb-6">
-            <SheetTitle className="text-xl font-headline-md font-bold text-primary-sendliberty">API Key Generated</SheetTitle>
+            <SheetTitle className="text-xl font-headline-md font-bold text-primary-sendlib">API Key Generated</SheetTitle>
             <SheetDescription className="text-secondary text-sm">
               Copy this API key now. For security reasons, it will not be shown again.
             </SheetDescription>
@@ -252,14 +252,14 @@ function KeysContent() {
           <div className="space-y-5">
             <div>
               <label className="text-sm font-label-sm font-semibold text-on-background mb-2 block">Your Secret API Key</label>
-              <div className="font-mono bg-surface-container-low p-3.5 rounded-lg text-sm break-all border border-outline-variant text-primary-sendliberty selection:bg-primary-sendliberty selection:text-white">
+              <div className="font-mono bg-surface-container-low p-3.5 rounded-lg text-sm break-all border border-outline-variant text-primary-sendlib selection:bg-primary-sendlib selection:text-white">
                 {newKeyDialog?.key}
               </div>
             </div>
           </div>
           <SheetFooter className="p-0 mt-6 pt-4 border-t border-outline-variant">
             <Button 
-              className="w-full rounded-lg font-label-sm bg-primary-sendliberty hover:bg-primary-sendliberty/90 text-white py-2.5" 
+              className="w-full rounded-lg font-label-sm bg-primary-sendlib hover:bg-primary-sendlib/90 text-white py-2.5" 
               onClick={() => {
                 navigator.clipboard.writeText(newKeyDialog?.key || "");
                 confetti({
@@ -317,7 +317,7 @@ export default function KeysPage() {
   return (
     <Suspense fallback={
       <div className="flex items-center justify-center min-h-[40vh]">
-        <div className='w-10 h-10 animate-spin rounded-full border-2 border-solid border-current border-t-transparent mx-auto text-primary-sendliberty' />
+        <div className='w-10 h-10 animate-spin rounded-full border-2 border-solid border-current border-t-transparent mx-auto text-primary-sendlib' />
       </div>
     }>
       <KeysContent />

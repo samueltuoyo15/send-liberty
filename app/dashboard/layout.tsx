@@ -70,7 +70,7 @@ export default function DashboardLayout({
   const closeMobileMenu = () => setIsMobileMenuOpen(false);
 
   return (
-    <div className="min-h-screen bg-background-sendliberty text-on-background font-body-md flex flex-col selection:bg-primary-sendliberty selection:text-white">
+    <div className="min-h-screen bg-background-sendlib text-on-background font-body-md flex flex-col selection:bg-primary-sendlib selection:text-white">
       {/* Top Navigation Header */}
       <header className="sticky top-0 z-50 w-full border-b border-outline-variant bg-surface-container-lowest shadow-xs">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
@@ -80,8 +80,8 @@ export default function DashboardLayout({
             <Button variant="ghost" size="icon" className="lg:hidden text-on-surface-variant cursor-pointer" onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
               <HugeiconsIcon icon={isMobileMenuOpen ? Cancel01Icon : Menu01Icon} size={20} color='currentColor' strokeWidth={1.5} />
             </Button>
-            <Link href="/" className="text-xl font-headline-md font-bold tracking-tight text-primary-sendliberty hover:opacity-90 transition-opacity">
-              SendLiberty
+            <Link href="/" className="text-xl font-headline-md font-bold tracking-tight text-primary-sendlib hover:opacity-90 transition-opacity">
+              SendLib
             </Link>
           </div>
 
@@ -95,7 +95,7 @@ export default function DashboardLayout({
                   href={item.href}
                   className={`flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-label-sm transition-all cursor-pointer ${
                     isActive 
-                      ? "bg-primary-sendliberty text-white font-semibold shadow-xs" 
+                      ? "bg-primary-sendlib text-white font-semibold shadow-xs" 
                       : "text-secondary hover:bg-surface-container-low hover:text-on-background"
                   }`}
                 >
@@ -155,7 +155,7 @@ export default function DashboardLayout({
                   onClick={closeMobileMenu}
                   className={`flex items-center gap-3 rounded-lg px-3.5 py-2.5 text-sm font-label-sm transition-all cursor-pointer ${
                     isActive 
-                      ? "bg-primary-sendliberty text-white font-semibold" 
+                      ? "bg-primary-sendlib text-white font-semibold" 
                       : "text-secondary hover:bg-surface-container-low hover:text-on-background"
                   }`}
                 >
@@ -179,7 +179,7 @@ export default function DashboardLayout({
           <DialogHeader className="mb-2">
             <DialogTitle className="text-xl font-headline-md font-bold text-destructive">Sign Out</DialogTitle>
             <DialogDescription className="text-secondary text-sm leading-relaxed mt-1">
-              Are you sure you want to sign out of your SendLiberty account? You will need to log in again to access your dashboard.
+              Are you sure you want to sign out of your SendLib account? You will need to log in again to access your dashboard.
             </DialogDescription>
           </DialogHeader>
           <div className="flex flex-row gap-3 mt-4 pt-4 border-t border-outline-variant/60">

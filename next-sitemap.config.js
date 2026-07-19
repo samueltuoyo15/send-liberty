@@ -1,5 +1,5 @@
 const config = {
-  siteUrl: 'https://sendliberty.xyz', 
+  siteUrl: 'https://sendlib.samueltuoyo.com', 
   generateRobotsTxt: true, 
   exclude: ['/api/*', '/login'], 
   changefreq: 'daily', 

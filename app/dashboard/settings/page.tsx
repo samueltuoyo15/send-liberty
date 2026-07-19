@@ -51,13 +51,13 @@ export default function SettingsPage() {
     <div className="space-y-6 max-w-2xl">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-headline-md font-bold tracking-tight text-primary-sendliberty">Settings</h1>
+          <h1 className="text-3xl font-headline-md font-bold tracking-tight text-primary-sendlib">Settings</h1>
           <p className="text-secondary font-body-md mt-1">
             Manage your account settings and preferences.
           </p>
         </div>
         <Button 
-          className="rounded-lg font-label-sm bg-primary-sendliberty hover:bg-primary-sendliberty/90 text-white shadow-sm transition-all active:scale-95 px-4 py-2"
+          className="rounded-lg font-label-sm bg-primary-sendlib hover:bg-primary-sendlib/90 text-white shadow-sm transition-all active:scale-95 px-4 py-2"
           onClick={handleEditClick}
         >
           <HugeiconsIcon icon={PencilEdit01Icon} size={16} color='currentColor' strokeWidth={1.5} />
@@ -111,7 +111,7 @@ export default function SettingsPage() {
           </div>
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <p className="text-sm text-secondary leading-relaxed">
-              Sign out of your SendLiberty account on this device.
+              Sign out of your SendLib account on this device.
             </p>
             <Button 
               variant="destructive"
@@ -149,7 +149,7 @@ export default function SettingsPage() {
       <Sheet open={isEditOpen} onOpenChange={setIsEditOpen}>
         <SheetContent side="right">
           <SheetHeader className="p-0 mb-6">
-            <SheetTitle className="text-xl font-headline-md font-bold text-primary-sendliberty">Edit Settings</SheetTitle>
+            <SheetTitle className="text-xl font-headline-md font-bold text-primary-sendlib">Edit Settings</SheetTitle>
             <SheetDescription className="text-secondary text-sm">
               Update your display name below.
             </SheetDescription>
@@ -163,7 +163,7 @@ export default function SettingsPage() {
                 type="text"
                 value={editName}
                 onChange={(e) => setEditName(e.target.value)}
-                className="h-10 rounded-lg border border-outline-variant bg-surface-container-low px-3 text-sm focus-visible:border-primary-sendliberty text-on-background font-medium"
+                className="h-10 rounded-lg border border-outline-variant bg-surface-container-low px-3 text-sm focus-visible:border-primary-sendlib text-on-background font-medium"
               />
               <div className="flex justify-between mt-1.5 text-xs">
                 <span className={editName.length > 30 ? "text-destructive font-bold" : "text-secondary font-medium"}>
@@ -190,7 +190,7 @@ export default function SettingsPage() {
             <Button variant="outline" className="flex-1 rounded-lg font-label-sm border border-outline-variant" onClick={() => setIsEditOpen(false)}>
               Cancel
             </Button>
-            <Button className="flex-1 rounded-lg font-label-sm bg-primary-sendliberty hover:bg-primary-sendliberty/90 text-white" onClick={handleSave} disabled={isUpdating || editName.length > 30 || !editName.trim()}>
+            <Button className="flex-1 rounded-lg font-label-sm bg-primary-sendlib hover:bg-primary-sendlib/90 text-white" onClick={handleSave} disabled={isUpdating || editName.length > 30 || !editName.trim()}>
               <HugeiconsIcon icon={FloppyDiskIcon} size={16} color='currentColor' strokeWidth={1.5} className="mr-2" />
               {isUpdating ? "Saving..." : "Save Changes"}
             </Button>
@@ -204,7 +204,7 @@ export default function SettingsPage() {
           <DialogHeader className="mb-2">
             <DialogTitle className="text-xl font-headline-md font-bold text-destructive">Sign Out</DialogTitle>
             <DialogDescription className="text-secondary text-sm leading-relaxed mt-1">
-              Are you sure you want to sign out of your SendLiberty account? You will need to log in again to access your dashboard.
+              Are you sure you want to sign out of your SendLib account? You will need to log in again to access your dashboard.
             </DialogDescription>
           </DialogHeader>
           <div className="flex flex-row gap-3 mt-4 pt-4 border-t border-outline-variant/60">
@@ -235,7 +235,7 @@ export default function SettingsPage() {
           <DialogHeader className="mb-2">
             <DialogTitle className="text-xl font-headline-md font-bold text-destructive">Delete Account</DialogTitle>
             <DialogDescription className="text-secondary text-sm leading-relaxed mt-1">
-              This will permanently delete your SendLiberty account and all associated data, including connected Gmail accounts, email logs, and API keys. This action is <strong>irreversible</strong>.
+              This will permanently delete your SendLib account and all associated data, including connected Gmail accounts, email logs, and API keys. This action is <strong>irreversible</strong>.
             </DialogDescription>
           </DialogHeader>
           <div className="flex flex-row gap-3 mt-4 pt-4 border-t border-outline-variant/60">

@@ -21,8 +21,8 @@ export default function LoginPage() {
   if (isLoading) {
     return (
       <SEO title="Loading..." description="Authenticating session...">
-        <div className="min-h-screen flex items-center justify-center bg-background-sendliberty">
-          <div className="w-8 h-8 animate-spin rounded-full border-4 border-solid border-primary-sendliberty border-t-transparent" />
+        <div className="min-h-screen flex items-center justify-center bg-background-sendlib">
+          <div className="w-8 h-8 animate-spin rounded-full border-4 border-solid border-primary-sendlib border-t-transparent" />
         </div>
       </SEO>
     );
@@ -31,14 +31,14 @@ export default function LoginPage() {
   if (user) return null;
 
   return (
-    <SEO title="Login / Sign Up" description="Log in or create a new SendLiberty account to manage your API keys and SMTP integrations.">
-      <div className="min-h-screen grid grid-cols-1 md:grid-cols-2 bg-background-sendliberty">
+    <SEO title="Login / Sign Up" description="Log in or create a new SendLib account to manage your API keys and SMTP integrations.">
+      <div className="min-h-screen grid grid-cols-1 md:grid-cols-2 bg-background-sendlib">
         
         {/* Left side: Login forms (Top on mobile) */}
         <div className="flex flex-col justify-center px-margin-mobile md:px-margin-desktop py-xl relative">
           <Link 
             href="/" 
-            className="absolute top-8 left-8 md:left-12 font-label-sm text-label-sm text-secondary hover:text-primary-sendliberty flex items-center gap-xs transition-colors"
+            className="absolute top-8 left-8 md:left-12 font-label-sm text-label-sm text-secondary hover:text-primary-sendlib flex items-center gap-xs transition-colors"
           >
             <HugeiconsIcon icon={ArrowLeft01Icon} size={20} />
             Back to Home
@@ -46,8 +46,8 @@ export default function LoginPage() {
 
           <div className="w-full max-w-105 mx-auto space-y-xl">
             <div className="space-y-sm">
-              <h1 className="font-headline-lg text-headline-lg text-primary-sendliberty">
-                Welcome to SendLiberty
+              <h1 className="font-headline-lg text-headline-lg text-primary-sendlib">
+                Welcome to SendLib
               </h1>
               <p className="font-body-md text-body-md text-on-surface-variant">
                 Log in or create an account to manage your API keys, and start sending emails in seconds.
@@ -57,7 +57,7 @@ export default function LoginPage() {
             <div className="space-y-md">
               <button
                 onClick={() => { window.location.href = "/api/auth/github"; }}
-                className="w-full font-label-sm text-label-sm bg-primary-sendliberty text-white h-12 flex items-center justify-center gap-md rounded-xl transition-transform active:scale-95 hover:bg-primary-sendliberty/95 shadow-sm"
+                className="w-full font-label-sm text-label-sm bg-primary-sendlib text-white h-12 flex items-center justify-center gap-md rounded-xl transition-transform active:scale-95 hover:bg-primary-sendlib/95 shadow-sm"
               >
                 <HugeiconsIcon icon={GithubIcon} className="w-5 h-5" />
                 Continue with GitHub
@@ -79,9 +79,9 @@ export default function LoginPage() {
 
             <p className="font-label-xs text-label-xs text-center text-on-surface-variant max-w-85 mx-auto leading-relaxed">
               By clicking continue, you agree to our{" "}
-              <Link href="/terms-of-service" className="underline hover:text-primary-sendliberty">Terms of Service</Link>{" "}
+              <Link href="/terms-of-service" className="underline hover:text-primary-sendlib">Terms of Service</Link>{" "}
               and{" "}
-              <Link href="/privacy-policy" className="underline hover:text-primary-sendliberty">Privacy Policy</Link>.
+              <Link href="/privacy-policy" className="underline hover:text-primary-sendlib">Privacy Policy</Link>.
             </p>
           </div>
         </div>
@@ -95,7 +95,7 @@ export default function LoginPage() {
           }}
         >
           <Link href="/" className="font-headline-md text-headline-md font-bold text-white relative z-10">
-            SendLiberty
+            SendLib
           </Link>
 
           <div className="space-y-md max-w-115 relative z-10">

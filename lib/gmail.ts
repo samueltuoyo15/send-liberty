@@ -99,12 +99,12 @@ export async function sendGmailEmail(
   if (lookupEmail) {
     account = await GmailAccount.findOne({ userId, gmailEmail: lookupEmail });
     if (!account) {
-      throw new Error(`Gmail account '${lookupEmail}' is not connected. Please go to your SendLiberty dashboard, connect this Gmail account, and try again.`);
+      throw new Error(`Gmail account '${lookupEmail}' is not connected. Please go to your SendLib dashboard, connect this Gmail account, and try again.`);
     }
   } else {
     account = await GmailAccount.findOne({ userId });
     if (!account) {
-      throw new Error("No Gmail account connected. Please go to your SendLiberty dashboard, connect a Gmail account, and try again.");
+      throw new Error("No Gmail account connected. Please go to your SendLib dashboard, connect a Gmail account, and try again.");
     }
   }
   if (!account.connected) throw new Error(`Gmail account '${account.gmailEmail}' is disconnected. Please reconnect.`);

@@ -4,7 +4,7 @@ export default function ApiKeysPage() {
   return (
     <div className="max-w-3xl">
       <div className="mb-10">
-        <h1 className="text-3xl font-bold tracking-tight text-primary-sendliberty mb-4">API Keys</h1>
+        <h1 className="text-3xl font-bold tracking-tight text-primary-sendlib mb-4">API Keys</h1>
         <p className="text-secondary text-lg leading-relaxed">
           Authentication and security for your API requests.
         </p>
@@ -12,10 +12,10 @@ export default function ApiKeysPage() {
 
       <div className="space-y-6 text-secondary leading-relaxed">
         <p>
-          To interact with the SendLiberty API, you must include a valid API key in your request header.
+          To interact with the SendLib API, you must include a valid API key in your request header.
         </p>
 
-        <h3 className="text-xl font-bold text-primary-sendliberty mt-8 mb-4">Generating a Key</h3>
+        <h3 className="text-xl font-bold text-primary-sendlib mt-8 mb-4">Generating a Key</h3>
         <ul className="list-disc pl-5 space-y-2 text-[#75777d]">
           <li>Go to the <Link href="/dashboard/keys" className="text-indigo-600 hover:text-indigo-700 underline font-semibold">API Keys</Link> section in your dashboard.</li>
           <li>Click <Link href="/dashboard/keys" className="text-indigo-600 hover:text-indigo-700 underline font-semibold">Generate New Key</Link>.</li>

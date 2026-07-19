@@ -6,7 +6,7 @@ type Language = "curl" | "js" | "python" | "go" | "rust" | "php" | "net" | "java
 
 export default function BasicSendPage() {
   const [lang, setLang] = useState<Language>("curl");
-  const [apiUrl, setApiUrl] = useState("https://api.sendliberty.com");
+  const [apiUrl, setApiUrl] = useState("https://api.sendlib.com");
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -17,27 +17,27 @@ export default function BasicSendPage() {
   return (
     <div className="max-w-3xl">
       <div className="mb-10">
-        <h1 className="text-3xl font-bold tracking-tight text-primary-sendliberty mb-4">Basic Send</h1>
+        <h1 className="text-3xl font-bold tracking-tight text-primary-sendlib mb-4">Basic Send</h1>
         <p className="text-secondary text-lg leading-relaxed">
-          Send a single transactional email instantly using the SendLiberty REST API.
+          Send a single transactional email instantly using the SendLib REST API.
         </p>
       </div>
 
       <div className="space-y-6 text-secondary leading-relaxed">
         <p>
-          To send an email, make a secure HTTP <code>POST</code> request to the <code>/api/send</code> endpoint. If you have connected multiple Gmail accounts, you can specify which one to use by passing the <code>from</code> field in your request body. If omitted, SendLiberty automatically defaults to your first connected Gmail account.
+          To send an email, make a secure HTTP <code>POST</code> request to the <code>/api/send</code> endpoint. If you have connected multiple Gmail accounts, you can specify which one to use by passing the <code>from</code> field in your request body. If omitted, SendLib automatically defaults to your first connected Gmail account.
         </p>
 
         <div className="mt-8">
           <div className="flex justify-between items-center mb-4">
-            <h3 className="text-xl font-bold text-primary-sendliberty">Example Request</h3>
+            <h3 className="text-xl font-bold text-primary-sendlib">Example Request</h3>
             <div className="flex rounded-lg bg-white border border-outline-variant p-1 text-xs font-mono overflow-x-auto max-w-full">
               {(["curl", "js", "python", "go", "rust", "php", "net", "java"] as Language[]).map((tab) => (
                 <button
                   key={tab}
                   onClick={() => setLang(tab)}
                   className={`px-3 py-1 rounded-md transition-colors cursor-pointer whitespace-nowrap ${
-                    lang === tab ? "bg-primary-sendliberty/10 text-primary-sendliberty font-bold" : "text-[#75777d] hover:text-primary-sendliberty"
+                    lang === tab ? "bg-primary-sendlib/10 text-primary-sendlib font-bold" : "text-[#75777d] hover:text-primary-sendlib"
                   }`}
                 >
                   {tab === "curl"
@@ -248,7 +248,7 @@ System.out.println(response.body());`
         <div className="p-5 rounded-xl border border-outline-variant bg-[#1d2b3e]/[0.02] mt-8 space-y-2">
           <h4 className="font-bold text-[#1d2b3e] text-base">Authentication Headers</h4>
           <p className="text-sm text-[#75777d]">
-            You can authenticate your requests with SendLiberty in two ways:
+            You can authenticate your requests with SendLib in two ways:
           </p>
           <ul className="list-disc pl-5 text-sm text-[#75777d] space-y-2">
             <li><strong>Authorization Header:</strong> Send your API key as a Bearer token: <code>Authorization: Bearer YOUR_API_KEY</code></li>
@@ -256,7 +256,7 @@ System.out.println(response.body());`
           </ul>
         </div>
 
-        <h3 className="text-xl font-bold text-primary-sendliberty mt-8 mb-4">Request Body Parameters</h3>
+        <h3 className="text-xl font-bold text-primary-sendlib mt-8 mb-4">Request Body Parameters</h3>
         <ul className="list-disc pl-5 space-y-4 text-[#75777d]">
           <li><strong>from</strong> (string, optional): The connected Gmail email address you want to send this email from (e.g. <code>mysecondgmail@gmail.com</code>). If not supplied, it defaults to your first connected Gmail account.</li>
           <li><strong>to</strong> (string or array of strings): The recipient's email address (or array of addresses).</li>

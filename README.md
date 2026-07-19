@@ -1,16 +1,16 @@
-# SendLiberty: Bypass SMTP Restrictions for Transactional Emails
+# SendLib: Bypass SMTP Restrictions for Transactional Emails
 
-SendLiberty helps developers send transactional emails from any hosting environment, even those that block traditional SMTP ports. It lets you connect your Google account securely and send emails via a simple API, solving the headache of complex email server setup and ensuring reliable inbox delivery. You won't need to configure any DNS records or worry about SMTP blocks again.
+SendLib helps developers send transactional emails from any hosting environment, even those that block traditional SMTP ports. It lets you connect your Google account securely and send emails via a simple API, solving the headache of complex email server setup and ensuring reliable inbox delivery. You won't need to configure any DNS records or worry about SMTP blocks again.
 
 ## Screenshots
 
-While there are no direct UI screenshots provided in the repository, you can see how the application looks and feels by visiting the [live demo](https://sendliberty.xyz/).
+While there are no direct UI screenshots provided in the repository, you can see how the application looks and feels by visiting the [live demo](https://sendlib.samueltuoyo.com/).
 
 ## Features
 
 ### Secure Gmail Integration
 
-Easily connect your personal or Google Workspace Gmail accounts using secure OAuth 2.0. SendLiberty only requests the minimum necessary permissions to send emails on your behalf, and your credentials are never stored directly. This approach ensures high deliverability, as emails are sent from a trusted Google server.
+Easily connect your personal or Google Workspace Gmail accounts using secure OAuth 2.0. SendLib only requests the minimum necessary permissions to send emails on your behalf, and your credentials are never stored directly. This approach ensures high deliverability, as emails are sent from a trusted Google server.
 
 ```mermaid
 sequenceDiagram
@@ -36,7 +36,7 @@ sequenceDiagram
 
 ### Effortless Email Sending via API
 
-Send transactional emails with a single, straightforward REST API call. Whether you're sending welcome emails, password resets, or notifications, SendLiberty handles the delivery without needing any SMTP port configuration.
+Send transactional emails with a single, straightforward REST API call. Whether you're sending welcome emails, password resets, or notifications, SendLib handles the delivery without needing any SMTP port configuration.
 
 ```mermaid
 sequenceDiagram
@@ -70,7 +70,7 @@ Keep an eye on your email sending activity with a dashboard that provides daily 
 
 ## System Architecture / Design
 
-SendLiberty leverages a Next.js application for both its frontend dashboard and backend API routes. User authentication is handled via GitHub or Google OAuth, and connected Gmail accounts are used to relay emails through the Gmail API. All user and application data is persisted in a MongoDB database.
+SendLib leverages a Next.js application for both its frontend dashboard and backend API routes. User authentication is handled via GitHub or Google OAuth, and connected Gmail accounts are used to relay emails through the Gmail API. All user and application data is persisted in a MongoDB database.
 
 ```mermaid
 flowchart LR
@@ -108,7 +108,7 @@ flowchart LR
 
 ## Installation
 
-To get SendLiberty up and running on your local machine, follow these steps:
+To get SendLib up and running on your local machine, follow these steps:
 
 1.  **Clone the Repository**:
     ```bash
@@ -128,7 +128,7 @@ To get SendLiberty up and running on your local machine, follow these steps:
 
     ```
     # MongoDB
-    MONGODB_URI=mongodb+srv://<user>:<password>@cluster.mongodb.net/send-liberty?retryWrites=true&w=majority
+    MONGODB_URI=mongodb+srv://<user>:<password>@cluster.mongodb.net/send-lib?retryWrites=true&w=majority
 
     # Auth
     JWT_SECRET=your_random_64_char_hex_string_here
@@ -165,7 +165,7 @@ To get SendLiberty up and running on your local machine, follow these steps:
 
 ## Usage
 
-Once your SendLiberty instance is running and you've connected a Gmail account and generated an API key from the dashboard, you can start sending emails via the `/api/send` endpoint.
+Once your SendLib instance is running and you've connected a Gmail account and generated an API key from the dashboard, you can start sending emails via the `/api/send` endpoint.
 
 Here's how you can use the API in various languages:
 
@@ -178,9 +178,9 @@ curl -X POST http://localhost:3000/api/send \
   -d '{
     "from": "sender@gmail.com",
     "to": "user@example.com",
-    "subject": "Hello via SendLiberty Webhook!",
-    "html": "<p>This email was sent with <strong>SendLiberty</strong>, bypassing SMTP restrictions!</p>",
-    "text": "This email was sent with SendLiberty, bypassing SMTP restrictions!",
+    "subject": "Hello via SendLib Webhook!",
+    "html": "<p>This email was sent with <strong>SendLib</strong>, bypassing SMTP restrictions!</p>",
+    "text": "This email was sent with SendLib, bypassing SMTP restrictions!",
     "replyTo": "support@yourdomain.com",
     "cc": "anotheruser@example.com",
     "bcc": ["audit@example.com"],
@@ -206,9 +206,9 @@ const response = await fetch('http://localhost:3000/api/send', {
   body: JSON.stringify({
     from: 'sender@gmail.com',
     to: 'user@example.com',
-    subject: 'Hello via SendLiberty Webhook!',
-    html: '<p>This email was sent with <strong>SendLiberty</strong>, bypassing SMTP restrictions!</p>',
-    text: 'This email was sent with SendLiberty, bypassing SMTP restrictions!',
+    subject: 'Hello via SendLib Webhook!',
+    html: '<p>This email was sent with <strong>SendLib</strong>, bypassing SMTP restrictions!</p>',
+    text: 'This email was sent with SendLib, bypassing SMTP restrictions!',
     replyTo: 'support@yourdomain.com',
     cc: 'anotheruser@example.com',
     bcc: ['audit@example.com'],
@@ -240,9 +240,9 @@ headers = {
 payload = {
   "from": "sender@gmail.com",
   "to": "user@example.com",
-  "subject": "Hello via SendLiberty Webhook!",
-  "html": "<p>This email was sent with <strong>SendLiberty</strong>, bypassing SMTP restrictions!</p>",
-  "text": "This email was sent with SendLiberty, bypassing SMTP restrictions!",
+  "subject": "Hello via SendLib Webhook!",
+  "html": "<p>This email was sent with <strong>SendLib</strong>, bypassing SMTP restrictions!</p>",
+  "text": "This email was sent with SendLib, bypassing SMTP restrictions!",
   "replyTo": "support@yourdomain.com",
   "cc": "anotheruser@example.com",
   "bcc": ["audit@example.com"],
@@ -275,9 +275,9 @@ func main() {
 	payload := map[string]interface{}{
 		"from":    "sender@gmail.com",
 		"to":      "user@example.com",
-		"subject": "Hello via SendLiberty Webhook!",
-		"html":    "<p>This email was sent with <strong>SendLiberty</strong>, bypassing SMTP restrictions!</p>",
-		"text":    "This email was sent with SendLiberty, bypassing SMTP restrictions!",
+		"subject": "Hello via SendLib Webhook!",
+		"html":    "<p>This email was sent with <strong>SendLib</strong>, bypassing SMTP restrictions!</p>",
+		"text":    "This email was sent with SendLib, bypassing SMTP restrictions!",
 		"replyTo": "support@yourdomain.com",
 		"cc":      "anotheruser@example.com",
 		"bcc":     []string{"audit@example.com"},
@@ -321,9 +321,9 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let payload = json!({
         "from": "sender@gmail.com",
         "to": "user@example.com",
-        "subject": "Hello via SendLiberty Webhook!",
-        "html": "<p>This email was sent with <strong>SendLiberty</strong>, bypassing SMTP restrictions!</p>",
-        "text": "This email was sent with SendLiberty, bypassing SMTP restrictions!",
+        "subject": "Hello via SendLib Webhook!",
+        "html": "<p>This email was sent with <strong>SendLib</strong>, bypassing SMTP restrictions!</p>",
+        "text": "This email was sent with SendLib, bypassing SMTP restrictions!",
         "replyTo": "support@yourdomain.com",
         "cc": "anotheruser@example.com",
         "bcc": ["audit@example.com"],
@@ -359,9 +359,9 @@ $apiKey = 'YOUR_SECRET_API_KEY';
 $payload = [
     'from' => 'sender@gmail.com',
     'to' => 'user@example.com',
-    'subject' => 'Hello via SendLiberty Webhook!',
-    'html' => '<p>This email was sent with <strong>SendLiberty</strong>, bypassing SMTP restrictions!</p>',
-    'text' => 'This email was sent with SendLiberty, bypassing SMTP restrictions!',
+    'subject' => 'Hello via SendLib Webhook!',
+    'html' => '<p>This email was sent with <strong>SendLib</strong>, bypassing SMTP restrictions!</p>',
+    'text' => 'This email was sent with SendLib, bypassing SMTP restrictions!',
     'replyTo' => 'support@yourdomain.com',
     'cc' => 'anotheruser@example.com',
     'bcc' => ['audit@example.com'],
@@ -414,9 +414,9 @@ public class EmailSender
         {
             from = "sender@gmail.com",
             to = "user@example.com",
-            subject = "Hello via SendLiberty Webhook!",
-            html = "<p>This email was sent with <strong>SendLiberty</strong>, bypassing SMTP restrictions!</p>",
-            text = "This email was sent with SendLiberty, bypassing SMTP restrictions!",
+            subject = "Hello via SendLib Webhook!",
+            html = "<p>This email was sent with <strong>SendLib</strong>, bypassing SMTP restrictions!</p>",
+            text = "This email was sent with SendLib, bypassing SMTP restrictions!",
             replyTo = "support@yourdomain.com",
             cc = "anotheruser@example.com",
             bcc = new[] { "audit@example.com" },
@@ -460,9 +460,9 @@ public class EmailSender {
             {
               "from": "sender@gmail.com",
               "to": "user@example.com",
-              "subject": "Hello via SendLiberty Webhook!",
-              "html": "<p>This email was sent with <strong>SendLiberty</strong>, bypassing SMTP restrictions!</p>",
-              "text": "This email was sent with SendLiberty, bypassing SMTP restrictions!",
+              "subject": "Hello via SendLib Webhook!",
+              "html": "<p>This email was sent with <strong>SendLib</strong>, bypassing SMTP restrictions!</p>",
+              "text": "This email was sent with SendLib, bypassing SMTP restrictions!",
               "replyTo": "support@yourdomain.com",
               "cc": "anotheruser@example.com",
               "bcc": ["audit@example.com"],
@@ -511,7 +511,7 @@ public class EmailSender {
 
 ## Contributing
 
-We welcome contributions! If you're interested in improving SendLiberty, please feel free to fork the repository, make your changes, and submit a pull request. We appreciate all efforts to make this project better.
+We welcome contributions! If you're interested in improving SendLib, please feel free to fork the repository, make your changes, and submit a pull request. We appreciate all efforts to make this project better.
 
 ## Author Info
 

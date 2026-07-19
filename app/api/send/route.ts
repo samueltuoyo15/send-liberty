@@ -77,7 +77,7 @@ export async function POST(req: NextRequest) {
         return NextResponse.json(
           {
             success: false,
-            message: `Origin restricted: The requesting origin '${clientOrigin || "unknown"}' is not allowed for this API Key. Go to your SendLiberty dashboard and add it to your API Key allowed origins, or remove origin restrictions.`,
+            message: `Origin restricted: The requesting origin '${clientOrigin || "unknown"}' is not allowed for this API Key. Go to your SendLib dashboard and add it to your API Key allowed origins, or remove origin restrictions.`,
           },
           { status: 403 }
         );

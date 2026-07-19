@@ -1050,7 +1050,7 @@
   .bg-background {
     background-color: var(--background);
   }
-  .bg-background-sendliberty {
+  .bg-background-sendlib {
     background-color: #f7f9fb;
   }
   .bg-background\/80 {
@@ -1131,10 +1131,10 @@
   .bg-primary-container {
     background-color: #334155;
   }
-  .bg-primary-sendliberty {
+  .bg-primary-sendlib {
     background-color: #1d2b3e;
   }
-  .bg-primary-sendliberty\/20 {
+  .bg-primary-sendlib\/20 {
     background-color: color-mix(in oklab, #1d2b3e 20%, transparent);
   }
   .bg-primary\/10 {
@@ -1628,7 +1628,7 @@
   .text-primary-foreground {
     color: var(--primary-foreground);
   }
-  .text-primary-sendliberty {
+  .text-primary-sendlib {
     color: #1d2b3e;
   }
   .text-purple-400 {
@@ -2001,7 +2001,7 @@
       }
     }
   }
-  .hover\:border-primary-sendliberty {
+  .hover\:border-primary-sendlib {
     &:hover {
       @media (hover: hover) {
         border-color: #1d2b3e;
@@ -2145,7 +2145,7 @@
       }
     }
   }
-  .hover\:text-primary-sendliberty {
+  .hover\:text-primary-sendlib {
     &:hover {
       @media (hover: hover) {
         color: #1d2b3e;

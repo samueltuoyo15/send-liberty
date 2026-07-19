@@ -8,7 +8,7 @@ type Language = "curl" | "js" | "python" | "go" | "rust" | "php" | "net" | "java
 
 export default function DocsIntroduction() {
   const [copied, setCopied] = useState(false);
-  const [apiUrl, setApiUrl] = useState("https://api.sendliberty.com");
+  const [apiUrl, setApiUrl] = useState("https://api.sendlib.com");
   const [activeTab, setActiveTab] = useState<Language>("curl");
 
   useEffect(() => {
@@ -27,7 +27,7 @@ export default function DocsIntroduction() {
     "from": "sender@gmail.com",
     "to": "recipient@example.com",
     "subject": "Welcome aboard!",
-    "html": "<p>Sent via SendLiberty REST API.</p>",
+    "html": "<p>Sent via SendLib REST API.</p>",
     "replyTo": "support@yourdomain.com",
     "cc": "anotheruser@example.com",
     "bcc": ["audit@example.com"],
@@ -46,7 +46,7 @@ export default function DocsIntroduction() {
     from: 'sender@gmail.com',
     to: 'recipient@example.com',
     subject: 'Welcome aboard!',
-    html: '<p>Sent via SendLiberty REST API.</p>',
+    html: '<p>Sent via SendLib REST API.</p>',
     replyTo: 'support@yourdomain.com',
     cc: 'anotheruser@example.com',
     bcc: ['audit@example.com'],
@@ -67,7 +67,7 @@ payload = {
   "from": "sender@gmail.com",
   "to": "recipient@example.com",
   "subject": "Welcome aboard!",
-  "html": "<p>Sent via SendLiberty REST API.</p>",
+  "html": "<p>Sent via SendLib REST API.</p>",
   "replyTo": "support@yourdomain.com",
   "cc": "anotheruser@example.com",
   "bcc": ["audit@example.com"],
@@ -92,7 +92,7 @@ func main() {
     "from":    "sender@gmail.com",
     "to":      "recipient@example.com",
     "subject": "Welcome aboard!",
-    "html":    "<p>Sent via SendLiberty REST API.</p>",
+    "html":    "<p>Sent via SendLib REST API.</p>",
     "replyTo": "support@yourdomain.com",
     "cc":      "anotheruser@example.com",
     "bcc":     []string{"audit@example.com"},
@@ -116,7 +116,7 @@ async fn main() -> Result<(), reqwest::Error> {
     "from": "sender@gmail.com",
     "to": "recipient@example.com",
     "subject": "Welcome aboard!",
-    "html": "<p>Sent via SendLiberty REST API.</p>",
+    "html": "<p>Sent via SendLib REST API.</p>",
     "replyTo": "support@yourdomain.com",
     "cc": "anotheruser@example.com",
     "bcc": ["audit@example.com"],
@@ -146,7 +146,7 @@ curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode([
   'from' => 'sender@gmail.com',
   'to' => 'recipient@example.com',
   'subject' => 'Welcome aboard!',
-  'html' => '<p>Sent via SendLiberty REST API.</p>',
+  'html' => '<p>Sent via SendLib REST API.</p>',
   'replyTo' => 'support@yourdomain.com',
   'cc' => 'anotheruser@example.com',
   'bcc' => ['audit@example.com'],
@@ -168,7 +168,7 @@ var payload = new {
   from = "sender@gmail.com",
   to = "recipient@example.com",
   subject = "Welcome aboard!",
-  html = "<p>Sent via SendLiberty REST API.</p>",
+  html = "<p>Sent via SendLib REST API.</p>",
   replyTo = "support@yourdomain.com",
   cc = "anotheruser@example.com",
   bcc = new[] { "audit@example.com" },
@@ -191,7 +191,7 @@ var payload = """
       "from": "sender@gmail.com",
       "to": "recipient@example.com",
       "subject": "Welcome aboard!",
-      "html": "<p>Sent via SendLiberty REST API.</p>",
+      "html": "<p>Sent via SendLib REST API.</p>",
       "replyTo": "support@yourdomain.com",
       "cc": "anotheruser@example.com",
       "bcc": ["audit@example.com"],
@@ -226,29 +226,29 @@ System.out.println(response.body());`;
       
       {/* Header */}
       <div className="space-y-4">
-        <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight text-primary-sendliberty">
+        <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight text-primary-sendlib">
           Introduction
         </h1>
         <p className="text-xl text-secondary leading-relaxed">
-          Welcome to the SendLiberty documentation. Learn how to connect your Gmail via OAuth and send transactional emails using our REST API.
+          Welcome to the SendLib documentation. Learn how to connect your Gmail via OAuth and send transactional emails using our REST API.
         </p>
       </div>
 
       {/* Section 1 */}
       <div className="space-y-6">
-        <h2 className="text-2xl font-bold tracking-tight text-primary-sendliberty border-b border-outline-variant pb-2">
-          What is SendLiberty?
+        <h2 className="text-2xl font-bold tracking-tight text-primary-sendlib border-b border-outline-variant pb-2">
+          What is SendLib?
         </h2>
         <p className="text-secondary leading-relaxed">
-          SendLiberty removes the friction of configuring ancient SMTP ports, storing risky App Passwords, and managing strict firewall rules. By using secure Google Workspace OAuth2 flows, you grant SendLiberty temporary, revokable access to relay messages securely through your own connected Gmail accounts.
+          SendLib removes the friction of configuring ancient SMTP ports, storing risky App Passwords, and managing strict firewall rules. By using secure Google Workspace OAuth2 flows, you grant SendLib temporary, revokable access to relay messages securely through your own connected Gmail accounts.
         </p>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
            <div className="p-5 rounded-xl border border-outline-variant/60 bg-white">
-              <h3 className="font-bold text-primary-sendliberty mb-2">Secure by Default</h3>
+              <h3 className="font-bold text-primary-sendlib mb-2">Secure by Default</h3>
               <p className="text-sm text-secondary">We never see your Google password. You use a standard Bearer API key to authorize request calls.</p>
            </div>
            <div className="p-5 rounded-xl border border-outline-variant/60 bg-white">
-              <h3 className="font-bold text-primary-sendliberty mb-2">API-First Design</h3>
+              <h3 className="font-bold text-primary-sendlib mb-2">API-First Design</h3>
               <p className="text-sm text-secondary">Send transactional emails instantly from any cloud platform (Railway, Render) with a single HTTP POST request.</p>
            </div>
         </div>
@@ -256,7 +256,7 @@ System.out.println(response.body());`;
 
       {/* Section 2 */}
       <div className="space-y-6">
-        <h2 className="text-2xl font-bold tracking-tight text-primary-sendliberty border-b border-outline-variant pb-2">
+        <h2 className="text-2xl font-bold tracking-tight text-primary-sendlib border-b border-outline-variant pb-2">
           Basic Usage
         </h2>
         <p className="text-secondary leading-relaxed">

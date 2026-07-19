@@ -42,10 +42,10 @@
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
 
-  /* SendLiberty Design System */
+  /* SendLib Design System */
   --color-surface-container: #eceef0;
   --color-on-tertiary-container: #c3a881;
-  --color-background-sendliberty: #f7f9fb;
+  --color-background-sendlib: #f7f9fb;
   --color-secondary-fixed-dim: #b7c8e1;
   --color-on-primary-fixed: #0d1c2f;
   --color-secondary-container: #d0e1fb;
@@ -81,7 +81,7 @@
   --color-on-primary: #ffffff;
   --color-on-tertiary-fixed-variant: #574424;
   --color-surface-bright: #f7f9fb;
-  --color-primary-sendliberty: #1d2b3e;
+  --color-primary-sendlib: #1d2b3e;
   --color-surface-tint: #515f74;
   --color-on-error: #ffffff;
   --color-tertiary: #38270a;

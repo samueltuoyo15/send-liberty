@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useState, useEffect } from "react";
 
 export default function QuickstartPage() {
-  const [apiUrl, setApiUrl] = useState("https://api.sendliberty.com");
+  const [apiUrl, setApiUrl] = useState("https://api.sendlib.com");
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -15,16 +15,16 @@ export default function QuickstartPage() {
   return (
     <div className="max-w-3xl">
       <div className="mb-10">
-        <h1 className="text-3xl font-bold tracking-tight text-primary-sendliberty mb-4">Quick Start</h1>
+        <h1 className="text-3xl font-bold tracking-tight text-primary-sendlib mb-4">Quick Start</h1>
         <p className="text-secondary text-lg leading-relaxed">
-          Get up and running with SendLiberty in under 5 minutes.
+          Get up and running with SendLib in under 5 minutes.
         </p>
       </div>
 
       <div className="space-y-8">
         {/* Step 1 */}
         <div className="p-6 rounded-xl border border-outline-variant/60 bg-white">
-          <h3 className="text-xl font-bold text-primary-sendliberty mb-2 flex items-center gap-2">
+          <h3 className="text-xl font-bold text-primary-sendlib mb-2 flex items-center gap-2">
             <span className="w-6 h-6 rounded-md bg-indigo-500/10 text-indigo-600 flex items-center justify-center text-xs font-bold">1</span>
             Connect your Gmail
           </h3>
@@ -35,7 +35,7 @@ export default function QuickstartPage() {
 
         {/* Step 2 */}
         <div className="p-6 rounded-xl border border-outline-variant/60 bg-white">
-          <h3 className="text-xl font-bold text-primary-sendliberty mb-2 flex items-center gap-2">
+          <h3 className="text-xl font-bold text-primary-sendlib mb-2 flex items-center gap-2">
             <span className="w-6 h-6 rounded-md bg-indigo-500/10 text-indigo-600 flex items-center justify-center text-xs font-bold">2</span>
             Generate an API Key
           </h3>
@@ -46,7 +46,7 @@ export default function QuickstartPage() {
 
         {/* Step 3 */}
         <div className="p-6 rounded-xl border border-outline-variant/60 bg-white">
-          <h3 className="text-xl font-bold text-primary-sendliberty mb-2 flex items-center gap-2">
+          <h3 className="text-xl font-bold text-primary-sendlib mb-2 flex items-center gap-2">
             <span className="w-6 h-6 rounded-md bg-indigo-500/10 text-indigo-600 flex items-center justify-center text-xs font-bold">3</span>
             Send your first email
           </h3>
@@ -58,8 +58,8 @@ export default function QuickstartPage() {
   -d '{
     "from": "sender@gmail.com",
     "to": "recipient@example.com",
-    "subject": "Welcome to SendLiberty!",
-    "html": "<p>This email was sent via SendLiberty REST API.</p>"
+    "subject": "Welcome to SendLib!",
+    "html": "<p>This email was sent via SendLib REST API.</p>"
   }'`}
           </pre>
         </div>
