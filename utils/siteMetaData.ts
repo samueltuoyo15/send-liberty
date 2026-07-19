@@ -1,6 +1,6 @@
 const siteMetadata = {
-  title: "SendLib - Bypass SMTP Restrictions",
-  author: "SendLib",
+  title: "SendLib",
+  author: "Samuel Tuoyo",
   headerTitle: "SendLib",
   description: "Bypass SMTP blocks on Railway, Render and other restricted hosting clouds. Send transactional emails via secure Google OAuth2 with zero DNS configuration.",
   language: "en-us",
