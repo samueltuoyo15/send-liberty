@@ -8,7 +8,7 @@ type Language = "curl" | "js" | "python" | "go" | "rust" | "php" | "net" | "java
 
 export default function DocsIntroduction() {
   const [copied, setCopied] = useState(false);
-  const [apiUrl, setApiUrl] = useState("https://api.sendlib.com");
+  const [apiUrl, setApiUrl] = useState("https://sendlib.samueltuoyo.com");
   const [activeTab, setActiveTab] = useState<Language>("curl");
 
   useEffect(() => {

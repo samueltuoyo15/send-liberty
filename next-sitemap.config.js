@@ -1,10 +1,11 @@
 const config = {
-  siteUrl: 'https://sendlib.samueltuoyo.com', 
-  generateRobotsTxt: true, 
-  exclude: ['/api/*', '/login'], 
-  changefreq: 'daily', 
-  priority: 0.8, 
-  sitemapSize: 5000, 
+  siteUrl: 'https://sendlib.samueltuoyo.com',
+  generateRobotsTxt: true,
+  generateIndexSitemap: false,
+  exclude: ['/api/*', '/login', '/dashboard', '/dashboard/*'],
+  changefreq: 'daily',
+  priority: 0.8,
+  sitemapSize: 5000,
   robotsTxtOptions: {
     policies: [
       { userAgent: '*', allow: '/' },
@@ -13,4 +14,4 @@ const config = {
   }
 };
 
-export default config;
+export default config;

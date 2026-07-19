@@ -6,7 +6,7 @@ type Language = "curl" | "js" | "python" | "go" | "rust" | "php" | "net" | "java
 
 export default function BasicSendPage() {
   const [lang, setLang] = useState<Language>("curl");
-  const [apiUrl, setApiUrl] = useState("https://api.sendlib.com");
+  const [apiUrl, setApiUrl] = useState("https://sendlib.samueltuoyo.com");
 
   useEffect(() => {
     if (typeof window !== "undefined") {

@@ -1,0 +1,768 @@
+"use client";
+
+import { useState, useEffect } from "react";
+import Link from "next/link";
+import { useMe } from "@/hooks/useAuth";
+
+export default function HomeClient() {
+  const [isScrolled, setIsScrolled] = useState(false);
+  const { data: user, isLoading } = useMe();
+  const [apiUrl, setApiUrl] = useState("https://sendlib.samueltuoyo.com");
+  const [activeTab, setActiveTab] = useState<"curl" | "js" | "python" | "go" | "rust" | "php" | "net" | "java">("curl");
+  const [isExpanded, setIsExpanded] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 20);
+    };
+    window.addEventListener("scroll", handleScroll);
+    
+    if (typeof window !== "undefined") {
+      setApiUrl(window.location.origin);
+    }
+    
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  return (
+    <div className="flex flex-col min-h-screen bg-background-sendlib text-on-background font-body-md">
+      {/* TopNavBar */}
+      <header 
+        className={`w-full fixed top-0 z-50 transition-all duration-300 border-b ${
+          isScrolled ? "border-outline-variant shadow-sm" : "border-transparent"
+        }`}
+        style={{ 
+          backgroundColor: isScrolled ? 'rgba(247, 249, 251, 0.75)' : 'transparent', 
+          backdropFilter: isScrolled ? 'blur(16px)' : 'blur(0px)', 
+          WebkitBackdropFilter: isScrolled ? 'blur(16px)' : 'blur(0px)' 
+        }}
+      >
+        <nav className="flex justify-between items-center px-margin-mobile md:px-margin-desktop py-md max-w-7xl mx-auto">
+          <Link 
+            href="/" 
+            className={`font-headline-md text-headline-md font-bold transition-colors duration-300 ${
+              isScrolled ? "text-primary-sendlib" : "text-white"
+            }`}
+          >
+            SendLib
+          </Link>
+          <div className="hidden md:flex items-center gap-xl">
+            <Link 
+              href="#features" 
+              className={`font-body-md text-body-md transition-colors duration-300 ${
+                isScrolled ? "text-secondary hover:text-primary-sendlib" : "text-white/80 hover:text-white"
+              }`}
+            >
+              Features
+            </Link>
+            <Link 
+              href="#about-oauth" 
+              className={`font-body-md text-body-md transition-colors duration-300 ${
+                isScrolled ? "text-secondary hover:text-primary-sendlib" : "text-white/80 hover:text-white"
+              }`}
+            >
+              About
+            </Link>
+            <Link 
+              href="/docs" 
+              className={`font-body-md text-body-md transition-colors duration-300 ${
+                isScrolled ? "text-secondary hover:text-primary-sendlib" : "text-white/80 hover:text-white"
+              }`}
+            >
+              API Docs
+            </Link>
+          </div>
+          <div className="flex items-center gap-md">
+            {!isLoading && user ? (
+              <Link 
+                href="/dashboard" 
+                className={`px-lg py-sm rounded-xl font-label-sm text-label-sm transition-all duration-300 active:scale-95 inline-block ${
+                  isScrolled 
+                    ? "bg-primary-sendlib text-white hover:bg-primary-sendlib/90" 
+                    : "bg-white text-primary-sendlib hover:bg-white/90"
+                }`}
+              >
+                Dashboard
+              </Link>
+            ) : (
+              <>
+                <Link 
+                  href="/login" 
+                  className={`hidden sm:block font-label-sm text-label-sm transition-all duration-300 active:scale-95 px-lg py-sm ${
+                    isScrolled ? "text-primary-sendlib" : "text-white/80 hover:text-white"
+                  }`}
+                >
+                  Login
+                </Link>
+                <Link 
+                  href="/login" 
+                  className={`px-lg py-sm rounded-xl font-label-sm text-label-sm transition-all duration-300 active:scale-95 inline-block ${
+                    isScrolled 
+                      ? "bg-primary-sendlib text-white hover:bg-primary-sendlib/90" 
+                      : "bg-white text-primary-sendlib hover:bg-white/90"
+                  }`}
+                >
+                  Sign Up
+                </Link>
+              </>
+            )}
+          </div>
+        </nav>
+      </header>
+
+      <main className="flex-grow">
+        {/* Hero Section */}
+        <section
+          className="w-full relative"
+          style={{
+            backgroundImage: "linear-gradient(rgba(29, 43, 62, 0.7), rgba(29, 43, 62, 0.45)), url('/forest_background/forest-background.png')",
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+          }}
+        >
+          <div className="max-w-7xl mx-auto px-margin-mobile md:px-margin-desktop pt-24 pb-xl md:pt-40 md:pb-32 grid md:grid-cols-2 gap-xl items-center">
+            <div className="space-y-lg">
+              <h1 className="font-headline-lg-mobile md:font-headline-lg text-headline-lg-mobile md:text-headline-lg text-white">
+                SendLib - Bypass SMTP Restrictions
+              </h1>
+              <p className="font-body-lg text-body-lg max-w-[500px] text-white/90 leading-relaxed">
+                Send transactional emails with just your Gmail account from any hosting environment, even where port 25, 465, or 587 are strictly blocked. No more server configuration headaches.
+              </p>
+              <div className="flex flex-col sm:flex-row gap-md pt-md">
+                {!isLoading && user ? (
+                  <Link href="/dashboard" className="bg-primary-sendlib hover:bg-primary-sendlib/90 text-white px-xl py-lg rounded-xl font-label-sm text-label-sm transition-transform active:scale-95 shadow-sm text-center w-full sm:w-auto inline-block">
+                    Go to Dashboard
+                  </Link>
+                ) : (
+                  <Link href="/login" className="bg-primary-sendlib hover:bg-primary-sendlib/90 text-white px-xl py-lg rounded-xl font-label-sm text-label-sm transition-transform active:scale-95 shadow-sm text-center w-full sm:w-auto inline-block">
+                    Get Started Free
+                  </Link>
+                )}
+                <Link href="/docs" className="border border-white text-white px-xl py-lg rounded-xl font-label-sm text-label-sm transition-transform active:scale-95 hover:bg-white/10 text-center w-full sm:w-auto inline-block">
+                  Read Documentation
+                </Link>
+              </div>
+            </div>
+            <div className="bg-primary-sendlib text-primary-fixed rounded-xl p-lg font-mono border border-outline-variant hover:border-primary-sendlib transition-colors overflow-hidden shadow-sm flex flex-col">
+              <div className="flex justify-between items-center mb-md border-b border-[#2d3b4e] pb-3">
+                <div className="flex gap-xs">
+                  <div className="w-3 h-3 rounded-full bg-red-400"></div>
+                  <div className="w-3 h-3 rounded-full bg-yellow-400"></div>
+                  <div className="w-3 h-3 rounded-full bg-green-400"></div>
+                </div>
+                <div className="flex rounded-lg bg-[#16202e] border border-[#2d3b4e] p-1 text-[11px] overflow-x-auto max-w-full gap-1 custom-scrollbar">
+                  {(["curl", "js", "python", "go", "rust", "php", "net", "java"] as const).map((tab) => (
+                    <button
+                      key={tab}
+                      onClick={() => setActiveTab(tab)}
+                      className={`px-2 py-0.5 rounded-md transition-colors cursor-pointer whitespace-nowrap ${
+                        activeTab === tab ? "bg-indigo-600/30 text-indigo-400 border border-indigo-500/20" : "text-white/40 hover:text-white/80"
+                      }`}
+                    >
+                      {tab === "curl"
+                        ? "cURL"
+                        : tab === "js"
+                        ? "JavaScript"
+                        : tab === "python"
+                        ? "Python"
+                        : tab === "go"
+                        ? "Go"
+                        : tab === "rust"
+                        ? "Rust"
+                        : tab === "php"
+                        ? "PHP"
+                        : tab === "net"
+                        ? ".NET"
+                        : "Java"}
+                    </button>
+                  ))}
+                </div>
+              </div>
+              <pre className="text-sm overflow-auto max-h-[360px] leading-relaxed text-[#c0caf5] p-md custom-scrollbar">
+                {activeTab === "curl" && (
+                  isExpanded ? (
+                    `curl -X POST ${apiUrl}/api/send \\
+  -H "Authorization: Bearer YOUR_KEY" \\
+  -H "Content-Type: application/json" \\
+  -d '{
+    "from": "sender@gmail.com",
+    "to": "user@example.com",
+    "subject": "Hello via Webhook!",
+    "html": "<p>No SMTP needed.</p>",
+    "replyTo": "support@yourdomain.com",
+    "cc": "anotheruser@example.com",
+    "bcc": ["audit@example.com"],
+    "attachments": [
+      { "filename": "invoice.pdf", "content": "base64..." }
+    ]
+  }'`
+                  ) : (
+                    `curl -X POST ${apiUrl}/api/send \\
+  -H "Authorization: Bearer YOUR_KEY" \\
+  -H "Content-Type: application/json" \\
+  -d '{
+    "from": "sender@gmail.com",
+    "to": "user@example.com",
+    "subject": "Hello via Webhook!",
+    "html": "<p>No SMTP needed.</p>"
+  }'`
+                  )
+                )}
+                {activeTab === "js" && (
+                  isExpanded ? (
+                    `await fetch('${apiUrl}/api/send', {
+  method: 'POST',
+  headers: {
+    'Authorization': 'Bearer YOUR_KEY',
+    'Content-Type': 'application/json'
+  },
+  body: JSON.stringify({
+    from: 'sender@gmail.com',
+    to: 'user@example.com',
+    subject: 'Hello via Webhook!',
+    html: '<p>No SMTP needed.</p>',
+    replyTo: 'support@yourdomain.com',
+    cc: 'anotheruser@example.com',
+    bcc: ['audit@example.com'],
+    attachments: [
+      { filename: 'invoice.pdf', content: 'base64...' }
+    ]
+  })
+});`
+                  ) : (
+                    `await fetch('${apiUrl}/api/send', {
+  method: 'POST',
+  headers: {
+    'Authorization': 'Bearer YOUR_KEY',
+    'Content-Type': 'application/json'
+  },
+  body: JSON.stringify({
+    from: 'sender@gmail.com',
+    to: 'user@example.com',
+    subject: 'Hello via Webhook!',
+    html: '<p>No SMTP needed.</p>'
+  })
+});`
+                  )
+                )}
+                {activeTab === "python" && (
+                  isExpanded ? (
+                    `import requests
+
+url = "${apiUrl}/api/send"
+headers = {
+  "Authorization": "Bearer YOUR_KEY",
+  "Content-Type": "application/json"
+}
+payload = {
+  "from": "sender@gmail.com",
+  "to": "user@example.com",
+  "subject": "Hello via Webhook!",
+  "html": "<p>No SMTP needed.</p>",
+  "replyTo": "support@yourdomain.com",
+  "cc": "anotheruser@example.com",
+  "bcc": ["audit@example.com"],
+  "attachments": [
+    { "filename": "invoice.pdf", "content": "base64..." }
+  ]
+}
+
+res = requests.post(url, json=payload, headers=headers)`
+                  ) : (
+                    `import requests
+
+url = "${apiUrl}/api/send"
+headers = {
+  "Authorization": "Bearer YOUR_KEY",
+  "Content-Type": "application/json"
+}
+payload = {
+  "from": "sender@gmail.com",
+  "to": "user@example.com",
+  "subject": "Hello via Webhook!",
+  "html": "<p>No SMTP needed.</p>"
+}
+
+res = requests.post(url, json=payload, headers=headers)`
+                  )
+                )}
+                {activeTab === "go" && (
+                  isExpanded ? (
+                    `package main
+
+import (
+  "bytes"
+  "encoding/json"
+  "net/http"
+)
+
+func main() {
+  payload, _ := json.Marshal(map[string]interface{}{
+    "from":    "sender@gmail.com",
+    "to":      "user@example.com",
+    "subject": "Hello via Webhook!",
+    "html":    "<p>No SMTP needed.</p>",
+    "replyTo": "support@yourdomain.com",
+    "cc":      "anotheruser@example.com",
+    "bcc":     []string{"audit@example.com"},
+    "attachments": []map[string]string{
+      {"filename": "invoice.pdf", "content": "base64..."},
+    },
+  })
+  req, _ := http.NewRequest("POST", "${apiUrl}/api/send", bytes.NewBuffer(payload))
+  req.Header.Set("Authorization", "Bearer YOUR_KEY")
+  req.Header.Set("Content-Type", "application/json")
+  
+  http.DefaultClient.Do(req)
+}`
+                  ) : (
+                    `package main
+
+import (
+  "bytes"
+  "encoding/json"
+  "net/http"
+)
+
+func main() {
+  payload, _ := json.Marshal(map[string]interface{}{
+    "from":    "sender@gmail.com",
+    "to":      "user@example.com",
+    "subject": "Hello via Webhook!",
+    "html":    "<p>No SMTP needed.</p>",
+  })
+  req, _ := http.NewRequest("POST", "${apiUrl}/api/send", bytes.NewBuffer(payload))
+  req.Header.Set("Authorization", "Bearer YOUR_KEY")
+  req.Header.Set("Content-Type", "application/json")
+  
+  http.DefaultClient.Do(req)
+}`
+                  )
+                )}
+                {activeTab === "rust" && (
+                  isExpanded ? (
+                    `use serde_json::json;
+
+#[tokio::main]
+async fn main() -> Result<(), reqwest::Error> {
+  let client = reqwest::Client::new();
+  let payload = json!({
+    "from": "sender@gmail.com",
+    "to": "user@example.com",
+    "subject": "Hello via Webhook!",
+    "html": "<p>No SMTP needed.</p>",
+    "replyTo": "support@yourdomain.com",
+    "cc": "anotheruser@example.com",
+    "bcc": ["audit@example.com"],
+    "attachments": [
+      { "filename": "invoice.pdf", "content": "base64..." }
+    ]
+  });
+  
+  client.post("${apiUrl}/api/send")
+    .header("Authorization", "Bearer YOUR_KEY")
+    .json(&payload)
+    .send()
+    .await?;
+    
+  Ok(())
+}`
+                  ) : (
+                    `use serde_json::json;
+
+#[tokio::main]
+async fn main() -> Result<(), reqwest::Error> {
+  let client = reqwest::Client::new();
+  let payload = json!({
+    "from": "sender@gmail.com",
+    "to": "user@example.com",
+    "subject": "Hello via Webhook!",
+    "html": "<p>No SMTP needed.</p>"
+  });
+  
+  client.post("${apiUrl}/api/send")
+    .header("Authorization", "Bearer YOUR_KEY")
+    .json(&payload)
+    .send()
+    .await?;
+    
+  Ok(())
+}`
+                  )
+                )}
+                {activeTab === "php" && (
+                  isExpanded ? (
+                    `<?php
+$ch = curl_init('${apiUrl}/api/send');
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+curl_setopt($ch, CURLOPT_POST, true);
+curl_setopt($ch, CURLOPT_HTTPHEADER, [
+  'Authorization: Bearer YOUR_KEY',
+  'Content-Type: application/json'
+]);
+curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode([
+  'from' => 'sender@gmail.com',
+  'to' => 'user@example.com',
+  'subject' => 'Hello via Webhook!',
+  'html' => '<p>No SMTP needed.</p>',
+  'replyTo' => 'support@yourdomain.com',
+  'cc' => 'anotheruser@example.com',
+  'bcc' => ['audit@example.com'],
+  'attachments' => [
+    ['filename' => 'invoice.pdf', 'content' => 'base64...']
+  ]
+]));
+
+curl_exec($ch);`
+                  ) : (
+                    `<?php
+$ch = curl_init('${apiUrl}/api/send');
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+curl_setopt($ch, CURLOPT_POST, true);
+curl_setopt($ch, CURLOPT_HTTPHEADER, [
+  'Authorization: Bearer YOUR_KEY',
+  'Content-Type: application/json'
+]);
+curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode([
+  'from' => 'sender@gmail.com',
+  'to' => 'user@example.com',
+  'subject' => 'Hello via Webhook!',
+  'html' => '<p>No SMTP needed.</p>'
+]));
+
+curl_exec($ch);`
+                  )
+                )}
+                {activeTab === "net" && (
+                  isExpanded ? (
+                    `var client = new HttpClient();
+client.DefaultRequestHeaders.Add("Authorization", "Bearer YOUR_KEY");
+
+var payload = new {
+  from = "sender@gmail.com",
+  to = "user@example.com",
+  subject = "Hello via Webhook!",
+  html = "<p>No SMTP needed.</p>",
+  replyTo = "support@yourdomain.com",
+  cc = "anotheruser@example.com",
+  bcc = new[] { "audit@example.com" },
+  attachments = new[] { new { filename = "invoice.pdf", content = "base64..." } }
+};`
+                  ) : (
+                    `var client = new HttpClient();
+client.DefaultRequestHeaders.Add("Authorization", "Bearer YOUR_KEY");
+
+var payload = new {
+  from = "sender@gmail.com",
+  to = "user@example.com",
+  subject = "Hello via Webhook!",
+  html = "<p>No SMTP needed.</p>"
+};`
+                  )
+                )}
+                {activeTab === "java" && (
+                  isExpanded ? (
+                    `var client = HttpClient.newHttpClient();
+var payload = """
+    {
+      "from": "sender@gmail.com",
+      "to": "user@example.com",
+      "subject": "Hello via Webhook!",
+      "html": "<p>No SMTP needed.</p>",
+      "replyTo": "support@yourdomain.com",
+      "cc": "anotheruser@example.com",
+      "bcc": ["audit@example.com"],
+      "attachments": [
+        { "filename": "invoice.pdf", "content": "base64..." }
+      ]
+    }
+    """;
+
+var req = HttpRequest.newBuilder()
+  .uri(URI.create("${apiUrl}/api/send"))
+  .header("Authorization", "Bearer YOUR_KEY")
+  .header("Content-Type", "application/json")
+  .POST(HttpRequest.BodyPublishers.ofString(payload))
+  .build();`
+                  ) : (
+                    `var client = HttpClient.newHttpClient();
+var payload = """
+    {
+      "from": "sender@gmail.com",
+      "to": "user@example.com",
+      "subject": "Hello via Webhook!",
+      "html": "<p>No SMTP needed.</p>"
+    }
+    """;
+
+var req = HttpRequest.newBuilder()
+  .uri(URI.create("${apiUrl}/api/send"))
+  .header("Authorization", "Bearer YOUR_KEY")
+  .header("Content-Type", "application/json")
+  .POST(HttpRequest.BodyPublishers.ofString(payload))
+  .build();`
+                  )
+                )}
+              </pre>
+              <div className="flex justify-between items-center mt-xs pt-2.5 border-t border-[#2d3b4e]/60 text-xs px-md pb-md">
+                <button
+                  onClick={() => setIsExpanded(!isExpanded)}
+                  className="text-indigo-400 hover:text-indigo-300 font-semibold cursor-pointer flex items-center gap-1 transition-colors outline-none"
+                >
+                  {isExpanded ? "Collapse Parameters ▲" : "Show All Parameters (CC, BCC, Attachments) ▼"}
+                </button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Features Bento Grid */}
+        <section id="features" className="py-xl md:py-32 bg-surface">
+          <div className="max-w-7xl mx-auto px-margin-mobile md:px-margin-desktop">
+            <div className="text-center max-w-[640px] mx-auto mb-16 space-y-md">
+              <h2 className="font-headline-lg text-headline-lg text-primary-sendlib">Features</h2>
+              <p className="font-body-lg text-body-lg text-on-surface-variant">
+                Everything you need to deliver mission-critical emails without blocked SMTP ports, domain verifications, or complex DNS configurations.
+              </p>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-lg">
+              {/* Large Feature Card */}
+              <div className="md:col-span-2 border border-[#d8cbf9] p-xl rounded-2xl bg-[#eae3fc] transition-all hover:bg-[#eae3fc]/90 duration-300">
+                <span className="material-symbols-outlined text-[#6324f5] text-4xl mb-md">webhook</span>
+                <h3 className="font-headline-md text-headline-md mb-sm text-[#2e1065]">Bypass Blocked Ports</h3>
+                <p className="font-body-md text-body-md text-[#4c2d96] leading-relaxed">
+                  Railway, Render, and most free cloud hosts block outbound SMTP ports. SendLib relays through your connected Google account, no SMTP port required. Improve deliverability by sending through Google's trusted mail infrastructure.
+                </p>
+              </div>
+              {/* Regular Card */}
+              <div className="border border-[#b0e8e0] p-xl rounded-2xl bg-[#cbf1ec] transition-all hover:bg-[#cbf1ec]/90 duration-300">
+                <span className="material-symbols-outlined text-[#0d9488] text-4xl mb-md">dns</span>
+                <h3 className="font-label-sm text-label-sm uppercase tracking-widest mb-sm text-[#064e45]">Zero DNS Setup</h3>
+                <p className="font-body-md text-body-md text-[#0f685c] leading-relaxed">No domain needed, no MX records, SPF, or DKIM to configure. Connect your Google account and start sending immediately.</p>
+              </div>
+              {/* Regular Card */}
+              <div className="border border-[#fbb3d3] p-xl rounded-2xl bg-[#fec8e1] transition-all hover:bg-[#fec8e1]/90 duration-300">
+                <span className="material-symbols-outlined text-[#ec4899] text-4xl mb-md">api</span>
+                <h3 className="font-label-sm text-label-sm uppercase tracking-widest mb-sm text-[#6d0935]">Simple API</h3>
+                <p className="font-body-md text-body-md text-[#9d1b54] leading-relaxed">One POST request. No SDK to install. Works from any language or framework.</p>
+              </div>
+              {/* Image Integration Card */}
+              <div className="md:col-span-2 relative h-64 md:h-auto overflow-hidden rounded-2xl border border-[#c5c6cd] group">
+                <div
+                  className="absolute inset-0 z-0 transition-transform duration-700 group-hover:scale-105"
+                  style={{
+                    backgroundImage: "url('https://lh3.googleusercontent.com/aida-public/AB6AXuDnw8bH2IFtHCVDRA6W-KwT6_yuapqxq9Dc97vtn-iJac5CTLw9dPDHcRu-5rGIcqfkqcG9kZsR0ui6aZV4GPjium0pjFKhCCzgJnrHCY1JBsU0KWK8f3utSiHlBty52P3FWaXi8e3FYsZBI_WfVBvj5BbliJ0lVWtMWAouYmTYqW_CwC22uivzomECi45BkZGRJ0QBZuS8wKAMaYlguwol9vNRnJeQJoEMYxIioLFOkir5mIaqKpwxLFGh-wAJBdMIuQiE0j2zBKM')",
+                    backgroundSize: "cover",
+                    backgroundPosition: "center",
+                  }}
+                ></div>
+                <div className="absolute inset-0 bg-black/45 z-10"></div>
+                <div className="relative z-20 p-xl h-full flex flex-col justify-end text-white">
+                  <h3 className="font-headline-md text-headline-md font-bold text-white">Inbox Delivery</h3>
+                  <p className="font-body-md text-body-md opacity-90 text-white">Because emails are sent from your own Google account, they land in the inbox, not the spam folder.</p>
+                </div>
+              </div>
+              {/* OAuth2 Card */}
+              <div className="md:col-span-2 border border-[#bfd7fa] p-xl rounded-2xl flex items-center gap-xl bg-[#d7e6fc] transition-all hover:bg-[#d7e6fc]/90 duration-300">
+                <div className="hidden sm:block">
+                  <span className="material-symbols-outlined text-[#3b82f6] text-6xl" style={{ fontVariationSettings: "'FILL' 1" }}>
+                    security
+                  </span>
+                </div>
+                <div>
+                  <h3 className="font-headline-md text-headline-md mb-sm text-[#1e3a8a]">OAuth2 Secured</h3>
+                  <p className="font-body-md text-body-md text-[#1d4ed8] leading-relaxed">
+                    We connect to your Google account via OAuth2. We never see or store your password, only an encrypted access token you can revoke at any time.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* About SendLib & Google OAuth Integration Section */}
+        <section id="about-oauth" className="py-xl md:py-24 bg-surface-container border-t border-outline-variant/60">
+          <div className="max-w-5xl mx-auto px-margin-mobile md:px-margin-desktop">
+            <div className="text-center max-w-3xl mx-auto mb-12 space-y-md">
+          
+              <h2 className="font-headline-lg text-headline-lg text-primary-sendlib">
+                About SendLib & Google OAuth Integration
+              </h2>
+              <p className="font-body-lg text-body-lg text-on-surface-variant">
+                SendLib is designed specifically to provide developers with a simple, secure transactional email API without blocked SMTP ports or DNS record requirements.
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-lg">
+              <div className="p-xl rounded-2xl border border-outline-variant bg-white space-y-sm">
+                <div className="w-10 h-10 rounded-xl bg-primary-sendlib/10 text-primary-sendlib flex items-center justify-center font-bold text-lg mb-md">
+                  1
+                </div>
+                <h3 className="font-headline-sm text-headline-sm text-primary-sendlib">Application Purpose & Identity</h3>
+                <p className="font-body-md text-secondary leading-relaxed">
+                  The application name configured on this website is <strong>SendLib</strong>. SendLib operates as an API proxy that enables developers to dispatch transactional emails (such as user verification, notifications, and magic links) via Google OAuth2 credentials.
+                </p>
+              </div>
+
+              <div className="p-xl rounded-2xl border border-outline-variant bg-white space-y-sm">
+                <div className="w-10 h-10 rounded-xl bg-primary-sendlib/10 text-primary-sendlib flex items-center justify-center font-bold text-lg mb-md">
+                  2
+                </div>
+                <h3 className="font-headline-sm text-headline-sm text-primary-sendlib">Why We Request Google OAuth Access</h3>
+                <p className="font-body-md text-secondary leading-relaxed">
+                  SendLib requests the <code className="bg-surface-container px-2 py-0.5 rounded text-xs">gmail.send</code> permission scope. This scope allows SendLib to route outbound transactional emails requested via your SendLib API keys, bypassing cloud host SMTP port restrictions.
+                </p>
+              </div>
+
+              <div className="p-xl rounded-2xl border border-outline-variant bg-white space-y-sm">
+                <div className="w-10 h-10 rounded-xl bg-primary-sendlib/10 text-primary-sendlib flex items-center justify-center font-bold text-lg mb-md">
+                  3
+                </div>
+                <h3 className="font-headline-sm text-headline-sm text-primary-sendlib">User Data Protection & Security</h3>
+                <p className="font-body-md text-secondary leading-relaxed">
+                  We value your privacy. SendLib never reads, views, indexes, or stores any messages from your Gmail inbox. Your Google password is never requested or stored. OAuth access tokens are encrypted using AES-256 encryption at rest, and access can be revoked at any time in your Google Account settings.
+                </p>
+              </div>
+
+              <div className="p-xl rounded-2xl border border-outline-variant bg-white space-y-sm">
+                <div className="w-10 h-10 rounded-xl bg-primary-sendlib/10 text-primary-sendlib flex items-center justify-center font-bold text-lg mb-md">
+                  4
+                </div>
+                <h3 className="font-headline-sm text-headline-sm text-primary-sendlib">Google API User Data Policy Compliance</h3>
+                <p className="font-body-md text-secondary leading-relaxed">
+                  SendLib&apos;s use and transfer to any other app of information received from Google APIs adheres strictly to the Google API Services User Data Policy, including Limited Use requirements.
+                </p>
+                <div className="pt-sm flex flex-wrap gap-md text-sm">
+                  <Link href="/privacy-policy" className="text-primary-sendlib font-semibold underline underline-offset-2 hover:opacity-80">
+                    Privacy Policy
+                  </Link>
+                  <Link href="/terms-of-service" className="text-primary-sendlib font-semibold underline underline-offset-2 hover:opacity-80">
+                    Terms of Service
+                  </Link>
+                  <a href="mailto:motionpipehq@gmail.com" className="text-primary-sendlib font-semibold underline underline-offset-2 hover:opacity-80">
+                    Support Email
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* FAQ Section */}
+        <section id="faq" className="py-xl md:py-32 bg-surface-container-low border-t border-outline-variant/60">
+          <div className="max-w-4xl mx-auto px-margin-mobile md:px-margin-desktop">
+            <div className="text-center mb-16 space-y-3">
+              <h2 className="font-headline-lg text-headline-lg text-primary-sendlib">Frequently Asked Questions</h2>
+              <p className="font-body-lg text-body-lg text-on-surface-variant max-w-[600px] mx-auto">
+                Got questions about how SendLib is different from other transactional email sending platforms? We have answers.
+              </p>
+            </div>
+            
+            <div className="space-y-6">
+              <div className="p-6 rounded-2xl border border-outline-variant bg-white/70 hover:bg-white transition-colors duration-300">
+                <h3 className="font-bold text-base text-[#1d2b3e] mb-2 flex items-center gap-2">
+                  <span className="w-2 h-2 rounded-full bg-indigo-500"></span>
+                  Do I need to verify my domain or configure DNS records?
+                </h3>
+                <p className="text-sm text-secondary leading-relaxed pl-4">
+                  No! Because SendLib routes your email relay requests securely through your already verified, connected Google accounts, there is absolutely zero DNS configuration required. You do not need to add SPF, DKIM, MX, or TXT records to start sending immediately.
+                </p>
+              </div>
+
+              <div className="p-6 rounded-2xl border border-outline-variant bg-white/70 hover:bg-white transition-colors duration-300">
+                <h3 className="font-bold text-base text-[#1d2b3e] mb-2 flex items-center gap-2">
+                  <span className="w-2 h-2 rounded-full bg-emerald-500"></span>
+                  Will my emails land in the inbox?
+                </h3>
+                <p className="text-sm text-secondary leading-relaxed pl-4">
+                  Yes, absolutely. Because the emails are sent using Google's official, highly trusted outbound mail servers, they inherit the absolute highest deliverability rates out of the box.
+                </p>
+              </div>
+
+              <div className="p-6 rounded-2xl border border-outline-variant bg-white/70 hover:bg-white transition-colors duration-300">
+                <h3 className="font-bold text-base text-[#1d2b3e] mb-2 flex items-center gap-2">
+                  <span className="w-2 h-2 rounded-full bg-pink-500"></span>
+                  How does this compare to the free tier of Resend, Mailgun, or SendGrid?
+                </h3>
+                <p className="text-sm text-secondary leading-relaxed pl-4">
+                  Other platforms limit you to only 100 free emails per day on their free plans and require strict domain verification. With SendLib, you can send up to <strong>500 emails/day</strong> per connected personal/product Gmail account, or up to <strong>2,000 emails/day</strong> per connected Google Workspace account.
+                </p>
+              </div>
+
+              <div className="p-6 rounded-2xl border border-outline-variant bg-white/70 hover:bg-white transition-colors duration-300">
+                <h3 className="font-bold text-base text-[#1d2b3e] mb-2 flex items-center gap-2">
+                  <span className="w-2 h-2 rounded-full bg-amber-500"></span>
+                  Can I send attachments and CC/BCC recipients?
+                </h3>
+                <p className="text-sm text-secondary leading-relaxed pl-4">
+                  Yes, our REST API supports complete transactional payloads. You can specify a custom Reply-To header, carbon copies (CC), blind carbon copies (BCC), and pass an array of base64-encoded attachments.
+                </p>
+              </div>
+              
+              <div className="p-6 rounded-2xl border border-outline-variant bg-white/70 hover:bg-white transition-colors duration-300">
+                <h3 className="font-bold text-base text-[#1d2b3e] mb-2 flex items-center gap-2">
+                  <span className="w-2 h-2 rounded-full bg-blue-500"></span>
+                  Is my Google account password secure?
+                </h3>
+                <p className="text-sm text-secondary leading-relaxed pl-4">
+                  We never see, ask for, or store your Google password. Authorization is done entirely through standard, secure Google OAuth2 credentials. We only store encrypted access and refresh tokens, which you can manually revoke from your Google Account settings page at any time.
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* CTA Section */}
+        <section
+          className="w-full relative py-xl md:py-32 mt-xl overflow-hidden"
+          style={{
+            backgroundImage: "linear-gradient(rgba(29, 43, 62, 0.75), rgba(29, 43, 62, 0.75)), url('/forest_background/forest-background.png')",
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+          }}
+        >
+          {/* Blur blobs for premium aesthetic */}
+          <div className="absolute top-1/2 left-1/4 -translate-y-1/2 w-64 h-64 bg-indigo-500/20 rounded-full blur-3xl pointer-events-none" />
+          <div className="absolute top-1/2 right-1/4 -translate-y-1/2 w-64 h-64 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none" />
+          
+          <div className="relative z-10 max-w-5xl mx-auto px-margin-mobile md:px-margin-desktop text-center">
+            <h2 className="font-headline-lg text-headline-lg text-white mb-lg">Stop fighting your hosting provider.</h2>
+            <p className="font-body-lg text-body-lg text-white/80 mb-xl max-w-2xl mx-auto">
+              Join developers who have simplified their email delivery pipeline. Start sending in seconds.
+            </p>
+            {!isLoading && user ? (
+              <Link href="/dashboard" className="bg-white text-primary-sendlib hover:bg-gray-100 px-xl py-lg rounded-xl font-label-sm text-label-sm transition-transform active:scale-95 shadow-sm inline-block">
+                Go to Dashboard
+              </Link>
+            ) : (
+              <Link href="/login" className="bg-white text-primary-sendlib hover:bg-gray-100 px-xl py-lg rounded-xl font-label-sm text-label-sm transition-transform active:scale-95 shadow-sm inline-block">
+                Create Free Account
+              </Link>
+            )}
+          </div>
+        </section>
+      </main>
+
+      {/* Footer */}
+      <footer className="w-full mt-auto bg-surface-container border-t border-outline-variant">
+        <div className="flex flex-col md:flex-row justify-between items-center px-margin-mobile md:px-margin-desktop py-xl gap-md max-w-7xl mx-auto">
+          <div className="flex flex-col gap-xs text-center md:text-left">
+            <div className="font-headline-md text-headline-md font-bold text-primary-sendlib">SendLib</div>
+            <p className="font-label-sm text-label-sm text-on-surface-variant">© {new Date().getFullYear()} SendLib. All rights reserved.</p>
+          </div>
+          <div className="flex flex-wrap justify-center gap-md">
+            <Link href="/docs" className="font-label-sm text-label-sm text-on-surface-variant hover:text-primary-sendlib transition-colors underline">
+              Documentation
+            </Link>
+            <Link href="/privacy-policy" className="font-label-sm text-label-sm text-on-surface-variant hover:text-primary-sendlib transition-colors underline">
+              Privacy Policy
+            </Link>
+            <Link href="/terms-of-service" className="font-label-sm text-label-sm text-on-surface-variant hover:text-primary-sendlib transition-colors underline">
+              Terms of Service
+            </Link>
+          </div>
+        </div>
+      </footer>
+    </div>
+  );
+}

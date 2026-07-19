@@ -7,15 +7,18 @@ import "./globals.css"
 export const metadata: Metadata = {
   metadataBase: new URL(siteMetadata.siteUrl),
   title: {
-    template: `%s | ${siteMetadata.title}`,
+    template: `%s | SendLib`,
     default: siteMetadata.title,
   },
   description: siteMetadata.description,
+  alternates: {
+    canonical: siteMetadata.siteUrl,
+  },
   openGraph: {
     title: siteMetadata.title,
     description: siteMetadata.description,
     url: siteMetadata.siteUrl,
-    siteName: siteMetadata.title,
+    siteName: "SendLib",
     locale: "en_US",
     type: "website",
   },
@@ -25,7 +28,7 @@ export const metadata: Metadata = {
     googleBot: {
       index: true,
       follow: true,
-      noimageindex: true,
+      noimageindex: false,
       "max-video-preview": -1,
       "max-image-preview": "large",
       "max-snippet": -1,
@@ -34,10 +37,11 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: siteMetadata.title,
+    description: siteMetadata.description,
   },
-  // other: {
-  //   "google-site-verification": process.env.GOOGLE_SITE_VERIFICATION_TOKEN || "",
-  // },
+  verification: {
+    google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION || process.env.GOOGLE_SITE_VERIFICATION || "",
+  },
 };
 
 export default function RootLayout({

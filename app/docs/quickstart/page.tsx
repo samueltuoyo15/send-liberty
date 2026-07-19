@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useState, useEffect } from "react";
 
 export default function QuickstartPage() {
-  const [apiUrl, setApiUrl] = useState("https://api.sendlib.com");
+  const [apiUrl, setApiUrl] = useState("https://sendlib.samueltuoyo.com");
 
   useEffect(() => {
     if (typeof window !== "undefined") {
