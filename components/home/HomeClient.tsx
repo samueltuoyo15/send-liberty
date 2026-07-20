@@ -122,9 +122,12 @@ export default function HomeClient() {
         >
           <div className="max-w-7xl mx-auto px-margin-mobile md:px-margin-desktop pt-24 pb-xl md:pt-40 md:pb-32 grid md:grid-cols-2 gap-xl items-center">
             <div className="space-y-lg">
-              <h1 className="font-headline-lg-mobile md:font-headline-lg text-headline-lg-mobile md:text-headline-lg text-white">
-                SendLib - Bypass SMTP Restrictions
+              <h1 className="font-headline-lg-mobile md:font-headline-lg text-headline-lg-mobile md:text-headline-lg text-white font-extrabold">
+                SendLib
               </h1>
+              <p className="text-xl md:text-2xl font-bold text-indigo-200 tracking-tight">
+                Send Transactional Emails Without SMTP Restrictions
+              </p>
               <p className="font-body-lg text-body-lg max-w-[500px] text-white/90 leading-relaxed">
                 Send transactional emails with just your Gmail account from any hosting environment, even where port 25, 465, or 587 are strictly blocked. No more server configuration headaches.
               </p>
@@ -513,6 +516,21 @@ var req = HttpRequest.newBuilder()
                 </button>
               </div>
             </div>
+          </div>
+        </section>
+
+        {/* What is SendLib Section */}
+        <section id="what-is-sendlib" className="py-xl md:py-20 bg-white border-b border-outline-variant/60">
+          <div className="max-w-4xl mx-auto px-margin-mobile md:px-margin-desktop text-center space-y-md">
+            <span className="px-md py-xs rounded-full bg-primary-sendlib/10 text-primary-sendlib font-label-sm text-label-sm inline-block font-bold">
+              Application Purpose
+            </span>
+            <h2 className="font-headline-lg text-headline-lg text-primary-sendlib font-extrabold">
+              What is SendLib?
+            </h2>
+            <p className="font-body-lg text-body-lg text-on-surface-variant leading-relaxed max-w-3xl mx-auto">
+              SendLib is a transactional email API for developers. It allows applications to send emails using a connected Google account through OAuth 2.0. Developers can use SendLib for verification emails, notifications, password resets, and other application emails without configuring SMTP servers or dealing with blocked cloud ports.
+            </p>
           </div>
         </section>
 
