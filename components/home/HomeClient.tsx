@@ -123,7 +123,8 @@ export default function HomeClient() {
           <div className="max-w-7xl mx-auto px-margin-mobile md:px-margin-desktop pt-24 pb-xl md:pt-40 md:pb-32 grid md:grid-cols-2 gap-xl items-center">
             <div className="space-y-lg">
               <h1 className="font-headline-lg-mobile md:font-headline-lg text-headline-lg-mobile md:text-headline-lg text-white">
-                SendLib - Bypass SMTP Restrictions
+                SendLib 
+                {/* - Bypass SMTP Restrictions */}
               </h1>
               <p className="font-body-lg text-body-lg max-w-[500px] text-white/90 leading-relaxed">
                 Send transactional emails with just your Gmail account from any hosting environment, even where port 25, 465, or 587 are strictly blocked. No more server configuration headaches.
