@@ -129,18 +129,20 @@ export default function HomeClient() {
               <p className="font-body-lg text-body-lg max-w-[500px] text-white/95 leading-relaxed drop-shadow-sm">
                 Send transactional emails with just your Gmail account from any hosting environment, even where port 25, 465, or 587 are strictly blocked. No more server configuration headaches.
               </p>
-              <div className="flex flex-col sm:flex-row gap-md pt-md">
+              <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-md pt-md">
                 {!isLoading && user ? (
-                  <Link href="/dashboard" className="bg-white hover:bg-white/90 text-primary-sendlib font-bold px-xl py-lg rounded-xl font-label-sm text-label-sm transition-all active:scale-95 shadow-md text-center w-full sm:w-auto inline-block">
-                    Go to Dashboard
+                  <Link href="/dashboard" className="bg-white hover:bg-white/95 text-primary-sendlib font-bold px-xl py-lg rounded-xl font-label-sm text-label-sm transition-all active:scale-95 shadow-lg text-center inline-flex items-center justify-center gap-2 group">
+                    <span>Go to Dashboard</span>
+                    <span className="transition-transform duration-200 group-hover:translate-x-1">→</span>
                   </Link>
                 ) : (
-                  <Link href="/login" className="bg-white hover:bg-white/90 text-primary-sendlib font-bold px-xl py-lg rounded-xl font-label-sm text-label-sm transition-all active:scale-95 shadow-md text-center w-full sm:w-auto inline-block">
-                    Get Started Free
+                  <Link href="/login" className="bg-white hover:bg-white/95 text-primary-sendlib font-bold px-xl py-lg rounded-xl font-label-sm text-label-sm transition-all active:scale-95 shadow-lg text-center inline-flex items-center justify-center gap-2 group">
+                    <span>Get Started Free</span>
+                    <span className="transition-transform duration-200 group-hover:translate-x-1">→</span>
                   </Link>
                 )}
-                <Link href="/docs" className="border border-white/80 text-white px-xl py-lg rounded-xl font-label-sm text-label-sm transition-all active:scale-95 hover:bg-white/15 backdrop-blur-xs text-center w-full sm:w-auto inline-block">
-                  Read Documentation
+                <Link href="/docs" className="bg-white/10 hover:bg-white/20 text-white border border-white/25 px-xl py-lg rounded-xl font-label-sm text-label-sm transition-all active:scale-95 backdrop-blur-md text-center inline-flex items-center justify-center gap-1.5">
+                  <span>Read Documentation</span>
                 </Link>
               </div>
             </div>
