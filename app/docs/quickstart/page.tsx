@@ -68,7 +68,7 @@ export default function QuickstartPage() {
 
       <DocsPagination
         prev={{ title: "Introduction", href: "/docs" }}
-        next={{ title: "Connecting Gmail", href: "/docs/gmail" }}
+        next={{ title: "Limits & Quotas", href: "/docs/limits" }}
       />
     </div>
   );

@@ -32,7 +32,7 @@ export default function GmailOAuthPage() {
       </div>
 
       <DocsPagination
-        prev={{ title: "Quick Start", href: "/docs/quickstart" }}
+        prev={{ title: "Limits & Quotas", href: "/docs/limits" }}
         next={{ title: "API Keys", href: "/docs/keys" }}
       />
     </div>

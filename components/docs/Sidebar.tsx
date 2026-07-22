@@ -11,6 +11,7 @@ const DOC_SECTIONS = [
     links: [
       { name: "Introduction", href: "/docs", icon: BookOpenIcon },
       { name: "Quick Start", href: "/docs/quickstart", icon: ZapIcon },
+      { name: "Limits & Quotas", href: "/docs/limits", icon: FileTypeIcon },
     ],
   },
   {

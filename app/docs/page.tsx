@@ -23,7 +23,7 @@ export default function DocsIntroduction() {
           What is SendLib?
         </h2>
         <p className="text-secondary leading-relaxed">
-          SendLib removes the friction of configuring ancient SMTP ports, storing risky App Passwords, and managing strict firewall rules. By using secure Google Workspace OAuth2 flows, you grant SendLib temporary, revokable access to relay messages securely through your own connected Gmail accounts.
+          SendLib removes the friction of configuring ancient SMTP ports, storing risky App Passwords, and managing strict firewall rules. By using secure Google OAuth2 flows, you grant SendLib temporary, revokable access to relay messages securely through your own connected Gmail accounts.
         </p>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
            <div className="p-5 rounded-xl border border-outline-variant/60 bg-white">
