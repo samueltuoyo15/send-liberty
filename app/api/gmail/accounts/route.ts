@@ -12,9 +12,10 @@ export async function GET(req: NextRequest) {
     const user = await requireAuthUser(req);
     await connectDB();
 
-    const accounts = await GmailAccount.find({ userId: user.id }).select(
-      "gmailEmail connected lastError createdAt updatedAt"
-    ).lean();
+    const accounts = await GmailAccount.find({ userId: user.id })
+      .select("gmailEmail connected lastError createdAt updatedAt")
+      .sort({ createdAt: -1 })
+      .lean();
 
     return NextResponse.json({
       success: true,

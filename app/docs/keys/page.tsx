@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { DocsPagination } from "@/components/docs/DocsPagination";
 
 export default function ApiKeysPage() {
   return (
@@ -26,6 +27,11 @@ export default function ApiKeysPage() {
           <strong>Security Warning:</strong> Never commit your API keys to version control (e.g., GitHub). Always use environment variables (e.g., <code>process.env.SL_API_KEY</code>).
         </div>
       </div>
+
+      <DocsPagination
+        prev={{ title: "Connecting Gmail", href: "/docs/gmail" }}
+        next={{ title: "Basic Send", href: "/docs/send" }}
+      />
     </div>
   );
 }

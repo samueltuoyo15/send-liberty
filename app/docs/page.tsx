@@ -1,228 +1,11 @@
 "use client";
 
-import { HugeiconsIcon } from '@hugeicons/react';
-import { CheckmarkCircle01Icon, Copy01Icon } from '@hugeicons/core-free-icons';
-import { useState, useEffect } from "react";
-
-type Language = "curl" | "js" | "python" | "go" | "rust" | "php" | "net" | "java";
+import Link from "next/link";
+import { DocsPagination } from "@/components/docs/DocsPagination";
 
 export default function DocsIntroduction() {
-  const [copied, setCopied] = useState(false);
-  const [apiUrl, setApiUrl] = useState("https://sendlib.samueltuoyo.com");
-  const [activeTab, setActiveTab] = useState<Language>("curl");
-
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      setApiUrl(window.location.origin);
-    }
-  }, []);
-
-  const getCodeSnippet = (tab: Language) => {
-    switch (tab) {
-      case "curl":
-        return `curl -X POST ${apiUrl}/api/send \\
-  -H "Authorization: Bearer YOUR_API_KEY" \\
-  -H "Content-Type: application/json" \\
-  -d '{
-    "from": "sender@gmail.com",
-    "to": "recipient@example.com",
-    "subject": "Welcome aboard!",
-    "html": "<p>Sent via SendLib REST API.</p>",
-    "replyTo": "support@yourdomain.com",
-    "cc": "anotheruser@example.com",
-    "bcc": ["audit@example.com"],
-    "attachments": [
-      { "filename": "invoice.pdf", "content": "JVBERi0xLjQKJ..." }
-    ]
-  }'`;
-      case "js":
-        return `await fetch('${apiUrl}/api/send', {
-  method: 'POST',
-  headers: {
-    'Authorization': 'Bearer YOUR_API_KEY',
-    'Content-Type': 'application/json'
-  },
-  body: JSON.stringify({
-    from: 'sender@gmail.com',
-    to: 'recipient@example.com',
-    subject: 'Welcome aboard!',
-    html: '<p>Sent via SendLib REST API.</p>',
-    replyTo: 'support@yourdomain.com',
-    cc: 'anotheruser@example.com',
-    bcc: ['audit@example.com'],
-    attachments: [
-      { filename: 'invoice.pdf', content: 'JVBERi0xLjQKJ...' }
-    ]
-  })
-});`;
-      case "python":
-        return `import requests
-
-url = "${apiUrl}/api/send"
-headers = {
-  "Authorization": "Bearer YOUR_API_KEY",
-  "Content-Type": "application/json"
-}
-payload = {
-  "from": "sender@gmail.com",
-  "to": "recipient@example.com",
-  "subject": "Welcome aboard!",
-  "html": "<p>Sent via SendLib REST API.</p>",
-  "replyTo": "support@yourdomain.com",
-  "cc": "anotheruser@example.com",
-  "bcc": ["audit@example.com"],
-  "attachments": [
-    { "filename": "invoice.pdf", "content": "JVBERi0xLjQKJ..." }
-  ]
-}
-
-response = requests.post(url, json=payload, headers=headers)
-print(response.json())`;
-      case "go":
-        return `package main
-
-import (
-  "bytes"
-  "encoding/json"
-  "net/http"
-)
-
-func main() {
-  payload, _ := json.Marshal(map[string]interface{}{
-    "from":    "sender@gmail.com",
-    "to":      "recipient@example.com",
-    "subject": "Welcome aboard!",
-    "html":    "<p>Sent via SendLib REST API.</p>",
-    "replyTo": "support@yourdomain.com",
-    "cc":      "anotheruser@example.com",
-    "bcc":     []string{"audit@example.com"},
-    "attachments": []map[string]string{
-      {"filename": "invoice.pdf", "content": "JVBERi0xLjQKJ..."},
-    },
-  })
-  req, _ := http.NewRequest("POST", "${apiUrl}/api/send", bytes.NewBuffer(payload))
-  req.Header.Set("Authorization", "Bearer YOUR_API_KEY")
-  req.Header.Set("Content-Type", "application/json")
-  
-  http.DefaultClient.Do(req)
-}`;
-      case "rust":
-        return `use serde_json::json;
-
-#[tokio::main]
-async fn main() -> Result<(), reqwest::Error> {
-  let client = reqwest::Client::new();
-  let payload = json!({
-    "from": "sender@gmail.com",
-    "to": "recipient@example.com",
-    "subject": "Welcome aboard!",
-    "html": "<p>Sent via SendLib REST API.</p>",
-    "replyTo": "support@yourdomain.com",
-    "cc": "anotheruser@example.com",
-    "bcc": ["audit@example.com"],
-    "attachments": [
-      { "filename": "invoice.pdf", "content": "JVBERi0xLjQKJ..." }
-    ]
-  });
-  
-  client.post("${apiUrl}/api/send")
-    .header("Authorization", "Bearer YOUR_API_KEY")
-    .json(&payload)
-    .send()
-    .await?;
-    
-  Ok(())
-}`;
-      case "php":
-        return `<?php
-$ch = curl_init('${apiUrl}/api/send');
-curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-curl_setopt($ch, CURLOPT_POST, true);
-curl_setopt($ch, CURLOPT_HTTPHEADER, [
-  'Authorization: Bearer YOUR_API_KEY',
-  'Content-Type: application/json'
-]);
-curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode([
-  'from' => 'sender@gmail.com',
-  'to' => 'recipient@example.com',
-  'subject' => 'Welcome aboard!',
-  'html' => '<p>Sent via SendLib REST API.</p>',
-  'replyTo' => 'support@yourdomain.com',
-  'cc' => 'anotheruser@example.com',
-  'bcc' => ['audit@example.com'],
-  'attachments' => [
-    ['filename' => 'invoice.pdf', 'content' => 'JVBERi0xLjQKJ...']
-  ]
-]));
-
-curl_exec($ch);`;
-      case "net":
-        return `using System.Net.Http;
-using System.Text;
-using System.Text.Json;
-
-var client = new HttpClient();
-client.DefaultRequestHeaders.Add("Authorization", "Bearer YOUR_API_KEY");
-
-var payload = new {
-  from = "sender@gmail.com",
-  to = "recipient@example.com",
-  subject = "Welcome aboard!",
-  html = "<p>Sent via SendLib REST API.</p>",
-  replyTo = "support@yourdomain.com",
-  cc = "anotheruser@example.com",
-  bcc = new[] { "audit@example.com" },
-  attachments = new[] { new { filename = "invoice.pdf", content = "JVBERi0xLjQKJ..." } }
-};
-
-var content = new StringContent(JsonSerializer.Serialize(payload), Encoding.UTF8, "application/json");
-var response = await client.PostAsync("${apiUrl}/api/send", content);
-var result = await response.Content.ReadAsStringAsync();
-Console.WriteLine(result);`;
-      case "java":
-        return `import java.net.URI;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
-
-var client = HttpClient.newHttpClient();
-var payload = """
-    {
-      "from": "sender@gmail.com",
-      "to": "recipient@example.com",
-      "subject": "Welcome aboard!",
-      "html": "<p>Sent via SendLib REST API.</p>",
-      "replyTo": "support@yourdomain.com",
-      "cc": "anotheruser@example.com",
-      "bcc": ["audit@example.com"],
-      "attachments": [
-        { "filename": "invoice.pdf", "content": "JVBERi0xLjQKJ..." }
-      ]
-    }
-    """;
-
-var request = HttpRequest.newBuilder()
-  .uri(URI.create("${apiUrl}/api/send"))
-  .header("Authorization", "Bearer YOUR_API_KEY")
-  .header("Content-Type", "application/json")
-  .POST(HttpRequest.BodyPublishers.ofString(payload))
-  .build();
-
-var response = client.send(request, HttpResponse.BodyHandlers.ofString());
-System.out.println(response.body());`;
-      default:
-        return "";
-    }
-  };
-
-  const copyCode = () => {
-    navigator.clipboard.writeText(getCodeSnippet(activeTab));
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
-  };
-
   return (
-    <div className="space-y-12 pb-24 animate-in fade-in slide-in-from-bottom-4 duration-700">
+    <div className="space-y-10 pb-24 animate-in fade-in slide-in-from-bottom-4 duration-700">
       
       {/* Header */}
       <div className="space-y-4">
@@ -251,66 +34,34 @@ System.out.println(response.body());`;
               <h3 className="font-bold text-primary-sendlib mb-2">API-First Design</h3>
               <p className="text-sm text-secondary">Send transactional emails instantly from any cloud platform (Railway, Render) with a single HTTP POST request.</p>
            </div>
+           <div className="p-5 rounded-xl border border-outline-variant/60 bg-white">
+              <h3 className="font-bold text-primary-sendlib mb-2">Zero Domain Required</h3>
+              <p className="text-sm text-secondary">No DNS, MX, or SPF records needed. Connect your Gmail account and start sending right away.</p>
+           </div>
+           <div className="p-5 rounded-xl border border-outline-variant/60 bg-white">
+              <h3 className="font-bold text-primary-sendlib mb-2">High Daily Limits</h3>
+              <p className="text-sm text-secondary">Send up to 500 emails per day for free personal Gmail accounts, or up to 2,000 for Google Workspace.</p>
+           </div>
         </div>
       </div>
 
-      {/* Section 2 */}
-      <div className="space-y-6">
-        <h2 className="text-2xl font-bold tracking-tight text-primary-sendlib border-b border-outline-variant pb-2">
-          Basic Usage
-        </h2>
-        <p className="text-secondary leading-relaxed">
-          To send an email, make a secure HTTP <code>POST</code> request containing your API Key in the headers and the email details in the JSON body. You can authenticate using the standard <code>Authorization: Bearer YOUR_API_KEY</code> header, or the custom <code>x-api-key: YOUR_API_KEY</code> header.
+      {/* Next Step Banner */}
+      <div className="p-6 rounded-xl border border-primary-sendlib/20 bg-primary-sendlib/[0.02] space-y-3">
+        <h3 className="font-bold text-primary-sendlib text-lg">Ready to get started?</h3>
+        <p className="text-sm text-secondary leading-relaxed">
+          Follow our 5-minute Quick Start guide to connect your account, generate your first API key, and send a test email.
         </p>
-        
-        <div className="relative group rounded-lg overflow-hidden border border-outline-variant bg-[#1d2b3e]">
-           <div className="flex h-10 items-center justify-between px-4 border-b border-[#2d3b4e] bg-[#16202e] overflow-x-auto max-w-full gap-1 custom-scrollbar">
-             <div className="flex gap-2">
-               {(["curl", "js", "python", "go", "rust", "php", "net", "java"] as const).map((tab) => (
-                 <button
-                   key={tab}
-                   onClick={() => setActiveTab(tab)}
-                   className={`px-3 py-1 text-xs font-mono rounded-md transition-colors cursor-pointer whitespace-nowrap ${
-                     activeTab === tab ? "bg-[#c8dbf0]/20 text-white font-bold" : "text-white/40 hover:text-white/80"
-                   }`}
-                 >
-                   {tab === "curl"
-                     ? "cURL"
-                     : tab === "js"
-                     ? "JavaScript"
-                     : tab === "python"
-                     ? "Python"
-                     : tab === "go"
-                     ? "Go"
-                     : tab === "rust"
-                     ? "Rust"
-                     : tab === "php"
-                     ? "PHP"
-                     : tab === "net"
-                     ? ".NET"
-                     : "Java"}
-                 </button>
-               ))}
-             </div>
-             <button 
-               onClick={copyCode}
-               className="p-1 hover:bg-[#2d3b4e] rounded-md transition-colors cursor-pointer text-white/40 hover:text-white shrink-0 ml-4"
-             >
-                {copied ? (
-                  <HugeiconsIcon icon={CheckmarkCircle01Icon} className="w-3.5 h-3.5 text-emerald-400" />
-                ) : (
-                  <HugeiconsIcon icon={Copy01Icon} className="w-3.5 h-3.5" />
-                )}
-             </button>
-           </div>
-           <div className="p-5 overflow-x-auto">
-<pre className="text-sm font-mono leading-relaxed text-white/90 whitespace-pre p-4 rounded block overflow-x-auto w-full custom-scrollbar max-h-[380px]">
-{getCodeSnippet(activeTab)}
-</pre>
-           </div>
+        <div>
+          <Link
+            href="/docs/quickstart"
+            className="inline-flex items-center text-sm font-bold text-primary-sendlib hover:underline"
+          >
+            Go to Quick Start →
+          </Link>
         </div>
       </div>
 
+      <DocsPagination next={{ title: "Quick Start", href: "/docs/quickstart" }} />
     </div>
   );
 }

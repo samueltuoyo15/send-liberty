@@ -11,6 +11,26 @@ export default function HomeClient() {
   const [apiUrl, setApiUrl] = useState("https://sendlib.samueltuoyo.com");
   const [activeTab, setActiveTab] = useState<CodeTab>("curl");
   const [isExpanded, setIsExpanded] = useState(false);
+  const [isCopied, setIsCopied] = useState(false);
+
+  const handleCopyCode = () => {
+    const code = getCodeSnippet(activeTab, isExpanded, apiUrl);
+    if (navigator.clipboard && window.isSecureContext) {
+      navigator.clipboard.writeText(code);
+    } else {
+      const textArea = document.createElement("textarea");
+      textArea.value = code;
+      textArea.style.position = "fixed";
+      textArea.style.left = "-999999px";
+      document.body.appendChild(textArea);
+      textArea.focus();
+      textArea.select();
+      document.execCommand("copy");
+      textArea.remove();
+    }
+    setIsCopied(true);
+    setTimeout(() => setIsCopied(false), 2000);
+  };
 
   useEffect(() => {
     const handleScroll = () => {
@@ -124,7 +144,7 @@ export default function HomeClient() {
           <div className="max-w-7xl mx-auto px-margin-mobile md:px-margin-desktop pt-24 pb-xl md:pt-40 md:pb-32 grid md:grid-cols-2 gap-xl items-center">
             <div className="space-y-lg">
               <h1 className="font-headline-lg-mobile md:font-headline-lg text-headline-lg-mobile md:text-headline-lg text-white font-extrabold drop-shadow-sm">
-                SendLib - Bypass SMTP Restrictions
+                SendLib - Zero-Config Email for Developers
               </h1>
               <p className="font-body-lg text-body-lg max-w-[500px] text-white/95 leading-relaxed drop-shadow-sm">
                 Send transactional emails with just your Gmail account from any hosting environment, even where port 25, 465, or 587 are strictly blocked. No more server configuration headaches.
@@ -145,8 +165,8 @@ export default function HomeClient() {
               </div>
             </div>
             <div className="bg-[#090a0f] text-white rounded-2xl font-mono border border-zinc-800 overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.8)] flex flex-col transition-all hover:border-zinc-700">
-              <div className="flex justify-between items-center px-4 py-3 bg-[#12131a] border-b border-zinc-800">
-                <div className="flex items-center rounded-xl bg-[#07080c] border border-zinc-800/80 p-1 text-xs overflow-x-auto max-w-full gap-1 w-full justify-start [ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+              <div className="flex justify-between items-center px-4 py-3 bg-[#12131a] border-b border-zinc-800 gap-2">
+                <div className="flex items-center rounded-xl bg-[#07080c] border border-zinc-800/80 p-1 text-xs overflow-x-auto max-w-full gap-1 flex-1 [ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
                   {(["curl", "js", "python", "go", "rust", "php", "net", "java"] as const).map((tab) => (
                     <button
                       key={tab}
@@ -175,6 +195,12 @@ export default function HomeClient() {
                     </button>
                   ))}
                 </div>
+                <button
+                  onClick={handleCopyCode}
+                  className="text-xs font-sans font-medium text-zinc-300 hover:text-white bg-[#07080c] border border-zinc-800 hover:bg-zinc-800 px-3 py-1.5 rounded-lg transition-colors cursor-pointer flex items-center gap-1.5 shrink-0"
+                >
+                  {isCopied ? "✓ Copied" : "Copy Code"}
+                </button>
               </div>
               <pre className="text-sm overflow-auto max-h-[360px] leading-relaxed text-zinc-200 p-6 custom-scrollbar font-mono">
                 {getCodeSnippet(activeTab, isExpanded, apiUrl)}
@@ -398,6 +424,98 @@ export default function HomeClient() {
                   We never see, ask for, or store your Google password. Authorization is done entirely through standard, secure Google OAuth2 credentials. We only store encrypted access and refresh tokens, which you can manually revoke from your Google Account settings page at any time.
                 </p>
               </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Pricing Section */}
+        <section className="w-full py-xl md:py-32 bg-surface-container" id="pricing">
+          <div className="max-w-7xl mx-auto px-margin-mobile md:px-margin-desktop">
+            <div className="text-center mb-12 space-y-3">
+              <h2 className="font-headline-lg text-headline-lg text-primary-sendlib font-extrabold">Simple, Honest Pricing</h2>
+              <p className="text-secondary font-body-lg max-w-2xl mx-auto">Start for free, no credit card required. Pro features coming soon.</p>
+            </div>
+
+            <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto items-start">
+
+              {/* Free Card */}
+              <div className="rounded-2xl border-2 border-primary-sendlib bg-white shadow-lg p-8 flex flex-col gap-6 relative">
+                <div className="absolute -top-3 left-6">
+                  <span className="bg-primary-sendlib text-white text-xs font-bold px-3 py-1 rounded-full tracking-wide">CURRENT PLAN</span>
+                </div>
+                <div>
+                  <h3 className="text-2xl font-extrabold text-primary-sendlib">Free</h3>
+                  <div className="flex items-end gap-1 mt-1">
+                    <span className="text-4xl font-extrabold text-primary-sendlib">$0</span>
+                    <span className="text-secondary mb-1">/ forever</span>
+                  </div>
+                  <p className="text-sm text-secondary mt-2">No credit card. No expiry. No catch.</p>
+                </div>
+                <ul className="space-y-3 text-sm text-secondary flex-1">
+                  {[
+                    "Up to 5 connected Gmail accounts",
+                    "500 emails / day per account",
+                    "10 API keys",
+                    "60 API requests / minute",
+                    "2MB HTML body · 1MB text body",
+                    "Up to 10 attachments · 25MB total",
+                    "50 recipients per field (to/cc/bcc)",
+                    "7 days email analytics",
+                  ].map((f) => (
+                    <li key={f} className="flex items-start gap-2">
+                      <svg className="w-4 h-4 mt-0.5 text-emerald-500 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" /></svg>
+                      {f}
+                    </li>
+                  ))}
+                </ul>
+                <Link
+                  href="/login"
+                  className="block w-full text-center bg-primary-sendlib hover:bg-primary-sendlib/90 text-white font-bold py-3 rounded-xl transition-all active:scale-95"
+                >
+                  Get Started Free
+                </Link>
+              </div>
+
+              {/* Pro Card — blurred, coming soon */}
+              <div className="rounded-2xl border border-outline-variant bg-white shadow-sm p-8 flex flex-col gap-6 relative overflow-hidden">
+                <div className="absolute -top-3 left-6">
+                  <span className="bg-amber-400 text-amber-900 text-xs font-bold px-3 py-1 rounded-full tracking-wide">COMING SOON</span>
+                </div>
+
+                {/* Blurred overlay */}
+                <div className="absolute inset-0 z-10 backdrop-blur-sm bg-white/60 flex flex-col items-center justify-center gap-3 rounded-2xl">
+                  <p className="font-bold text-primary-sendlib text-lg">Pro Plan</p>
+                  <p className="text-secondary text-sm text-center max-w-[220px]">More accounts, higher limits & advanced features. Coming soon.</p>
+                </div>
+
+                <div className="opacity-30 pointer-events-none select-none">
+                  <h3 className="text-2xl font-extrabold text-primary-sendlib">Pro</h3>
+                  <div className="flex items-end gap-1 mt-1">
+                    <span className="text-4xl font-extrabold text-primary-sendlib">$?</span>
+                    <span className="text-secondary mb-1">/ credits</span>
+                  </div>
+                  <p className="text-sm text-secondary mt-2">Pay as you go. No subscriptions.</p>
+                </div>
+                <ul className="space-y-3 text-sm text-secondary flex-1 opacity-30 pointer-events-none select-none">
+                  {[
+                    "Everything in Free",
+                    "More connected Gmail accounts",
+                    "Higher rate limits",
+                    "Larger HTML body & attachments",
+                    "90-day email analytics",
+                    "Email open & click tracking",
+                    "Webhooks & scheduled sends",
+                    "Priority support",
+                  ].map((f) => (
+                    <li key={f} className="flex items-start gap-2">
+                      <svg className="w-4 h-4 mt-0.5 text-emerald-500 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" /></svg>
+                      {f}
+                    </li>
+                  ))}
+                </ul>
+                <div className="h-12 rounded-xl bg-outline-variant/30 opacity-30 pointer-events-none select-none" />
+              </div>
+
             </div>
           </div>
         </section>

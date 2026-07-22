@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { DocsPagination } from "@/components/docs/DocsPagination";
 
 export default function GmailOAuthPage() {
   return (
@@ -29,6 +30,11 @@ export default function GmailOAuthPage() {
           <li>You will be redirected back to the dashboard. Your account is now active!</li>
         </ol>
       </div>
+
+      <DocsPagination
+        prev={{ title: "Quick Start", href: "/docs/quickstart" }}
+        next={{ title: "API Keys", href: "/docs/keys" }}
+      />
     </div>
   );
 }

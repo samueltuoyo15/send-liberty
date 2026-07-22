@@ -1,18 +1,49 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { DocsPagination } from "@/components/docs/DocsPagination";
 
 type Language = "curl" | "js" | "python" | "go" | "rust" | "php" | "net" | "java";
 
 export default function BasicSendPage() {
   const [lang, setLang] = useState<Language>("curl");
   const [apiUrl, setApiUrl] = useState("https://sendlib.samueltuoyo.com");
+  const [isCopied, setIsCopied] = useState(false);
 
   useEffect(() => {
     if (typeof window !== "undefined") {
       setApiUrl(window.location.origin);
     }
   }, []);
+
+  const handleCopyCode = () => {
+    let snippet = "";
+    if (lang === "curl") {
+      snippet = `curl -X POST ${apiUrl}/api/send \\\n  -H "Authorization: Bearer YOUR_API_KEY" \\\n  -H "Content-Type: application/json" \\\n  -d '{\n    "from": "mysecondgmail@gmail.com",\n    "to": "user@example.com",\n    "subject": "Hello via REST API",\n    "html": "<p>No SMTP configuration needed!</p>",\n    "replyTo": "support@yourdomain.com",\n    "attachments": [\n      { "filename": "invoice.pdf", "content": "JVBERi0xLjQKJ..." }\n    ]\n  }'`;
+    } else if (lang === "js") {
+      snippet = `await fetch('${apiUrl}/api/send', {\n  method: 'POST',\n  headers: {\n    'Authorization': 'Bearer YOUR_API_KEY',\n    'Content-Type': 'application/json'\n  },\n  body: JSON.stringify({\n    from: 'mysecondgmail@gmail.com',\n    to: 'user@example.com',\n    subject: 'Hello via Fetch!',\n    html: '<p>No SMTP configuration needed!</p>',\n    replyTo: 'support@yourdomain.com',\n    attachments: [\n      { filename: 'invoice.pdf', content: 'JVBERi0xLjQKJ...' }\n    ]\n  })\n});`;
+    } else if (lang === "python") {
+      snippet = `import requests\n\nurl = "${apiUrl}/api/send"\nheaders = {\n  "Authorization": "Bearer YOUR_API_KEY",\n  "Content-Type": "application/json"\n}\npayload = {\n  "from": "mysecondgmail@gmail.com",\n  "to": "user@example.com",\n  "subject": "Hello via Python!",\n  "html": "<p>No SMTP configuration needed!</p>",\n  "replyTo": "support@yourdomain.com",\n  "attachments": [\n    { "filename": "invoice.pdf", "content": "JVBERi0xLjQKJ..." }\n  ]\n}\n\nres = requests.post(url, json=payload, headers=headers)`;
+    } else {
+      snippet = `POST ${apiUrl}/api/send`;
+    }
+
+    if (navigator.clipboard && window.isSecureContext) {
+      navigator.clipboard.writeText(snippet);
+    } else {
+      const textArea = document.createElement("textarea");
+      textArea.value = snippet;
+      textArea.style.position = "fixed";
+      textArea.style.left = "-999999px";
+      document.body.appendChild(textArea);
+      textArea.focus();
+      textArea.select();
+      document.execCommand("copy");
+      textArea.remove();
+    }
+    setIsCopied(true);
+    setTimeout(() => setIsCopied(false), 2000);
+  };
 
   return (
     <div className="max-w-3xl">
@@ -29,34 +60,42 @@ export default function BasicSendPage() {
         </p>
 
         <div className="mt-8">
-          <div className="flex justify-between items-center mb-4">
+          <div className="flex justify-between items-center mb-4 flex-wrap gap-2">
             <h3 className="text-xl font-bold text-primary-sendlib">Example Request</h3>
-            <div className="flex rounded-lg bg-white border border-outline-variant p-1 text-xs font-mono overflow-x-auto max-w-full">
-              {(["curl", "js", "python", "go", "rust", "php", "net", "java"] as Language[]).map((tab) => (
-                <button
-                  key={tab}
-                  onClick={() => setLang(tab)}
-                  className={`px-3 py-1 rounded-md transition-colors cursor-pointer whitespace-nowrap ${
-                    lang === tab ? "bg-primary-sendlib/10 text-primary-sendlib font-bold" : "text-[#75777d] hover:text-primary-sendlib"
-                  }`}
-                >
-                  {tab === "curl"
-                    ? "cURL"
-                    : tab === "js"
-                    ? "JavaScript"
-                    : tab === "python"
-                    ? "Python"
-                    : tab === "go"
-                    ? "Go"
-                    : tab === "rust"
-                    ? "Rust"
-                    : tab === "php"
-                    ? "PHP"
-                    : tab === "net"
-                    ? ".NET"
-                    : "Java"}
-                </button>
-              ))}
+            <div className="flex items-center gap-2">
+              <div className="flex rounded-lg bg-white border border-outline-variant p-1 text-xs font-mono overflow-x-auto max-w-full">
+                {(["curl", "js", "python", "go", "rust", "php", "net", "java"] as Language[]).map((tab) => (
+                  <button
+                    key={tab}
+                    onClick={() => setLang(tab)}
+                    className={`px-3 py-1 rounded-md transition-colors cursor-pointer whitespace-nowrap ${
+                      lang === tab ? "bg-primary-sendlib/10 text-primary-sendlib font-bold" : "text-[#75777d] hover:text-primary-sendlib"
+                    }`}
+                  >
+                    {tab === "curl"
+                      ? "cURL"
+                      : tab === "js"
+                      ? "JavaScript"
+                      : tab === "python"
+                      ? "Python"
+                      : tab === "go"
+                      ? "Go"
+                      : tab === "rust"
+                      ? "Rust"
+                      : tab === "php"
+                      ? "PHP"
+                      : tab === "net"
+                      ? ".NET"
+                      : "Java"}
+                  </button>
+                ))}
+              </div>
+              <button
+                onClick={handleCopyCode}
+                className="text-xs font-mono bg-white border border-outline-variant hover:bg-surface-container-low text-primary-sendlib px-3 py-1.5 rounded-lg transition-colors cursor-pointer"
+              >
+                {isCopied ? "✓ Copied" : "Copy Code"}
+              </button>
             </div>
           </div>
 
@@ -276,6 +315,121 @@ System.out.println(response.body());`
           </li>
         </ul>
       </div>
+
+      {/* Limits */}
+      <div className="space-y-6 mt-12 pt-8 border-t border-outline-variant">
+        <h2 className="text-2xl font-bold tracking-tight text-primary-sendlib border-b border-outline-variant pb-2">
+          Limits
+        </h2>
+        <p className="text-secondary leading-relaxed">
+          SendLib is free. The following limits apply to all accounts.
+        </p>
+
+        <div className="space-y-4">
+          <h3 className="text-lg font-bold text-primary-sendlib">Rate Limits</h3>
+          <div className="overflow-x-auto rounded-xl border border-outline-variant">
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="border-b border-outline-variant bg-surface-variant/40">
+                  <th className="text-left px-4 py-3 font-semibold text-primary-sendlib">Endpoint</th>
+                  <th className="text-left px-4 py-3 font-semibold text-primary-sendlib">Limit</th>
+                  <th className="text-left px-4 py-3 font-semibold text-primary-sendlib">Window</th>
+                  <th className="text-left px-4 py-3 font-semibold text-primary-sendlib">Keyed By</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-outline-variant/50">
+                <tr className="hover:bg-surface-variant/20 transition-colors">
+                  <td className="px-4 py-3 font-mono text-xs text-secondary"><code>POST /api/send</code></td>
+                  <td className="px-4 py-3 font-bold text-primary-sendlib">60 requests</td>
+                  <td className="px-4 py-3 text-secondary">per minute</td>
+                  <td className="px-4 py-3 text-secondary">API key</td>
+                </tr>
+                <tr className="hover:bg-surface-variant/20 transition-colors">
+                  <td className="px-4 py-3 font-mono text-xs text-secondary"><code>GET /api/auth/*</code></td>
+                  <td className="px-4 py-3 font-bold text-primary-sendlib">10 requests</td>
+                  <td className="px-4 py-3 text-secondary">per minute</td>
+                  <td className="px-4 py-3 text-secondary">IP address</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <p className="text-xs text-secondary">When a rate limit is hit, the API returns <code className="bg-surface-variant px-1 rounded">429 Too Many Requests</code> with a <code className="bg-surface-variant px-1 rounded">Retry-After</code> header indicating how many seconds to wait.</p>
+        </div>
+
+        <div className="space-y-4">
+          <h3 className="text-lg font-bold text-primary-sendlib">Request Size Limits</h3>
+          <div className="overflow-x-auto rounded-xl border border-outline-variant">
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="border-b border-outline-variant bg-surface-variant/40">
+                  <th className="text-left px-4 py-3 font-semibold text-primary-sendlib">Field</th>
+                  <th className="text-left px-4 py-3 font-semibold text-primary-sendlib">Limit</th>
+                  <th className="text-left px-4 py-3 font-semibold text-primary-sendlib">Notes</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-outline-variant/50">
+                <tr className="hover:bg-surface-variant/20 transition-colors">
+                  <td className="px-4 py-3 font-mono text-xs text-secondary"><code>subject</code></td>
+                  <td className="px-4 py-3 font-bold text-primary-sendlib">998 characters</td>
+                  <td className="px-4 py-3 text-secondary">RFC 2822 maximum</td>
+                </tr>
+                <tr className="hover:bg-surface-variant/20 transition-colors">
+                  <td className="px-4 py-3 font-mono text-xs text-secondary"><code>html</code></td>
+                  <td className="px-4 py-3 font-bold text-primary-sendlib">2 MB</td>
+                  <td className="px-4 py-3 text-secondary">UTF-8 encoded</td>
+                </tr>
+                <tr className="hover:bg-surface-variant/20 transition-colors">
+                  <td className="px-4 py-3 font-mono text-xs text-secondary"><code>text</code></td>
+                  <td className="px-4 py-3 font-bold text-primary-sendlib">1 MB</td>
+                  <td className="px-4 py-3 text-secondary">UTF-8 encoded</td>
+                </tr>
+                <tr className="hover:bg-surface-variant/20 transition-colors">
+                  <td className="px-4 py-3 font-mono text-xs text-secondary"><code>to</code> / <code>cc</code> / <code>bcc</code></td>
+                  <td className="px-4 py-3 font-bold text-primary-sendlib">50 recipients each</td>
+                  <td className="px-4 py-3 text-secondary">String or array of strings</td>
+                </tr>
+                <tr className="hover:bg-surface-variant/20 transition-colors">
+                  <td className="px-4 py-3 font-mono text-xs text-secondary"><code>attachments</code></td>
+                  <td className="px-4 py-3 font-bold text-primary-sendlib">10 files · 10 MB each · 25 MB total</td>
+                  <td className="px-4 py-3 text-secondary">Base64-encoded content</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div className="space-y-4">
+          <h3 className="text-lg font-bold text-primary-sendlib">Daily Sending Limits</h3>
+          <div className="overflow-x-auto rounded-xl border border-outline-variant">
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="border-b border-outline-variant bg-surface-variant/40">
+                  <th className="text-left px-4 py-3 font-semibold text-primary-sendlib">Account type</th>
+                  <th className="text-left px-4 py-3 font-semibold text-primary-sendlib">Daily limit</th>
+                  <th className="text-left px-4 py-3 font-semibold text-primary-sendlib">Reset</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-outline-variant/50">
+                <tr className="hover:bg-surface-variant/20 transition-colors">
+                  <td className="px-4 py-3 text-secondary">Personal Gmail (<code className="text-xs bg-surface-variant px-1 rounded">@gmail.com</code>)</td>
+                  <td className="px-4 py-3 font-bold text-primary-sendlib">500 emails</td>
+                  <td className="px-4 py-3 text-secondary">Daily at UTC midnight</td>
+                </tr>
+                <tr className="hover:bg-surface-variant/20 transition-colors">
+                  <td className="px-4 py-3 text-secondary">Google Workspace account</td>
+                  <td className="px-4 py-3 font-bold text-primary-sendlib">2,000 emails</td>
+                  <td className="px-4 py-3 text-secondary">Daily at UTC midnight</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <p className="text-xs text-secondary">These limits are enforced by Google&apos;s Gmail API, not SendLib. Exceeding them returns a <code className="bg-surface-variant px-1 rounded">429</code> with a descriptive error message.</p>
+        </div>
+      </div>
+
+      <DocsPagination
+        prev={{ title: "API Keys", href: "/docs/keys" }}
+      />
     </div>
   );
 }

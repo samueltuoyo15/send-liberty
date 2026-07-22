@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useState, useEffect } from "react";
+import { DocsPagination } from "@/components/docs/DocsPagination";
 
 export default function QuickstartPage() {
   const [apiUrl, setApiUrl] = useState("https://sendlib.samueltuoyo.com");
@@ -64,6 +65,11 @@ export default function QuickstartPage() {
           </pre>
         </div>
       </div>
+
+      <DocsPagination
+        prev={{ title: "Introduction", href: "/docs" }}
+        next={{ title: "Connecting Gmail", href: "/docs/gmail" }}
+      />
     </div>
   );
 }

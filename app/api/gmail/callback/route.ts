@@ -1,15 +1,23 @@
 import { NextRequest, NextResponse } from "next/server";
-import { handleGmailCallback } from "@/lib/gmail";
+import { handleGmailCallback, verifyGmailState } from "@/lib/gmail";
 
 const { NEXT_PUBLIC_APP_URL } = process.env;
 
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
   const code = searchParams.get("code");
-  const userId = searchParams.get("state");
+  const state = searchParams.get("state");
 
-  if (!code || !userId) {
+  if (!code || !state) {
     return NextResponse.redirect(`${NEXT_PUBLIC_APP_URL}/dashboard?gmail_error=missing_params`);
+  }
+
+  let userId: string;
+  try {
+    userId = verifyGmailState(state);
+  } catch (err) {
+    console.error("Gmail callback state verification failed:", err);
+    return NextResponse.redirect(`${NEXT_PUBLIC_APP_URL}/dashboard/accounts?gmail_error=invalid_state`);
   }
 
   try {
@@ -23,3 +31,4 @@ export async function GET(req: NextRequest) {
     return NextResponse.redirect(`${NEXT_PUBLIC_APP_URL}/dashboard/accounts?gmail_error=callback_failed`);
   }
 }
+

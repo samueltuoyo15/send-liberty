@@ -37,7 +37,16 @@ export async function PATCH(req: NextRequest) {
     const authUser = await requireAuthUser(req);
     await connectDB();
 
-    const { displayName } = await req.json();
+    const { displayName: rawDisplayName } = await req.json();
+    const displayName = String(rawDisplayName ?? "").trim();
+
+    if (!displayName || displayName.length === 0) {
+      return NextResponse.json({ success: false, message: "Display name cannot be empty." }, { status: 400 });
+    }
+    if (displayName.length > 35) {
+      return NextResponse.json({ success: false, message: "Display name is too long. Max 35 characters." }, { status: 400 });
+    }
+
     const user = await User.findByIdAndUpdate(
       authUser.id,
       { displayName },

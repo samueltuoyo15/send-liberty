@@ -11,6 +11,7 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } f
 import { Input } from "@/components/ui/input";
 import { useSearchParams } from "next/navigation";
 import confetti from "canvas-confetti";
+import { toast } from "sonner";
 
 function KeysContent() {
   const searchParams = useSearchParams();
@@ -22,6 +23,23 @@ function KeysContent() {
   const [keyLabel, setKeyLabel] = useState("");
   const [allowedOriginsText, setAllowedOriginsText] = useState("");
   const [deleteKeyId, setDeleteKeyId] = useState<string | null>(null);
+
+  const copyToClipboard = (text: string) => {
+    if (navigator.clipboard && window.isSecureContext) {
+      navigator.clipboard.writeText(text);
+    } else {
+      const textArea = document.createElement("textarea");
+      textArea.value = text;
+      textArea.style.position = "fixed";
+      textArea.style.left = "-999999px";
+      document.body.appendChild(textArea);
+      textArea.focus();
+      textArea.select();
+      document.execCommand("copy");
+      textArea.remove();
+    }
+    toast.success("API key copied to clipboard!");
+  };
 
   useEffect(() => {
     if (searchParams.get("generate") === "true") {
@@ -56,6 +74,13 @@ function KeysContent() {
           <p className="text-secondary font-body-md mt-1">
             Manage your API keys for authenticating requests.
           </p>
+          {!isLoading && apiKeys && (
+            <p className="text-xs mt-1.5 font-medium">
+              <span className={apiKeys.filter(k => !k.revoked).length >= 10 ? "text-destructive font-bold" : "text-secondary"}>
+                {apiKeys.filter(k => !k.revoked).length} / 10 active keys used
+              </span>
+            </p>
+          )}
         </div>
         <Button 
           size="lg"
@@ -251,17 +276,34 @@ function KeysContent() {
           </SheetHeader>
           <div className="space-y-5">
             <div>
-              <label className="text-sm font-label-sm font-semibold text-on-background mb-2 block">Your Secret API Key</label>
-              <div className="font-mono bg-surface-container-low p-3.5 rounded-lg text-sm break-all border border-outline-variant text-primary-sendlib selection:bg-primary-sendlib selection:text-white">
+              <label className="text-sm font-label-sm font-semibold text-on-background mb-2 flex justify-between items-center">
+                <span>Your Secret API Key</span>
+                <span className="text-xs text-emerald-600 font-medium">Keep this key secret</span>
+              </label>
+              <div className="relative font-mono bg-surface-container-low p-3.5 pr-12 rounded-lg text-sm break-all border border-outline-variant text-primary-sendlib selection:bg-primary-sendlib selection:text-white">
                 {newKeyDialog?.key}
+                <button
+                  type="button"
+                  title="Copy API Key"
+                  className="absolute right-2.5 top-2.5 p-1.5 rounded-md hover:bg-outline-variant/30 text-primary-sendlib transition-colors cursor-pointer"
+                  onClick={() => {
+                    if (newKeyDialog?.key) {
+                      copyToClipboard(newKeyDialog.key);
+                    }
+                  }}
+                >
+                  <HugeiconsIcon icon={Copy01Icon} size={16} color='currentColor' strokeWidth={1.5} />
+                </button>
               </div>
             </div>
           </div>
           <SheetFooter className="p-0 mt-6 pt-4 border-t border-outline-variant">
             <Button 
-              className="w-full rounded-lg font-label-sm bg-primary-sendlib hover:bg-primary-sendlib/90 text-white py-2.5" 
+              className="w-full rounded-lg font-label-sm bg-primary-sendlib hover:bg-primary-sendlib/90 text-white py-2.5 cursor-pointer" 
               onClick={() => {
-                navigator.clipboard.writeText(newKeyDialog?.key || "");
+                if (newKeyDialog?.key) {
+                  copyToClipboard(newKeyDialog.key);
+                }
                 confetti({
                   particleCount: 300,
                   spread: 120,
@@ -271,7 +313,7 @@ function KeysContent() {
               }}
             >
               <HugeiconsIcon icon={Copy01Icon} size={16} color='currentColor' strokeWidth={1.5} className="mr-2" />
-              Copy to Clipboard & Close
+              Copy API Key & Close
             </Button>
           </SheetFooter>
         </SheetContent>

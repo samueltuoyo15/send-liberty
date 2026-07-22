@@ -57,6 +57,8 @@ export default function AccountsPage() {
     }
   }, [searchParams]);
 
+  const atAccountLimit = !isLoading && !!accounts && accounts.length >= 5;
+
   return (
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
@@ -65,15 +67,23 @@ export default function AccountsPage() {
           <p className="text-secondary font-body-md mt-1">
             Connect and manage the Gmail accounts used for sending emails.
           </p>
+          {!isLoading && accounts && (
+            <p className="text-xs mt-1.5 font-medium">
+              <span className={atAccountLimit ? "text-destructive font-bold" : "text-secondary"}>
+                {accounts.length} / 5 accounts connected
+              </span>
+            </p>
+          )}
         </div>
-        <Button 
+        <Button
           size="lg"
-          className="rounded-lg font-label-sm bg-primary-sendlib hover:bg-primary-sendlib/90 text-white shadow-sm transition-all active:scale-95 cursor-pointer" 
+          className="rounded-lg font-label-sm bg-primary-sendlib hover:bg-primary-sendlib/90 text-white shadow-sm transition-all active:scale-95 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
           onClick={() => setConnectConfirmOpen(true)}
-          disabled={isConnecting}
+          disabled={isConnecting || atAccountLimit}
+          title={atAccountLimit ? "You've reached the 5-account limit" : undefined}
         >
           <HugeiconsIcon icon={MailIcon} size={16} color='currentColor' strokeWidth={1.5} />
-          <span className="ml-2">Connect New Account</span>
+          <span className="ml-2">{atAccountLimit ? "Account Limit Reached" : "Connect New Account"}</span>
         </Button>
       </div>
 

@@ -5,8 +5,9 @@ import GmailAccount from "@/models/GmailAccount";
 import EmailLog from "@/models/EmailLog";
 import MailComposer from "nodemailer/lib/mail-composer";
 import mongoose from "mongoose";
+import crypto from "crypto";
 
-const { GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, GMAIL_CALLBACK_URL } = process.env;
+const { GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, GMAIL_CALLBACK_URL, JWT_SECRET } = process.env;
 
 export function createOAuthClient(redirectUri?: string) {
   return new google.auth.OAuth2(
@@ -16,13 +17,48 @@ export function createOAuthClient(redirectUri?: string) {
   );
 }
 
+export function signGmailState(userId: string): string {
+  const nonce = crypto.randomBytes(12).toString("hex");
+  const timestamp = Date.now();
+  const payload = `${userId}:${nonce}:${timestamp}`;
+  const hmac = crypto.createHmac("sha256", JWT_SECRET!).update(payload).digest("hex");
+  return Buffer.from(`${payload}:${hmac}`).toString("base64url");
+}
+
+export function verifyGmailState(state: string): string {
+  let decoded: string;
+  try {
+    decoded = Buffer.from(state, "base64url").toString("utf8");
+  } catch {
+    throw new Error("Invalid state parameter");
+  }
+  const parts = decoded.split(":");
+  if (parts.length < 4) throw new Error("Invalid state format");
+
+  const hmac = parts[parts.length - 1];
+  const payload = parts.slice(0, -1).join(":");
+  const timestamp = parseInt(parts[parts.length - 2], 10);
+  const userId = parts[0];
+
+  const expected = crypto.createHmac("sha256", JWT_SECRET!).update(payload).digest("hex");
+  if (!crypto.timingSafeEqual(Buffer.from(hmac, "hex"), Buffer.from(expected, "hex"))) {
+    throw new Error("State signature mismatch — possible CSRF attempt");
+  }
+
+  if (Date.now() - timestamp > 10 * 60 * 1000) {
+    throw new Error("OAuth state has expired. Please try connecting your Gmail account again.");
+  }
+
+  return userId;
+}
+
 export function getGmailAuthUrl(userId: string): string {
   const oauth2Client = createOAuthClient();
   return oauth2Client.generateAuthUrl({
     access_type: "offline",
     prompt: "consent select_account",
     scope: ["https://www.googleapis.com/auth/gmail.send", "email"],
-    state: userId,
+    state: signGmailState(userId),
   });
 }
 

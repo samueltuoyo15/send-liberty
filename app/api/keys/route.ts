@@ -34,17 +34,35 @@ export async function GET(req: NextRequest) {
   }
 }
 
+const MAX_KEYS_PER_USER = 10;
+
 export async function POST(req: NextRequest) {
   try {
     const user = await requireAuthUser(req);
     await connectDB();
 
+    // Enforce per-user key limit
+    const activeKeyCount = await ApiKey.countDocuments({
+      userId: new mongoose.Types.ObjectId(user.id),
+      revoked: false,
+    });
+    if (activeKeyCount >= MAX_KEYS_PER_USER) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: `You have reached the maximum of ${MAX_KEYS_PER_USER} active API keys. Please revoke an existing key before creating a new one.`,
+        },
+        { status: 429 }
+      );
+    }
+
     const body = await req.json();
-    const name: string = body.name || "My API Key";
+    const rawName = String(body.name ?? "").trim();
+    const name: string = rawName.length > 0 ? rawName.slice(0, 25) : "My API Key";
     const rawAllowedOrigins = Array.isArray(body.allowedOrigins) ? body.allowedOrigins : [];
     const allowedOrigins = rawAllowedOrigins
       .map((o: any) => String(o).trim().toLowerCase())
-      .filter((o: string) => o.length > 0);
+      .filter((o: string) => o.length > 0 && o.length <= 253);
 
     const rawKey = crypto.randomBytes(32).toString("hex");
     const prefix = `sl_${rawKey.substring(0, 8)}`;
