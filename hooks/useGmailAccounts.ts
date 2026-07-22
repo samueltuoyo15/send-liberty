@@ -1,5 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { api } from "../lib/api";
+import { toast } from "sonner";
 
 export interface GmailAccount {
   id: string;
@@ -24,6 +25,10 @@ export function useConnectGmail() {
     mutationFn: async () => {
       const res = await api.get<never, { success: boolean; url: string }>("/gmail/connect");
       window.location.href = res.url;
+    },
+    onError: (err: any) => {
+      const msg = typeof err === "string" ? err : err?.message || "Failed to connect Gmail account.";
+      toast.error(msg, { id: "gmail-connect" });
     },
   });
 }

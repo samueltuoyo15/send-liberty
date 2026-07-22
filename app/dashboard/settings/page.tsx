@@ -61,7 +61,7 @@ export default function SettingsPage() {
           onClick={handleEditClick}
         >
           <HugeiconsIcon icon={PencilEdit01Icon} size={16} color='currentColor' strokeWidth={1.5} />
-          <span className="ml-2">Edit Settings</span>
+          <span className="ml-2">Edit Profile</span>
         </Button>
       </div>
 
@@ -157,7 +157,7 @@ export default function SettingsPage() {
       <Sheet open={isEditOpen} onOpenChange={setIsEditOpen}>
         <SheetContent side="right">
           <SheetHeader className="p-0 mb-6">
-            <SheetTitle className="text-xl font-headline-md font-bold text-primary-sendlib">Edit Settings</SheetTitle>
+            <SheetTitle className="text-xl font-headline-md font-bold text-primary-sendlib">Edit Profile</SheetTitle>
             <SheetDescription className="text-secondary text-sm">
               Update your display name below.
             </SheetDescription>

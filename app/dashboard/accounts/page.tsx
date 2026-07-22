@@ -78,7 +78,13 @@ export default function AccountsPage() {
         <Button
           size="lg"
           className="rounded-lg font-label-sm bg-primary-sendlib hover:bg-primary-sendlib/90 text-white shadow-sm transition-all active:scale-95 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
-          onClick={() => setConnectConfirmOpen(true)}
+          onClick={() => {
+            if (atAccountLimit) {
+              toast.error("Account limit reached: 5 / 5 accounts connected. Please disconnect an account first.");
+              return;
+            }
+            setConnectConfirmOpen(true);
+          }}
           disabled={isConnecting || atAccountLimit}
           title={atAccountLimit ? "You've reached the 5-account limit" : undefined}
         >
@@ -110,8 +116,11 @@ export default function AccountsPage() {
           <p className="max-w-[420px] mx-auto mb-6 text-sm text-[#738210] leading-relaxed">Connect a Gmail account to start sending emails on its behalf.</p>
           <Button 
             size="lg"
-            className="rounded-lg font-label-sm bg-[#5b6a05] hover:bg-[#5b6a05]/90 text-white shadow-sm transition-all active:scale-95 cursor-pointer" 
-            onClick={() => connectGmail()}
+            className="rounded-lg font-label-sm bg-[#5b6a05] hover:bg-[#5b6a05]/90 text-white shadow-sm transition-all active:scale-95 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed" 
+            onClick={() => {
+              toast.loading("Redirecting to Google...", { id: "gmail-connect" });
+              connectGmail();
+            }}
             disabled={isConnecting}
           >
             <HugeiconsIcon icon={MailIcon} size={16} color='currentColor' strokeWidth={1.5} />
@@ -141,23 +150,25 @@ export default function AccountsPage() {
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       {account.connected ? (
-                        <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-label-xs border border-emerald-200 bg-emerald-50 text-emerald-700">
-                          <HugeiconsIcon icon={CheckmarkCircle01Icon} size={12} color='currentColor' strokeWidth={1.5} /> Connected
+                        <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold bg-emerald-100 text-emerald-800 border border-emerald-200">
+                          <HugeiconsIcon icon={CheckmarkCircle01Icon} size={12} color='currentColor' strokeWidth={2} />
+                          Active
                         </span>
                       ) : (
-                        <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-label-xs border border-destructive/20 bg-destructive/10 text-destructive">
-                          <HugeiconsIcon icon={CancelCircleIcon} size={12} color='currentColor' strokeWidth={1.5} /> Disconnected
+                        <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold bg-rose-100 text-rose-800 border border-rose-200">
+                          <HugeiconsIcon icon={CancelCircleIcon} size={12} color='currentColor' strokeWidth={2} />
+                          Needs Re-auth
                         </span>
                       )}
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-xs text-[#0f685c] font-medium">
+                    <td className="px-6 py-4 whitespace-nowrap text-xs text-[#0f685c]">
                       {new Date(account.connectedAt).toLocaleDateString()}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-right pr-6">
-                      <Button 
-                        variant="outline" 
-                        size="sm" 
-                        className="rounded-lg font-label-sm border border-[#bbf3ee] bg-white text-destructive hover:bg-destructive/10 px-3 h-8 cursor-pointer"
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="text-rose-600 hover:text-rose-700 hover:bg-rose-50 text-xs font-semibold rounded-lg cursor-pointer"
                         onClick={() => setDisconnectEmail(account.email)}
                         disabled={isDisconnecting}
                       >
@@ -172,7 +183,7 @@ export default function AccountsPage() {
         </div>
       )}
 
-      {/* Gmail Connected Success Dialog */}
+      {/* Gmail Connected Celebration Dialog */}
       <Dialog open={successDialogOpen} onOpenChange={setSuccessDialogOpen}>
         <DialogContent className="sm:max-w-md">
           <DialogHeader className="mb-2">
@@ -210,6 +221,11 @@ export default function AccountsPage() {
               Connect your Google account via secure OAuth 2.0. SendLib will only request the narrow permissions required to relay transactional emails on your behalf, and your credentials are never seen or stored.
             </DialogDescription>
           </DialogHeader>
+          {atAccountLimit && (
+            <div className="p-3.5 rounded-lg bg-destructive/10 border border-destructive/20 text-destructive text-xs font-semibold leading-relaxed mt-2">
+              Account limit reached (5 / 5 accounts connected). Please disconnect an existing account first.
+            </div>
+          )}
           <div className="flex flex-row gap-3 mt-4 pt-4 border-t border-outline-variant/60">
             <Button 
               variant="outline" 
@@ -219,13 +235,17 @@ export default function AccountsPage() {
               Cancel
             </Button>
             <Button 
-              className="flex-1 rounded-lg font-label-sm bg-primary-sendlib hover:bg-primary-sendlib/90 text-white cursor-pointer" 
+              className="flex-1 rounded-lg font-label-sm bg-primary-sendlib hover:bg-primary-sendlib/90 text-white cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed" 
               onClick={() => {
+                if (atAccountLimit) {
+                  toast.error("Account limit reached: 5 / 5 accounts connected.");
+                  return;
+                }
                 setConnectConfirmOpen(false);
                 toast.loading("Redirecting to Google...", { id: "gmail-connect" });
                 connectGmail();
               }}
-              disabled={isConnecting}
+              disabled={isConnecting || atAccountLimit}
             >
               Connect Gmail
             </Button>
