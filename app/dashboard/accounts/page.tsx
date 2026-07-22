@@ -44,6 +44,16 @@ export default function AccountsPage() {
 
       const newUrl = window.location.pathname;
       window.history.replaceState({}, document.title, newUrl);
+    } else if (searchParams.get("gmail_updated") === "true") {
+      const email = searchParams.get("email");
+      toast.success(
+        email 
+          ? `Gmail account (${email}) re-authenticated & tokens updated!` 
+          : "Gmail account re-authenticated & tokens updated!"
+      );
+
+      const newUrl = window.location.pathname;
+      window.history.replaceState({}, document.title, newUrl);
     }
   }, [searchParams]);
 

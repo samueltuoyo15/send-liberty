@@ -13,9 +13,10 @@ export async function GET(req: NextRequest) {
   }
 
   try {
-    const { gmailEmail } = await handleGmailCallback(code, userId);
+    const { gmailEmail, isNew } = await handleGmailCallback(code, userId);
+    const paramKey = isNew ? "gmail_connected" : "gmail_updated";
     return NextResponse.redirect(
-      `${NEXT_PUBLIC_APP_URL}/dashboard/accounts?gmail_connected=true&email=${encodeURIComponent(gmailEmail)}`
+      `${NEXT_PUBLIC_APP_URL}/dashboard/accounts?${paramKey}=true&email=${encodeURIComponent(gmailEmail)}`
     );
   } catch (err) {
     console.error("Gmail callback error:", err);

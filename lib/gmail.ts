@@ -47,6 +47,9 @@ export async function handleGmailCallback(code: string, userId: string) {
     ? new Date(tokens.expiry_date)
     : new Date(Date.now() + 3600 * 1000);
 
+  const existingAccount = await GmailAccount.findOne({ userId, gmailEmail });
+  const isNew = !existingAccount;
+
   await GmailAccount.findOneAndUpdate(
     { userId, gmailEmail },
     {
@@ -61,7 +64,7 @@ export async function handleGmailCallback(code: string, userId: string) {
     { upsert: true, new: true }
   );
 
-  return { gmailEmail };
+  return { gmailEmail, isNew };
 }
 
 export type GmailSendOptions = {
