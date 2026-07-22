@@ -116,30 +116,30 @@ export default function HomeClient() {
         <section
           className="w-full relative"
           style={{
-            backgroundImage: "linear-gradient(rgba(29, 43, 62, 0.7), rgba(29, 43, 62, 0.45)), url('/forest_background/forest-background.png')",
+            backgroundImage: "linear-gradient(rgba(29, 43, 62, 0.45), rgba(29, 43, 62, 0.25)), url('/forest_background/forest-background.png')",
             backgroundSize: "cover",
             backgroundPosition: "center",
           }}
         >
           <div className="max-w-7xl mx-auto px-margin-mobile md:px-margin-desktop pt-24 pb-xl md:pt-40 md:pb-32 grid md:grid-cols-2 gap-xl items-center">
             <div className="space-y-lg">
-              <h1 className="font-headline-lg-mobile md:font-headline-lg text-headline-lg-mobile md:text-headline-lg text-white font-extrabold">
+              <h1 className="font-headline-lg-mobile md:font-headline-lg text-headline-lg-mobile md:text-headline-lg text-white font-extrabold drop-shadow-sm">
                 SendLib - Bypass SMTP Restrictions
               </h1>
-              <p className="font-body-lg text-body-lg max-w-[500px] text-white/90 leading-relaxed">
+              <p className="font-body-lg text-body-lg max-w-[500px] text-white/95 leading-relaxed drop-shadow-sm">
                 Send transactional emails with just your Gmail account from any hosting environment, even where port 25, 465, or 587 are strictly blocked. No more server configuration headaches.
               </p>
               <div className="flex flex-col sm:flex-row gap-md pt-md">
                 {!isLoading && user ? (
-                  <Link href="/dashboard" className="bg-primary-sendlib hover:bg-primary-sendlib/90 text-white px-xl py-lg rounded-xl font-label-sm text-label-sm transition-transform active:scale-95 shadow-sm text-center w-full sm:w-auto inline-block">
+                  <Link href="/dashboard" className="bg-white hover:bg-white/90 text-primary-sendlib font-bold px-xl py-lg rounded-xl font-label-sm text-label-sm transition-all active:scale-95 shadow-md text-center w-full sm:w-auto inline-block">
                     Go to Dashboard
                   </Link>
                 ) : (
-                  <Link href="/login" className="bg-primary-sendlib hover:bg-primary-sendlib/90 text-white px-xl py-lg rounded-xl font-label-sm text-label-sm transition-transform active:scale-95 shadow-sm text-center w-full sm:w-auto inline-block">
+                  <Link href="/login" className="bg-white hover:bg-white/90 text-primary-sendlib font-bold px-xl py-lg rounded-xl font-label-sm text-label-sm transition-all active:scale-95 shadow-md text-center w-full sm:w-auto inline-block">
                     Get Started Free
                   </Link>
                 )}
-                <Link href="/docs" className="border border-white text-white px-xl py-lg rounded-xl font-label-sm text-label-sm transition-transform active:scale-95 hover:bg-white/10 text-center w-full sm:w-auto inline-block">
+                <Link href="/docs" className="border border-white/80 text-white px-xl py-lg rounded-xl font-label-sm text-label-sm transition-all active:scale-95 hover:bg-white/15 backdrop-blur-xs text-center w-full sm:w-auto inline-block">
                   Read Documentation
                 </Link>
               </div>
