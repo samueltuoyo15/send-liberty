@@ -131,35 +131,30 @@ export default function HomeClient() {
               </p>
               <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-md pt-md">
                 {!isLoading && user ? (
-                  <Link href="/dashboard" className="bg-white hover:bg-white/95 text-primary-sendlib font-bold px-xl py-lg rounded-xl font-label-sm text-label-sm transition-all active:scale-95 shadow-lg text-center inline-flex items-center justify-center gap-2 group">
-                    <span>Go to Dashboard</span>
-                    <span className="transition-transform duration-200 group-hover:translate-x-1">→</span>
+                  <Link href="/dashboard" className="bg-white hover:bg-white/95 text-primary-sendlib font-bold px-xl py-lg rounded-xl font-label-sm text-label-sm transition-all active:scale-95 shadow-lg text-center inline-block">
+                    Open Console
                   </Link>
                 ) : (
-                  <Link href="/login" className="bg-white hover:bg-white/95 text-primary-sendlib font-bold px-xl py-lg rounded-xl font-label-sm text-label-sm transition-all active:scale-95 shadow-lg text-center inline-flex items-center justify-center gap-2 group">
-                    <span>Get Started Free</span>
-                    <span className="transition-transform duration-200 group-hover:translate-x-1">→</span>
+                  <Link href="/login" className="bg-white hover:bg-white/95 text-primary-sendlib font-bold px-xl py-lg rounded-xl font-label-sm text-label-sm transition-all active:scale-95 shadow-lg text-center inline-block">
+                    Get Started For Free
                   </Link>
                 )}
-                <Link href="/docs" className="bg-white/10 hover:bg-white/20 text-white border border-white/25 px-xl py-lg rounded-xl font-label-sm text-label-sm transition-all active:scale-95 backdrop-blur-md text-center inline-flex items-center justify-center gap-1.5">
-                  <span>Read Documentation</span>
+                <Link href="/docs" className="bg-white/10 hover:bg-white/20 text-white border border-white/25 px-xl py-lg rounded-xl font-label-sm text-label-sm transition-all active:scale-95 backdrop-blur-md text-center inline-block">
+                  Read Documentation
                 </Link>
               </div>
             </div>
-            <div className="bg-primary-sendlib text-primary-fixed rounded-xl p-lg font-mono border border-outline-variant hover:border-primary-sendlib transition-colors overflow-hidden shadow-sm flex flex-col">
-              <div className="flex justify-between items-center mb-md border-b border-[#2d3b4e] pb-3">
-                <div className="flex gap-xs">
-                  <div className="w-3 h-3 rounded-full bg-red-400"></div>
-                  <div className="w-3 h-3 rounded-full bg-yellow-400"></div>
-                  <div className="w-3 h-3 rounded-full bg-green-400"></div>
-                </div>
-                <div className="flex rounded-lg bg-[#16202e] border border-[#2d3b4e] p-1 text-[11px] overflow-x-auto max-w-full gap-1 custom-scrollbar">
+            <div className="bg-[#090a0f] text-white rounded-2xl font-mono border border-zinc-800 overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.8)] flex flex-col transition-all hover:border-zinc-700">
+              <div className="flex justify-between items-center px-4 py-3 bg-[#12131a] border-b border-zinc-800">
+                <div className="flex items-center rounded-xl bg-[#07080c] border border-zinc-800/80 p-1 text-xs overflow-x-auto max-w-full gap-1 w-full justify-start [ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
                   {(["curl", "js", "python", "go", "rust", "php", "net", "java"] as const).map((tab) => (
                     <button
                       key={tab}
                       onClick={() => setActiveTab(tab)}
-                      className={`px-2 py-0.5 rounded-md transition-colors cursor-pointer whitespace-nowrap ${
-                        activeTab === tab ? "bg-indigo-600/30 text-indigo-400 border border-indigo-500/20" : "text-white/40 hover:text-white/80"
+                      className={`px-3 py-1 rounded-lg transition-all cursor-pointer whitespace-nowrap font-sans text-[11px] font-medium ${
+                        activeTab === tab 
+                          ? "bg-white text-zinc-950 shadow-sm font-bold" 
+                          : "text-zinc-400 hover:text-zinc-200 hover:bg-white/5"
                       }`}
                     >
                       {tab === "curl"
@@ -181,13 +176,13 @@ export default function HomeClient() {
                   ))}
                 </div>
               </div>
-              <pre className="text-sm overflow-auto max-h-[360px] leading-relaxed text-[#c0caf5] p-md custom-scrollbar">
+              <pre className="text-sm overflow-auto max-h-[360px] leading-relaxed text-zinc-200 p-6 custom-scrollbar font-mono">
                 {getCodeSnippet(activeTab, isExpanded, apiUrl)}
               </pre>
-              <div className="flex justify-between items-center mt-xs pt-2.5 border-t border-[#2d3b4e]/60 text-xs px-md pb-md">
+              <div className="flex justify-between items-center border-t border-zinc-800 text-xs px-6 py-3 bg-[#12131a]">
                 <button
                   onClick={() => setIsExpanded(!isExpanded)}
-                  className="text-indigo-400 hover:text-indigo-300 font-semibold cursor-pointer flex items-center gap-1 transition-colors outline-none"
+                  className="text-emerald-400 hover:text-emerald-300 font-medium cursor-pointer flex items-center gap-1.5 transition-colors outline-none font-sans"
                 >
                   {isExpanded ? "Collapse Parameters ▲" : "Show All Parameters (CC, BCC, Attachments) ▼"}
                 </button>
