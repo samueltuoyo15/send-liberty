@@ -48,7 +48,7 @@ export default function SettingsPage() {
   };
 
   return (
-    <div className="space-y-6 max-w-2xl">
+    <div className="space-y-6 w-full">
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-headline-md font-bold tracking-tight text-primary-sendlib">Settings</h1>
@@ -57,7 +57,7 @@ export default function SettingsPage() {
           </p>
         </div>
         <Button 
-          className="rounded-lg font-label-sm bg-primary-sendlib hover:bg-primary-sendlib/90 text-white shadow-sm transition-all active:scale-95 px-4 py-2"
+          className="rounded-lg font-label-sm bg-primary-sendlib hover:bg-primary-sendlib/90 text-white shadow-sm transition-all active:scale-95 px-4 py-2 cursor-pointer"
           onClick={handleEditClick}
         >
           <HugeiconsIcon icon={PencilEdit01Icon} size={16} color='currentColor' strokeWidth={1.5} />
@@ -65,82 +65,90 @@ export default function SettingsPage() {
         </Button>
       </div>
 
-      <div className="space-y-6">
-        <div className="rounded-xl border border-[#ebdcd0]/60 bg-[#f4ebe1]/35 shadow-none p-6">
-          <div className="flex items-center gap-2 mb-4">
-            <HugeiconsIcon icon={UserIcon} size={20} color='currentColor' strokeWidth={1.5} className="text-[#6d4d24]" />
-            <h3 className="font-headline-md font-bold text-lg text-[#6d4d24]">Profile</h3>
-          </div>
-          {isLoading ? (
-            <div className="space-y-4">
-              <Skeleton className="h-10 w-full rounded-lg bg-[#ebdcd0]/35" />
-              <Skeleton className="h-10 w-full rounded-lg bg-[#ebdcd0]/35" />
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+        {/* Left Column: Profile Card */}
+        <div className="lg:col-span-7">
+          <div className="rounded-xl border border-[#ebdcd0]/60 bg-[#f4ebe1]/35 shadow-none p-6">
+            <div className="flex items-center gap-2 mb-4">
+              <HugeiconsIcon icon={UserIcon} size={20} color='currentColor' strokeWidth={1.5} className="text-[#6d4d24]" />
+              <h3 className="font-headline-md font-bold text-lg text-[#6d4d24]">Profile</h3>
             </div>
-          ) : (
-            <div className="space-y-4">
-              <div>
-                <label className="text-xs font-label-xs uppercase tracking-wider text-[#6d4d24]/80 mb-1.5 block font-semibold">
-                  Display Name
-                </label>
-                <input
-                  type="text"
-                  value={user?.displayName || ""}
-                  disabled
-                  className="w-full rounded-lg border border-[#ebdcd0]/80 bg-white px-3.5 py-2.5 text-sm text-[#6d4d24] font-medium outline-none cursor-not-allowed opacity-80"
-                />
+            {isLoading ? (
+              <div className="space-y-4">
+                <Skeleton className="h-10 w-full rounded-lg bg-[#ebdcd0]/35" />
+                <Skeleton className="h-10 w-full rounded-lg bg-[#ebdcd0]/35" />
               </div>
-              <div>
-                <label className="text-xs font-label-xs uppercase tracking-wider text-[#6d4d24]/80 mb-1.5 block font-semibold">
-                  Email Address
-                </label>
-                <input
-                  type="email"
-                  value={user?.email || ""}
-                  disabled
-                  className="w-full rounded-lg border border-[#ebdcd0]/80 bg-white px-3.5 py-2.5 text-sm text-[#6d4d24] font-medium outline-none cursor-not-allowed opacity-80"
-                />
+            ) : (
+              <div className="space-y-4">
+                <div>
+                  <label className="text-xs font-label-xs uppercase tracking-wider text-[#6d4d24]/80 mb-1.5 block font-semibold">
+                    Display Name
+                  </label>
+                  <input
+                    type="text"
+                    value={user?.displayName || ""}
+                    disabled
+                    className="w-full rounded-lg border border-[#ebdcd0]/80 bg-white px-3.5 py-2.5 text-sm text-[#6d4d24] font-medium outline-none cursor-not-allowed opacity-80"
+                  />
+                </div>
+                <div>
+                  <label className="text-xs font-label-xs uppercase tracking-wider text-[#6d4d24]/80 mb-1.5 block font-semibold">
+                    Email Address
+                  </label>
+                  <input
+                    type="email"
+                    value={user?.email || ""}
+                    disabled
+                    className="w-full rounded-lg border border-[#ebdcd0]/80 bg-white px-3.5 py-2.5 text-sm text-[#6d4d24] font-medium outline-none cursor-not-allowed opacity-80"
+                  />
+                </div>
               </div>
-            </div>
-          )}
-        </div>
-
-        <div className="rounded-xl border border-destructive/20 bg-destructive/[0.01] shadow-none p-6">
-          <div className="flex items-center gap-2 mb-4">
-            <HugeiconsIcon icon={Logout01Icon} size={20} color='currentColor' strokeWidth={1.5} className="text-destructive" />
-            <h3 className="font-headline-md font-bold text-lg text-destructive">Sign Out</h3>
-          </div>
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-            <p className="text-sm text-secondary leading-relaxed">
-              Sign out of your SendLib account on this device.
-            </p>
-            <Button 
-              variant="destructive"
-              size="lg"
-              className="rounded-lg font-label-sm"
-              onClick={() => setSignOutConfirmOpen(true)}
-            >
-              Sign Out
-            </Button>
+            )}
           </div>
         </div>
 
-        <div className="rounded-xl border border-destructive/40 bg-destructive/[0.03] shadow-none p-6">
-          <div className="flex items-center gap-2 mb-4">
-            <HugeiconsIcon icon={Delete02Icon} size={20} color='currentColor' strokeWidth={1.5} className="text-destructive" />
-            <h3 className="font-headline-md font-bold text-lg text-destructive">Delete Account</h3>
+        {/* Right Column: Sign Out & Delete Account */}
+        <div className="lg:col-span-5 space-y-6">
+          <div className="rounded-xl border border-destructive/20 bg-destructive/[0.01] shadow-none p-6">
+            <div className="flex items-center gap-2 mb-4">
+              <HugeiconsIcon icon={Logout01Icon} size={20} color='currentColor' strokeWidth={1.5} className="text-destructive" />
+              <h3 className="font-headline-md font-bold text-lg text-destructive">Sign Out</h3>
+            </div>
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+              <p className="text-sm text-secondary leading-relaxed">
+                Sign out of your SendLib account on this device.
+              </p>
+              <Button 
+                variant="destructive"
+                size="lg"
+                className="rounded-lg font-label-sm shrink-0 cursor-pointer"
+                onClick={() => setSignOutConfirmOpen(true)}
+              >
+                Sign Out
+              </Button>
+            </div>
           </div>
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-            <p className="text-sm text-secondary leading-relaxed">
-              Permanently delete your account and all associated data, including connected Gmail accounts, email logs, and API keys. This action cannot be undone.
-            </p>
-            <Button 
-              variant="destructive"
-              size="lg"
-              className="rounded-lg font-label-sm whitespace-nowrap"
-              onClick={() => setDeleteAccountOpen(true)}
-            >
-              Delete Account
-            </Button>
+
+          <div className="rounded-xl border border-destructive/40 bg-destructive/[0.03] shadow-none p-6">
+            <div className="flex items-center gap-2 mb-4">
+              <HugeiconsIcon icon={Delete02Icon} size={20} color='currentColor' strokeWidth={1.5} className="text-destructive" />
+              <h3 className="font-headline-md font-bold text-lg text-destructive">Delete Account</h3>
+            </div>
+            <div className="flex flex-col gap-4">
+              <p className="text-sm text-secondary leading-relaxed">
+                Permanently delete your account and all associated data, including connected Gmail accounts, email logs, and API keys. This action cannot be undone.
+              </p>
+              <div>
+                <Button 
+                  variant="destructive"
+                  size="lg"
+                  className="rounded-lg font-label-sm w-full sm:w-auto whitespace-nowrap cursor-pointer"
+                  onClick={() => setDeleteAccountOpen(true)}
+                >
+                  Delete Account
+                </Button>
+              </div>
+            </div>
           </div>
         </div>
       </div>

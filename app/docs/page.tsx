@@ -56,7 +56,7 @@ export default function DocsIntroduction() {
             href="/docs/quickstart"
             className="inline-flex items-center text-sm font-bold text-primary-sendlib hover:underline"
           >
-            Go to Quick Start →
+            Go to Quick Start
           </Link>
         </div>
       </div>
