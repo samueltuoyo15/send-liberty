@@ -34,8 +34,27 @@ export function useDisconnectGmail() {
     mutationFn: async (email?: string) => {
       await api.delete(email ? `/gmail/accounts?email=${encodeURIComponent(email)}` : "/gmail/accounts");
     },
-    onSuccess: () => {
+    onMutate: async (email?: string) => {
+      await queryClient.cancelQueries({ queryKey: ["gmail-accounts"] });
+      const previousAccounts = queryClient.getQueryData<GmailAccount[]>(["gmail-accounts"]);
+
+      if (previousAccounts) {
+        queryClient.setQueryData<GmailAccount[]>(
+          ["gmail-accounts"],
+          email ? previousAccounts.filter((acc) => acc.email !== email) : []
+        );
+      }
+
+      return { previousAccounts };
+    },
+    onError: (_err, _email, context) => {
+      if (context?.previousAccounts) {
+        queryClient.setQueryData(["gmail-accounts"], context.previousAccounts);
+      }
+    },
+    onSettled: () => {
       queryClient.invalidateQueries({ queryKey: ["gmail-accounts"] });
+      queryClient.invalidateQueries({ queryKey: ["me"] });
     },
   });
 }

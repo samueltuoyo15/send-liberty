@@ -244,8 +244,10 @@ export default function AccountsPage() {
               className="flex-1 rounded-lg font-label-sm bg-destructive hover:bg-destructive/90 text-white cursor-pointer" 
               onClick={() => {
                 if (disconnectEmail) {
-                  disconnectGmail(disconnectEmail);
+                  const targetEmail = disconnectEmail;
                   setDisconnectEmail(null);
+                  toast.success(`Disconnected ${targetEmail}`);
+                  disconnectGmail(targetEmail);
                 }
               }}
               disabled={isDisconnecting}
