@@ -47,7 +47,15 @@ function KeysContent() {
     }
   }, [searchParams]);
 
+  const activeKeyCount = apiKeys ? apiKeys.filter(k => !k.revoked).length : 0;
+  const atKeyLimit = !isLoading && activeKeyCount >= 10;
+
   const handleGenerate = () => {
+    if (atKeyLimit) {
+      toast.error("You have reached the maximum limit of 10 active API keys.");
+      return;
+    }
+
     const allowedOrigins = allowedOriginsText
       .split(/[\n,]/)
       .map(o => o.trim())
@@ -62,6 +70,10 @@ function KeysContent() {
         setGenerateDialog(false);
         setKeyLabel("");
         setAllowedOriginsText("");
+      },
+      onError: (err: any) => {
+        const msg = typeof err === "string" ? err : err?.message || "Failed to generate API key.";
+        toast.error(msg);
       }
     });
   };
@@ -76,20 +88,27 @@ function KeysContent() {
           </p>
           {!isLoading && apiKeys && (
             <p className="text-xs mt-1.5 font-medium">
-              <span className={apiKeys.filter(k => !k.revoked).length >= 10 ? "text-destructive font-bold" : "text-secondary"}>
-                {apiKeys.filter(k => !k.revoked).length} / 10 active keys used
+              <span className={atKeyLimit ? "text-destructive font-bold" : "text-secondary"}>
+                {activeKeyCount} / 10 active keys used
               </span>
             </p>
           )}
         </div>
         <Button 
           size="lg"
-          className="rounded-lg font-label-sm bg-primary-sendlib hover:bg-primary-sendlib/90 text-white shadow-sm transition-all active:scale-95" 
-          onClick={() => setGenerateDialog(true)}
-          disabled={isGenerating}
+          className="rounded-lg font-label-sm bg-primary-sendlib hover:bg-primary-sendlib/90 text-white shadow-sm transition-all active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer" 
+          onClick={() => {
+            if (atKeyLimit) {
+              toast.error("Limit reached: 10 / 10 active keys used. Please revoke a key first.");
+              return;
+            }
+            setGenerateDialog(true);
+          }}
+          disabled={isGenerating || atKeyLimit}
+          title={atKeyLimit ? "You've reached the 10-key limit" : undefined}
         >
           <HugeiconsIcon icon={Key01Icon} size={16} color='currentColor' strokeWidth={1.5} />
-          <span className="ml-2">Generate New Key</span>
+          <span className="ml-2">{atKeyLimit ? "Key Limit Reached" : "Generate New Key"}</span>
         </Button>
       </div>
 
@@ -249,15 +268,20 @@ function KeysContent() {
                 Restrict API requests to specific domains. If your key gets leaked, requests will still be blocked unless they originate from one of these domains. Note: Since origin headers can be spoofed by server-to-server requests, you must still keep your keys secure!
               </p>
             </div>
+            {atKeyLimit && (
+              <div className="p-3.5 rounded-lg bg-destructive/10 border border-destructive/20 text-destructive text-xs font-semibold leading-relaxed">
+                Key limit reached (10 / 10 active keys used). Please revoke an existing key before creating a new one.
+              </div>
+            )}
           </div>
           <SheetFooter className="p-0 mt-6 pt-4 border-t border-outline-variant flex-row gap-3">
             <Button variant="outline" className="flex-1 rounded-lg font-label-sm border border-outline-variant" onClick={() => setGenerateDialog(false)}>
               Cancel
             </Button>
             <Button 
-              className="flex-1 rounded-lg font-label-sm bg-primary-sendlib hover:bg-primary-sendlib/90 text-white" 
+              className="flex-1 rounded-lg font-label-sm bg-primary-sendlib hover:bg-primary-sendlib/90 text-white disabled:opacity-50 disabled:cursor-not-allowed" 
               onClick={handleGenerate} 
-              disabled={isGenerating || keyLabel.length > 25 || allowedOriginsText.length > 200}
+              disabled={isGenerating || atKeyLimit || keyLabel.length > 25 || allowedOriginsText.length > 200}
             >
               {isGenerating ? "Generating..." : "Generate Key"}
             </Button>
