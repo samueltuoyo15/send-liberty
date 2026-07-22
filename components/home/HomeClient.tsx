@@ -3,12 +3,13 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useMe } from "@/hooks/useAuth";
+import { getCodeSnippet, CodeTab } from "@/utils/codeSnippets";
 
 export default function HomeClient() {
   const [isScrolled, setIsScrolled] = useState(false);
   const { data: user, isLoading } = useMe();
   const [apiUrl, setApiUrl] = useState("https://sendlib.samueltuoyo.com");
-  const [activeTab, setActiveTab] = useState<"curl" | "js" | "python" | "go" | "rust" | "php" | "net" | "java">("curl");
+  const [activeTab, setActiveTab] = useState<CodeTab>("curl");
   const [isExpanded, setIsExpanded] = useState(false);
 
   useEffect(() => {
@@ -123,11 +124,8 @@ export default function HomeClient() {
           <div className="max-w-7xl mx-auto px-margin-mobile md:px-margin-desktop pt-24 pb-xl md:pt-40 md:pb-32 grid md:grid-cols-2 gap-xl items-center">
             <div className="space-y-lg">
               <h1 className="font-headline-lg-mobile md:font-headline-lg text-headline-lg-mobile md:text-headline-lg text-white font-extrabold">
-                SendLib
+                SendLib - Bypass SMTP Restrictions
               </h1>
-              <p className="text-xl md:text-2xl font-bold text-indigo-200 tracking-tight">
-                Send Transactional Emails Without SMTP Restrictions
-              </p>
               <p className="font-body-lg text-body-lg max-w-[500px] text-white/90 leading-relaxed">
                 Send transactional emails with just your Gmail account from any hosting environment, even where port 25, 465, or 587 are strictly blocked. No more server configuration headaches.
               </p>
@@ -182,330 +180,7 @@ export default function HomeClient() {
                 </div>
               </div>
               <pre className="text-sm overflow-auto max-h-[360px] leading-relaxed text-[#c0caf5] p-md custom-scrollbar">
-                {activeTab === "curl" && (
-                  isExpanded ? (
-                    `curl -X POST ${apiUrl}/api/send \\
-  -H "Authorization: Bearer YOUR_KEY" \\
-  -H "Content-Type: application/json" \\
-  -d '{
-    "from": "sender@gmail.com",
-    "to": "user@example.com",
-    "subject": "Hello via Webhook!",
-    "html": "<p>No SMTP needed.</p>",
-    "replyTo": "support@yourdomain.com",
-    "cc": "anotheruser@example.com",
-    "bcc": ["audit@example.com"],
-    "attachments": [
-      { "filename": "invoice.pdf", "content": "base64..." }
-    ]
-  }'`
-                  ) : (
-                    `curl -X POST ${apiUrl}/api/send \\
-  -H "Authorization: Bearer YOUR_KEY" \\
-  -H "Content-Type: application/json" \\
-  -d '{
-    "from": "sender@gmail.com",
-    "to": "user@example.com",
-    "subject": "Hello via Webhook!",
-    "html": "<p>No SMTP needed.</p>"
-  }'`
-                  )
-                )}
-                {activeTab === "js" && (
-                  isExpanded ? (
-                    `await fetch('${apiUrl}/api/send', {
-  method: 'POST',
-  headers: {
-    'Authorization': 'Bearer YOUR_KEY',
-    'Content-Type': 'application/json'
-  },
-  body: JSON.stringify({
-    from: 'sender@gmail.com',
-    to: 'user@example.com',
-    subject: 'Hello via Webhook!',
-    html: '<p>No SMTP needed.</p>',
-    replyTo: 'support@yourdomain.com',
-    cc: 'anotheruser@example.com',
-    bcc: ['audit@example.com'],
-    attachments: [
-      { filename: 'invoice.pdf', content: 'base64...' }
-    ]
-  })
-});`
-                  ) : (
-                    `await fetch('${apiUrl}/api/send', {
-  method: 'POST',
-  headers: {
-    'Authorization': 'Bearer YOUR_KEY',
-    'Content-Type': 'application/json'
-  },
-  body: JSON.stringify({
-    from: 'sender@gmail.com',
-    to: 'user@example.com',
-    subject: 'Hello via Webhook!',
-    html: '<p>No SMTP needed.</p>'
-  })
-});`
-                  )
-                )}
-                {activeTab === "python" && (
-                  isExpanded ? (
-                    `import requests
-
-url = "${apiUrl}/api/send"
-headers = {
-  "Authorization": "Bearer YOUR_KEY",
-  "Content-Type": "application/json"
-}
-payload = {
-  "from": "sender@gmail.com",
-  "to": "user@example.com",
-  "subject": "Hello via Webhook!",
-  "html": "<p>No SMTP needed.</p>",
-  "replyTo": "support@yourdomain.com",
-  "cc": "anotheruser@example.com",
-  "bcc": ["audit@example.com"],
-  "attachments": [
-    { "filename": "invoice.pdf", "content": "base64..." }
-  ]
-}
-
-res = requests.post(url, json=payload, headers=headers)`
-                  ) : (
-                    `import requests
-
-url = "${apiUrl}/api/send"
-headers = {
-  "Authorization": "Bearer YOUR_KEY",
-  "Content-Type": "application/json"
-}
-payload = {
-  "from": "sender@gmail.com",
-  "to": "user@example.com",
-  "subject": "Hello via Webhook!",
-  "html": "<p>No SMTP needed.</p>"
-}
-
-res = requests.post(url, json=payload, headers=headers)`
-                  )
-                )}
-                {activeTab === "go" && (
-                  isExpanded ? (
-                    `package main
-
-import (
-  "bytes"
-  "encoding/json"
-  "net/http"
-)
-
-func main() {
-  payload, _ := json.Marshal(map[string]interface{}{
-    "from":    "sender@gmail.com",
-    "to":      "user@example.com",
-    "subject": "Hello via Webhook!",
-    "html":    "<p>No SMTP needed.</p>",
-    "replyTo": "support@yourdomain.com",
-    "cc":      "anotheruser@example.com",
-    "bcc":     []string{"audit@example.com"},
-    "attachments": []map[string]string{
-      {"filename": "invoice.pdf", "content": "base64..."},
-    },
-  })
-  req, _ := http.NewRequest("POST", "${apiUrl}/api/send", bytes.NewBuffer(payload))
-  req.Header.Set("Authorization", "Bearer YOUR_KEY")
-  req.Header.Set("Content-Type", "application/json")
-  
-  http.DefaultClient.Do(req)
-}`
-                  ) : (
-                    `package main
-
-import (
-  "bytes"
-  "encoding/json"
-  "net/http"
-)
-
-func main() {
-  payload, _ := json.Marshal(map[string]interface{}{
-    "from":    "sender@gmail.com",
-    "to":      "user@example.com",
-    "subject": "Hello via Webhook!",
-    "html":    "<p>No SMTP needed.</p>",
-  })
-  req, _ := http.NewRequest("POST", "${apiUrl}/api/send", bytes.NewBuffer(payload))
-  req.Header.Set("Authorization", "Bearer YOUR_KEY")
-  req.Header.Set("Content-Type", "application/json")
-  
-  http.DefaultClient.Do(req)
-}`
-                  )
-                )}
-                {activeTab === "rust" && (
-                  isExpanded ? (
-                    `use serde_json::json;
-
-#[tokio::main]
-async fn main() -> Result<(), reqwest::Error> {
-  let client = reqwest::Client::new();
-  let payload = json!({
-    "from": "sender@gmail.com",
-    "to": "user@example.com",
-    "subject": "Hello via Webhook!",
-    "html": "<p>No SMTP needed.</p>",
-    "replyTo": "support@yourdomain.com",
-    "cc": "anotheruser@example.com",
-    "bcc": ["audit@example.com"],
-    "attachments": [
-      { "filename": "invoice.pdf", "content": "base64..." }
-    ]
-  });
-  
-  client.post("${apiUrl}/api/send")
-    .header("Authorization", "Bearer YOUR_KEY")
-    .json(&payload)
-    .send()
-    .await?;
-    
-  Ok(())
-}`
-                  ) : (
-                    `use serde_json::json;
-
-#[tokio::main]
-async fn main() -> Result<(), reqwest::Error> {
-  let client = reqwest::Client::new();
-  let payload = json!({
-    "from": "sender@gmail.com",
-    "to": "user@example.com",
-    "subject": "Hello via Webhook!",
-    "html": "<p>No SMTP needed.</p>"
-  });
-  
-  client.post("${apiUrl}/api/send")
-    .header("Authorization", "Bearer YOUR_KEY")
-    .json(&payload)
-    .send()
-    .await?;
-    
-  Ok(())
-}`
-                  )
-                )}
-                {activeTab === "php" && (
-                  isExpanded ? (
-                    `<?php
-$ch = curl_init('${apiUrl}/api/send');
-curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-curl_setopt($ch, CURLOPT_POST, true);
-curl_setopt($ch, CURLOPT_HTTPHEADER, [
-  'Authorization: Bearer YOUR_KEY',
-  'Content-Type: application/json'
-]);
-curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode([
-  'from' => 'sender@gmail.com',
-  'to' => 'user@example.com',
-  'subject' => 'Hello via Webhook!',
-  'html' => '<p>No SMTP needed.</p>',
-  'replyTo' => 'support@yourdomain.com',
-  'cc' => 'anotheruser@example.com',
-  'bcc' => ['audit@example.com'],
-  'attachments' => [
-    ['filename' => 'invoice.pdf', 'content' => 'base64...']
-  ]
-]));
-
-curl_exec($ch);`
-                  ) : (
-                    `<?php
-$ch = curl_init('${apiUrl}/api/send');
-curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-curl_setopt($ch, CURLOPT_POST, true);
-curl_setopt($ch, CURLOPT_HTTPHEADER, [
-  'Authorization: Bearer YOUR_KEY',
-  'Content-Type: application/json'
-]);
-curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode([
-  'from' => 'sender@gmail.com',
-  'to' => 'user@example.com',
-  'subject' => 'Hello via Webhook!',
-  'html' => '<p>No SMTP needed.</p>'
-]));
-
-curl_exec($ch);`
-                  )
-                )}
-                {activeTab === "net" && (
-                  isExpanded ? (
-                    `var client = new HttpClient();
-client.DefaultRequestHeaders.Add("Authorization", "Bearer YOUR_KEY");
-
-var payload = new {
-  from = "sender@gmail.com",
-  to = "user@example.com",
-  subject = "Hello via Webhook!",
-  html = "<p>No SMTP needed.</p>",
-  replyTo = "support@yourdomain.com",
-  cc = "anotheruser@example.com",
-  bcc = new[] { "audit@example.com" },
-  attachments = new[] { new { filename = "invoice.pdf", content = "base64..." } }
-};`
-                  ) : (
-                    `var client = new HttpClient();
-client.DefaultRequestHeaders.Add("Authorization", "Bearer YOUR_KEY");
-
-var payload = new {
-  from = "sender@gmail.com",
-  to = "user@example.com",
-  subject = "Hello via Webhook!",
-  html = "<p>No SMTP needed.</p>"
-};`
-                  )
-                )}
-                {activeTab === "java" && (
-                  isExpanded ? (
-                    `var client = HttpClient.newHttpClient();
-var payload = """
-    {
-      "from": "sender@gmail.com",
-      "to": "user@example.com",
-      "subject": "Hello via Webhook!",
-      "html": "<p>No SMTP needed.</p>",
-      "replyTo": "support@yourdomain.com",
-      "cc": "anotheruser@example.com",
-      "bcc": ["audit@example.com"],
-      "attachments": [
-        { "filename": "invoice.pdf", "content": "base64..." }
-      ]
-    }
-    """;
-
-var req = HttpRequest.newBuilder()
-  .uri(URI.create("${apiUrl}/api/send"))
-  .header("Authorization", "Bearer YOUR_KEY")
-  .header("Content-Type", "application/json")
-  .POST(HttpRequest.BodyPublishers.ofString(payload))
-  .build();`
-                  ) : (
-                    `var client = HttpClient.newHttpClient();
-var payload = """
-    {
-      "from": "sender@gmail.com",
-      "to": "user@example.com",
-      "subject": "Hello via Webhook!",
-      "html": "<p>No SMTP needed.</p>"
-    }
-    """;
-
-var req = HttpRequest.newBuilder()
-  .uri(URI.create("${apiUrl}/api/send"))
-  .header("Authorization", "Bearer YOUR_KEY")
-  .header("Content-Type", "application/json")
-  .POST(HttpRequest.BodyPublishers.ofString(payload))
-  .build();`
-                  )
-                )}
+                {getCodeSnippet(activeTab, isExpanded, apiUrl)}
               </pre>
               <div className="flex justify-between items-center mt-xs pt-2.5 border-t border-[#2d3b4e]/60 text-xs px-md pb-md">
                 <button
@@ -547,7 +222,7 @@ var req = HttpRequest.newBuilder()
               {/* Large Feature Card */}
               <div className="md:col-span-2 border border-[#d8cbf9] p-xl rounded-2xl bg-[#eae3fc] transition-all hover:bg-[#eae3fc]/90 duration-300">
                 <span className="material-symbols-outlined text-[#6324f5] text-4xl mb-md">webhook</span>
-                <h3 className="font-headline-md text-headline-md mb-sm text-[#2e1065]">Bypass Blocked Ports</h3>
+                <h3 className="font-headline-md text-headline-md mb-sm text-[#2e1065]">Send Without SMTP Restrictions</h3>
                 <p className="font-body-md text-body-md text-[#4c2d96] leading-relaxed">
                   Railway, Render, and most free cloud hosts block outbound SMTP ports. SendLib relays through your connected Google account, no SMTP port required. Improve deliverability by sending through Google's trusted mail infrastructure.
                 </p>
@@ -628,7 +303,7 @@ var req = HttpRequest.newBuilder()
                 </div>
                 <h3 className="font-headline-sm text-headline-sm text-primary-sendlib">Why We Request Google OAuth Access</h3>
                 <p className="font-body-md text-secondary leading-relaxed">
-                  SendLib requests the <code className="bg-surface-container px-2 py-0.5 rounded text-xs">gmail.send</code> permission scope. This scope allows SendLib to route outbound transactional emails requested via your SendLib API keys, bypassing cloud host SMTP port restrictions.
+                  SendLib requests the <code className="bg-surface-container px-2 py-0.5 rounded text-xs">gmail.send</code> permission scope. This scope allows SendLib to route outbound transactional emails requested via your SendLib API keys without SMTP port restrictions.
                 </p>
               </div>
 

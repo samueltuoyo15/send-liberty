@@ -103,7 +103,7 @@ export default function LoginPage() {
               Stop fighting SMTP configuration.
             </h2>
             <p className="font-body-lg text-body-lg text-white/90">
-              A secure API designed for developers to bypass restricted hosting environments and send transactional emails instantly.
+              A secure API designed for developers to send transactional emails instantly from any hosting environment without port restrictions.
             </p>
           </div>
 

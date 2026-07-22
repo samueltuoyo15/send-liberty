@@ -1,4 +1,4 @@
-# SendLib: Bypass SMTP Restrictions for Transactional Emails
+# SendLib: Transactional Email API Without SMTP Restrictions
 
 SendLib helps developers send transactional emails from any hosting environment, even those that block traditional SMTP ports. It lets you connect your Google account securely and send emails via a simple API, solving the headache of complex email server setup and ensuring reliable inbox delivery. You won't need to configure any DNS records or worry about SMTP blocks again.
 

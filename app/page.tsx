@@ -2,14 +2,14 @@ import type { Metadata } from "next";
 import HomeClient from "@/components/home/HomeClient";
 
 export const metadata: Metadata = {
-  title: "SendLib",
-  description: "Bypass SMTP blocks on Railway, Render, and restricted hosting clouds. Send transactional emails via Google OAuth2 with zero DNS configuration.",
+  title: "SendLib - Send Transactional Emails Without SMTP Restrictions",
+  description: "Send transactional emails seamlessly from Railway, Render, and restricted hosting clouds via Google OAuth2 with zero DNS configuration.",
   alternates: {
     canonical: "https://sendlib.samueltuoyo.com",
   },
   openGraph: {
-    title: "SendLib",
-    description: "Bypass SMTP blocks on Railway, Render, and restricted hosting clouds. Send transactional emails via Google OAuth2 with zero DNS configuration.",
+    title: "SendLib - Send Transactional Emails Without SMTP Restrictions",
+    description: "Send transactional emails seamlessly from Railway, Render, and restricted hosting clouds via Google OAuth2 with zero DNS configuration.",
     url: "https://sendlib.samueltuoyo.com",
     siteName: "SendLib",
     type: "website",
@@ -24,7 +24,7 @@ const jsonLd = {
       "@id": "https://sendlib.samueltuoyo.com/#website",
       "url": "https://sendlib.samueltuoyo.com",
       "name": "SendLib",
-      "description": "Bypass SMTP restrictions & send transactional emails via Google OAuth2",
+      "description": "Send transactional emails seamlessly via Google OAuth2 without SMTP port restrictions",
       "publisher": {
         "@id": "https://sendlib.samueltuoyo.com/#organization"
       }
