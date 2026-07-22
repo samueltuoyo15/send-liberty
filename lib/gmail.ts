@@ -32,10 +32,6 @@ export async function handleGmailCallback(code: string, userId: string) {
   const { tokens } = await oauth2Client.getToken(code);
 
   if (!tokens.access_token) throw new Error("Failed to get access token from Google");
-  if (!tokens.refresh_token)
-    throw new Error(
-      "No refresh token. Please revoke app access in Google settings and try again."
-    );
 
   oauth2Client.setCredentials(tokens);
   const oauth2 = google.oauth2({ auth: oauth2Client, version: "v2" });
@@ -50,13 +46,23 @@ export async function handleGmailCallback(code: string, userId: string) {
   const existingAccount = await GmailAccount.findOne({ userId, gmailEmail });
   const isNew = !existingAccount;
 
+  let encryptedRefreshToken = tokens.refresh_token
+    ? encrypt(tokens.refresh_token)
+    : existingAccount?.encryptedRefreshToken;
+
+  if (!encryptedRefreshToken) {
+    throw new Error(
+      "No refresh token received from Google. Please revoke app access in your Google Account Security settings and try again."
+    );
+  }
+
   await GmailAccount.findOneAndUpdate(
     { userId, gmailEmail },
     {
       userId,
       gmailEmail,
       encryptedAccessToken: encrypt(tokens.access_token),
-      encryptedRefreshToken: encrypt(tokens.refresh_token),
+      encryptedRefreshToken,
       tokenExpiresAt,
       connected: true,
       lastError: null,

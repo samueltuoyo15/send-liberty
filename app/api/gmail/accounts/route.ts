@@ -52,10 +52,16 @@ export async function DELETE(req: NextRequest) {
       }
 
       try {
+        const refreshToken = decrypt(account.encryptedRefreshToken);
         const oauth2Client = createOAuthClient();
-        oauth2Client.setCredentials({ access_token: decrypt(account.encryptedAccessToken) });
-        await oauth2Client.revokeCredentials();
-      } catch {}
+        await oauth2Client.revokeToken(refreshToken);
+      } catch {
+        try {
+          const accessToken = decrypt(account.encryptedAccessToken);
+          const oauth2Client = createOAuthClient();
+          await oauth2Client.revokeToken(accessToken);
+        } catch {}
+      }
 
       await Promise.all([
         GmailAccount.deleteOne({ _id: account._id }),
@@ -66,10 +72,16 @@ export async function DELETE(req: NextRequest) {
       const accounts = await GmailAccount.find({ userId: new mongoose.Types.ObjectId(user.id) }).lean();
       for (const account of accounts) {
         try {
+          const refreshToken = decrypt(account.encryptedRefreshToken);
           const oauth2Client = createOAuthClient();
-          oauth2Client.setCredentials({ access_token: decrypt(account.encryptedAccessToken) });
-          await oauth2Client.revokeCredentials();
-        } catch {}
+          await oauth2Client.revokeToken(refreshToken);
+        } catch {
+          try {
+            const accessToken = decrypt(account.encryptedAccessToken);
+            const oauth2Client = createOAuthClient();
+            await oauth2Client.revokeToken(accessToken);
+          } catch {}
+        }
       }
       
       const emails = accounts.map(a => a.gmailEmail);
