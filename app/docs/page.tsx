@@ -35,8 +35,8 @@ export default function DocsIntroduction() {
               <p className="text-sm text-secondary">Send transactional emails instantly from any cloud platform (Railway, Render) with a single HTTP POST request.</p>
            </div>
            <div className="p-5 rounded-xl border border-outline-variant/60 bg-white">
-              <h3 className="font-bold text-primary-sendlib mb-2">Zero Domain Required</h3>
-              <p className="text-sm text-secondary">No DNS, MX, or SPF records needed. Connect your Gmail account and start sending right away.</p>
+              <h3 className="font-bold text-primary-sendlib mb-2">Zero Domain Required (Custom Domains Supported)</h3>
+              <p className="text-sm text-secondary">No DNS, MX, or SPF records needed. Connect @gmail.com or your custom domain Google Workspace account to send instantly.</p>
            </div>
            <div className="p-5 rounded-xl border border-outline-variant/60 bg-white">
               <h3 className="font-bold text-primary-sendlib mb-2">High Daily Limits</h3>

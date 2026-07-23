@@ -20,6 +20,13 @@ export default function GmailOAuthPage() {
           <strong className="text-primary-sendlib">Daily Limits:</strong> Standard Gmail accounts are limited to 500 emails per day. Google Workspace accounts can send up to 2,000 emails per day.
         </div>
 
+        <div className="p-4 border border-emerald-100 bg-emerald-50/50 rounded-xl text-emerald-900 text-sm space-y-1">
+          <strong className="text-emerald-950 font-bold block">Custom Company Domains:</strong>
+          <p className="text-emerald-800 leading-relaxed">
+            You can send emails directly from custom domain addresses (e.g. <code className="bg-emerald-100/80 px-1 rounded text-xs">hello@yourcompany.com</code>). Simply link your Google Workspace account using standard Google OAuth. Google Workspace handles all the DNS, SPF, and DKIM authentication for you automatically, so no domain configuration is needed on SendLib!
+          </p>
+        </div>
+
         <h3 className="text-xl font-bold text-primary-sendlib mt-8 mb-4">Steps to Connect</h3>
         <ol className="list-decimal pl-5 space-y-4 text-[#75777d]">
           <li>Navigate to your SendLib dashboard <Link href="/dashboard/accounts" className="text-indigo-600 hover:text-indigo-700 underline font-semibold">Gmail Accounts</Link> tab.</li>

@@ -88,6 +88,14 @@ const jsonLd = {
         },
         {
           "@type": "Question",
+          "name": "Can I send from my custom domain (e.g. hello@mycompany.com)?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes! If your custom company domain is connected to Google Workspace, simply link that account to SendLib via Google OAuth. SendLib will send emails directly from your custom domain (e.g. hello@mycompany.com) with zero extra DNS setup required on SendLib."
+          }
+        },
+        {
+          "@type": "Question",
           "name": "Will my emails land in the inbox?",
           "acceptedAnswer": {
             "@type": "Answer",

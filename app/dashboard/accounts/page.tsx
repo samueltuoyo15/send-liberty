@@ -96,9 +96,9 @@ export default function AccountsPage() {
       <div className="rounded-xl border border-indigo-100 bg-indigo-50/50 p-4">
         <div className="flex gap-3">
           <div className="flex-1">
-            <h3 className="font-semibold text-primary-sendlib text-sm mb-1">Gmail Sending Limits</h3>
+            <h3 className="font-semibold text-primary-sendlib text-sm mb-1">Gmail & Custom Domain Limits</h3>
             <p className="text-sm text-secondary leading-relaxed">
-              Standard Gmail accounts can send up to <span className="font-bold">500 emails per day</span>. Google Workspace custom domain accounts can send up to <span className="font-bold">2,000 emails per day</span>.
+              Standard <code className="text-xs bg-indigo-100/70 px-1 py-0.5 rounded font-mono">@gmail.com</code> accounts send up to <span className="font-bold">500 emails/day</span>. Google Workspace custom company domain accounts (e.g. <code className="text-xs bg-indigo-100/70 px-1 py-0.5 rounded font-mono">hello@yourcompany.com</code>) send up to <span className="font-bold">2,000 emails/day</span> with zero DNS configuration required!
             </p>
           </div>
         </div>

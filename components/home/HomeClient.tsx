@@ -387,6 +387,16 @@ export default function HomeClient() {
 
               <div className="p-6 rounded-2xl border border-outline-variant bg-white/70 hover:bg-white transition-colors duration-300">
                 <h3 className="font-bold text-base text-[#1d2b3e] mb-2 flex items-center gap-2">
+                  <span className="w-2 h-2 rounded-full bg-purple-500"></span>
+                  Can I send from my custom domain (e.g. hello@mycompany.com)?
+                </h3>
+                <p className="text-sm text-secondary leading-relaxed pl-4">
+                  Yes! If your custom company domain is connected to Google Workspace, simply link that account to SendLib via Google OAuth. SendLib will send transactional emails directly from your custom domain (e.g. <code className="bg-surface-variant/80 px-1.5 py-0.5 rounded text-xs">hello@mycompany.com</code>) with zero extra DNS or SPF configuration required on SendLib. Plus, Google Workspace accounts get <strong>2,000 emails/day</strong> per account!
+                </p>
+              </div>
+
+              <div className="p-6 rounded-2xl border border-outline-variant bg-white/70 hover:bg-white transition-colors duration-300">
+                <h3 className="font-bold text-base text-[#1d2b3e] mb-2 flex items-center gap-2">
                   <span className="w-2 h-2 rounded-full bg-emerald-500"></span>
                   Will my emails land in the inbox?
                 </h3>
