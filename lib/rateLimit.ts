@@ -1,4 +1,4 @@
-import { RateLimiterRedis, RateLimiterMemory } from "rate-limiter-flexible";
+import { RateLimiterRedis, RateLimiterMemory, RateLimiterRes } from "rate-limiter-flexible";
 import { getRedisClient } from "./redis";
 
 let sendLimiter: RateLimiterRedis | RateLimiterMemory;
@@ -39,8 +39,15 @@ export async function rateLimit(
   try {
     await limiter.consume(key);
     return { success: true, resetInSeconds: 0 };
-  } catch (res: any) {
-    const resetInSeconds = Math.ceil(res?.msBeforeNextConsume / 1000) || 60;
-    return { success: false, resetInSeconds };
+  } catch (res: unknown) {
+    // rate-limiter-flexible rejects with a RateLimiterRes on limit exceeded
+    if (res instanceof RateLimiterRes) {
+      const resetInSeconds = Math.ceil(res.msBeforeNext / 1000) || 1;
+      return { success: false, resetInSeconds };
+    }
+    // Redis connection error or other unexpected error — fail open so users
+    // are not blocked when Redis is down
+    console.error("[RateLimit] unexpected error, allowing request:", res);
+    return { success: true, resetInSeconds: 0 };
   }
 }
