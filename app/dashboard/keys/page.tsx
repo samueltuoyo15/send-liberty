@@ -48,11 +48,11 @@ function KeysContent() {
   }, [searchParams]);
 
   const activeKeyCount = apiKeys ? apiKeys.filter(k => !k.revoked).length : 0;
-  const atKeyLimit = !isLoading && activeKeyCount >= 10;
+  const atKeyLimit = !isLoading && activeKeyCount >= 15;
 
   const handleGenerate = () => {
     if (atKeyLimit) {
-      toast.error("You have reached the maximum limit of 10 active API keys.");
+      toast.error("You have reached the maximum limit of 15 active API keys.");
       return;
     }
 
@@ -89,7 +89,7 @@ function KeysContent() {
           {!isLoading && apiKeys && (
             <p className="text-xs mt-1.5 font-medium">
               <span className={atKeyLimit ? "text-destructive font-bold" : "text-secondary"}>
-                {activeKeyCount} / 10 active keys used
+                {activeKeyCount} / 15 active keys used
               </span>
             </p>
           )}
@@ -99,13 +99,13 @@ function KeysContent() {
           className="rounded-lg font-label-sm bg-primary-sendlib hover:bg-primary-sendlib/90 text-white shadow-sm transition-all active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer" 
           onClick={() => {
             if (atKeyLimit) {
-              toast.error("Limit reached: 10 / 10 active keys used. Please revoke a key first.");
+              toast.error("Limit reached: 15 / 15 active keys used. Please revoke a key first.");
               return;
             }
             setGenerateDialog(true);
           }}
           disabled={isGenerating || atKeyLimit}
-          title={atKeyLimit ? "You've reached the 10-key limit" : undefined}
+          title={atKeyLimit ? "You've reached the 15-key limit" : undefined}
         >
           <HugeiconsIcon icon={Key01Icon} size={16} color='currentColor' strokeWidth={1.5} />
           <span className="ml-2">{atKeyLimit ? "Key Limit Reached" : "Generate New Key"}</span>
@@ -270,7 +270,7 @@ function KeysContent() {
             </div>
             {atKeyLimit && (
               <div className="p-3.5 rounded-lg bg-destructive/10 border border-destructive/20 text-destructive text-xs font-semibold leading-relaxed">
-                Key limit reached (10 / 10 active keys used). Please revoke an existing key before creating a new one.
+                Key limit reached (15 / 15 active keys used). Please revoke an existing key before creating a new one.
               </div>
             )}
           </div>

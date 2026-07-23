@@ -166,7 +166,7 @@ export default function HomeClient() {
             </div>
             <div className="bg-[#090a0f] text-white rounded-2xl font-mono border border-zinc-800 overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.8)] flex flex-col transition-all hover:border-zinc-700">
               <div className="flex justify-between items-center px-4 py-3 bg-[#12131a] border-b border-zinc-800 gap-2">
-                <div className="flex items-center rounded-xl bg-[#07080c] border border-zinc-800/80 p-1 text-xs overflow-x-auto max-w-full gap-1 flex-1 [ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+                <div className="flex items-center rounded-xl bg-[#07080c] border border-zinc-800/80 p-1 text-xs overflow-x-auto max-w-full flex-1 [ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
                   {(["curl", "js", "python", "go", "rust", "php", "net", "java"] as const).map((tab) => (
                     <button
                       key={tab}
@@ -453,9 +453,9 @@ export default function HomeClient() {
                 </div>
                 <ul className="space-y-3 text-sm text-secondary flex-1">
                   {[
-                    "Up to 5 connected Gmail accounts",
+                    "Up to 10 connected Gmail accounts",
                     "500 emails / day per account",
-                    "10 API keys",
+                    "15 API keys",
                     "60 API requests / minute",
                     "2MB HTML body · 1MB text body",
                     "Up to 10 attachments · 25MB total",

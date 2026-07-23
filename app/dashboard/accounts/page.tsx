@@ -57,7 +57,7 @@ export default function AccountsPage() {
     }
   }, [searchParams]);
 
-  const atAccountLimit = !isLoading && !!accounts && accounts.length >= 5;
+  const atAccountLimit = !isLoading && !!accounts && accounts.length >= 10;
 
   return (
     <div className="space-y-6">
@@ -70,7 +70,7 @@ export default function AccountsPage() {
           {!isLoading && accounts && (
             <p className="text-xs mt-1.5 font-medium">
               <span className={atAccountLimit ? "text-destructive font-bold" : "text-secondary"}>
-                {accounts.length} / 5 accounts connected
+                {accounts.length} / 10 accounts connected
               </span>
             </p>
           )}
@@ -80,13 +80,13 @@ export default function AccountsPage() {
           className="rounded-lg font-label-sm bg-primary-sendlib hover:bg-primary-sendlib/90 text-white shadow-sm transition-all active:scale-95 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
           onClick={() => {
             if (atAccountLimit) {
-              toast.error("Account limit reached: 5 / 5 accounts connected. Please disconnect an account first.");
+              toast.error("Account limit reached: 10 / 10 accounts connected. Please disconnect an account first.");
               return;
             }
             setConnectConfirmOpen(true);
           }}
           disabled={isConnecting || atAccountLimit}
-          title={atAccountLimit ? "You've reached the 5-account limit" : undefined}
+          title={atAccountLimit ? "You've reached the 10-account limit" : undefined}
         >
           <HugeiconsIcon icon={MailIcon} size={16} color='currentColor' strokeWidth={1.5} />
           <span className="ml-2">{atAccountLimit ? "Account Limit Reached" : "Connect New Account"}</span>
@@ -223,7 +223,7 @@ export default function AccountsPage() {
           </DialogHeader>
           {atAccountLimit && (
             <div className="p-3.5 rounded-lg bg-destructive/10 border border-destructive/20 text-destructive text-xs font-semibold leading-relaxed mt-2">
-              Account limit reached (5 / 5 accounts connected). Please disconnect an existing account first.
+              Account limit reached (10 / 10 accounts connected). Please disconnect an existing account first.
             </div>
           )}
           <div className="flex flex-row gap-3 mt-4 pt-4 border-t border-outline-variant/60">
@@ -238,7 +238,7 @@ export default function AccountsPage() {
               className="flex-1 rounded-lg font-label-sm bg-primary-sendlib hover:bg-primary-sendlib/90 text-white cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed" 
               onClick={() => {
                 if (atAccountLimit) {
-                  toast.error("Account limit reached: 5 / 5 accounts connected.");
+                  toast.error("Account limit reached: 10 / 10 accounts connected.");
                   return;
                 }
                 setConnectConfirmOpen(false);

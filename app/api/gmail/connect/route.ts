@@ -4,7 +4,7 @@ import { getGmailAuthUrl } from "@/lib/gmail";
 import { connectDB } from "@/lib/db";
 import GmailAccount from "@/models/GmailAccount";
 
-const MAX_GMAIL_ACCOUNTS = 5;
+const MAX_GMAIL_ACCOUNTS = 10;
 
 export async function GET(req: NextRequest) {
   try {
