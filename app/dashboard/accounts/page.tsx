@@ -28,6 +28,7 @@ export default function AccountsPage() {
   const [connectConfirmOpen, setConnectConfirmOpen] = useState(false);
   const [disconnectEmail, setDisconnectEmail] = useState<string | null>(null);
   const [successDialogOpen, setSuccessDialogOpen] = useState(false);
+  const [agreeTerms, setAgreeTerms] = useState(false);
 
   const searchParams = useSearchParams();
   const router = useRouter();
@@ -99,6 +100,9 @@ export default function AccountsPage() {
             <h3 className="font-semibold text-primary-sendlib text-sm mb-1">Gmail & Custom Domain Limits</h3>
             <p className="text-sm text-secondary leading-relaxed">
               Standard <code className="text-xs bg-indigo-100/70 px-1 py-0.5 rounded font-mono">@gmail.com</code> accounts send up to <span className="font-bold">500 emails/day</span>. Google Workspace custom company domain accounts (e.g. <code className="text-xs bg-indigo-100/70 px-1 py-0.5 rounded font-mono">hello@yourcompany.com</code>) send up to <span className="font-bold">2,000 emails/day</span> with zero DNS configuration required!
+            </p>
+            <p className="text-xs text-secondary/80 mt-2 border-t border-indigo-100/80 pt-2 leading-relaxed">
+              Notice: SendLib is strictly for 1-to-1 transactional emails (welcome emails, password resets, OTPs). Unsolicited bulk marketing, cold outreach, or spam is strictly prohibited and results in immediate account suspension.
             </p>
           </div>
         </div>
@@ -221,10 +225,20 @@ export default function AccountsPage() {
               Connect your Google account via secure OAuth 2.0. SendLib will only request the narrow permissions required to relay transactional emails on your behalf, and your credentials are never seen or stored.
             </DialogDescription>
           </DialogHeader>
-          {atAccountLimit && (
+          {atAccountLimit ? (
             <div className="p-3.5 rounded-lg bg-destructive/10 border border-destructive/20 text-destructive text-xs font-semibold leading-relaxed mt-2">
               Account limit reached (10 / 10 accounts connected). Please disconnect an existing account first.
             </div>
+          ) : (
+            <label className="flex items-start gap-2.5 mt-3 p-3 rounded-lg bg-surface-container-low border border-outline-variant/60 text-xs text-secondary cursor-pointer select-none">
+              <input 
+                type="checkbox" 
+                checked={agreeTerms} 
+                onChange={(e) => setAgreeTerms(e.target.checked)} 
+                className="mt-0.5 rounded border-outline-variant text-primary-sendlib focus:ring-primary-sendlib shrink-0 cursor-pointer" 
+              />
+              <span>I agree to use this account for <strong>transactional emails only</strong> (OTPs, welcome emails, receipts) and understand bulk cold spam will result in immediate account suspension.</span>
+            </label>
           )}
           <div className="flex flex-row gap-3 mt-4 pt-4 border-t border-outline-variant/60">
             <Button 
@@ -241,11 +255,15 @@ export default function AccountsPage() {
                   toast.error("Account limit reached: 10 / 10 accounts connected.");
                   return;
                 }
+                if (!agreeTerms) {
+                  toast.error("Please agree to the transactional usage terms first.");
+                  return;
+                }
                 setConnectConfirmOpen(false);
                 toast.loading("Redirecting to Google...", { id: "gmail-connect" });
                 connectGmail();
               }}
-              disabled={isConnecting || atAccountLimit}
+              disabled={isConnecting || atAccountLimit || !agreeTerms}
             >
               Connect Gmail
             </Button>
