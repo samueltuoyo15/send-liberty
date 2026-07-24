@@ -382,8 +382,9 @@ function KeysContent() {
 export default function KeysPage() {
   return (
     <Suspense fallback={
-      <div className="flex items-center justify-center min-h-[40vh]">
-        <div className='w-10 h-10 animate-spin rounded-full border-2 border-solid border-current border-t-transparent mx-auto text-primary-sendlib' />
+      <div className="space-y-4 p-6">
+        <Skeleton className="h-10 w-48 rounded-lg" />
+        <Skeleton className="h-64 w-full rounded-2xl" />
       </div>
     }>
       <KeysContent />

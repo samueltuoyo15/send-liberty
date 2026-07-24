@@ -18,18 +18,6 @@ export default function LoginPage() {
     }
   }, [isLoading, user, router]);
 
-  if (isLoading) {
-    return (
-      <SEO title="Loading..." description="Authenticating session...">
-        <div className="min-h-screen flex items-center justify-center bg-background-sendlib">
-          <div className="w-8 h-8 animate-spin rounded-full border-4 border-solid border-primary-sendlib border-t-transparent" />
-        </div>
-      </SEO>
-    );
-  }
-
-  if (user) return null;
-
   return (
     <SEO title="Login / Sign Up" description="Log in or create a new SendLib account to manage your API keys and SMTP integrations.">
       <div className="min-h-screen grid grid-cols-1 md:grid-cols-2 bg-background-sendlib">
