@@ -26,7 +26,7 @@ export default function TermsPage() {
 
         <div className="space-y-sm">
           <h1 className="font-headline-lg text-headline-lg text-primary-sendlib">Terms of Service</h1>
-          <p className="font-body-md text-on-surface-variant">Last updated: {new Date().toLocaleDateString()}</p>
+          <p className="font-body-md text-on-surface-variant">Last updated: July 24, 2026</p>
         </div>
 
         <div className="space-y-lg text-body-md font-body-md text-on-background">

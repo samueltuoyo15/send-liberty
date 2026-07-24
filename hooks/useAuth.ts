@@ -13,9 +13,15 @@ export function useMe() {
   return useQuery({
     queryKey: ["me"],
     queryFn: async () => {
-      const res = await api.get<never, { success: boolean; data: User }>("/auth/me");
-      return res.data;
+      try {
+        const res = await api.get<never, { success: boolean; data: User }>("/auth/me");
+        return res.data;
+      } catch {
+        return null;
+      }
     },
+    retry: false,
+    staleTime: 5 * 60 * 1000,
   });
 }
 
