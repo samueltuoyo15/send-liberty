@@ -136,7 +136,7 @@ export default function HomeClient() {
         <section
           className="w-full relative"
           style={{
-            backgroundImage: "linear-gradient(rgba(29, 43, 62, 0.45), rgba(29, 43, 62, 0.25)), url('/forest_background/forest-background.png')",
+            backgroundImage: "linear-gradient(to bottom, rgba(29, 43, 62, 0.38), rgba(29, 43, 62, 0.18)), url('/forest_background/forest-background.webp')",
             backgroundSize: "cover",
             backgroundPosition: "center",
           }}

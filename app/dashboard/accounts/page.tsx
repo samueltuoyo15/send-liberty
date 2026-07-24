@@ -97,18 +97,15 @@ export default function AccountsPage() {
       <div className="rounded-xl border border-indigo-100 bg-indigo-50/40 p-4 space-y-3">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-indigo-100/70 pb-2.5">
           <h3 className="font-bold text-primary-sendlib text-sm">Gmail & Custom Domain Limits</h3>
-          <span className="text-xs text-indigo-700 bg-indigo-100/80 px-2.5 py-0.5 rounded-full font-semibold w-fit">
-            Zero DNS Setup Required
-          </span>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs text-secondary">
           <div className="bg-white/80 p-2.5 rounded-lg border border-indigo-100/60">
-            <span className="font-bold text-primary-sendlib block mb-0.5">Standard Gmail (@gmail.com)</span>
+            <span className="font-bold text-primary-sendlib block mb-0.5">Standard Gmail (yourproduct@gmail.com)</span>
             <span>Up to <strong className="text-primary-sendlib">500 emails/day</strong> per connected account.</span>
           </div>
           <div className="bg-white/80 p-2.5 rounded-lg border border-indigo-100/60">
             <span className="font-bold text-primary-sendlib block mb-0.5">Google Workspace Custom Domain</span>
-            <span>Up to <strong className="text-primary-sendlib">2,000 emails/day</strong> (e.g. hello@yourcompany.com).</span>
+            <span>Up to <strong className="text-primary-sendlib">2,000 emails/day</strong> (e.g. hello@yourprodct.com).</span>
           </div>
         </div>
       </div>
@@ -281,7 +278,7 @@ export default function AccountsPage() {
           <DialogHeader className="mb-2">
             <DialogTitle className="text-xl font-headline-md font-bold text-destructive">Disconnect Gmail Account</DialogTitle>
             <DialogDescription className="text-secondary text-sm leading-relaxed mt-1">
-              Are you sure you want to disconnect **{disconnectEmail}**? SendLib will no longer be able to send transactional emails on behalf of this account.
+              Are you sure you want to disconnect <strong className="font-bold text-on-background">{disconnectEmail}</strong>? SendLib will no longer be able to send transactional emails on behalf of this account.
             </DialogDescription>
           </DialogHeader>
           <div className="flex flex-row gap-3 mt-4 pt-4 border-t border-outline-variant/60">

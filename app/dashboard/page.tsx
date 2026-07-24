@@ -46,6 +46,7 @@ export default function DashboardPage() {
   const [newKeyDialog, setNewKeyDialog] = useState<{ key: string; hint: string } | null>(null);
   const [connectConfirmOpen, setConnectConfirmOpen] = useState(false);
   const [milestoneDialogOpen, setMilestoneDialogOpen] = useState(false);
+  const [agreeTerms, setAgreeTerms] = useState(false);
   const activeKeysCount = apiKeys?.filter(k => !k.revoked).length || 0;
   const connectedGmailsCount = gmailAccounts?.filter(g => g.connected).length || 0;
   const emailLogs = Array.isArray(logsData?.data) ? logsData.data : [];
@@ -85,11 +86,11 @@ export default function DashboardPage() {
         <motion.div 
           initial={{ opacity: 0, x: 20 }}
           animate={{ opacity: 1, x: 0 }}
-          className="flex items-center gap-3"
+          className="flex items-center gap-3 w-full sm:w-auto"
         >
           <Button 
             size="lg"
-            className="rounded-lg font-label-sm bg-primary-sendlib hover:bg-primary-sendlib/90 text-white shadow-sm transition-all active:scale-95 group" 
+            className="flex-1 sm:flex-initial rounded-lg font-label-sm bg-primary-sendlib hover:bg-primary-sendlib/90 text-white shadow-sm transition-all active:scale-95 group cursor-pointer" 
             onClick={() => {
               setConnectConfirmOpen(true);
             }}
@@ -98,11 +99,11 @@ export default function DashboardPage() {
             <HugeiconsIcon icon={MailIcon} size={16} color='currentColor' strokeWidth={1.5} className="group-hover:rotate-12 transition-transform" />
             <span className="ml-2">{isConnecting ? "Connecting..." : "Connect Account"}</span>
           </Button>
-          <Link href="/dashboard/keys?generate=true">
+          <Link href="/dashboard/keys?generate=true" className="flex-1 sm:flex-initial">
             <Button 
               size="lg"
               variant="outline" 
-              className="rounded-lg font-label-sm border border-outline-variant bg-white text-primary-sendlib shadow-xs hover:bg-surface-container-low transition-all active:scale-95"
+              className="w-full rounded-lg font-label-sm border border-outline-variant bg-white text-primary-sendlib shadow-xs hover:bg-surface-container-low transition-all active:scale-95 cursor-pointer"
             >
               <HugeiconsIcon icon={Key01Icon} size={16} color='currentColor' strokeWidth={1.5} />
               <span className="ml-2">Generate Key</span>
@@ -617,22 +618,37 @@ export default function DashboardPage() {
               Connect your Google account via secure OAuth 2.0. SendLib will only request the narrow permissions required to relay transactional emails on your behalf, and your credentials are never seen or stored.
             </DialogDescription>
           </DialogHeader>
+          <label className="flex items-start gap-3 mt-3 p-3.5 rounded-xl bg-surface-container-low border border-outline-variant/80 hover:border-primary-sendlib/40 transition-colors text-xs text-secondary cursor-pointer select-none">
+            <input 
+              type="checkbox" 
+              checked={agreeTerms} 
+              onChange={(e) => setAgreeTerms(e.target.checked)} 
+              className="mt-0.5 h-4 w-4 rounded border-outline-variant text-primary-sendlib accent-primary-sendlib focus:ring-primary-sendlib shrink-0 cursor-pointer" 
+            />
+            <span className="leading-relaxed">
+              I agree to use this account for <strong>transactional emails only</strong> (welcome emails, password resets, OTPs, receipts, etc.) and acknowledge that bulk cold spam will result in immediate account suspension.
+            </span>
+          </label>
           <div className="flex flex-row gap-3 mt-4 pt-4 border-t border-outline-variant/60">
             <Button 
               variant="outline" 
-              className="flex-1 rounded-lg font-label-sm border border-outline-variant hover:bg-surface-container-low" 
+              className="flex-1 rounded-lg font-label-sm border border-outline-variant hover:bg-surface-container-low cursor-pointer" 
               onClick={() => setConnectConfirmOpen(false)}
             >
               Cancel
             </Button>
             <Button 
-              className="flex-1 rounded-lg font-label-sm bg-primary-sendlib hover:bg-primary-sendlib/90 text-white" 
+              className="flex-1 rounded-lg font-label-sm bg-primary-sendlib hover:bg-primary-sendlib/90 text-white cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed" 
               onClick={() => {
+                if (!agreeTerms) {
+                  toast.error("Please agree to the transactional usage terms first.");
+                  return;
+                }
                 setConnectConfirmOpen(false);
                 toast.loading("Redirecting to Google...", { id: "gmail-connect" });
                 connectGmail();
               }}
-              disabled={isConnecting}
+              disabled={isConnecting || !agreeTerms}
             >
               Connect Gmail
             </Button>
