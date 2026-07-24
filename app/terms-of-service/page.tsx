@@ -47,7 +47,7 @@ export default function TermsPage() {
           <section className="space-y-sm">
             <h2 className="font-headline-sm text-headline-sm text-primary-sendlib">3. Acceptable Use & Anti-Spam Policy</h2>
             <p>
-              SendLib is strictly designed for relaying legitimate 1-to-1 transactional emails (e.g. welcome messages, password resets, OTP verification codes, and purchase receipts) triggered by genuine user actions.
+              SendLib is strictly designed for relaying legitimate 1-to-1 transactional emails (e.g. welcome messages, password resets, OTP verification codes, purchase receipts, etc.) triggered by genuine user actions.
             </p>
             <p className="mt-2">
               Unsolicited mass emailing, commercial spam, cold outreach campaigns, or any attempt to bypass system rate limits is strictly prohibited. SendLib reserves the right to immediately terminate access, revoke API keys, and suspend accounts violating this policy without prior notice.

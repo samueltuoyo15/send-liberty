@@ -94,16 +94,21 @@ export default function AccountsPage() {
         </Button>
       </div>
 
-      <div className="rounded-xl border border-indigo-100 bg-indigo-50/50 p-4">
-        <div className="flex gap-3">
-          <div className="flex-1">
-            <h3 className="font-semibold text-primary-sendlib text-sm mb-1">Gmail & Custom Domain Limits</h3>
-            <p className="text-sm text-secondary leading-relaxed">
-              Standard <code className="text-xs bg-indigo-100/70 px-1 py-0.5 rounded font-mono">@gmail.com</code> accounts send up to <span className="font-bold">500 emails/day</span>. Google Workspace custom company domain accounts (e.g. <code className="text-xs bg-indigo-100/70 px-1 py-0.5 rounded font-mono">hello@yourcompany.com</code>) send up to <span className="font-bold">2,000 emails/day</span> with zero DNS configuration required!
-            </p>
-            <p className="text-xs text-secondary/80 mt-2 border-t border-indigo-100/80 pt-2 leading-relaxed">
-              Notice: SendLib is strictly for 1-to-1 transactional emails (welcome emails, password resets, OTPs). Unsolicited bulk marketing, cold outreach, or spam is strictly prohibited and results in immediate account suspension.
-            </p>
+      <div className="rounded-xl border border-indigo-100 bg-indigo-50/40 p-4 space-y-3">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-indigo-100/70 pb-2.5">
+          <h3 className="font-bold text-primary-sendlib text-sm">Gmail & Custom Domain Limits</h3>
+          <span className="text-xs text-indigo-700 bg-indigo-100/80 px-2.5 py-0.5 rounded-full font-semibold w-fit">
+            Zero DNS Setup Required
+          </span>
+        </div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs text-secondary">
+          <div className="bg-white/80 p-2.5 rounded-lg border border-indigo-100/60">
+            <span className="font-bold text-primary-sendlib block mb-0.5">Standard Gmail (@gmail.com)</span>
+            <span>Up to <strong className="text-primary-sendlib">500 emails/day</strong> per connected account.</span>
+          </div>
+          <div className="bg-white/80 p-2.5 rounded-lg border border-indigo-100/60">
+            <span className="font-bold text-primary-sendlib block mb-0.5">Google Workspace Custom Domain</span>
+            <span>Up to <strong className="text-primary-sendlib">2,000 emails/day</strong> (e.g. hello@yourcompany.com).</span>
           </div>
         </div>
       </div>
@@ -121,10 +126,7 @@ export default function AccountsPage() {
           <Button 
             size="lg"
             className="rounded-lg font-label-sm bg-[#5b6a05] hover:bg-[#5b6a05]/90 text-white shadow-sm transition-all active:scale-95 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed" 
-            onClick={() => {
-              toast.loading("Redirecting to Google...", { id: "gmail-connect" });
-              connectGmail();
-            }}
+            onClick={() => setConnectConfirmOpen(true)}
             disabled={isConnecting}
           >
             <HugeiconsIcon icon={MailIcon} size={16} color='currentColor' strokeWidth={1.5} />
@@ -230,14 +232,16 @@ export default function AccountsPage() {
               Account limit reached (10 / 10 accounts connected). Please disconnect an existing account first.
             </div>
           ) : (
-            <label className="flex items-start gap-2.5 mt-3 p-3 rounded-lg bg-surface-container-low border border-outline-variant/60 text-xs text-secondary cursor-pointer select-none">
+            <label className="flex items-start gap-3 mt-3 p-3.5 rounded-xl bg-surface-container-low border border-outline-variant/80 hover:border-primary-sendlib/40 transition-colors text-xs text-secondary cursor-pointer select-none">
               <input 
                 type="checkbox" 
                 checked={agreeTerms} 
                 onChange={(e) => setAgreeTerms(e.target.checked)} 
-                className="mt-0.5 rounded border-outline-variant text-primary-sendlib focus:ring-primary-sendlib shrink-0 cursor-pointer" 
+                className="mt-0.5 h-4 w-4 rounded border-outline-variant text-primary-sendlib accent-primary-sendlib focus:ring-primary-sendlib shrink-0 cursor-pointer" 
               />
-              <span>I agree to use this account for <strong>transactional emails only</strong> (OTPs, welcome emails, receipts) and understand bulk cold spam will result in immediate account suspension.</span>
+              <span className="leading-relaxed">
+                I agree to use this account for <strong>transactional emails only</strong> (welcome emails, password resets, OTPs, receipts, etc.) and acknowledge that bulk cold spam will result in immediate account suspension.
+              </span>
             </label>
           )}
           <div className="flex flex-row gap-3 mt-4 pt-4 border-t border-outline-variant/60">
