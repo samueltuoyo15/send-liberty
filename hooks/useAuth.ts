@@ -10,16 +10,14 @@ export interface User {
 }
 
 export function useMe() {
+  const hasToken = typeof window !== "undefined" && document.cookie.includes("access_token");
   return useQuery({
     queryKey: ["me"],
     queryFn: async () => {
-      try {
-        const res = await api.get<never, { success: boolean; data: User }>("/auth/me");
-        return res.data;
-      } catch {
-        return null;
-      }
+      const res = await api.get<never, { success: boolean; data: User }>("/auth/me");
+      return res.data;
     },
+    enabled: hasToken,
     retry: false,
     staleTime: 5 * 60 * 1000,
   });

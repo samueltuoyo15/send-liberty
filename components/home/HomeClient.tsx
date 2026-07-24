@@ -7,8 +7,9 @@ import { useMe } from "@/hooks/useAuth";
 import { getCodeSnippet, CodeTab } from "@/utils/codeSnippets";
 
 export default function HomeClient() {
+  const [mounted, setMounted] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
-  const { data: user, isLoading } = useMe();
+  const { data: user } = useMe();
   const [apiUrl, setApiUrl] = useState("https://sendlib.samueltuoyo.com");
   const [activeTab, setActiveTab] = useState<CodeTab>("curl");
   const [isExpanded, setIsExpanded] = useState(false);
@@ -34,6 +35,7 @@ export default function HomeClient() {
   };
 
   useEffect(() => {
+    setMounted(true);
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 20);
     };
@@ -95,7 +97,7 @@ export default function HomeClient() {
             </Link>
           </div>
           <div className="flex items-center gap-md">
-            {!isLoading && user ? (
+            {mounted && user ? (
               <Link 
                 href="/dashboard" 
                 className={`px-lg py-sm rounded-xl font-label-sm text-label-sm transition-all duration-300 active:scale-95 inline-block ${
@@ -154,7 +156,7 @@ export default function HomeClient() {
                 Send transactional emails with just your Gmail account from any hosting environment, even where port 25, 465, or 587 are strictly blocked. No more server configuration headaches.
               </p>
               <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-md pt-md">
-                {!isLoading && user ? (
+                {mounted && user ? (
                   <Link href="/dashboard" className="bg-white hover:bg-white/95 text-primary-sendlib font-bold px-xl py-lg rounded-xl font-label-sm text-label-sm transition-all active:scale-95 shadow-lg text-center inline-block">
                     Open Console
                   </Link>
