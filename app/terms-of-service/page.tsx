@@ -45,9 +45,12 @@ export default function TermsPage() {
           </section>
 
           <section className="space-y-sm">
-            <h2 className="font-headline-sm text-headline-sm text-primary-sendlib">3. API Usage and Limits</h2>
+            <h2 className="font-headline-sm text-headline-sm text-primary-sendlib">3. Acceptable Use & Anti-Spam Policy</h2>
             <p>
-              You agree not to misuse the SendLib API. Any attempt to bypass rate limits, send spam, or use the service for illegal activities will result in immediate termination of your account.
+              SendLib is strictly designed for relaying legitimate 1-to-1 transactional emails (e.g. welcome messages, password resets, OTP verification codes, and purchase receipts) triggered by genuine user actions.
+            </p>
+            <p className="mt-2">
+              Unsolicited mass emailing, commercial spam, cold outreach campaigns, or any attempt to bypass system rate limits is strictly prohibited. SendLib reserves the right to immediately terminate access, revoke API keys, and suspend accounts violating this policy without prior notice.
             </p>
           </section>
 
