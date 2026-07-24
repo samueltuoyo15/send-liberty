@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { useMe } from "@/hooks/useAuth";
 import { getCodeSnippet, CodeTab } from "@/utils/codeSnippets";
 
@@ -133,15 +134,18 @@ export default function HomeClient() {
 
       <main className="flex-grow">
         {/* Hero Section */}
-        <section
-          className="w-full relative"
-          style={{
-            backgroundImage: "linear-gradient(to bottom, rgba(29, 43, 62, 0.38), rgba(29, 43, 62, 0.18)), url('/forest_background/forest-background.webp')",
-            backgroundSize: "cover",
-            backgroundPosition: "center",
-          }}
-        >
-          <div className="max-w-7xl mx-auto px-margin-mobile md:px-margin-desktop pt-24 pb-xl md:pt-40 md:pb-32 grid md:grid-cols-2 gap-xl items-center">
+        <section className="w-full relative overflow-hidden bg-[#1d2b3e]">
+          <Image
+            src="/forest_background/forest-background.webp"
+            alt="SendLib Hero Background"
+            fill
+            priority
+            quality={85}
+            sizes="100vw"
+            className="object-cover object-center pointer-events-none opacity-60"
+          />
+          <div className="absolute inset-0 bg-gradient-to-b from-[#1d2b3e]/30 via-transparent to-[#1d2b3e]/50 pointer-events-none" />
+          <div className="max-w-7xl mx-auto px-margin-mobile md:px-margin-desktop pt-24 pb-xl md:pt-40 md:pb-32 grid md:grid-cols-2 gap-xl items-center relative z-10">
             <div className="space-y-lg">
               <h1 className="font-headline-lg-mobile md:font-headline-lg text-headline-lg-mobile md:text-headline-lg text-white font-extrabold drop-shadow-sm">
                 Zero-Config Email for Developers
