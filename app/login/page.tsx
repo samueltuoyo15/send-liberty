@@ -77,7 +77,7 @@ export default function LoginPage() {
         <div 
           className="hidden md:flex flex-col justify-between p-8 relative overflow-hidden"
           style={{
-            backgroundImage: "linear-gradient(rgba(29, 43, 62, 0.65), rgba(29, 43, 62, 0.65)), url('/forest_background/forest-background.png')",
+            backgroundImage: "linear-gradient(rgba(29, 43, 62, 0.65), rgba(29, 43, 62, 0.65)), url('/forest_background/forest-background.webp')",
             backgroundSize: "cover",
             backgroundPosition: "center",
           }}

@@ -250,46 +250,44 @@ export default function HomeClient() {
             <div className="grid grid-cols-1 md:grid-cols-4 gap-lg">
               {/* Large Feature Card */}
               <div className="md:col-span-2 border border-[#d8cbf9] p-xl rounded-2xl bg-[#eae3fc] transition-all hover:bg-[#eae3fc]/90 duration-300">
-                <span className="material-symbols-outlined text-[#6324f5] text-4xl mb-md">webhook</span>
+                <svg className="w-10 h-10 text-[#6324f5] mb-md" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M13.19 8.688a4.5 4.5 0 011.242 7.244l-4.5 4.5a4.5 4.5 0 01-6.364-6.364l1.757-1.757m13.35-.622l1.757-1.757a4.5 4.5 0 00-6.364-6.364l-4.5 4.5a4.5 4.5 0 001.242 7.244" />
+                </svg>
                 <h3 className="font-headline-md text-headline-md mb-sm text-[#2e1065]">Send Without SMTP Restrictions</h3>
                 <p className="font-body-md text-body-md text-[#4c2d96] leading-relaxed">
-                  Railway, Render, and most free cloud hosts block outbound SMTP ports. SendLib relays through your connected Google account, no SMTP port required. Improve deliverability by sending through Google's trusted mail infrastructure.
+                  Railway, Render, and most free cloud hosts block outbound SMTP ports. SendLib relays through your connected Google account, no SMTP port required. Improve deliverability by sending through Google&apos;s trusted mail infrastructure.
                 </p>
               </div>
               {/* Regular Card */}
               <div className="border border-[#b0e8e0] p-xl rounded-2xl bg-[#cbf1ec] transition-all hover:bg-[#cbf1ec]/90 duration-300">
-                <span className="material-symbols-outlined text-[#0d9488] text-4xl mb-md">dns</span>
+                <svg className="w-10 h-10 text-[#0d9488] mb-md" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M5 12h14M5 12a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v4a2 2 0 01-2 2M5 12a2 2 0 00-2 2v4a2 2 0 002 2h14a2 2 0 002-2v-4a2 2 0 00-2-2m-2-4h.01M17 16h.01" />
+                </svg>
                 <h3 className="font-label-sm text-label-sm uppercase tracking-widest mb-sm text-[#064e45]">Zero DNS Setup</h3>
                 <p className="font-body-md text-body-md text-[#0f685c] leading-relaxed">No domain needed, no MX records, SPF, or DKIM to configure. Connect your Google account and start sending immediately.</p>
               </div>
               {/* Regular Card */}
               <div className="border border-[#fbb3d3] p-xl rounded-2xl bg-[#fec8e1] transition-all hover:bg-[#fec8e1]/90 duration-300">
-                <span className="material-symbols-outlined text-[#ec4899] text-4xl mb-md">api</span>
+                <svg className="w-10 h-10 text-[#ec4899] mb-md" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M14.25 9.75L16.5 12l-2.25 2.25m-4.5 0L7.5 12l2.25-2.25M6 20.25h12A2.25 2.25 0 0020.25 18V6A2.25 2.25 0 0018 3.75H6A2.25 2.25 0 006 20.25z" />
+                </svg>
                 <h3 className="font-label-sm text-label-sm uppercase tracking-widest mb-sm text-[#6d0935]">Simple API</h3>
                 <p className="font-body-md text-body-md text-[#9d1b54] leading-relaxed">One POST request. No SDK to install. Works from any language or framework.</p>
               </div>
               {/* Image Integration Card */}
-              <div className="md:col-span-2 relative h-64 md:h-auto overflow-hidden rounded-2xl border border-[#c5c6cd] group">
-                <div
-                  className="absolute inset-0 z-0 transition-transform duration-700 group-hover:scale-105"
-                  style={{
-                    backgroundImage: "url('https://lh3.googleusercontent.com/aida-public/AB6AXuDnw8bH2IFtHCVDRA6W-KwT6_yuapqxq9Dc97vtn-iJac5CTLw9dPDHcRu-5rGIcqfkqcG9kZsR0ui6aZV4GPjium0pjFKhCCzgJnrHCY1JBsU0KWK8f3utSiHlBty52P3FWaXi8e3FYsZBI_WfVBvj5BbliJ0lVWtMWAouYmTYqW_CwC22uivzomECi45BkZGRJ0QBZuS8wKAMaYlguwol9vNRnJeQJoEMYxIioLFOkir5mIaqKpwxLFGh-wAJBdMIuQiE0j2zBKM')",
-                    backgroundSize: "cover",
-                    backgroundPosition: "center",
-                  }}
-                ></div>
-                <div className="absolute inset-0 bg-black/45 z-10"></div>
-                <div className="relative z-20 p-xl h-full flex flex-col justify-end text-white">
-                  <h3 className="font-headline-md text-headline-md font-bold text-white">Inbox Delivery</h3>
-                  <p className="font-body-md text-body-md opacity-90 text-white">Because emails are sent from your own Google account, they land in the inbox, not the spam folder.</p>
+              <div className="md:col-span-2 relative h-64 md:h-auto overflow-hidden rounded-2xl border border-[#1e293b] bg-gradient-to-br from-[#0f172a] via-[#1d2b3e] to-[#090a0f] group p-xl flex flex-col justify-end">
+                <div className="absolute top-0 right-0 w-48 h-48 bg-emerald-500/10 rounded-full blur-2xl pointer-events-none" />
+                <div className="relative z-20 text-white">
+                  <h3 className="font-headline-md text-headline-md font-bold text-white mb-xs">Inbox Delivery</h3>
+                  <p className="font-body-md text-body-md opacity-90 text-white/90">Because emails are sent from your own Google account, they land in the inbox, not the spam folder.</p>
                 </div>
               </div>
               {/* OAuth2 Card */}
               <div className="md:col-span-2 border border-[#bfd7fa] p-xl rounded-2xl flex items-center gap-xl bg-[#d7e6fc] transition-all hover:bg-[#d7e6fc]/90 duration-300">
-                <div className="hidden sm:block">
-                  <span className="material-symbols-outlined text-[#3b82f6] text-6xl" style={{ fontVariationSettings: "'FILL' 1" }}>
-                    security
-                  </span>
+                <div className="hidden sm:block shrink-0">
+                  <svg className="w-14 h-14 text-[#3b82f6]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.75}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" />
+                  </svg>
                 </div>
                 <div>
                   <h3 className="font-headline-md text-headline-md mb-sm text-[#1e3a8a]">OAuth2 Secured</h3>
@@ -538,9 +536,9 @@ export default function HomeClient() {
 
         {/* CTA Section */}
         <section
-          className="w-full relative py-xl md:py-32 mt-xl overflow-hidden"
+          className="w-full relative py-xl md:py-32 mt-xl overflow-hidden bg-[#1d2b3e]"
           style={{
-            backgroundImage: "linear-gradient(rgba(29, 43, 62, 0.75), rgba(29, 43, 62, 0.75)), url('/forest_background/forest-background.png')",
+            backgroundImage: "linear-gradient(rgba(29, 43, 62, 0.75), rgba(29, 43, 62, 0.75)), url('/forest_background/forest-background.webp')",
             backgroundSize: "cover",
             backgroundPosition: "center",
           }}
@@ -554,7 +552,7 @@ export default function HomeClient() {
             <p className="font-body-lg text-body-lg text-white/80 mb-xl max-w-2xl mx-auto">
               Join developers who have simplified their email delivery pipeline. Start sending in seconds.
             </p>
-            {!isLoading && user ? (
+            {mounted && user ? (
               <Link href="/dashboard" className="bg-white text-primary-sendlib hover:bg-gray-100 px-xl py-lg rounded-xl font-label-sm text-label-sm transition-transform active:scale-95 shadow-sm inline-block">
                 Go to Dashboard
               </Link>
@@ -572,7 +570,7 @@ export default function HomeClient() {
         <div className="flex flex-col md:flex-row justify-between items-center px-margin-mobile md:px-margin-desktop py-xl gap-md max-w-7xl mx-auto">
           <div className="flex flex-col gap-xs text-center md:text-left">
             <div className="font-headline-md text-headline-md font-bold text-primary-sendlib">SendLib</div>
-            <p className="font-label-sm text-label-sm text-on-surface-variant">© {new Date().getFullYear()} SendLib. All rights reserved.</p>
+            <p className="font-label-sm text-label-sm text-on-surface-variant">© 2026 SendLib. All rights reserved.</p>
           </div>
           <div className="flex flex-wrap justify-center gap-md">
             <Link href="/docs" className="font-label-sm text-label-sm text-on-surface-variant hover:text-primary-sendlib transition-colors underline">

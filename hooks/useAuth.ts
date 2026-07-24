@@ -10,7 +10,7 @@ export interface User {
 }
 
 export function useMe() {
-  const hasToken = typeof window !== "undefined" && document.cookie.includes("access_token");
+  const hasToken = typeof window !== "undefined" && document.cookie.includes("logged_in=true");
   return useQuery({
     queryKey: ["me"],
     queryFn: async () => {

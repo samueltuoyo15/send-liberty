@@ -100,6 +100,13 @@ export async function GET(req: NextRequest) {
       maxAge: 60 * 60 * 24 * 7, // 7 days
       path: "/",
     });
+    response.cookies.set("logged_in", "true", {
+      httpOnly: false,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+      maxAge: 60 * 60 * 24 * 7, // 7 days
+      path: "/",
+    });
 
     return response;
   } catch (err) {

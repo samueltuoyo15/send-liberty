@@ -2,7 +2,7 @@
 
 import { HugeiconsIcon } from '@hugeicons/react';
 import { MailIcon, CheckmarkCircle01Icon, CancelCircleIcon } from '@hugeicons/core-free-icons';
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import Link from "next/link";
 import { useSearchParams, useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
@@ -21,7 +21,7 @@ function redactEmail(email: string): string {
   return `${localPart[0]}***${localPart[localPart.length - 1]}@${domain}`;
 }
 
-export default function AccountsPage() {
+function AccountsContent() {
   const { data: accounts, isLoading } = useGmailAccounts();
   const { mutate: connectGmail, isPending: isConnecting } = useConnectGmail();
   const { mutate: disconnectGmail, isPending: isDisconnecting } = useDisconnectGmail();
@@ -307,5 +307,13 @@ export default function AccountsPage() {
         </DialogContent>
       </Dialog>
     </div>
+  );
+}
+
+export default function AccountsPage() {
+  return (
+    <Suspense fallback={<Skeleton className="h-48 w-full rounded-xl" />}>
+      <AccountsContent />
+    </Suspense>
   );
 }
