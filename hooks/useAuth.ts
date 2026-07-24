@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { api } from "../lib/api";
 
@@ -10,7 +11,14 @@ export interface User {
 }
 
 export function useMe() {
-  const hasToken = typeof window !== "undefined" && document.cookie.includes("logged_in=true");
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  const hasToken = mounted && document.cookie.includes("logged_in=true");
+
   return useQuery({
     queryKey: ["me"],
     queryFn: async () => {
