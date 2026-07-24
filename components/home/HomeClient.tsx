@@ -9,7 +9,6 @@ import { getCodeSnippet, CodeTab } from "@/utils/codeSnippets";
 import TopNavBar from "@/components/home/TopNavBar";
 
 export default function HomeClient() {
-  const [mounted, setMounted] = useState(false);
   const { data: user } = useMe();
   const [apiUrl, setApiUrl] = useState("https://sendlib.samueltuoyo.com");
   const [activeTab, setActiveTab] = useState<CodeTab>("curl");
@@ -36,7 +35,6 @@ export default function HomeClient() {
   };
 
   useEffect(() => {
-    setMounted(true);
     if (typeof window !== "undefined") {
       setApiUrl(window.location.origin);
     }
@@ -54,7 +52,7 @@ export default function HomeClient() {
             alt="SendLib Hero Background"
             fill
             priority
-            quality={90}
+            quality={60}
             sizes="100vw"
             className="object-cover object-top md:object-center pointer-events-none opacity-100 md:opacity-40 transition-opacity"
           />
@@ -68,7 +66,7 @@ export default function HomeClient() {
                 Send transactional emails with just your Gmail account from any hosting environment, even where port 25, 465, or 587 are strictly blocked. No more server configuration headaches.
               </p>
               <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-md pt-md">
-                {mounted && user ? (
+                {user ? (
                   <Link href="/dashboard" className="bg-white hover:bg-white/95 text-primary-sendlib font-bold px-xl py-lg rounded-xl font-label-sm text-label-sm transition-all active:scale-95 shadow-lg text-center inline-block">
                     Open Console
                   </Link>
@@ -447,14 +445,17 @@ export default function HomeClient() {
         </section>
 
         {/* CTA Section */}
-        <section
-          className="w-full relative py-xl md:py-32 mt-xl overflow-hidden bg-[#1d2b3e]"
-          style={{
-            backgroundImage: "linear-gradient(rgba(29, 43, 62, 0.75), rgba(29, 43, 62, 0.75)), url('/forest_background/forest-background.webp')",
-            backgroundSize: "cover",
-            backgroundPosition: "center",
-          }}
-        >
+        <section className="w-full relative py-xl md:py-32 mt-xl overflow-hidden bg-[#1d2b3e]">
+          <Image
+            src="/forest_background/forest-background.webp"
+            alt=""
+            fill
+            quality={50}
+            sizes="100vw"
+            className="object-cover object-center pointer-events-none"
+            aria-hidden="true"
+          />
+          <div className="absolute inset-0 bg-[#1d2b3e]/75 pointer-events-none" />
           {/* Blur blobs for premium aesthetic */}
           <div className="absolute top-1/2 left-1/4 -translate-y-1/2 w-64 h-64 bg-indigo-500/20 rounded-full blur-3xl pointer-events-none" />
           <div className="absolute top-1/2 right-1/4 -translate-y-1/2 w-64 h-64 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none" />
@@ -464,7 +465,7 @@ export default function HomeClient() {
             <p className="font-body-lg text-body-lg text-white/80 mb-xl max-w-2xl mx-auto">
               Join developers who have simplified their email delivery pipeline. Start sending in seconds.
             </p>
-            {mounted && user ? (
+            {user ? (
               <Link href="/dashboard" className="bg-white text-primary-sendlib hover:bg-gray-100 px-xl py-lg rounded-xl font-label-sm text-label-sm transition-transform active:scale-95 shadow-sm inline-block">
                 Go to Dashboard
               </Link>
