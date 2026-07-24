@@ -142,9 +142,9 @@ export default function HomeClient() {
             priority
             quality={85}
             sizes="100vw"
-            className="object-cover object-center pointer-events-none opacity-60"
+            className="object-cover object-top md:object-center pointer-events-none opacity-85 md:opacity-60"
           />
-          <div className="absolute inset-0 bg-gradient-to-b from-[#1d2b3e]/30 via-transparent to-[#1d2b3e]/50 pointer-events-none" />
+          <div className="absolute inset-0 bg-gradient-to-b from-[#1d2b3e]/65 via-[#1d2b3e]/25 to-transparent md:from-[#1d2b3e]/30 md:via-transparent md:to-[#1d2b3e]/50 pointer-events-none" />
           <div className="max-w-7xl mx-auto px-margin-mobile md:px-margin-desktop pt-24 pb-xl md:pt-40 md:pb-32 grid md:grid-cols-2 gap-xl items-center relative z-10">
             <div className="space-y-lg">
               <h1 className="font-headline-lg-mobile md:font-headline-lg text-headline-lg-mobile md:text-headline-lg text-white font-extrabold drop-shadow-sm">
