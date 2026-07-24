@@ -44,21 +44,6 @@ export default function DashboardLayout({
     }
   }, [isLoading, error, user, router]);
 
-  if (isLoading) {
-    return (
-      <div className="flex items-center justify-center min-h-screen bg-background">
-        <div className="text-center space-y-4">
-          <div className='w-12 h-12 animate-spin rounded-full border-2 border-solid border-current border-t-transparent mx-auto text-primary' />
-          <p className="text-muted-foreground">Loading...</p>
-        </div>
-      </div>
-    );
-  }
-
-  if (!user) {
-    return null;
-  }
-
   const navigation = [
     { name: "Overview", href: "/dashboard", icon: BarChartIcon },
     { name: "Gmail Accounts", href: "/dashboard/accounts", icon: MailIcon },
@@ -106,40 +91,44 @@ export default function DashboardLayout({
             })}
           </nav>
 
-          {/* Right: User Profile Avatar */}
+          {/* Right: User Profile Menu */}
           <div className="flex items-center gap-3">
-            <DropdownMenu>
-              <DropdownMenuTrigger className="flex h-8 w-8 items-center justify-center rounded-full hover:opacity-90 transition-opacity cursor-pointer outline-none">
-                {user.avatar && !avatarError ? (
-                  <img 
-                    src={user.avatar} 
-                    alt="Avatar" 
-                    className="h-8 w-8 rounded-full object-cover border border-outline-variant"
-                    onError={() => setAvatarError(true)}
-                  />
-                ) : (
-                  <img 
-                    src={`https://api.dicebear.com/7.x/initials/svg?seed=${encodeURIComponent(user.displayName || user.email || "U")}`} 
-                    alt="Avatar" 
-                    className="h-8 w-8 rounded-full object-cover border border-outline-variant" 
-                  />
-                )}
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-56 mt-1 border border-outline-variant bg-surface-container-lowest text-on-background p-1.5 rounded-xl shadow-md">
-                <div className="px-2.5 py-2 text-xs font-semibold text-secondary truncate">
-                  Logged in as: {user.email}
-                </div>
-                <DropdownMenuSeparator className="-mx-1.5 my-1.5 h-px bg-outline-variant/30" />
-                <DropdownMenuItem className="rounded-lg hover:bg-surface-container-low px-2 py-1.5 cursor-pointer outline-none flex items-center" onClick={() => router.push("/dashboard/settings")}>
-                  <HugeiconsIcon icon={Settings01Icon} size={14} color='currentColor' strokeWidth={1.5} className="mr-2 text-secondary" />
-                  Settings
-                </DropdownMenuItem>
-                <DropdownMenuSeparator className="-mx-1.5 my-1.5 h-px bg-outline-variant/30" />
-                <DropdownMenuItem variant="destructive" className="rounded-lg hover:bg-destructive/10 px-2 py-1.5 cursor-pointer outline-none text-destructive font-medium" onClick={() => setLogoutConfirmOpen(true)}>
-                  Sign Out
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
+            {!user ? (
+              <div className="h-8 w-8 rounded-full bg-outline-variant/40 animate-pulse" />
+            ) : (
+              <DropdownMenu>
+                <DropdownMenuTrigger className="flex h-8 w-8 items-center justify-center rounded-full hover:opacity-90 transition-opacity cursor-pointer outline-none">
+                  {user.avatar && !avatarError ? (
+                    <img 
+                      src={user.avatar} 
+                      alt="Avatar" 
+                      className="h-8 w-8 rounded-full object-cover border border-outline-variant"
+                      onError={() => setAvatarError(true)}
+                    />
+                  ) : (
+                    <img 
+                      src={`https://api.dicebear.com/7.x/initials/svg?seed=${encodeURIComponent(user.displayName || user.email || "U")}`} 
+                      alt="Avatar" 
+                      className="h-8 w-8 rounded-full object-cover border border-outline-variant" 
+                    />
+                  )}
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-56 mt-1 border border-outline-variant bg-surface-container-lowest text-on-background p-1.5 rounded-xl shadow-md">
+                  <div className="px-2.5 py-2 text-xs font-semibold text-secondary truncate">
+                    Logged in as: {user.email}
+                  </div>
+                  <DropdownMenuSeparator className="-mx-1.5 my-1.5 h-px bg-outline-variant/30" />
+                  <DropdownMenuItem className="rounded-lg hover:bg-surface-container-low px-2 py-1.5 cursor-pointer outline-none flex items-center" onClick={() => router.push("/dashboard/settings")}>
+                    <HugeiconsIcon icon={Settings01Icon} size={14} color='currentColor' strokeWidth={1.5} className="mr-2 text-secondary" />
+                    Settings
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator className="-mx-1.5 my-1.5 h-px bg-outline-variant/30" />
+                  <DropdownMenuItem variant="destructive" className="rounded-lg hover:bg-destructive/10 px-2 py-1.5 cursor-pointer outline-none text-destructive font-medium" onClick={() => setLogoutConfirmOpen(true)}>
+                    Sign Out
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            )}
           </div>
         </div>
 
