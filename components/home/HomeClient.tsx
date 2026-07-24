@@ -54,9 +54,9 @@ export default function HomeClient() {
             priority
             quality={60}
             sizes="100vw"
-            className="object-cover object-top md:object-center pointer-events-none opacity-100 md:opacity-40 transition-opacity"
+            className="object-cover object-top md:object-center pointer-events-none opacity-55 md:opacity-70 transition-opacity"
           />
-          <div className="absolute inset-0 bg-gradient-to-b from-[#1d2b3e]/45 via-[#1d2b3e]/10 to-transparent md:from-[#1d2b3e]/45 md:via-[#1d2b3e]/25 md:to-[#1d2b3e]/65 pointer-events-none" />
+          <div className="absolute inset-0 bg-gradient-to-b from-[#1d2b3e]/60 via-[#1d2b3e]/30 to-[#1d2b3e]/20 md:from-[#1d2b3e]/30 md:via-[#1d2b3e]/10 md:to-[#1d2b3e]/40 pointer-events-none" />
           <div className="max-w-7xl mx-auto px-margin-mobile md:px-margin-desktop pt-24 pb-xl md:pt-40 md:pb-32 grid md:grid-cols-2 gap-xl items-center relative z-10">
             <div className="space-y-lg">
               <h1 className="font-headline-lg-mobile md:font-headline-lg text-headline-lg-mobile md:text-headline-lg text-white font-extrabold drop-shadow-sm">
