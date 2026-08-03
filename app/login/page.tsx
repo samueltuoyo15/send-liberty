@@ -18,6 +18,17 @@ export default function LoginPage() {
     }
   }, [isLoading, user, router]);
 
+  if (isLoading || user) {
+    return (
+      <div className="min-h-screen bg-background-sendlib flex flex-col items-center justify-center">
+        <div className="flex flex-col items-center gap-3">
+          <div className="h-9 w-9 rounded-full border-2 border-primary-sendlib border-t-transparent animate-spin" />
+          <p className="text-sm font-medium text-secondary font-sans animate-pulse">Authenticating...</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <SEO title="Login / Sign Up" description="Log in or create a new SendLib account to manage your API keys and SMTP integrations.">
       <div className="min-h-screen grid grid-cols-1 md:grid-cols-2 bg-background-sendlib">

@@ -17,18 +17,27 @@ export function useMe() {
     setMounted(true);
   }, []);
 
-  const hasToken = mounted && document.cookie.includes("logged_in=true");
+  const hasToken = typeof window !== "undefined" && document.cookie.includes("logged_in=true");
 
-  return useQuery({
+  const query = useQuery({
     queryKey: ["me"],
     queryFn: async () => {
       const res = await api.get<never, { success: boolean; data: User }>("/auth/me");
       return res.data;
     },
-    enabled: hasToken,
+    enabled: hasToken && mounted,
     retry: false,
     staleTime: 5 * 60 * 1000,
   });
+
+  const isLoading = !mounted || (hasToken && query.isLoading);
+
+  return {
+    ...query,
+    isLoading,
+    hasToken,
+    isUnauthenticated: mounted && !hasToken,
+  };
 }
 
 export function useUpdateProfile() {

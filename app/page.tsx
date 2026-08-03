@@ -3,13 +3,13 @@ import HomeClient from "@/components/home/HomeClient";
 
 export const metadata: Metadata = {
   title: "SendLib - Send Transactional Emails Without SMTP Restrictions",
-  description: "Send transactional emails seamlessly from Railway, Render, and restricted hosting clouds via Google OAuth2 with zero DNS configuration.",
+  description: "Send transactional emails seamlessly from any cloud hosting environment via Google OAuth2 with zero domain or DNS configuration required.",
   alternates: {
     canonical: "https://sendlib.samueltuoyo.com",
   },
   openGraph: {
     title: "SendLib - Send Transactional Emails Without SMTP Restrictions",
-    description: "Send transactional emails seamlessly from Railway, Render, and restricted hosting clouds via Google OAuth2 with zero DNS configuration.",
+    description: "Send transactional emails seamlessly from any cloud hosting environment via Google OAuth2 with zero domain or DNS configuration required.",
     url: "https://sendlib.samueltuoyo.com",
     siteName: "SendLib",
     type: "website",

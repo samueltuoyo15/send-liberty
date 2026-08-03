@@ -44,6 +44,21 @@ export default function DashboardLayout({
     }
   }, [isLoading, error, user, router]);
 
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-background-sendlib flex flex-col items-center justify-center">
+        <div className="flex flex-col items-center gap-3">
+          <div className="h-9 w-9 rounded-full border-2 border-primary-sendlib border-t-transparent animate-spin" />
+          <p className="text-sm font-medium text-secondary font-sans animate-pulse">Loading dashboard...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (!user) {
+    return null;
+  }
+
   const navigation = [
     { name: "Overview", href: "/dashboard", icon: BarChartIcon },
     { name: "Gmail Accounts", href: "/dashboard/accounts", icon: MailIcon },

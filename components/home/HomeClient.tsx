@@ -165,7 +165,7 @@ export default function HomeClient() {
                 </svg>
                 <h3 className="font-headline-md text-headline-md mb-sm text-[#2e1065]">Send Without SMTP Restrictions</h3>
                 <p className="font-body-md text-body-md text-[#4c2d96] leading-relaxed">
-                  Railway, Render, and most free cloud hosts block outbound SMTP ports. SendLib relays through your connected Google account, no SMTP port required. Improve deliverability by sending through Google&apos;s trusted mail infrastructure.
+                  Most free cloud hosts block outbound SMTP ports. SendLib relays through your connected Google account with zero custom domain needed and no SMTP port configuration required. Improve deliverability by sending through Google&apos;s trusted mail infrastructure.
                 </p>
               </div>
               {/* Regular Card */}
@@ -210,73 +210,7 @@ export default function HomeClient() {
           </div>
         </section>
 
-        {/* About SendLib & Google OAuth Integration Section */}
-        <section id="about-oauth" className="py-xl md:py-24 bg-surface-container border-t border-outline-variant/60">
-          <div className="max-w-5xl mx-auto px-margin-mobile md:px-margin-desktop">
-            <div className="text-center max-w-3xl mx-auto mb-12 space-y-md">
-          
-              <h2 className="font-headline-lg text-headline-lg text-primary-sendlib">
-                About SendLib & Google OAuth Integration
-              </h2>
-              <p className="font-body-lg text-body-lg text-on-surface-variant">
-                SendLib is designed specifically to provide developers with a simple, secure transactional email API without blocked SMTP ports or DNS record requirements.
-              </p>
-            </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-lg">
-              <div className="p-xl rounded-2xl border border-outline-variant bg-white space-y-sm">
-                <div className="w-10 h-10 rounded-xl bg-primary-sendlib/10 text-primary-sendlib flex items-center justify-center font-bold text-lg mb-md">
-                  1
-                </div>
-                <h3 className="font-headline-sm text-headline-sm text-primary-sendlib">Application Purpose & Identity</h3>
-                <p className="font-body-md text-secondary leading-relaxed">
-                  The application name configured on this website is <strong>SendLib</strong>. SendLib operates as an API proxy that enables developers to dispatch transactional emails (such as user verification, notifications, and magic links) via Google OAuth2 credentials.
-                </p>
-              </div>
-
-              <div className="p-xl rounded-2xl border border-outline-variant bg-white space-y-sm">
-                <div className="w-10 h-10 rounded-xl bg-primary-sendlib/10 text-primary-sendlib flex items-center justify-center font-bold text-lg mb-md">
-                  2
-                </div>
-                <h3 className="font-headline-sm text-headline-sm text-primary-sendlib">Why We Request Google OAuth Access</h3>
-                <p className="font-body-md text-secondary leading-relaxed">
-                  SendLib requests the <code className="bg-surface-container px-2 py-0.5 rounded text-xs">gmail.send</code> permission scope. This scope allows SendLib to route outbound transactional emails requested via your SendLib API keys without SMTP port restrictions.
-                </p>
-              </div>
-
-              <div className="p-xl rounded-2xl border border-outline-variant bg-white space-y-sm">
-                <div className="w-10 h-10 rounded-xl bg-primary-sendlib/10 text-primary-sendlib flex items-center justify-center font-bold text-lg mb-md">
-                  3
-                </div>
-                <h3 className="font-headline-sm text-headline-sm text-primary-sendlib">User Data Protection & Security</h3>
-                <p className="font-body-md text-secondary leading-relaxed">
-                  We value your privacy. SendLib never reads, views, indexes, or stores any messages from your Gmail inbox. Your Google password is never requested or stored. OAuth access tokens are encrypted using AES-256 encryption at rest, and access can be revoked at any time in your Google Account settings.
-                </p>
-              </div>
-
-              <div className="p-xl rounded-2xl border border-outline-variant bg-white space-y-sm">
-                <div className="w-10 h-10 rounded-xl bg-primary-sendlib/10 text-primary-sendlib flex items-center justify-center font-bold text-lg mb-md">
-                  4
-                </div>
-                <h3 className="font-headline-sm text-headline-sm text-primary-sendlib">Google API User Data Policy Compliance</h3>
-                <p className="font-body-md text-secondary leading-relaxed">
-                  SendLib&apos;s use and transfer to any other app of information received from Google APIs adheres strictly to the Google API Services User Data Policy, including Limited Use requirements.
-                </p>
-                <div className="pt-sm flex flex-wrap gap-md text-sm">
-                  <Link href="/privacy-policy" className="text-primary-sendlib font-semibold underline underline-offset-2 hover:opacity-80">
-                    Privacy Policy
-                  </Link>
-                  <Link href="/terms-of-service" className="text-primary-sendlib font-semibold underline underline-offset-2 hover:opacity-80">
-                    Terms of Service
-                  </Link>
-                  <a href="mailto:motionpipehq@gmail.com" className="text-primary-sendlib font-semibold underline underline-offset-2 hover:opacity-80">
-                    Support Email
-                  </a>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
 
         {/* FAQ Section */}
         <section id="faq" className="py-xl md:py-32 bg-surface-container-low border-t border-outline-variant/60">
@@ -377,6 +311,8 @@ export default function HomeClient() {
                 </div>
                 <ul className="space-y-3 text-sm text-secondary flex-1">
                   {[
+                    "Unlimited emails per month",
+                    "No custom domain needed",
                     "Up to 10 connected Gmail accounts",
                     "500 emails / day per account",
                     "15 API keys",
@@ -423,6 +359,8 @@ export default function HomeClient() {
                 <ul className="space-y-3 text-sm text-secondary flex-1 opacity-30 pointer-events-none select-none">
                   {[
                     "Everything in Free",
+                    "Unlimited emails per month",
+                    "No custom domain needed",
                     "More connected Gmail accounts",
                     "Higher rate limits",
                     "Larger HTML body & attachments",
