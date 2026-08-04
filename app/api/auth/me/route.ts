@@ -24,6 +24,7 @@ export async function GET(req: NextRequest) {
         displayName: user.displayName,
         avatar: user.avatar,
         plan: user.plan,
+        lastPaymentAt: user.lastPaymentAt,
         createdAt: user.createdAt,
       },
     });

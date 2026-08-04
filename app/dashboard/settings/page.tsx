@@ -241,14 +241,22 @@ export default function SettingsPage() {
                   </span>
                 </Button>
               ) : (
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="rounded-lg border-destructive/40 text-destructive hover:bg-destructive/10 text-xs font-bold cursor-pointer"
-                  onClick={() => setCancelSubConfirmOpen(true)}
-                >
-                  Cancel Subscription
-                </Button>
+                <div className="flex items-center gap-4">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="rounded-lg border-destructive/40 text-destructive hover:bg-destructive/10 text-xs font-bold cursor-pointer"
+                    onClick={() => setCancelSubConfirmOpen(true)}
+                  >
+                    Cancel Subscription
+                  </Button>
+                  {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
+                  {(user as any)?.lastPaymentAt && (
+                    <span className="text-xs font-medium text-secondary">
+                      Renews on: {new Date(new Date((user as any).lastPaymentAt).setMonth(new Date((user as any).lastPaymentAt).getMonth() + 1)).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+                    </span>
+                  )}
+                </div>
               )}
             </div>
           </div>
