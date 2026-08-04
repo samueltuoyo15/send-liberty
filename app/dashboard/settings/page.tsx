@@ -23,6 +23,8 @@ export default function SettingsPage() {
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [signOutConfirmOpen, setSignOutConfirmOpen] = useState(false);
   const [deleteAccountOpen, setDeleteAccountOpen] = useState(false);
+  const [cancelSubConfirmOpen, setCancelSubConfirmOpen] = useState(false);
+  const [isCancelingSub, setIsCancelingSub] = useState(false);
   const [isRedirectingCheckout, setIsRedirectingCheckout] = useState(false);
   const router = useRouter();
 
@@ -243,22 +245,7 @@ export default function SettingsPage() {
                   variant="outline"
                   size="sm"
                   className="rounded-lg border-destructive/40 text-destructive hover:bg-destructive/10 text-xs font-bold cursor-pointer"
-                  onClick={async () => {
-                    if (confirm("Are you sure you want to cancel your Pro subscription?")) {
-                      try {
-                        const res = await fetch("/api/billing/cancel", { method: "POST" });
-                        const data = await res.json();
-                        if (data.success) {
-                          toast.success("Subscription canceled.");
-                          window.location.reload();
-                        } else {
-                          toast.error(data.message || "Failed to cancel");
-                        }
-                      } catch {
-                        toast.error("Error canceling subscription");
-                      }
-                    }
-                  }}
+                  onClick={() => setCancelSubConfirmOpen(true)}
                 >
                   Cancel Subscription
                 </Button>
@@ -376,6 +363,52 @@ export default function SettingsPage() {
               disabled={isDeletingAccount}
             >
               {isDeletingAccount ? "Deleting..." : "Yes, Delete Everything"}
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Cancel Subscription Confirmation Dialog */}
+      <Dialog open={cancelSubConfirmOpen} onOpenChange={setCancelSubConfirmOpen}>
+        <DialogContent>
+          <DialogHeader className="mb-2">
+            <DialogTitle className="text-xl font-headline-md font-bold text-destructive">Cancel Subscription</DialogTitle>
+            <DialogDescription className="text-secondary text-sm leading-relaxed mt-1">
+              Are you sure you want to cancel your Pro subscription? You will lose access to Pro features at the end of your billing cycle.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="flex flex-row gap-3 mt-4 pt-4 border-t border-outline-variant/60">
+            <Button 
+              variant="outline" 
+              className="flex-1 rounded-lg font-label-sm border border-outline-variant hover:bg-surface-container-low" 
+              onClick={() => setCancelSubConfirmOpen(false)}
+              disabled={isCancelingSub}
+            >
+              Keep Subscription
+            </Button>
+            <Button 
+              className="flex-1 rounded-lg font-label-sm bg-destructive hover:bg-destructive/90 text-white" 
+              onClick={async () => {
+                setIsCancelingSub(true);
+                try {
+                  const res = await fetch("/api/billing/cancel", { method: "POST" });
+                  const data = await res.json();
+                  if (data.success) {
+                    import("sonner").then(m => m.toast.success("Subscription canceled."));
+                    window.location.reload();
+                  } else {
+                    import("sonner").then(m => m.toast.error(data.message || "Failed to cancel"));
+                  }
+                } catch {
+                  import("sonner").then(m => m.toast.error("Error canceling subscription"));
+                } finally {
+                  setIsCancelingSub(false);
+                  setCancelSubConfirmOpen(false);
+                }
+              }}
+              disabled={isCancelingSub}
+            >
+              {isCancelingSub ? "Canceling..." : "Cancel Subscription"}
             </Button>
           </div>
         </DialogContent>
