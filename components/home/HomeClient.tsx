@@ -427,6 +427,9 @@ export default function HomeClient() {
             <Link href="/docs" className="font-label-sm text-label-sm text-on-surface-variant hover:text-primary-sendlib transition-colors underline">
               Documentation
             </Link>
+            <a href="mailto:hello@samueltuoyo.com" className="font-label-sm text-label-sm text-on-surface-variant hover:text-primary-sendlib transition-colors underline">
+              Contact Support
+            </a>
             <Link href="/privacy-policy" className="font-label-sm text-label-sm text-on-surface-variant hover:text-primary-sendlib transition-colors underline">
               Privacy Policy
             </Link>

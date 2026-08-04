@@ -78,18 +78,27 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ success: false, message: "Invalid or revoked API key." }, { status: 401 });
     }
 
-    // --- Rate limit: 60 requests per minute per API key ---
-    const rl = await rateLimit("send", apiKeyId!.toString());
+    const user = await User.findById(authenticatedUserId).lean();
+    if (!user) {
+      return NextResponse.json({ success: false, message: "User account not found." }, { status: 404 });
+    }
+
+    // --- Rate limit ---
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const plan = (user as any).plan || "free";
+    const rl = await rateLimit("send", apiKeyId!.toString(), plan);
+    const limit = plan === "pro" ? 300 : 60;
+    
     if (!rl.success) {
       return NextResponse.json(
         {
           success: false,
-          message: `Rate limit exceeded. You can send up to 60 requests/minute per API key. Try again in ${rl.resetInSeconds} second${rl.resetInSeconds === 1 ? "" : "s"}.`,
+          message: `Rate limit exceeded. You can send up to ${limit} requests/minute per API key. Try again in ${rl.resetInSeconds} second${rl.resetInSeconds === 1 ? "" : "s"}.`,
         },
         {
           status: 429,
           headers: {
-            "X-RateLimit-Limit": "60",
+            "X-RateLimit-Limit": String(limit),
             "X-RateLimit-Remaining": "0",
             "Retry-After": String(rl.resetInSeconds),
           },
@@ -114,10 +123,6 @@ export async function POST(req: NextRequest) {
       }
     }
 
-    const user = await User.findById(authenticatedUserId).lean();
-    if (!user) {
-      return NextResponse.json({ success: false, message: "User account not found." }, { status: 404 });
-    }
 
     const body = await req.json();
     const {

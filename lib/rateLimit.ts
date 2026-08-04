@@ -1,17 +1,28 @@
 import { RateLimiterRedis, RateLimiterMemory, RateLimiterRes } from "rate-limiter-flexible";
 import { getRedisClient } from "./redis";
 
-let sendLimiter: RateLimiterRedis | RateLimiterMemory;
+let sendLimiterFree: RateLimiterRedis | RateLimiterMemory;
+let sendLimiterPro: RateLimiterRedis | RateLimiterMemory;
 let authLimiter: RateLimiterRedis | RateLimiterMemory;
 
-function getSendLimiter(): RateLimiterRedis | RateLimiterMemory {
-  if (!sendLimiter) {
+function getSendLimiter(plan: "free" | "pro" = "free"): RateLimiterRedis | RateLimiterMemory {
+  if (plan === "pro") {
+    if (!sendLimiterPro) {
+      const opts = { points: 300, duration: 60, keyPrefix: "rl_send_pro" };
+      sendLimiterPro = process.env.REDIS_URL
+        ? new RateLimiterRedis({ storeClient: getRedisClient(), ...opts })
+        : new RateLimiterMemory(opts);
+    }
+    return sendLimiterPro;
+  }
+
+  if (!sendLimiterFree) {
     const opts = { points: 60, duration: 60, keyPrefix: "rl_send" };
-    sendLimiter = process.env.REDIS_URL
+    sendLimiterFree = process.env.REDIS_URL
       ? new RateLimiterRedis({ storeClient: getRedisClient(), ...opts })
       : new RateLimiterMemory(opts);
   }
-  return sendLimiter;
+  return sendLimiterFree;
 }
 
 function getAuthLimiter(): RateLimiterRedis | RateLimiterMemory {
@@ -33,9 +44,10 @@ export interface RateLimitResult {
 
 export async function rateLimit(
   type: LimiterType,
-  key: string
+  key: string,
+  plan: "free" | "pro" = "free"
 ): Promise<RateLimitResult> {
-  const limiter = type === "send" ? getSendLimiter() : getAuthLimiter();
+  const limiter = type === "send" ? getSendLimiter(plan) : getAuthLimiter();
   try {
     await limiter.consume(key);
     return { success: true, resetInSeconds: 0 };
