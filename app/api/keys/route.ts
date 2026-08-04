@@ -3,6 +3,7 @@ import { requireAuthUser } from "@/lib/auth";
 import { connectDB } from "@/lib/db";
 import ApiKey from "@/models/ApiKey";
 import GmailAccount from "@/models/GmailAccount";
+import User from "@/models/User";
 import argon2 from "argon2";
 import crypto from "crypto";
 import mongoose from "mongoose";
@@ -42,6 +43,7 @@ export async function POST(req: NextRequest) {
   try {
     const user = await requireAuthUser(req);
     await connectDB();
+    const dbUser = await User.findById(user.id).lean();
 
     // Verify user has at least one connected Gmail account
     const connectedAccountCount = await GmailAccount.countDocuments({
@@ -59,19 +61,22 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // Enforce per-user key limit
-    const activeKeyCount = await ApiKey.countDocuments({
-      userId: new mongoose.Types.ObjectId(user.id),
-      revoked: false,
-    });
-    if (activeKeyCount >= MAX_KEYS_PER_USER) {
-      return NextResponse.json(
-        {
-          success: false,
-          message: `You have reached the maximum of ${MAX_KEYS_PER_USER} active API keys. Please revoke an existing key before creating a new one.`,
-        },
-        { status: 429 }
-      );
+    // Enforce per-user key limit for Free tier
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    if ((dbUser as any)?.plan !== "pro") {
+      const activeKeyCount = await ApiKey.countDocuments({
+        userId: new mongoose.Types.ObjectId(user.id),
+        revoked: false,
+      });
+      if (activeKeyCount >= MAX_KEYS_PER_USER) {
+        return NextResponse.json(
+          {
+            success: false,
+            message: `You have reached the maximum of ${MAX_KEYS_PER_USER} active API keys on the Free plan. Please revoke an existing key before creating a new one.`,
+          },
+          { status: 429 }
+        );
+      }
     }
 
     const body = await req.json();

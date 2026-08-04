@@ -5,6 +5,7 @@ import { Key01Icon, Copy01Icon, CheckmarkCircle01Icon, CancelCircleIcon, Delete0
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useApiKeys, useGenerateApiKey, useDeleteApiKey } from "@/hooks/useApiKeys";
+import { useMe } from "@/hooks/useAuth";
 import { useState, useEffect, Suspense } from "react";
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetFooter } from "@/components/ui/sheet";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
@@ -17,6 +18,7 @@ import { useGmailAccounts } from "@/hooks/useGmailAccounts";
 import Link from "next/link";
 
 function KeysContent() {
+  const { data: user } = useMe();
   const searchParams = useSearchParams();
   const { data: apiKeys, isLoading } = useApiKeys();
   const { data: gmailAccounts, isLoading: isLoadingAccounts } = useGmailAccounts();
@@ -55,8 +57,10 @@ function KeysContent() {
     }
   }, [searchParams]);
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const isPro = (user as any)?.plan === "pro";
   const activeKeyCount = apiKeys ? apiKeys.filter(k => !k.revoked).length : 0;
-  const atKeyLimit = !isLoading && activeKeyCount >= 15;
+  const atKeyLimit = !isLoading && !isPro && activeKeyCount >= 15;
 
   const handleGenerate = () => {
     if (!hasConnectedAccounts) {
@@ -118,7 +122,7 @@ function KeysContent() {
           {!isLoading && apiKeys && (
             <p className="text-xs mt-1.5 font-medium">
               <span className={atKeyLimit ? "text-destructive font-bold" : "text-secondary"}>
-                {activeKeyCount} / 15 active keys used
+                {isPro ? `${activeKeyCount} / Unlimited keys used` : `${activeKeyCount} / 15 active keys used`}
               </span>
             </p>
           )}

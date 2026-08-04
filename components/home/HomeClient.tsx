@@ -359,6 +359,7 @@ export default function HomeClient() {
                   {[
                     "Everything in Free",
                     "Unlimited connected Gmail accounts",
+                    "Unlimited API keys",
                     "300 API requests / minute",
                     "5MB HTML body · 2MB text body",
                     "Up to 20 attachments · 50MB total",
