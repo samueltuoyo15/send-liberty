@@ -159,50 +159,6 @@ export default function SettingsPage() {
             )}
           </div>
 
-          {/* Flexed Row: Sign Out & Delete Account */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            {/* Sign Out Card */}
-            <div className="rounded-xl border border-destructive/20 bg-destructive/[0.01] shadow-none p-5 flex flex-col justify-between">
-              <div>
-                <div className="flex items-center gap-2 mb-2">
-                  <HugeiconsIcon icon={Logout01Icon} size={18} color='currentColor' strokeWidth={1.5} className="text-destructive" />
-                  <h3 className="font-headline-md font-bold text-base text-destructive">Sign Out</h3>
-                </div>
-                <p className="text-xs text-secondary leading-relaxed mb-4">
-                  Sign out of your SendLib account on this device.
-                </p>
-              </div>
-              <Button 
-                variant="destructive"
-                size="sm"
-                className="rounded-lg font-label-sm w-full cursor-pointer"
-                onClick={() => setSignOutConfirmOpen(true)}
-              >
-                Sign Out
-              </Button>
-            </div>
-
-            {/* Delete Account Card */}
-            <div className="rounded-xl border border-destructive/40 bg-destructive/[0.03] shadow-none p-5 flex flex-col justify-between">
-              <div>
-                <div className="flex items-center gap-2 mb-2">
-                  <HugeiconsIcon icon={Delete02Icon} size={18} color='currentColor' strokeWidth={1.5} className="text-destructive" />
-                  <h3 className="font-headline-md font-bold text-base text-destructive">Delete Account</h3>
-                </div>
-                <p className="text-xs text-secondary leading-relaxed mb-4">
-                  Permanently delete account, keys & logs. Cannot be undone.
-                </p>
-              </div>
-              <Button 
-                variant="destructive"
-                size="sm"
-                className="rounded-lg font-label-sm w-full cursor-pointer"
-                onClick={() => setDeleteAccountOpen(true)}
-              >
-                Delete Account
-              </Button>
-            </div>
-          </div>
         </div>
 
         {/* Right Column: Plan & Billing */}
@@ -258,6 +214,51 @@ export default function SettingsPage() {
                   )}
                 </div>
               )}
+            </div>
+          </div>
+
+          {/* Account Actions */}
+          <div className="grid grid-cols-1 gap-6">
+            {/* Sign Out Card */}
+            <div className="rounded-xl border border-destructive/20 bg-destructive/[0.01] shadow-none p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+              <div>
+                <div className="flex items-center gap-2 mb-1">
+                  <HugeiconsIcon icon={Logout01Icon} size={18} color='currentColor' strokeWidth={1.5} className="text-destructive" />
+                  <h3 className="font-headline-md font-bold text-base text-destructive">Sign Out</h3>
+                </div>
+                <p className="text-sm text-secondary leading-relaxed">
+                  Sign out of your SendLib account on this device.
+                </p>
+              </div>
+              <Button 
+                variant="destructive"
+                size="sm"
+                className="rounded-lg font-label-sm w-full sm:w-auto shrink-0 cursor-pointer"
+                onClick={() => setSignOutConfirmOpen(true)}
+              >
+                Sign Out
+              </Button>
+            </div>
+
+            {/* Delete Account Card */}
+            <div className="rounded-xl border border-destructive/40 bg-destructive/[0.03] shadow-none p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+              <div>
+                <div className="flex items-center gap-2 mb-1">
+                  <HugeiconsIcon icon={Delete02Icon} size={18} color='currentColor' strokeWidth={1.5} className="text-destructive" />
+                  <h3 className="font-headline-md font-bold text-base text-destructive">Delete Account</h3>
+                </div>
+                <p className="text-sm text-secondary leading-relaxed">
+                  Permanently delete account, keys & logs. Cannot be undone.
+                </p>
+              </div>
+              <Button 
+                variant="destructive"
+                size="sm"
+                className="rounded-lg font-label-sm w-full sm:w-auto shrink-0 cursor-pointer"
+                onClick={() => setDeleteAccountOpen(true)}
+              >
+                Delete Account
+              </Button>
             </div>
           </div>
         </div>
