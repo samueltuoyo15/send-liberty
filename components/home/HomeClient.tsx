@@ -64,7 +64,7 @@ export default function HomeClient() {
                 Zero-Config Email for Developers
               </h1>
               <p className="font-body-lg text-body-lg max-w-[500px] text-white/95 leading-relaxed drop-shadow-sm">
-                Send transactional emails with just your Gmail account from any hosting environment, even where port 25, 465, or 587 are strictly blocked. No more server configuration headaches.
+                The fastest way for founders and devs to send transactional emails (welcome messages, password resets, receipts) using their product's existing Gmail account. Zero domains to verify. Zero SMTP server stress. Just connect and send.
               </p>
               <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-md pt-md">
                 {user ? (
