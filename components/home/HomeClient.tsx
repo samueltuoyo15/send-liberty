@@ -350,7 +350,7 @@ export default function HomeClient() {
                 <div>
                   <h3 className="text-2xl font-extrabold text-primary-sendlib">Pro</h3>
                   <div className="flex items-end gap-1 mt-1">
-                    <span className="text-4xl font-extrabold text-primary-sendlib">$2</span>
+                    <span className="text-4xl font-extrabold text-primary-sendlib">$3.99</span>
                     <span className="text-secondary mb-1">/ month</span>
                   </div>
                   <p className="text-sm text-secondary mt-2">Higher limits & scale for growing applications.</p>
@@ -359,7 +359,7 @@ export default function HomeClient() {
                   {[
                     "Everything in Free",
                     "Up to 50 connected Gmail accounts",
-                    "Up to 200 API keys",
+                    "Up to 100 API keys",
                     "300 API requests / minute",
                     "5MB HTML body · 2MB text body",
                     "Up to 20 attachments · 50MB total",
@@ -375,7 +375,7 @@ export default function HomeClient() {
                   className="block w-full text-center bg-primary-sendlib hover:bg-primary-sendlib/90 text-white font-bold py-3 rounded-xl transition-all active:scale-95 shadow-md"
                 >
                   {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
-                  {(user as any)?.plan === "pro" ? "Manage Subscription" : user ? "Upgrade to Pro ($2/mo)" : "Get Started Pro ($2/mo)"}
+                  {(user as any)?.plan === "pro" ? "Manage Subscription" : user ? "Upgrade to Pro ($3.99/mo)" : "Get Started Pro ($3.99/mo)"}
                 </Link>
               </div>
 

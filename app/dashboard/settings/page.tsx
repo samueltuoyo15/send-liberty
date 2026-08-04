@@ -170,30 +170,26 @@ export default function SettingsPage() {
                 <h3 className="font-headline-md font-bold text-lg text-primary-sendlib">Plan & Billing</h3>
               </div>
               <span className="px-3 py-1 rounded-full text-xs font-bold bg-primary-sendlib text-white uppercase tracking-wider">
-                {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
-                {(user as any)?.plan === "pro" ? "Pro Plan Active" : "Free Plan"}
+                {isPro ? "Pro Plan Active" : "Free Plan"}
               </span>
             </div>
             
             <div className="space-y-4">
-              <p className="text-sm text-secondary leading-relaxed">
-                {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
-                {(user as any)?.plan === "pro" 
-                  ? "Your account is on the Pro Plan ($2/mo). You enjoy unlimited emails per month, higher rate limits, and unlimited connected accounts."
-                  : "You are currently on the Free Plan. Upgrade to Pro for $2/month to unlock higher rate limits, larger attachments, and unlimited connected accounts."
-                }
+              <p className="text-sm text-secondary leading-relaxed max-w-[600px] mb-4">
+                {isPro
+                  ? "Your account is on the Pro Plan ($3.99/mo). You enjoy unlimited emails per month, higher rate limits, and up to 50 connected accounts."
+                  : "You are currently on the Free Plan. Upgrade to Pro for $3.99/month to unlock higher rate limits, larger attachments, and up to 50 connected accounts."}
               </p>
 
-              {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
-              {(user as any)?.plan !== "pro" ? (
+              {!isPro ? (
                 <Button
+                  className="font-label-sm rounded-lg bg-primary-sendlib hover:bg-primary-sendlib/90 text-white cursor-pointer active:scale-95 transition-all shadow-sm disabled:opacity-50"
                   onClick={handleBachsCheckout}
                   disabled={isRedirectingCheckout}
-                  className="rounded-lg font-label-sm bg-primary-sendlib hover:bg-primary-sendlib/90 text-white shadow-sm px-4 py-2 cursor-pointer"
                 >
                   <HugeiconsIcon icon={CreditCardIcon} size={16} color='currentColor' strokeWidth={1.5} />
                   <span className="ml-2">
-                    {isRedirectingCheckout ? "Initializing Bachs Checkout..." : "Upgrade to Pro ($2/mo)"}
+                    {isRedirectingCheckout ? "Initializing Bachs Checkout..." : "Upgrade to Pro ($3.99/mo)"}
                   </span>
                 </Button>
               ) : (

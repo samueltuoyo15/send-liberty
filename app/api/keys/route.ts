@@ -67,7 +67,7 @@ export async function POST(req: NextRequest) {
       revoked: false,
     });
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const maxKeys = (dbUser as any)?.plan === "pro" ? 200 : MAX_KEYS_PER_USER;
+    const maxKeys = (dbUser as any)?.plan === "pro" ? 100 : MAX_KEYS_PER_USER;
     if (activeKeyCount >= maxKeys) {
       return NextResponse.json(
         {
