@@ -4,6 +4,16 @@ import User from "@/models/User";
 import { verifyBachsSignature } from "@/lib/bachs";
 import mongoose from "mongoose";
 
+function extractSubscriptionId(data: any): string | undefined {
+  if (!data) return undefined;
+  if (typeof data.subscription_id === "string") return data.subscription_id;
+  if (typeof data.subscription === "string") return data.subscription;
+  if (data.subscription && typeof data.subscription.subscription_id === "string") return data.subscription.subscription_id;
+  if (data.subscription && typeof data.subscription.id === "string") return data.subscription.id;
+  if (typeof data.id === "string" && data.id.startsWith("sub_")) return data.id;
+  return undefined;
+}
+
 export async function POST(req: NextRequest) {
   try {
     const rawBody = await req.text();
@@ -60,11 +70,14 @@ export async function POST(req: NextRequest) {
           user.set("plan", "pro");
           user.set("subscriptionStatus", "active");
           user.set("lastPaymentAt", new Date());
-          if (data.subscription_id || data.subscription || data.id) {
-            user.set("subscriptionId", data.subscription_id || data.subscription || data.id);
+
+          const subId = extractSubscriptionId(data);
+          if (subId) {
+            user.set("subscriptionId", subId);
           }
+
           await user.save();
-          console.log(`[Bachs Webhook] User ${userId} successfully upgraded to Pro.`);
+          console.log(`[Bachs Webhook] User ${userId} successfully upgraded to Pro with subId: ${subId || "N/A"}.`);
         } else if (inactiveEvents.includes(eventType)) {
           user.set("plan", "free");
           user.set("subscriptionStatus", eventType.includes("failed") ? "past_due" : "canceled");

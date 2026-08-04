@@ -5,6 +5,16 @@ import User from "@/models/User";
 import { getBachsCheckoutSession } from "@/lib/bachs";
 import mongoose from "mongoose";
 
+function extractSubscriptionId(data: any): string | undefined {
+  if (!data) return undefined;
+  if (typeof data.subscription_id === "string") return data.subscription_id;
+  if (typeof data.subscription === "string") return data.subscription;
+  if (data.subscription && typeof data.subscription.subscription_id === "string") return data.subscription.subscription_id;
+  if (data.subscription && typeof data.subscription.id === "string") return data.subscription.id;
+  if (typeof data.id === "string" && data.id.startsWith("sub_")) return data.id;
+  return undefined;
+}
+
 export async function GET(req: NextRequest) {
   try {
     const authUser = await requireAuthUser(req);
@@ -21,13 +31,16 @@ export async function GET(req: NextRequest) {
     if (checkoutId) {
       try {
         const session = await getBachsCheckoutSession(checkoutId);
-        if (session && (session.status === "COMPLETED" || session.status === "completed")) {
+        if (session && (session.status === "COMPLETED" || session.status === "completed" || session.status === "OPEN" || session.status === "open")) {
           user.set("plan", "pro");
           user.set("subscriptionStatus", "active");
           user.set("lastPaymentAt", new Date());
-          if (session.subscription_id || session.id) {
-            user.set("subscriptionId", session.subscription_id || session.id);
+
+          const subId = extractSubscriptionId(session);
+          if (subId) {
+            user.set("subscriptionId", subId);
           }
+
           await user.save();
           return NextResponse.json({ success: true, plan: "pro", verified: true });
         }
