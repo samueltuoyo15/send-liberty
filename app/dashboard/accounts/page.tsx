@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { useGmailAccounts, useConnectGmail, useDisconnectGmail } from "@/hooks/useGmailAccounts";
+import { useMe } from "@/hooks/useAuth";
 import { toast } from "sonner";
 import confetti from "canvas-confetti";
 
@@ -22,6 +23,7 @@ function redactEmail(email: string): string {
 }
 
 function AccountsContent() {
+  const { data: user } = useMe();
   const { data: accounts, isLoading } = useGmailAccounts();
   const { mutate: connectGmail, isPending: isConnecting } = useConnectGmail();
   const { mutate: disconnectGmail, isPending: isDisconnecting } = useDisconnectGmail();
@@ -59,7 +61,9 @@ function AccountsContent() {
     }
   }, [searchParams]);
 
-  const atAccountLimit = !isLoading && !!accounts && accounts.length >= 10;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const isPro = (user as any)?.plan === "pro";
+  const atAccountLimit = !isLoading && !!accounts && !isPro && accounts.length >= 10;
 
   return (
     <div className="space-y-6">
@@ -72,7 +76,7 @@ function AccountsContent() {
           {!isLoading && accounts && (
             <p className="text-xs mt-1.5 font-medium">
               <span className={atAccountLimit ? "text-destructive font-bold" : "text-secondary"}>
-                {accounts.length} / 10 accounts connected
+                {isPro ? `${accounts.length} / Unlimited accounts connected` : `${accounts.length} / 10 accounts connected`}
               </span>
             </p>
           )}
