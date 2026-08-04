@@ -18,6 +18,7 @@ export async function GET(req: NextRequest) {
 
     await connectDB();
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const query: any = { userId: new mongoose.Types.ObjectId(user.id) };
 
     if (status) {

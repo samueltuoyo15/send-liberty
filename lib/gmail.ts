@@ -82,7 +82,7 @@ export async function handleGmailCallback(code: string, userId: string) {
   const existingAccount = await GmailAccount.findOne({ userId, gmailEmail });
   const isNew = !existingAccount;
 
-  let encryptedRefreshToken = tokens.refresh_token
+  const encryptedRefreshToken = tokens.refresh_token
     ? encrypt(tokens.refresh_token)
     : existingAccount?.encryptedRefreshToken;
 

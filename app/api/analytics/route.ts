@@ -58,7 +58,7 @@ export async function GET(req: NextRequest) {
     ]);
 
     // Fill in missing dates with zero values so the frontend always has exactly 7 days
-    const volumeMap = new Map(volumeData.map((d: any) => [d._id, { sent: d.sent, failed: d.failed }]));
+    const volumeMap = new Map(volumeData.map((d: { _id: string; sent: number; failed: number }) => [d._id, { sent: d.sent, failed: d.failed }]));
     const formattedVolume = [];
     for (let i = 6; i >= 0; i--) {
       const d = new Date();

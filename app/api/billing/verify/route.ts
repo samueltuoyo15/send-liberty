@@ -5,6 +5,7 @@ import User from "@/models/User";
 import { getBachsCheckoutSession } from "@/lib/bachs";
 import mongoose from "mongoose";
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function extractSubscriptionId(data: any): string | undefined {
   if (!data) return undefined;
   if (typeof data.subscription_id === "string") return data.subscription_id;
@@ -44,8 +45,9 @@ export async function GET(req: NextRequest) {
           await user.save();
           return NextResponse.json({ success: true, plan: "pro", verified: true });
         }
-      } catch (err: any) {
-        console.warn("[Manual Verification Warning]:", err?.response?.data || err.message);
+      } catch (err: unknown) {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        console.warn("[Manual Verification Warning]:", (err as any)?.response?.data || (err as Error).message);
       }
     }
 
@@ -54,7 +56,7 @@ export async function GET(req: NextRequest) {
       plan: user.plan || "free",
       verified: user.plan === "pro",
     });
-  } catch (err: any) {
+  } catch (err: unknown) {
     if (err instanceof Response) return err;
     console.error("/api/billing/verify GET error:", err);
     return NextResponse.json({ success: false, message: "Verification failed" }, { status: 500 });

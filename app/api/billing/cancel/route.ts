@@ -18,8 +18,9 @@ export async function POST(req: NextRequest) {
     if (user.subscriptionId) {
       try {
         await cancelBachsSubscription(user.subscriptionId);
-      } catch (err: any) {
-        console.warn("[Cancel Subscription Warning]:", err?.response?.data || err.message);
+      } catch (err: unknown) {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        console.warn("[Cancel Subscription Warning]:", (err as any)?.response?.data || (err as Error).message);
       }
     }
 
@@ -30,7 +31,7 @@ export async function POST(req: NextRequest) {
       success: true,
       message: "Your subscription has been canceled.",
     });
-  } catch (err: any) {
+  } catch (err: unknown) {
     if (err instanceof Response) return err;
     console.error("/api/billing/cancel POST error:", err);
     return NextResponse.json({ success: false, message: "Failed to cancel subscription" }, { status: 500 });

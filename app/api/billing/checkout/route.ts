@@ -42,10 +42,11 @@ export async function POST(req: NextRequest) {
       url: session.checkout_url,
       checkoutId: session.checkout_id,
     });
-  } catch (err: any) {
+  } catch (err: unknown) {
     if (err instanceof Response) return err;
-    const bachsErr = err?.response?.data;
-    console.error("[Bachs Checkout API Error]:", bachsErr || err.message);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const bachsErr = (err as any)?.response?.data;
+    console.error("[Bachs Checkout API Error]:", bachsErr || (err as Error).message);
 
     const errorDetail = typeof bachsErr === "object" ? JSON.stringify(bachsErr) : (bachsErr || err.message || "Failed to initialize Bachs checkout session");
     return NextResponse.json(
@@ -53,7 +54,8 @@ export async function POST(req: NextRequest) {
         success: false,
         message: `Bachs Checkout Error: ${errorDetail}`,
       },
-      { status: err?.response?.status || 500 }
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      { status: (err as any)?.response?.status || 500 }
     );
   }
 }

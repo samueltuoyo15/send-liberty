@@ -65,7 +65,7 @@ export default function SettingsPage() {
       } else {
         toast.error(data.message || "Failed to initialize checkout session");
       }
-    } catch (err) {
+    } catch {
       toast.error("Error creating checkout session");
     } finally {
       setIsRedirectingCheckout(false);
@@ -212,18 +212,21 @@ export default function SettingsPage() {
                 <h3 className="font-headline-md font-bold text-lg text-primary-sendlib">Plan & Billing</h3>
               </div>
               <span className="px-3 py-1 rounded-full text-xs font-bold bg-primary-sendlib text-white uppercase tracking-wider">
+                {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
                 {(user as any)?.plan === "pro" ? "Pro Plan Active" : "Free Plan"}
               </span>
             </div>
             
             <div className="space-y-4">
               <p className="text-sm text-secondary leading-relaxed">
+                {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
                 {(user as any)?.plan === "pro" 
                   ? "Your account is on the Pro Plan ($2/mo). You enjoy unlimited emails per month, higher rate limits, and unlimited connected accounts."
                   : "You are currently on the Free Plan. Upgrade to Pro for $2/month to unlock higher rate limits, larger attachments, and unlimited connected accounts."
                 }
               </p>
 
+              {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
               {(user as any)?.plan !== "pro" ? (
                 <Button
                   onClick={handleBachsCheckout}

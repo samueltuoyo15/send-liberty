@@ -6,6 +6,7 @@ import { GithubIcon, ArrowLeft01Icon } from "@hugeicons/core-free-icons";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import SEO from "@/components/SEO";
 
 export default function LoginPage() {
@@ -108,10 +109,11 @@ export default function LoginPage() {
 
           {/* Character image positioned at the bottom right of the left panel */}
           <div className="absolute right-0 bottom-0 w-80 h-[80%] z-0 select-none pointer-events-none opacity-90 transition-transform duration-700 hover:scale-105">
-            <img 
+            <Image 
               src="/forest_background/character.png" 
               alt="Empowerer character" 
-              className="w-full h-full object-contain object-bottom"
+              fill
+              className="object-contain object-bottom"
             />
           </div>
         </div>

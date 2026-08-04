@@ -1,4 +1,3 @@
-"use client";
 
 import Link from "next/link";
 import { DocsPagination } from "@/components/docs/DocsPagination";

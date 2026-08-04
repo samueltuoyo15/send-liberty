@@ -17,6 +17,7 @@ export async function GET(req: NextRequest) {
       .sort({ createdAt: -1 })
       .lean();
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const formattedKeys = keys.map((key: any) => ({
       id: key._id.toString(),
       name: key.name,
@@ -78,7 +79,7 @@ export async function POST(req: NextRequest) {
     const name: string = rawName.length > 0 ? rawName.slice(0, 25) : "My API Key";
     const rawAllowedOrigins = Array.isArray(body.allowedOrigins) ? body.allowedOrigins : [];
     const allowedOrigins = rawAllowedOrigins
-      .map((o: any) => String(o).trim().toLowerCase())
+      .map((o: unknown) => String(o).trim().toLowerCase())
       .filter((o: string) => o.length > 0 && o.length <= 253);
 
     const rawKey = crypto.randomBytes(32).toString("hex");

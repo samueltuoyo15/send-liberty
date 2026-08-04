@@ -26,8 +26,8 @@ export function useConnectGmail() {
       const res = await api.get<never, { success: boolean; url: string }>("/gmail/connect");
       window.location.href = res.url;
     },
-    onError: (err: any) => {
-      const msg = typeof err === "string" ? err : err?.message || "Failed to connect Gmail account.";
+    onError: (err: unknown) => {
+      const msg = typeof err === "string" ? err : (err as Error)?.message || "Failed to connect Gmail account.";
       toast.error(msg, { id: "gmail-connect" });
     },
   });

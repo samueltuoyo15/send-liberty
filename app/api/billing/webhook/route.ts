@@ -4,6 +4,7 @@ import User from "@/models/User";
 import { verifyBachsSignature } from "@/lib/bachs";
 import mongoose from "mongoose";
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function extractSubscriptionId(data: any): string | undefined {
   if (!data) return undefined;
   if (typeof data.subscription_id === "string") return data.subscription_id;
@@ -29,6 +30,7 @@ export async function POST(req: NextRequest) {
       }
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     let payload: any = {};
     try {
       payload = JSON.parse(rawBody);
@@ -88,8 +90,10 @@ export async function POST(req: NextRequest) {
     }
 
     return NextResponse.json({ received: true });
-  } catch (err: any) {
-    console.error("[Bachs Webhook Fatal Error]:", err?.stack || err);
-    return NextResponse.json({ success: false, message: err?.message || "Webhook processing error" }, { status: 500 });
+  } catch (err: unknown) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    console.error("[Bachs Webhook Fatal Error]:", (err as any)?.stack || err);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    return NextResponse.json({ success: false, message: (err as any)?.message || "Webhook processing error" }, { status: 500 });
   }
 }

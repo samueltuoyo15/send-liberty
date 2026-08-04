@@ -59,6 +59,7 @@ export async function POST(req: NextRequest) {
     const candidates = await ApiKey.find({ keyPrefix: prefix, revoked: false });
     let authenticatedUserId: string | null = null;
     let apiKeyId: mongoose.Types.ObjectId | null = null;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     let matchedKey: any = null;
 
     for (const candidate of candidates) {
@@ -119,7 +120,7 @@ export async function POST(req: NextRequest) {
     }
 
     const body = await req.json();
-    let {
+    const {
       to: rawTo,
       subject,
       html,

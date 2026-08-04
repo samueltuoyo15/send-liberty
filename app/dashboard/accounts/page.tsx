@@ -4,7 +4,7 @@ import { HugeiconsIcon } from '@hugeicons/react';
 import { MailIcon, CheckmarkCircle01Icon, CancelCircleIcon } from '@hugeicons/core-free-icons';
 import { useState, useEffect, Suspense } from "react";
 import Link from "next/link";
-import { useSearchParams, useRouter } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
@@ -31,7 +31,7 @@ function AccountsContent() {
   const [agreeTerms, setAgreeTerms] = useState(false);
 
   const searchParams = useSearchParams();
-  const router = useRouter();
+
 
   useEffect(() => {
     if (searchParams.get("gmail_connected") === "true") {
@@ -40,6 +40,7 @@ function AccountsContent() {
         spread: 120,
         origin: { y: 0.6 }
       });
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setSuccessDialogOpen(true);
       toast.success("Gmail account connected successfully!");
 

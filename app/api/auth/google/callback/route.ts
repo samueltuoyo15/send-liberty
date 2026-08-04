@@ -10,9 +10,11 @@ const { NEXT_PUBLIC_APP_URL } = process.env;
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
   const code = searchParams.get("code");
+  const stateParam = searchParams.get("state");
+  const oauthStateCookie = req.cookies.get("oauth_state")?.value;
 
-  if (!code) {
-    return NextResponse.redirect(`${NEXT_PUBLIC_APP_URL}/login?error=missing_code`);
+  if (!code || !stateParam || stateParam !== oauthStateCookie) {
+    return NextResponse.redirect(`${NEXT_PUBLIC_APP_URL}/login?error=invalid_state_or_code`);
   }
 
   try {

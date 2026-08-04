@@ -13,7 +13,7 @@ export default function SEO({ title, description, children }: SEOProps) {
     document.title = `${title} | SendLib`;
     
     if (description) {
-      let metaDescription = document.querySelector('meta[name="description"]');
+      const metaDescription = document.querySelector('meta[name="description"]');
       if (metaDescription) {
         metaDescription.setAttribute("content", description);
       } else {

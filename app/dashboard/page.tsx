@@ -24,22 +24,21 @@ import {
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useMe } from "@/hooks/useAuth";
-import { useApiKeys, useGenerateApiKey } from "@/hooks/useApiKeys";
+
+import { useApiKeys } from "@/hooks/useApiKeys";
 import { useGmailAccounts, useConnectGmail } from "@/hooks/useGmailAccounts";
 import { useEmailLogs } from "@/hooks/useEmailLogs";
 import { useState, useEffect } from "react";
 import confetti from "canvas-confetti";
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetFooter } from "@/components/ui/sheet";
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { toast } from "sonner";
 import { redactEmail } from "@/utils/redact";
 import { useAnalytics } from "@/hooks/useAnalytics";
 
 export default function DashboardPage() {
-  const { data: user, isLoading: isLoadingUser, refetch: refetchUser } = useMe();
   const { data: apiKeys, isLoading: isLoadingKeys } = useApiKeys();
-  const { data: analytics, isLoading: isLoadingAnalytics, refetch: refetchAnalytics } = useAnalytics();
+  const { data: analytics, isLoading: isLoadingAnalytics } = useAnalytics();
   const { data: gmailAccounts, isLoading: isLoadingAccounts } = useGmailAccounts();
   const { data: logsData, isLoading: isLoadingLogs, refetch: refetchLogs, isFetching: isFetchingLogs } = useEmailLogs(1, 5);
   const { mutate: connectGmail, isPending: isConnecting } = useConnectGmail();
@@ -64,6 +63,7 @@ export default function DashboardPage() {
           spread: 120,
           origin: { y: 0.6 }
         });
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setMilestoneDialogOpen(true);
         localStorage.setItem("sendlib_confetti_step1_seen", "true");
       }
@@ -475,6 +475,7 @@ export default function DashboardPage() {
                       </TableCell>
                     </TableRow>
                   ) : (
+                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
                     emailLogs.map((log: any) => (
                       <TableRow key={log.id} className="border-[#1d2b3e]/10 transition-colors hover:bg-[#1d2b3e]/5 group">
                         <TableCell className="pl-6 py-4 font-mono text-xs text-[#1d2b3e]/70 whitespace-nowrap">
@@ -582,7 +583,7 @@ export default function DashboardPage() {
           <SheetHeader className="p-0 mb-6">
             <SheetTitle className="text-xl font-headline-md font-bold text-primary-sendlib">API Key Generated</SheetTitle>
             <SheetDescription className="text-secondary text-sm">
-              Copy your new secret key below. For security reasons, you won't be able to view it again.
+              Copy your new secret key below. For security reasons, you won&apos;t be able to view it again.
             </SheetDescription>
           </SheetHeader>
           <div className="space-y-5">
@@ -664,7 +665,7 @@ export default function DashboardPage() {
               <span>🎉</span> Step 1 Complete!
             </DialogTitle>
             <DialogDescription className="text-secondary text-sm leading-relaxed mt-1">
-              You've successfully connected your Gmail account! Next up: Generate an API Key to authorize email requests from your app.
+              You&apos;ve successfully connected your Gmail account! Next up: Generate an API Key to authorize email requests from your app.
             </DialogDescription>
           </DialogHeader>
           <div className="flex flex-row gap-3 mt-4 pt-4 border-t border-[#1d2b3e]/10">

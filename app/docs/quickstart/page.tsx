@@ -9,6 +9,7 @@ export default function QuickstartPage() {
 
   useEffect(() => {
     if (typeof window !== "undefined") {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setApiUrl(window.location.origin);
     }
   }, []);

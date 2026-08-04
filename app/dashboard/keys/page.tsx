@@ -4,7 +4,7 @@ import { HugeiconsIcon } from '@hugeicons/react';
 import { Key01Icon, Copy01Icon, CheckmarkCircle01Icon, CancelCircleIcon, Delete01Icon } from '@hugeicons/core-free-icons';
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useApiKeys, useGenerateApiKey, useDeleteApiKey, useRevokeApiKey } from "@/hooks/useApiKeys";
+import { useApiKeys, useGenerateApiKey, useDeleteApiKey } from "@/hooks/useApiKeys";
 import { useState, useEffect, Suspense } from "react";
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetFooter } from "@/components/ui/sheet";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
@@ -50,6 +50,7 @@ function KeysContent() {
 
   useEffect(() => {
     if (searchParams.get("generate") === "true") {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setGenerateDialog(true);
     }
   }, [searchParams]);
@@ -83,8 +84,8 @@ function KeysContent() {
         setKeyLabel("");
         setAllowedOriginsText("");
       },
-      onError: (err: any) => {
-        const msg = typeof err === "string" ? err : err?.message || "Failed to generate API key.";
+      onError: (err: unknown) => {
+        const msg = typeof err === "string" ? err : (err as Error)?.message || "Failed to generate API key.";
         toast.error(msg);
       }
     });
@@ -171,7 +172,7 @@ function KeysContent() {
                         <HugeiconsIcon icon={Key01Icon} size={40} color='currentColor' strokeWidth={1.5} className="text-[#4a358c] opacity-40 mb-0.5" />
                         <h4 className="text-base font-headline-md font-bold text-[#2c1075]">No API keys found</h4>
                         <p className="text-xs text-[#4a358c]/80 leading-relaxed">
-                          You haven't generated any API keys yet. Create one to start using the SendLib API.
+                          You haven&apos;t generated any API keys yet. Create one to start using the SendLib API.
                         </p>
                         <div className="pt-1">
                           <Button 

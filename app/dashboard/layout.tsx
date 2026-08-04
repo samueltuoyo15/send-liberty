@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
 import { HugeiconsIcon } from '@hugeicons/react';
 import { 
@@ -20,8 +21,8 @@ import {
   DropdownMenuTrigger, 
   DropdownMenuContent, 
   DropdownMenuItem, 
-  DropdownMenuSeparator,
-  DropdownMenuLabel
+  DropdownMenuItem, 
+  DropdownMenuSeparator
 } from "@/components/ui/dropdown-menu";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 
@@ -114,16 +115,20 @@ export default function DashboardLayout({
               <DropdownMenu>
                 <DropdownMenuTrigger className="flex h-8 w-8 items-center justify-center rounded-full hover:opacity-90 transition-opacity cursor-pointer outline-none">
                   {user.avatar && !avatarError ? (
-                    <img 
+                    <Image 
                       src={user.avatar} 
                       alt="Avatar" 
+                      width={32}
+                      height={32}
                       className="h-8 w-8 rounded-full object-cover border border-outline-variant"
                       onError={() => setAvatarError(true)}
                     />
                   ) : (
-                    <img 
+                    <Image 
                       src={`https://api.dicebear.com/7.x/initials/svg?seed=${encodeURIComponent(user.displayName || user.email || "U")}`} 
                       alt="Avatar" 
+                      width={32}
+                      height={32}
                       className="h-8 w-8 rounded-full object-cover border border-outline-variant" 
                     />
                   )}

@@ -36,6 +36,7 @@ export default function HomeClient() {
 
   useEffect(() => {
     if (typeof window !== "undefined") {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setApiUrl(window.location.origin);
     }
   }, []);
@@ -249,7 +250,7 @@ export default function HomeClient() {
                   Will my emails land in the inbox?
                 </h3>
                 <p className="text-sm text-secondary leading-relaxed pl-4">
-                  Yes, absolutely. Because the emails are sent using Google's official, highly trusted outbound mail servers, they inherit the absolute highest deliverability rates out of the box.
+                  Yes, absolutely. Because the emails are sent using Google&apos;s official, highly trusted outbound mail servers, they inherit the absolute highest deliverability rates out of the box.
                 </p>
               </div>
 

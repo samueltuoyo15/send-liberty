@@ -17,6 +17,7 @@ export default function LogsPage() {
   const [search, setSearch] = useState("");
   const [status, setStatus] = useState("");
   const [fromEmail, setFromEmail] = useState("");
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [selectedLog, setSelectedLog] = useState<any | null>(null);
 
   const { data: accounts } = useGmailAccounts();
@@ -80,6 +81,7 @@ export default function LogsPage() {
             className="bg-surface-container-low border border-outline-variant rounded-lg px-3 h-10 text-sm outline-none text-secondary focus:border-primary-sendlib focus:bg-white transition-colors w-full sm:w-56 cursor-pointer"
           >
             <option value="">All Senders</option>
+            {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
             {accounts?.map((acc: any) => (
               <option key={acc.id} value={acc.email}>
                 {acc.email}
@@ -121,7 +123,7 @@ export default function LogsPage() {
                       <HugeiconsIcon icon={Search01Icon} size={48} color='currentColor' strokeWidth={1.5} className="text-primary-sendlib opacity-50 mb-1" />
                       <h3 className="text-lg font-headline-md font-bold text-on-background">No matching logs</h3>
                       <p className="text-sm text-secondary leading-relaxed">
-                        We couldn't find any email logs matching your search terms or filter selections. Try clearing your filters.
+                        We couldn&apos;t find any email logs matching your search terms or filter selections. Try clearing your filters.
                       </p>
                       <div className="pt-2">
                         <Button 
@@ -143,7 +145,7 @@ export default function LogsPage() {
                       <HugeiconsIcon icon={FileTypeIcon} size={48} color='currentColor' strokeWidth={1.5} className="text-primary-sendlib opacity-50 mb-1" />
                       <h3 className="text-lg font-headline-md font-bold text-on-background">No email logs found</h3>
                       <p className="text-sm text-secondary leading-relaxed">
-                        You haven't sent any emails yet. Send an email using our REST API or Quickstart guide to view logs here.
+                        You haven&apos;t sent any emails yet. Send an email using our REST API or Quickstart guide to view logs here.
                       </p>
                       <div className="pt-2 flex flex-col sm:flex-row items-center gap-3">
                         <Link href="/docs/send">
@@ -162,6 +164,7 @@ export default function LogsPage() {
                 </td>
               </tr>
             ) : (
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
               logs.map((log: any) => (
                 <tr key={log.id} className="hover:bg-muted/30 transition-colors">
                   <td className="px-6 py-4 font-mono text-xs text-muted-foreground whitespace-nowrap">

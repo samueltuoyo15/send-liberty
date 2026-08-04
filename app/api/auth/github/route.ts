@@ -26,7 +26,15 @@ export async function GET(req: NextRequest) {
     redirect_uri: `${process.env.NEXT_PUBLIC_APP_URL}/api/auth/github/callback`,
     state,
   });
-  return NextResponse.redirect(
+  const response = NextResponse.redirect(
     `https://github.com/login/oauth/authorize?${params.toString()}`
   );
+  response.cookies.set("oauth_state", state, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "lax",
+    maxAge: 60 * 10, // 10 minutes
+    path: "/",
+  });
+  return response;
 }

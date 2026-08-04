@@ -40,7 +40,7 @@ export default function TermsPage() {
           <section className="space-y-sm">
             <h2 className="font-headline-sm text-headline-sm text-primary-sendlib">2. Use License</h2>
             <p>
-              Permission is granted to temporarily use SendLib's API for personal or commercial use, subject to rate limits and fair use policies. This is the grant of a license, not a transfer of title.
+              Permission is granted to temporarily use SendLib&apos;s API for personal or commercial use, subject to rate limits and fair use policies. This is the grant of a license, not a transfer of title.
             </p>
           </section>
 
@@ -57,7 +57,7 @@ export default function TermsPage() {
           <section className="space-y-sm">
             <h2 className="font-headline-sm text-headline-sm text-primary-sendlib">4. Disclaimer</h2>
             <p>
-              The materials on SendLib's website and API are provided on an 'as is' basis. SendLib makes no warranties, expressed or implied, and hereby disclaims and negates all other warranties including, without limitation, implied warranties or conditions of merchantability.
+              The materials on SendLib&apos;s website and API are provided on an &apos;as is&apos; basis. SendLib makes no warranties, expressed or implied, and hereby disclaims and negates all other warranties including, without limitation, implied warranties or conditions of merchantability.
             </p>
           </section>
 

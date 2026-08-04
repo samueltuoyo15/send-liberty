@@ -12,6 +12,7 @@ export default function BasicSendPage() {
 
   useEffect(() => {
     if (typeof window !== "undefined") {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setApiUrl(window.location.origin);
     }
   }, []);
@@ -298,7 +299,7 @@ System.out.println(response.body());`
         <h3 className="text-xl font-bold text-primary-sendlib mt-8 mb-4">Request Body Parameters</h3>
         <ul className="list-disc pl-5 space-y-4 text-[#75777d]">
           <li><strong>from</strong> (string, optional): The connected Gmail email address you want to send this email from (e.g. <code>mysecondgmail@gmail.com</code>). If not supplied, it defaults to your first connected Gmail account.</li>
-          <li><strong>to</strong> (string or array of strings): The recipient's email address (or array of addresses).</li>
+          <li><strong>to</strong> (string or array of strings): The recipient&apos;s email address (or array of addresses).</li>
           <li><strong>subject</strong> (string): The subject line of the email.</li>
           <li><strong>html</strong> (string): The HTML body content of the email.</li>
           <li><strong>text</strong> (string, optional): The plain text fallback body.</li>
