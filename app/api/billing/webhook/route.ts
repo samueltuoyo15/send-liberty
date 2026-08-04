@@ -9,22 +9,31 @@ export async function POST(req: NextRequest) {
     const rawBody = await req.text();
     const signature = req.headers.get("x-bachs-signature");
     const timestamp = req.headers.get("x-bachs-timestamp");
-    const webhookSecret = process.env.BACHS_WEBHOOK_SECRET;
+    const webhookSecret = process.env.BACHS_WEBHOOK_SECRET?.trim();
 
     if (webhookSecret && signature && timestamp) {
       const isValid = verifyBachsSignature(rawBody, webhookSecret, timestamp, signature);
       if (!isValid) {
+        console.warn("[Bachs Webhook] Invalid signature rejected.");
         return NextResponse.json({ success: false, message: "Invalid signature" }, { status: 401 });
       }
     }
 
-    const payload = JSON.parse(rawBody);
+    let payload: any = {};
+    try {
+      payload = JSON.parse(rawBody);
+    } catch {
+      return NextResponse.json({ success: false, message: "Invalid JSON" }, { status: 400 });
+    }
+
     const eventType = payload.type || payload.event || payload.status;
     const data = payload.data || payload;
     const metadata = data.metadata || {};
     const userId = metadata.userId;
 
-    if (userId) {
+    console.log(`[Bachs Webhook Received] event: ${eventType}, userId: ${userId || "none"}`);
+
+    if (userId && mongoose.Types.ObjectId.isValid(userId)) {
       await connectDB();
       const user = await User.findById(new mongoose.Types.ObjectId(userId));
 
@@ -55,16 +64,19 @@ export async function POST(req: NextRequest) {
             user.set("subscriptionId", data.subscription_id || data.subscription || data.id);
           }
           await user.save();
+          console.log(`[Bachs Webhook] User ${userId} successfully upgraded to Pro.`);
         } else if (inactiveEvents.includes(eventType)) {
           user.set("plan", "free");
           user.set("subscriptionStatus", eventType.includes("failed") ? "past_due" : "canceled");
           await user.save();
+          console.log(`[Bachs Webhook] User ${userId} downgraded/canceled.`);
         }
       }
     }
 
     return NextResponse.json({ received: true });
-  } catch (err) {
-    return NextResponse.json({ success: false, message: "Webhook handler error" }, { status: 500 });
+  } catch (err: any) {
+    console.error("[Bachs Webhook Fatal Error]:", err?.stack || err);
+    return NextResponse.json({ success: false, message: err?.message || "Webhook processing error" }, { status: 500 });
   }
 }

@@ -29,10 +29,28 @@ export default function SettingsPage() {
   useEffect(() => {
     if (typeof window !== "undefined") {
       const urlParams = new URLSearchParams(window.location.search);
+      const checkoutId = urlParams.get("checkout_id");
       if (urlParams.get("billing") === "success") {
-        toast.success("Payment completed! Your account has been upgraded to Pro.");
+        toast.loading("Verifying payment with Bachs...", { id: "billing-verify" });
+        fetch(`/api/billing/verify?checkout_id=${checkoutId || ""}`)
+          .then((res) => res.json())
+          .then((data) => {
+            if (data.success && data.verified) {
+              toast.success("Payment verified! Your account has been upgraded to Pro.", { id: "billing-verify" });
+              setTimeout(() => {
+                window.location.href = "/dashboard/settings";
+              }, 1000);
+            } else {
+              toast.info("Payment received! Updating account...", { id: "billing-verify" });
+              window.history.replaceState({}, document.title, window.location.pathname);
+            }
+          })
+          .catch(() => {
+            toast.dismiss("billing-verify");
+          });
       } else if (urlParams.get("billing") === "cancel") {
         toast.info("Checkout canceled.");
+        window.history.replaceState({}, document.title, window.location.pathname);
       }
     }
   }, []);

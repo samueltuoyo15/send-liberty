@@ -52,6 +52,25 @@ export async function createBachsCheckoutSession(options: CreateCheckoutSessionO
   return response.data;
 }
 
+export async function getBachsCheckoutSession(checkoutId: string) {
+  const secretKey = (process.env.BACHS_SECRET_KEY || "").trim();
+  if (!secretKey) {
+    throw new Error("BACHS_SECRET_KEY is missing from environment variables.");
+  }
+
+  const isSandbox = secretKey.startsWith("sk_sandbox_") || process.env.BACHS_ENV !== "production";
+  const baseUrl = isSandbox ? "https://sandbox-api.bachs.io" : "https://api.bachs.io";
+
+  const response = await axios.get(`${baseUrl}/v1/checkout-sessions/${checkoutId}`, {
+    headers: {
+      Authorization: `Bearer ${secretKey}`,
+      "Content-Type": "application/json",
+    },
+  });
+
+  return response.data;
+}
+
 export async function cancelBachsSubscription(subscriptionId: string) {
   const secretKey = (process.env.BACHS_SECRET_KEY || "").trim();
   if (!secretKey) {
@@ -82,23 +101,33 @@ export function verifyBachsSignature(
   signatureHeader: string,
   toleranceSeconds = 300
 ): boolean {
-  const timestamp = parseInt(timestampHeader, 10);
-  if (isNaN(timestamp) || Math.abs(Date.now() / 1000 - timestamp) > toleranceSeconds) {
-    return false;
-  }
-
-  const message = `${timestamp}.${rawBody}`;
-  const expected = crypto
-    .createHmac("sha256", secret.trim())
-    .update(message, "utf8")
-    .digest("hex");
-
   try {
+    const timestamp = parseInt(timestampHeader, 10);
+    if (isNaN(timestamp) || Math.abs(Date.now() / 1000 - timestamp) > toleranceSeconds) {
+      return false;
+    }
+
+    let cleanSig = signatureHeader.trim();
+    if (cleanSig.startsWith("v1=")) {
+      cleanSig = cleanSig.substring(3);
+    }
+
+    const message = `${timestamp}.${rawBody}`;
+    const expected = crypto
+      .createHmac("sha256", secret.trim())
+      .update(message, "utf8")
+      .digest("hex");
+
+    if (expected.length !== cleanSig.length) {
+      return false;
+    }
+
     return crypto.timingSafeEqual(
       Buffer.from(expected, "utf8"),
-      Buffer.from(signatureHeader.trim(), "utf8")
+      Buffer.from(cleanSig, "utf8")
     );
-  } catch {
+  } catch (err) {
+    console.error("Signature verification exception:", err);
     return false;
   }
 }
