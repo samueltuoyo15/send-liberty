@@ -23,6 +23,7 @@ export async function GET(req: NextRequest) {
         email: user.email,
         displayName: user.displayName,
         avatar: user.avatar,
+        plan: user.plan,
         createdAt: user.createdAt,
       },
     });
