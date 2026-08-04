@@ -7,6 +7,10 @@ export interface IUser extends Document {
   email?: string;
   displayName: string;
   avatar?: string;
+  plan: "free" | "pro";
+  subscriptionId?: string;
+  subscriptionStatus?: "active" | "canceled" | "past_due" | "none";
+  lastPaymentAt?: Date;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -18,6 +22,10 @@ const UserSchema = new Schema<IUser>(
     email: { type: String, sparse: true, index: true },
     displayName: { type: String, required: true },
     avatar: { type: String },
+    plan: { type: String, enum: ["free", "pro"], default: "free" },
+    subscriptionId: { type: String },
+    subscriptionStatus: { type: String, enum: ["active", "canceled", "past_due", "none"], default: "none" },
+    lastPaymentAt: { type: Date },
   },
   { timestamps: true }
 );

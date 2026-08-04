@@ -13,9 +13,13 @@ import { useSearchParams } from "next/navigation";
 import confetti from "canvas-confetti";
 import { toast } from "sonner";
 
+import { useGmailAccounts } from "@/hooks/useGmailAccounts";
+import Link from "next/link";
+
 function KeysContent() {
   const searchParams = useSearchParams();
   const { data: apiKeys, isLoading } = useApiKeys();
+  const { data: gmailAccounts, isLoading: isLoadingAccounts } = useGmailAccounts();
   const { mutate: generateKey, isPending: isGenerating } = useGenerateApiKey();
   const { mutate: deleteKey, isPending: isDeleting } = useDeleteApiKey();
   const [newKeyDialog, setNewKeyDialog] = useState<{ key: string; hint: string } | null>(null);
@@ -23,6 +27,9 @@ function KeysContent() {
   const [keyLabel, setKeyLabel] = useState("");
   const [allowedOriginsText, setAllowedOriginsText] = useState("");
   const [deleteKeyId, setDeleteKeyId] = useState<string | null>(null);
+
+  const connectedAccounts = gmailAccounts?.filter((a) => a.connected) || [];
+  const hasConnectedAccounts = connectedAccounts.length > 0;
 
   const copyToClipboard = (text: string) => {
     if (navigator.clipboard && window.isSecureContext) {
@@ -51,6 +58,11 @@ function KeysContent() {
   const atKeyLimit = !isLoading && activeKeyCount >= 15;
 
   const handleGenerate = () => {
+    if (!hasConnectedAccounts) {
+      toast.error("Please connect a Gmail account first before generating API keys.");
+      return;
+    }
+
     if (atKeyLimit) {
       toast.error("You have reached the maximum limit of 15 active API keys.");
       return;
@@ -63,7 +75,7 @@ function KeysContent() {
 
     generateKey({
       name: keyLabel || undefined,
-      allowedOrigins: allowedOrigins.length > 0 ? allowedOrigins : undefined
+      allowedOrigins: allowedOrigins.length > 0 ? allowedOrigins : undefined,
     }, {
       onSuccess: (data) => {
         setNewKeyDialog({ key: data.key, hint: data.prefix });
@@ -80,6 +92,22 @@ function KeysContent() {
 
   return (
     <div className="space-y-6">
+      {!isLoadingAccounts && !hasConnectedAccounts && (
+        <div className="p-4 rounded-xl border border-amber-300 bg-amber-50 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-amber-900 shadow-xs">
+          <div>
+            <p className="font-bold text-sm">No Gmail account connected</p>
+            <p className="text-xs text-amber-800 mt-0.5">
+              You must connect at least one Gmail account before creating API keys so SendLib knows where to dispatch your emails.
+            </p>
+          </div>
+          <Link href="/dashboard/accounts">
+            <Button size="sm" className="bg-amber-800 hover:bg-amber-900 text-white text-xs font-bold shrink-0">
+              Connect Gmail Account
+            </Button>
+          </Link>
+        </div>
+      )}
+
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
           <h1 className="text-3xl font-headline-md font-bold tracking-tight text-primary-sendlib">API Keys</h1>
@@ -98,17 +126,21 @@ function KeysContent() {
           size="lg"
           className="rounded-lg font-label-sm bg-primary-sendlib hover:bg-primary-sendlib/90 text-white shadow-sm transition-all active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer" 
           onClick={() => {
+            if (!hasConnectedAccounts) {
+              toast.error("Please connect at least one Gmail account first.");
+              return;
+            }
             if (atKeyLimit) {
               toast.error("Limit reached: 15 / 15 active keys used. Please revoke a key first.");
               return;
             }
             setGenerateDialog(true);
           }}
-          disabled={isGenerating || atKeyLimit}
-          title={atKeyLimit ? "You've reached the 15-key limit" : undefined}
+          disabled={isGenerating || atKeyLimit || (!isLoadingAccounts && !hasConnectedAccounts)}
+          title={!hasConnectedAccounts ? "Connect a Gmail account first" : atKeyLimit ? "You've reached the 15-key limit" : undefined}
         >
           <HugeiconsIcon icon={Key01Icon} size={16} color='currentColor' strokeWidth={1.5} />
-          <span className="ml-2">{atKeyLimit ? "Key Limit Reached" : "Generate New Key"}</span>
+          <span className="ml-2">{!hasConnectedAccounts ? "Connect Account First" : atKeyLimit ? "Key Limit Reached" : "Generate New Key"}</span>
         </Button>
       </div>
 
@@ -146,6 +178,7 @@ function KeysContent() {
                             size="sm"
                             className="rounded-lg font-label-sm bg-[#5a36cf] hover:bg-[#5a36cf]/90 text-white shadow-sm px-3.5 h-8 cursor-pointer" 
                             onClick={() => setGenerateDialog(true)}
+                            disabled={!hasConnectedAccounts}
                           >
                             Generate Key
                           </Button>

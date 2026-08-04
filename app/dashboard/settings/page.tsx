@@ -12,6 +12,9 @@ import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetFo
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 
+import { toast } from "sonner";
+import { CreditCardIcon } from '@hugeicons/core-free-icons';
+
 export default function SettingsPage() {
   const { data: user, isLoading } = useMe();
   const { mutate: updateProfile, isPending: isUpdating } = useUpdateProfile();
@@ -20,7 +23,36 @@ export default function SettingsPage() {
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [signOutConfirmOpen, setSignOutConfirmOpen] = useState(false);
   const [deleteAccountOpen, setDeleteAccountOpen] = useState(false);
+  const [isRedirectingCheckout, setIsRedirectingCheckout] = useState(false);
   const router = useRouter();
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const urlParams = new URLSearchParams(window.location.search);
+      if (urlParams.get("billing") === "success") {
+        toast.success("Payment completed! Your account has been upgraded to Pro.");
+      } else if (urlParams.get("billing") === "cancel") {
+        toast.info("Checkout canceled.");
+      }
+    }
+  }, []);
+
+  const handleBachsCheckout = async () => {
+    try {
+      setIsRedirectingCheckout(true);
+      const res = await fetch("/api/billing/checkout", { method: "POST" });
+      const data = await res.json();
+      if (data.success && data.url) {
+        window.location.href = data.url;
+      } else {
+        toast.error(data.message || "Failed to initialize checkout session");
+      }
+    } catch (err) {
+      toast.error("Error creating checkout session");
+    } finally {
+      setIsRedirectingCheckout(false);
+    }
+  };
 
   const { mutate: deleteAccount, isPending: isDeletingAccount } = useMutation({
     mutationFn: async () => {
@@ -66,8 +98,9 @@ export default function SettingsPage() {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-        {/* Left Column: Profile Card */}
-        <div className="lg:col-span-7">
+        {/* Left Column: Profile, Sign Out & Delete Account */}
+        <div className="lg:col-span-6 space-y-6">
+          {/* Profile Card */}
           <div className="rounded-xl border border-[#ebdcd0]/60 bg-[#f4ebe1]/35 shadow-none p-6">
             <div className="flex items-center gap-2 mb-4">
               <HugeiconsIcon icon={UserIcon} size={20} color='currentColor' strokeWidth={1.5} className="text-[#6d4d24]" />
@@ -105,49 +138,110 @@ export default function SettingsPage() {
               </div>
             )}
           </div>
-        </div>
 
-        {/* Right Column: Sign Out & Delete Account */}
-        <div className="lg:col-span-5 space-y-6">
-          <div className="rounded-xl border border-destructive/20 bg-destructive/[0.01] shadow-none p-6">
-            <div className="flex items-center gap-2 mb-4">
-              <HugeiconsIcon icon={Logout01Icon} size={20} color='currentColor' strokeWidth={1.5} className="text-destructive" />
-              <h3 className="font-headline-md font-bold text-lg text-destructive">Sign Out</h3>
-            </div>
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-              <p className="text-sm text-secondary leading-relaxed">
-                Sign out of your SendLib account on this device.
-              </p>
+          {/* Flexed Row: Sign Out & Delete Account */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            {/* Sign Out Card */}
+            <div className="rounded-xl border border-destructive/20 bg-destructive/[0.01] shadow-none p-5 flex flex-col justify-between">
+              <div>
+                <div className="flex items-center gap-2 mb-2">
+                  <HugeiconsIcon icon={Logout01Icon} size={18} color='currentColor' strokeWidth={1.5} className="text-destructive" />
+                  <h3 className="font-headline-md font-bold text-base text-destructive">Sign Out</h3>
+                </div>
+                <p className="text-xs text-secondary leading-relaxed mb-4">
+                  Sign out of your SendLib account on this device.
+                </p>
+              </div>
               <Button 
                 variant="destructive"
-                size="lg"
-                className="rounded-lg font-label-sm shrink-0 cursor-pointer"
+                size="sm"
+                className="rounded-lg font-label-sm w-full cursor-pointer"
                 onClick={() => setSignOutConfirmOpen(true)}
               >
                 Sign Out
               </Button>
             </div>
-          </div>
 
-          <div className="rounded-xl border border-destructive/40 bg-destructive/[0.03] shadow-none p-6">
-            <div className="flex items-center gap-2 mb-4">
-              <HugeiconsIcon icon={Delete02Icon} size={20} color='currentColor' strokeWidth={1.5} className="text-destructive" />
-              <h3 className="font-headline-md font-bold text-lg text-destructive">Delete Account</h3>
-            </div>
-            <div className="flex flex-col gap-4">
-              <p className="text-sm text-secondary leading-relaxed">
-                Permanently delete your account and all associated data, including connected Gmail accounts, email logs, and API keys. This action cannot be undone.
-              </p>
+            {/* Delete Account Card */}
+            <div className="rounded-xl border border-destructive/40 bg-destructive/[0.03] shadow-none p-5 flex flex-col justify-between">
               <div>
-                <Button 
-                  variant="destructive"
-                  size="lg"
-                  className="rounded-lg font-label-sm w-full sm:w-auto whitespace-nowrap cursor-pointer"
-                  onClick={() => setDeleteAccountOpen(true)}
-                >
-                  Delete Account
-                </Button>
+                <div className="flex items-center gap-2 mb-2">
+                  <HugeiconsIcon icon={Delete02Icon} size={18} color='currentColor' strokeWidth={1.5} className="text-destructive" />
+                  <h3 className="font-headline-md font-bold text-base text-destructive">Delete Account</h3>
+                </div>
+                <p className="text-xs text-secondary leading-relaxed mb-4">
+                  Permanently delete account, keys & logs. Cannot be undone.
+                </p>
               </div>
+              <Button 
+                variant="destructive"
+                size="sm"
+                className="rounded-lg font-label-sm w-full cursor-pointer"
+                onClick={() => setDeleteAccountOpen(true)}
+              >
+                Delete Account
+              </Button>
+            </div>
+          </div>
+        </div>
+
+        {/* Right Column: Plan & Billing */}
+        <div className="lg:col-span-6 space-y-6">
+          <div className="rounded-xl border border-primary-sendlib/20 bg-primary-sendlib/[0.02] p-6">
+            <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center gap-2">
+                <HugeiconsIcon icon={CreditCardIcon} size={20} color='currentColor' strokeWidth={1.5} className="text-primary-sendlib" />
+                <h3 className="font-headline-md font-bold text-lg text-primary-sendlib">Plan & Billing</h3>
+              </div>
+              <span className="px-3 py-1 rounded-full text-xs font-bold bg-primary-sendlib text-white uppercase tracking-wider">
+                {(user as any)?.plan === "pro" ? "Pro Plan Active" : "Free Plan"}
+              </span>
+            </div>
+            
+            <div className="space-y-4">
+              <p className="text-sm text-secondary leading-relaxed">
+                {(user as any)?.plan === "pro" 
+                  ? "Your account is on the Pro Plan ($2/mo). You enjoy unlimited emails per month, higher rate limits, and unlimited connected accounts."
+                  : "You are currently on the Free Plan. Upgrade to Pro for $2/month to unlock higher rate limits, larger attachments, and unlimited connected accounts."
+                }
+              </p>
+
+              {(user as any)?.plan !== "pro" ? (
+                <Button
+                  onClick={handleBachsCheckout}
+                  disabled={isRedirectingCheckout}
+                  className="rounded-lg font-label-sm bg-primary-sendlib hover:bg-primary-sendlib/90 text-white shadow-sm px-4 py-2 cursor-pointer"
+                >
+                  <HugeiconsIcon icon={CreditCardIcon} size={16} color='currentColor' strokeWidth={1.5} />
+                  <span className="ml-2">
+                    {isRedirectingCheckout ? "Initializing Bachs Checkout..." : "Upgrade to Pro ($2/mo)"}
+                  </span>
+                </Button>
+              ) : (
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="rounded-lg border-destructive/40 text-destructive hover:bg-destructive/10 text-xs font-bold cursor-pointer"
+                  onClick={async () => {
+                    if (confirm("Are you sure you want to cancel your Pro subscription?")) {
+                      try {
+                        const res = await fetch("/api/billing/cancel", { method: "POST" });
+                        const data = await res.json();
+                        if (data.success) {
+                          toast.success("Subscription canceled.");
+                          window.location.reload();
+                        } else {
+                          toast.error(data.message || "Failed to cancel");
+                        }
+                      } catch {
+                        toast.error("Error canceling subscription");
+                      }
+                    }
+                  }}
+                >
+                  Cancel Subscription
+                </Button>
+              )}
             </div>
           </div>
         </div>

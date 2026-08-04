@@ -173,7 +173,7 @@ export default function HomeClient() {
                 <svg className="w-10 h-10 text-[#0d9488] mb-md" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M5 12h14M5 12a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v4a2 2 0 01-2 2M5 12a2 2 0 00-2 2v4a2 2 0 002 2h14a2 2 0 002-2v-4a2 2 0 00-2-2m-2-4h.01M17 16h.01" />
                 </svg>
-                <h3 className="font-label-sm text-label-sm uppercase tracking-widest mb-sm text-[#064e45]">Zero DNS Setup</h3>
+                <h3 className="font-headline-md text-headline-md font-bold mb-sm text-[#064e45]">Zero DNS Setup</h3>
                 <p className="font-body-md text-body-md text-[#0f685c] leading-relaxed">No domain needed, no MX records, SPF, or DKIM to configure. Connect your Google account and start sending immediately.</p>
               </div>
               {/* Regular Card */}
@@ -181,7 +181,7 @@ export default function HomeClient() {
                 <svg className="w-10 h-10 text-[#ec4899] mb-md" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M14.25 9.75L16.5 12l-2.25 2.25m-4.5 0L7.5 12l2.25-2.25M6 20.25h12A2.25 2.25 0 0020.25 18V6A2.25 2.25 0 0018 3.75H6A2.25 2.25 0 006 20.25z" />
                 </svg>
-                <h3 className="font-label-sm text-label-sm uppercase tracking-widest mb-sm text-[#6d0935]">Simple API</h3>
+                <h3 className="font-headline-md text-headline-md font-bold mb-sm text-[#6d0935]">Simple API</h3>
                 <p className="font-body-md text-body-md text-[#9d1b54] leading-relaxed">One POST request. No SDK to install. Works from any language or framework.</p>
               </div>
               {/* Image Integration Card */}
@@ -336,38 +336,27 @@ export default function HomeClient() {
                 </Link>
               </div>
 
-              {/* Pro Card — blurred, coming soon */}
-              <div className="rounded-2xl border border-outline-variant bg-white shadow-sm p-8 flex flex-col gap-6 relative overflow-hidden">
+              {/* Pro Card */}
+              <div className="rounded-2xl border-2 border-primary-sendlib/80 bg-white shadow-xl p-8 flex flex-col gap-6 relative">
                 <div className="absolute -top-3 left-6">
-                  <span className="bg-amber-400 text-amber-900 text-xs font-bold px-3 py-1 rounded-full tracking-wide">COMING SOON</span>
+                  <span className="bg-emerald-600 text-white text-xs font-bold px-3 py-1 rounded-full tracking-wide">PRO PLAN</span>
                 </div>
 
-                {/* Blurred overlay */}
-                <div className="absolute inset-0 z-10 backdrop-blur-sm bg-white/60 flex flex-col items-center justify-center gap-3 rounded-2xl">
-                  <p className="font-bold text-primary-sendlib text-lg">Pro Plan</p>
-                  <p className="text-secondary text-sm text-center max-w-[220px]">More accounts, higher limits & advanced features. Coming soon.</p>
-                </div>
-
-                <div className="opacity-30 pointer-events-none select-none">
+                <div>
                   <h3 className="text-2xl font-extrabold text-primary-sendlib">Pro</h3>
                   <div className="flex items-end gap-1 mt-1">
-                    <span className="text-4xl font-extrabold text-primary-sendlib">$?</span>
-                    <span className="text-secondary mb-1">/ credits</span>
+                    <span className="text-4xl font-extrabold text-primary-sendlib">$2</span>
+                    <span className="text-secondary mb-1">/ month</span>
                   </div>
-                  <p className="text-sm text-secondary mt-2">Pay as you go. No subscriptions.</p>
+                  <p className="text-sm text-secondary mt-2">Higher limits & scale for growing applications.</p>
                 </div>
-                <ul className="space-y-3 text-sm text-secondary flex-1 opacity-30 pointer-events-none select-none">
+                <ul className="space-y-3 text-sm text-secondary flex-1">
                   {[
                     "Everything in Free",
-                    "Unlimited emails per month",
-                    "No custom domain needed",
-                    "More connected Gmail accounts",
-                    "Higher rate limits",
-                    "Larger HTML body & attachments",
-                    "90-day email analytics",
-                    "Email open & click tracking",
-                    "Webhooks & scheduled sends",
-                    "Priority support",
+                    "Unlimited connected Gmail accounts",
+                    "300 API requests / minute",
+                    "5MB HTML body · 2MB text body",
+                    "Up to 20 attachments · 50MB total",
                   ].map((f) => (
                     <li key={f} className="flex items-start gap-2">
                       <svg className="w-4 h-4 mt-0.5 text-emerald-500 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" /></svg>
@@ -375,7 +364,12 @@ export default function HomeClient() {
                     </li>
                   ))}
                 </ul>
-                <div className="h-12 rounded-xl bg-outline-variant/30 opacity-30 pointer-events-none select-none" />
+                <Link
+                  href={user ? "/dashboard/settings" : "/login"}
+                  className="block w-full text-center bg-primary-sendlib hover:bg-primary-sendlib/90 text-white font-bold py-3 rounded-xl transition-all active:scale-95 shadow-md"
+                >
+                  {user ? "Upgrade to Pro ($2/mo)" : "Get Started Pro ($2/mo)"}
+                </Link>
               </div>
 
             </div>

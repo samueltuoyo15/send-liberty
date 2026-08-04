@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { requireAuthUser } from "@/lib/auth";
 import { connectDB } from "@/lib/db";
 import ApiKey from "@/models/ApiKey";
+import GmailAccount from "@/models/GmailAccount";
 import argon2 from "argon2";
 import crypto from "crypto";
 import mongoose from "mongoose";
@@ -40,6 +41,22 @@ export async function POST(req: NextRequest) {
   try {
     const user = await requireAuthUser(req);
     await connectDB();
+
+    // Verify user has at least one connected Gmail account
+    const connectedAccountCount = await GmailAccount.countDocuments({
+      userId: new mongoose.Types.ObjectId(user.id),
+      connected: true,
+    });
+
+    if (connectedAccountCount === 0) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: "You must connect at least one Gmail account before creating an API key. Go to Dashboard → Accounts to connect a Gmail account.",
+        },
+        { status: 400 }
+      );
+    }
 
     // Enforce per-user key limit
     const activeKeyCount = await ApiKey.countDocuments({
