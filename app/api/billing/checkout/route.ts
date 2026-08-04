@@ -48,7 +48,7 @@ export async function POST(req: NextRequest) {
     const bachsErr = (err as any)?.response?.data;
     console.error("[Bachs Checkout API Error]:", bachsErr || (err as Error).message);
 
-    const errorDetail = typeof bachsErr === "object" ? JSON.stringify(bachsErr) : (bachsErr || err.message || "Failed to initialize Bachs checkout session");
+    const errorDetail = typeof bachsErr === "object" ? JSON.stringify(bachsErr) : (bachsErr || (err as Error).message || "Failed to initialize Bachs checkout session");
     return NextResponse.json(
       {
         success: false,
