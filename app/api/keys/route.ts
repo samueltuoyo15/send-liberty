@@ -61,22 +61,21 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // Enforce per-user key limit for Free tier
+    // Enforce per-user key limit
+    const activeKeyCount = await ApiKey.countDocuments({
+      userId: new mongoose.Types.ObjectId(user.id),
+      revoked: false,
+    });
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    if ((dbUser as any)?.plan !== "pro") {
-      const activeKeyCount = await ApiKey.countDocuments({
-        userId: new mongoose.Types.ObjectId(user.id),
-        revoked: false,
-      });
-      if (activeKeyCount >= MAX_KEYS_PER_USER) {
-        return NextResponse.json(
-          {
-            success: false,
-            message: `You have reached the maximum of ${MAX_KEYS_PER_USER} active API keys on the Free plan. Please revoke an existing key before creating a new one.`,
-          },
-          { status: 429 }
-        );
-      }
+    const maxKeys = (dbUser as any)?.plan === "pro" ? 200 : MAX_KEYS_PER_USER;
+    if (activeKeyCount >= maxKeys) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: `You have reached the maximum of ${maxKeys} active API keys. Please revoke an existing key before creating a new one.`,
+        },
+        { status: 429 }
+      );
     }
 
     const body = await req.json();

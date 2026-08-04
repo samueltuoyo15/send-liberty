@@ -63,7 +63,8 @@ function AccountsContent() {
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const isPro = (user as any)?.plan === "pro";
-  const atAccountLimit = !isLoading && !!accounts && !isPro && accounts.length >= 10;
+  const maxAccounts = isPro ? 50 : 10;
+  const atAccountLimit = !isLoading && !!accounts && accounts.length >= maxAccounts;
 
   return (
     <div className="space-y-6">
@@ -76,7 +77,7 @@ function AccountsContent() {
           {!isLoading && accounts && (
             <p className="text-xs mt-1.5 font-medium">
               <span className={atAccountLimit ? "text-destructive font-bold" : "text-secondary"}>
-                {isPro ? `${accounts.length} / Unlimited accounts connected` : `${accounts.length} / 10 accounts connected`}
+                {accounts.length} / {maxAccounts} accounts connected
               </span>
             </p>
           )}
@@ -86,13 +87,13 @@ function AccountsContent() {
           className="rounded-lg font-label-sm bg-primary-sendlib hover:bg-primary-sendlib/90 text-white shadow-sm transition-all active:scale-95 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
           onClick={() => {
             if (atAccountLimit) {
-              toast.error("Account limit reached: 10 / 10 accounts connected. Please disconnect an account first.");
+              toast.error(`Account limit reached: ${maxAccounts} / ${maxAccounts} accounts connected. Please disconnect an account first.`);
               return;
             }
             setConnectConfirmOpen(true);
           }}
           disabled={isConnecting || atAccountLimit}
-          title={atAccountLimit ? "You've reached the 10-account limit" : undefined}
+          title={atAccountLimit ? `You've reached the ${maxAccounts}-account limit` : undefined}
         >
           <HugeiconsIcon icon={MailIcon} size={16} color='currentColor' strokeWidth={1.5} />
           <span className="ml-2">{atAccountLimit ? "Account Limit Reached" : "Connect New Account"}</span>
@@ -231,7 +232,7 @@ function AccountsContent() {
           </DialogHeader>
           {atAccountLimit ? (
             <div className="p-3.5 rounded-lg bg-destructive/10 border border-destructive/20 text-destructive text-xs font-semibold leading-relaxed mt-2">
-              Account limit reached (10 / 10 accounts connected). Please disconnect an existing account first.
+              Account limit reached ({maxAccounts} / {maxAccounts} accounts connected). Please disconnect an existing account first.
             </div>
           ) : (
             <label className="flex items-start gap-3 mt-3 p-3.5 rounded-xl bg-surface-container-low border border-outline-variant/80 hover:border-primary-sendlib/40 transition-colors text-xs text-secondary cursor-pointer select-none">
@@ -258,7 +259,7 @@ function AccountsContent() {
               className="flex-1 rounded-lg font-label-sm bg-primary-sendlib hover:bg-primary-sendlib/90 text-white cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed" 
               onClick={() => {
                 if (atAccountLimit) {
-                  toast.error("Account limit reached: 10 / 10 accounts connected.");
+                  toast.error(`Account limit reached: ${maxAccounts} / ${maxAccounts} accounts connected.`);
                   return;
                 }
                 if (!agreeTerms) {

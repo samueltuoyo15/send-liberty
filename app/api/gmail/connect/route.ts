@@ -17,14 +17,14 @@ export async function GET(req: NextRequest) {
       return NextResponse.json({ success: false, message: "User not found" }, { status: 404 });
     }
 
-    if (dbUser.plan !== "pro") {
-      const count = await GmailAccount.countDocuments({ userId: user.id });
-      if (count >= MAX_GMAIL_ACCOUNTS) {
-        return NextResponse.json(
-          { success: false, message: `You have reached the maximum of ${MAX_GMAIL_ACCOUNTS} connected Gmail accounts on the Free plan.` },
-          { status: 429 }
-        );
-      }
+    const count = await GmailAccount.countDocuments({ userId: user.id });
+    const maxAccounts = dbUser.plan === "pro" ? 50 : MAX_GMAIL_ACCOUNTS;
+    
+    if (count >= maxAccounts) {
+      return NextResponse.json(
+        { success: false, message: `You have reached the maximum of ${maxAccounts} connected Gmail accounts.` },
+        { status: 429 }
+      );
     }
 
     const url = getGmailAuthUrl(user.id);

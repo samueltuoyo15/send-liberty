@@ -59,8 +59,9 @@ function KeysContent() {
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const isPro = (user as any)?.plan === "pro";
+  const maxKeys = isPro ? 200 : 15;
   const activeKeyCount = apiKeys ? apiKeys.filter(k => !k.revoked).length : 0;
-  const atKeyLimit = !isLoading && !isPro && activeKeyCount >= 15;
+  const atKeyLimit = !isLoading && activeKeyCount >= maxKeys;
 
   const handleGenerate = () => {
     if (!hasConnectedAccounts) {
@@ -69,7 +70,7 @@ function KeysContent() {
     }
 
     if (atKeyLimit) {
-      toast.error("You have reached the maximum limit of 15 active API keys.");
+      toast.error(`You have reached the maximum limit of ${maxKeys} active API keys.`);
       return;
     }
 
@@ -122,7 +123,7 @@ function KeysContent() {
           {!isLoading && apiKeys && (
             <p className="text-xs mt-1.5 font-medium">
               <span className={atKeyLimit ? "text-destructive font-bold" : "text-secondary"}>
-                {isPro ? `${activeKeyCount} / Unlimited keys used` : `${activeKeyCount} / 15 active keys used`}
+                {activeKeyCount} / {maxKeys} active keys used
               </span>
             </p>
           )}
@@ -136,13 +137,13 @@ function KeysContent() {
               return;
             }
             if (atKeyLimit) {
-              toast.error("Limit reached: 15 / 15 active keys used. Please revoke a key first.");
+              toast.error(`Limit reached: ${maxKeys} / ${maxKeys} active keys used. Please revoke a key first.`);
               return;
             }
             setGenerateDialog(true);
           }}
           disabled={isGenerating || atKeyLimit || (!isLoadingAccounts && !hasConnectedAccounts)}
-          title={!hasConnectedAccounts ? "Connect a Gmail account first" : atKeyLimit ? "You've reached the 15-key limit" : undefined}
+          title={!hasConnectedAccounts ? "Connect a Gmail account first" : atKeyLimit ? `You've reached the ${maxKeys}-key limit` : undefined}
         >
           <HugeiconsIcon icon={Key01Icon} size={16} color='currentColor' strokeWidth={1.5} />
           <span className="ml-2">{!hasConnectedAccounts ? "Connect Account First" : atKeyLimit ? "Key Limit Reached" : "Generate New Key"}</span>
@@ -308,7 +309,7 @@ function KeysContent() {
             </div>
             {atKeyLimit && (
               <div className="p-3.5 rounded-lg bg-destructive/10 border border-destructive/20 text-destructive text-xs font-semibold leading-relaxed">
-                Key limit reached (15 / 15 active keys used). Please revoke an existing key before creating a new one.
+                Key limit reached ({maxKeys} / {maxKeys} active keys used). Please revoke an existing key before creating a new one.
               </div>
             )}
           </div>

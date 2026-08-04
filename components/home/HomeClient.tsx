@@ -358,8 +358,8 @@ export default function HomeClient() {
                 <ul className="space-y-3 text-sm text-secondary flex-1">
                   {[
                     "Everything in Free",
-                    "Unlimited connected Gmail accounts",
-                    "Unlimited API keys",
+                    "Up to 50 connected Gmail accounts",
+                    "Up to 200 API keys",
                     "300 API requests / minute",
                     "5MB HTML body · 2MB text body",
                     "Up to 20 attachments · 50MB total",

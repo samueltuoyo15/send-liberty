@@ -108,12 +108,12 @@ export default function LimitsPage() {
             <tbody className="divide-y divide-outline-variant/50">
               <tr className="hover:bg-surface-variant/20 transition-colors">
                 <td className="px-4 py-3 text-secondary">Connected Gmail Accounts</td>
-                <td className="px-4 py-3 font-bold text-primary-sendlib">10 accounts max <span className="font-normal text-xs text-secondary block mt-1">(Unlimited on Pro)</span></td>
+                <td className="px-4 py-3 font-bold text-primary-sendlib">10 accounts max <span className="font-normal text-xs text-secondary block mt-1">(50 max on Pro)</span></td>
                 <td className="px-4 py-3 text-secondary">Per SendLib user account</td>
               </tr>
               <tr className="hover:bg-surface-variant/20 transition-colors">
                 <td className="px-4 py-3 text-secondary">Active API Keys</td>
-                <td className="px-4 py-3 font-bold text-primary-sendlib">15 keys max <span className="font-normal text-xs text-secondary block mt-1">(Unlimited on Pro)</span></td>
+                <td className="px-4 py-3 font-bold text-primary-sendlib">15 keys max <span className="font-normal text-xs text-secondary block mt-1">(200 max on Pro)</span></td>
                 <td className="px-4 py-3 text-secondary">Per SendLib user account</td>
               </tr>
               <tr className="hover:bg-surface-variant/20 transition-colors">
