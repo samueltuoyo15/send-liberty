@@ -13,7 +13,7 @@ export default function LimitsPage() {
       </div>
 
       <p className="text-secondary leading-relaxed">
-        SendLib is free. The following limits apply to all accounts to ensure platform stability and protect fair usage.
+        The following limits apply to accounts to ensure platform stability and protect fair usage. Pro plan upgrades increase these limits significantly.
       </p>
 
       {/* Section 1: Rate Limits */}
@@ -32,7 +32,7 @@ export default function LimitsPage() {
             <tbody className="divide-y divide-outline-variant/50">
               <tr className="hover:bg-surface-variant/20 transition-colors">
                 <td className="px-4 py-3 font-mono text-xs text-secondary"><code>POST /api/send</code></td>
-                <td className="px-4 py-3 font-bold text-primary-sendlib">60 requests</td>
+                <td className="px-4 py-3 font-bold text-primary-sendlib">60 requests <span className="font-normal text-xs text-secondary block mt-1">(300 on Pro)</span></td>
                 <td className="px-4 py-3 text-secondary">per minute</td>
                 <td className="px-4 py-3 text-secondary">API key</td>
               </tr>
@@ -70,12 +70,12 @@ export default function LimitsPage() {
               </tr>
               <tr className="hover:bg-surface-variant/20 transition-colors">
                 <td className="px-4 py-3 font-mono text-xs text-secondary"><code>html</code></td>
-                <td className="px-4 py-3 font-bold text-primary-sendlib">2 MB</td>
+                <td className="px-4 py-3 font-bold text-primary-sendlib">2 MB <span className="font-normal text-xs text-secondary block mt-1">(5 MB on Pro)</span></td>
                 <td className="px-4 py-3 text-secondary">UTF-8 encoded</td>
               </tr>
               <tr className="hover:bg-surface-variant/20 transition-colors">
                 <td className="px-4 py-3 font-mono text-xs text-secondary"><code>text</code></td>
-                <td className="px-4 py-3 font-bold text-primary-sendlib">1 MB</td>
+                <td className="px-4 py-3 font-bold text-primary-sendlib">1 MB <span className="font-normal text-xs text-secondary block mt-1">(2 MB on Pro)</span></td>
                 <td className="px-4 py-3 text-secondary">UTF-8 encoded</td>
               </tr>
               <tr className="hover:bg-surface-variant/20 transition-colors">
@@ -85,8 +85,8 @@ export default function LimitsPage() {
               </tr>
               <tr className="hover:bg-surface-variant/20 transition-colors">
                 <td className="px-4 py-3 font-mono text-xs text-secondary"><code>attachments</code></td>
-                <td className="px-4 py-3 font-bold text-primary-sendlib">10 files · 10 MB each · 25 MB total</td>
-                <td className="px-4 py-3 text-secondary">Base64-encoded content</td>
+                <td className="px-4 py-3 font-bold text-primary-sendlib">10 files · 25 MB total <span className="font-normal text-xs text-secondary block mt-1">(20 files · 50 MB total on Pro)</span></td>
+                <td className="px-4 py-3 text-secondary">Base64-encoded content (Max 10MB per file)</td>
               </tr>
             </tbody>
           </table>
@@ -108,12 +108,12 @@ export default function LimitsPage() {
             <tbody className="divide-y divide-outline-variant/50">
               <tr className="hover:bg-surface-variant/20 transition-colors">
                 <td className="px-4 py-3 text-secondary">Connected Gmail Accounts</td>
-                <td className="px-4 py-3 font-bold text-primary-sendlib">10 accounts max</td>
+                <td className="px-4 py-3 font-bold text-primary-sendlib">10 accounts max <span className="font-normal text-xs text-secondary block mt-1">(Unlimited on Pro)</span></td>
                 <td className="px-4 py-3 text-secondary">Per SendLib user account</td>
               </tr>
               <tr className="hover:bg-surface-variant/20 transition-colors">
                 <td className="px-4 py-3 text-secondary">Active API Keys</td>
-                <td className="px-4 py-3 font-bold text-primary-sendlib">15 keys max</td>
+                <td className="px-4 py-3 font-bold text-primary-sendlib">15 keys max <span className="font-normal text-xs text-secondary block mt-1">(Unlimited on Pro)</span></td>
                 <td className="px-4 py-3 text-secondary">Per SendLib user account</td>
               </tr>
               <tr className="hover:bg-surface-variant/20 transition-colors">
