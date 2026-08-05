@@ -292,7 +292,7 @@ export default function HomeClient() {
           <div className="max-w-7xl mx-auto px-margin-mobile md:px-margin-desktop">
             <div className="text-center mb-12 space-y-3">
               <h2 className="font-headline-lg text-headline-lg text-primary-sendlib font-extrabold">Simple, Honest Pricing</h2>
-              <p className="text-secondary font-body-lg max-w-2xl mx-auto">Start for free, no credit card required. Pro features coming soon.</p>
+              <p className="text-secondary font-body-lg max-w-2xl mx-auto">Start for free, no credit card required.</p>
             </div>
 
             <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto items-start">
