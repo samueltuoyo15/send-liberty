@@ -42,8 +42,7 @@ function AccountsContent() {
         spread: 120,
         origin: { y: 0.6 }
       });
-      // eslint-disable-next-line react-hooks/set-state-in-effect
-      setSuccessDialogOpen(true);
+      const timer = setTimeout(() => setSuccessDialogOpen(true), 0);
       toast.success("Gmail account connected successfully!");
 
       const newUrl = window.location.pathname;

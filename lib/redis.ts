@@ -11,7 +11,7 @@ export function getRedisClient(): Redis {
       enableOfflineQueue: false,
     });
     client.on("error", (err) => {
-      console.error("[Redis] connection error:", err.message);
+      console.error("Redis connection error:", err.message);
     });
   }
   return client;

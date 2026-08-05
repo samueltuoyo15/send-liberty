@@ -7,15 +7,9 @@ type Language = "curl" | "js" | "python" | "go" | "rust" | "php" | "net" | "java
 
 export default function BasicSendPage() {
   const [lang, setLang] = useState<Language>("curl");
-  const [apiUrl, setApiUrl] = useState("https://sendlib.samueltuoyo.com");
-  const [isCopied, setIsCopied] = useState(false);
-
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      // eslint-disable-next-line react-hooks/set-state-in-effect
-      setApiUrl(window.location.origin);
-    }
-  }, []);
+  const [apiUrl] = useState(() =>
+    typeof window !== "undefined" ? window.location.origin : "https://sendlib.samueltuoyo.com"
+  );
 
   const handleCopyCode = () => {
     let snippet = "";

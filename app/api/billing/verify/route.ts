@@ -5,13 +5,20 @@ import User from "@/models/User";
 import { getBachsCheckoutSession } from "@/lib/bachs";
 import mongoose from "mongoose";
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function extractSubscriptionId(data: any): string | undefined {
+interface WebhookData {
+  id?: string;
+  subscription_id?: string;
+  subscription?: string | { id?: string; subscription_id?: string };
+}
+
+function extractSubscriptionId(data: WebhookData | undefined): string | undefined {
   if (!data) return undefined;
   if (typeof data.subscription_id === "string") return data.subscription_id;
   if (typeof data.subscription === "string") return data.subscription;
-  if (data.subscription && typeof data.subscription.subscription_id === "string") return data.subscription.subscription_id;
-  if (data.subscription && typeof data.subscription.id === "string") return data.subscription.id;
+  if (typeof data.subscription === "object" && data.subscription) {
+    if (typeof data.subscription.subscription_id === "string") return data.subscription.subscription_id;
+    if (typeof data.subscription.id === "string") return data.subscription.id;
+  }
   if (typeof data.id === "string" && data.id.startsWith("sub_")) return data.id;
   return undefined;
 }
@@ -37,7 +44,7 @@ export async function GET(req: NextRequest) {
           user.set("subscriptionStatus", "active");
           user.set("lastPaymentAt", new Date());
 
-          const subId = extractSubscriptionId(session);
+          const subId = extractSubscriptionId(session as WebhookData);
           if (subId) {
             user.set("subscriptionId", subId);
           }
@@ -45,9 +52,9 @@ export async function GET(req: NextRequest) {
           await user.save();
           return NextResponse.json({ success: true, plan: "pro", verified: true });
         }
-      } catch (err: unknown) {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        console.warn("[Manual Verification Warning]:", (err as any)?.response?.data || (err as Error).message);
+      } catch (err) {
+        const msg = err instanceof Error ? err.message : "Manual verification failed";
+        console.warn("Manual verification warning:", msg);
       }
     }
 
@@ -56,9 +63,9 @@ export async function GET(req: NextRequest) {
       plan: user.plan || "free",
       verified: user.plan === "pro",
     });
-  } catch (err: unknown) {
+  } catch (err) {
     if (err instanceof Response) return err;
-    console.error("/api/billing/verify GET error:", err);
-    return NextResponse.json({ success: false, message: "Verification failed" }, { status: 500 });
+    const msg = err instanceof Error ? err.message : "Verification error";
+    return NextResponse.json({ success: false, message: msg }, { status: 500 });
   }
 }

@@ -34,12 +34,9 @@ export default function HomeClient() {
     setTimeout(() => setIsCopied(false), 2000);
   };
 
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      // eslint-disable-next-line react-hooks/set-state-in-effect
-      setApiUrl(window.location.origin);
-    }
-  }, []);
+  const [apiUrl, setApiUrl] = useState(() =>
+    typeof window !== "undefined" ? window.location.origin : "https://sendlib.samueltuoyo.com"
+  );
 
   return (
     <div className="flex flex-col min-h-screen bg-background-sendlib text-on-background font-body-md">
@@ -190,7 +187,7 @@ export default function HomeClient() {
                 <div className="absolute top-0 right-0 w-48 h-48 bg-emerald-500/10 rounded-full blur-2xl pointer-events-none" />
                 <div className="relative z-20 text-white">
                   <h3 className="font-headline-md text-headline-md font-bold text-white mb-xs">Inbox Delivery</h3>
-                  <p className="font-body-md text-body-md opacity-90 text-white/90">Because emails are sent from your own Google account, they land in the inbox, not the spam folder.</p>
+                  <p className="font-body-md text-body-md opacity-90 text-white/90">Because emails are sent from your own or your product's Google account, they land in the inbox, not the spam folder.</p>
                 </div>
               </div>
               {/* OAuth2 Card */}

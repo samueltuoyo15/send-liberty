@@ -17,8 +17,7 @@ export default function LogsPage() {
   const [search, setSearch] = useState("");
   const [status, setStatus] = useState("");
   const [fromEmail, setFromEmail] = useState("");
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const [selectedLog, setSelectedLog] = useState<any | null>(null);
+  const [selectedLog, setSelectedLog] = useState<EmailLog | null>(null);
 
   const { data: accounts } = useGmailAccounts();
   const { data: logsData, isLoading } = useEmailLogs(page, 20, {
@@ -81,8 +80,7 @@ export default function LogsPage() {
             className="bg-surface-container-low border border-outline-variant rounded-lg px-3 h-10 text-sm outline-none text-secondary focus:border-primary-sendlib focus:bg-white transition-colors w-full sm:w-56 cursor-pointer"
           >
             <option value="">All Senders</option>
-            {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
-            {accounts?.map((acc: any) => (
+            {accounts?.map((acc) => (
               <option key={acc.id} value={acc.email}>
                 {acc.email}
               </option>
@@ -164,8 +162,7 @@ export default function LogsPage() {
                 </td>
               </tr>
             ) : (
-              // eslint-disable-next-line @typescript-eslint/no-explicit-any
-              logs.map((log: any) => (
+              logs.map((log: EmailLog) => (
                 <tr key={log.id} className="hover:bg-muted/30 transition-colors">
                   <td className="px-6 py-4 font-mono text-xs text-muted-foreground whitespace-nowrap">
                     {log.from ? redactEmail(log.from) : "—"}

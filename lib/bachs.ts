@@ -23,8 +23,7 @@ export async function createBachsCheckoutSession(options: CreateCheckoutSessionO
 
   const { customerEmail, customerName, productId, amount, currency = "USD", successUrl, cancelUrl, metadata } = options;
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const payload: Record<string, any> = {
+  const payload: Record<string, unknown> = {
     customer: {
       email: customerEmail,
       name: customerName || customerEmail.split("@")[0],

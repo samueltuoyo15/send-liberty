@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { connectDB } from "@/lib/db";
 import { sendGmailEmail } from "@/lib/gmail";
-import ApiKey from "@/models/ApiKey";
+import ApiKey, { IApiKey } from "@/models/ApiKey";
 import User from "@/models/User";
 import argon2 from "argon2";
 import mongoose from "mongoose";
@@ -72,8 +72,7 @@ export async function POST(req: NextRequest) {
     const candidates = await ApiKey.find({ keyPrefix: prefix, revoked: false });
     let authenticatedUserId: string | null = null;
     let apiKeyId: mongoose.Types.ObjectId | null = null;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    let matchedKey: any = null;
+    let matchedKey: IApiKey | null = null;
 
     for (const candidate of candidates) {
       const valid = await argon2.verify(candidate.keyHash, rawKey);

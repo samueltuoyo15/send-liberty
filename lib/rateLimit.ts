@@ -59,7 +59,7 @@ export async function rateLimit(
     }
     // Redis connection error or other unexpected error — fail open so users
     // are not blocked when Redis is down
-    console.error("[RateLimit] unexpected error, allowing request:", res);
+    console.error("Rate limit error, allowing request:", res);
     return { success: true, resetInSeconds: 0 };
   }
 }

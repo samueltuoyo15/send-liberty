@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { requireAuthUser } from "@/lib/auth";
 import { connectDB } from "@/lib/db";
-import ApiKey from "@/models/ApiKey";
+import ApiKey, { IApiKey } from "@/models/ApiKey";
 import GmailAccount from "@/models/GmailAccount";
 import User from "@/models/User";
 import argon2 from "argon2";
@@ -16,10 +16,9 @@ export async function GET(req: NextRequest) {
     const keys = await ApiKey.find({ userId: new mongoose.Types.ObjectId(user.id) })
       .select("name keyPrefix revoked allowedOrigins lastUsedAt createdAt")
       .sort({ createdAt: -1 })
-      .lean();
+      .lean<IApiKey[]>();
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const formattedKeys = keys.map((key: any) => ({
+    const formattedKeys = keys.map((key) => ({
       id: key._id.toString(),
       name: key.name,
       keyPrefix: key.keyPrefix,
@@ -32,7 +31,7 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ success: true, data: formattedKeys });
   } catch (err) {
     if (err instanceof Response) return err;
-    console.error("/api/keys GET error:", err);
+    console.error("GET api/keys error:", err);
     return NextResponse.json({ success: false, message: "Internal server error" }, { status: 500 });
   }
 }
@@ -45,7 +44,6 @@ export async function POST(req: NextRequest) {
     await connectDB();
     const dbUser = await User.findById(user.id).lean();
 
-    // Verify user has at least one connected Gmail account
     const connectedAccountCount = await GmailAccount.countDocuments({
       userId: new mongoose.Types.ObjectId(user.id),
       connected: true,
@@ -55,19 +53,17 @@ export async function POST(req: NextRequest) {
       return NextResponse.json(
         {
           success: false,
-          message: "You must connect at least one Gmail account before creating an API key. Go to Dashboard → Accounts to connect a Gmail account.",
+          message: "You must connect at least one Gmail account before creating an API key. Go to Dashboard -> Accounts to connect a Gmail account.",
         },
         { status: 400 }
       );
     }
 
-    // Enforce per-user key limit
     const activeKeyCount = await ApiKey.countDocuments({
       userId: new mongoose.Types.ObjectId(user.id),
       revoked: false,
     });
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const maxKeys = (dbUser as any)?.plan === "pro" ? 100 : MAX_KEYS_PER_USER;
+    const maxKeys = dbUser?.plan === "pro" ? 100 : MAX_KEYS_PER_USER;
     if (activeKeyCount >= maxKeys) {
       return NextResponse.json(
         {
@@ -102,7 +98,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json(
       {
         success: true,
-        message: "API key created. Save it now — it won't be shown again.",
+        message: "API key created. Save it now - it will not be shown again.",
         data: {
           id: apiKey._id,
           key: fullKey,
@@ -116,7 +112,7 @@ export async function POST(req: NextRequest) {
     );
   } catch (err) {
     if (err instanceof Response) return err;
-    console.error("/api/keys POST error:", err);
+    console.error("POST api/keys error:", err);
     return NextResponse.json({ success: false, message: "Internal server error" }, { status: 500 });
   }
 }

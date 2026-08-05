@@ -3,6 +3,8 @@ import { api } from "../lib/api";
 
 export interface EmailLog {
   _id: string;
+  id?: string;
+  from?: string;
   to: string;
   subject: string;
   status: "sent" | "failed";

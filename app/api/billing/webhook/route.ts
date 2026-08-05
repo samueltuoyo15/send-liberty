@@ -4,13 +4,28 @@ import User from "@/models/User";
 import { verifyBachsSignature } from "@/lib/bachs";
 import mongoose from "mongoose";
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function extractSubscriptionId(data: any): string | undefined {
+interface WebhookData {
+  id?: string;
+  subscription_id?: string;
+  subscription?: string | { id?: string; subscription_id?: string };
+  metadata?: Record<string, string>;
+}
+
+interface WebhookPayload {
+  type?: string;
+  event?: string;
+  status?: string;
+  data?: WebhookData;
+}
+
+function extractSubscriptionId(data: WebhookData | undefined): string | undefined {
   if (!data) return undefined;
   if (typeof data.subscription_id === "string") return data.subscription_id;
   if (typeof data.subscription === "string") return data.subscription;
-  if (data.subscription && typeof data.subscription.subscription_id === "string") return data.subscription.subscription_id;
-  if (data.subscription && typeof data.subscription.id === "string") return data.subscription.id;
+  if (typeof data.subscription === "object" && data.subscription) {
+    if (typeof data.subscription.subscription_id === "string") return data.subscription.subscription_id;
+    if (typeof data.subscription.id === "string") return data.subscription.id;
+  }
   if (typeof data.id === "string" && data.id.startsWith("sub_")) return data.id;
   return undefined;
 }
@@ -23,32 +38,29 @@ export async function POST(req: NextRequest) {
     const webhookSecret = process.env.BACHS_WEBHOOK_SECRET?.trim();
 
     if (!webhookSecret) {
-      console.warn("Bachs Webhook BACHS_WEBHOOK_SECRET is not set. Skipping signature verification, set it in production!");
+      console.warn("Bachs webhook secret not set. Skipping signature verification.");
     } else if (!signature || !timestamp) {
-      console.warn("Bachs Webhook Request missing signature or timestamp headers, rejected.");
+      console.warn("Bachs webhook missing signature or timestamp headers.");
       return NextResponse.json({ success: false, message: "Missing signature headers" }, { status: 401 });
     } else {
       const isValid = verifyBachsSignature(rawBody, webhookSecret, timestamp, signature);
       if (!isValid) {
-        console.warn("Bachs Webhook Invalid signature rejected.");
+        console.warn("Bachs webhook invalid signature.");
         return NextResponse.json({ success: false, message: "Invalid signature" }, { status: 401 });
       }
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    let payload: any = {};
+    let payload: WebhookPayload = {};
     try {
-      payload = JSON.parse(rawBody);
+      payload = JSON.parse(rawBody) as WebhookPayload;
     } catch {
       return NextResponse.json({ success: false, message: "Invalid JSON" }, { status: 400 });
     }
 
     const eventType = payload.type || payload.event || payload.status;
-    const data = payload.data || payload;
+    const data = payload.data || (payload as unknown as WebhookData);
     const metadata = data.metadata || {};
     const userId = metadata.userId;
-
-    console.log(`[Bachs Webhook Received] event: ${eventType}, userId: ${userId || "none"}`);
 
     if (userId && mongoose.Types.ObjectId.isValid(userId)) {
       await connectDB();
@@ -73,7 +85,7 @@ export async function POST(req: NextRequest) {
           "CANCELLED",
         ];
 
-        if (activeEvents.includes(eventType)) {
+        if (eventType && activeEvents.includes(eventType)) {
           user.set("plan", "pro");
           user.set("subscriptionStatus", "active");
           user.set("lastPaymentAt", new Date());
@@ -84,21 +96,18 @@ export async function POST(req: NextRequest) {
           }
 
           await user.save();
-          console.log(`[Bachs Webhook] User ${userId} successfully upgraded to Pro with subId: ${subId || "N/A"}.`);
-        } else if (inactiveEvents.includes(eventType)) {
+        } else if (eventType && inactiveEvents.includes(eventType)) {
           user.set("plan", "free");
           user.set("subscriptionStatus", eventType.includes("failed") ? "past_due" : "canceled");
           await user.save();
-          console.log(`[Bachs Webhook] User ${userId} downgraded/canceled.`);
         }
       }
     }
 
     return NextResponse.json({ received: true });
-  } catch (err: unknown) {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    console.error("[Bachs Webhook Fatal Error]:", (err as any)?.stack || err);
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    return NextResponse.json({ success: false, message: (err as any)?.message || "Webhook processing error" }, { status: 500 });
+  } catch (err) {
+    const message = err instanceof Error ? err.message : "Webhook processing error";
+    console.error("Bachs webhook error:", message);
+    return NextResponse.json({ success: false, message }, { status: 500 });
   }
 }

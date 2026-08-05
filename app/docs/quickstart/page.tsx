@@ -5,14 +5,9 @@ import { useState, useEffect } from "react";
 import { DocsPagination } from "@/components/docs/DocsPagination";
 
 export default function QuickstartPage() {
-  const [apiUrl, setApiUrl] = useState("https://sendlib.samueltuoyo.com");
-
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      // eslint-disable-next-line react-hooks/set-state-in-effect
-      setApiUrl(window.location.origin);
-    }
-  }, []);
+  const [apiUrl] = useState(() =>
+    typeof window !== "undefined" ? window.location.origin : "https://sendlib.samueltuoyo.com"
+  );
 
   return (
     <div className="max-w-3xl">

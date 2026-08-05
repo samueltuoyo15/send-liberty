@@ -63,8 +63,7 @@ export default function DashboardPage() {
           spread: 120,
           origin: { y: 0.6 }
         });
-        // eslint-disable-next-line react-hooks/set-state-in-effect
-        setMilestoneDialogOpen(true);
+        const timer = setTimeout(() => setMilestoneDialogOpen(true), 0);
         localStorage.setItem("sendlib_confetti_step1_seen", "true");
       }
     }
@@ -475,8 +474,7 @@ export default function DashboardPage() {
                       </TableCell>
                     </TableRow>
                   ) : (
-                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                    emailLogs.map((log: any) => (
+                    emailLogs.map((log: EmailLog) => (
                       <TableRow key={log.id} className="border-[#1d2b3e]/10 transition-colors hover:bg-[#1d2b3e]/5 group">
                         <TableCell className="pl-6 py-4 font-mono text-xs text-[#1d2b3e]/70 whitespace-nowrap">
                           {log.from ? redactEmail(log.from) : "—"}

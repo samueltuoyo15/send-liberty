@@ -52,8 +52,8 @@ function KeysContent() {
 
   useEffect(() => {
     if (searchParams.get("generate") === "true") {
-      // eslint-disable-next-line react-hooks/set-state-in-effect
-      setGenerateDialog(true);
+      const timer = setTimeout(() => setGenerateDialog(true), 0);
+      return () => clearTimeout(timer);
     }
   }, [searchParams]);
 

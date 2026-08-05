@@ -2,6 +2,14 @@ import { NextRequest, NextResponse } from "next/server";
 import { requireAuthUser } from "@/lib/auth";
 import { createBachsCheckoutSession } from "@/lib/bachs";
 
+interface BachsErrorResponse {
+  response?: {
+    data?: unknown;
+    status?: number;
+  };
+  message?: string;
+}
+
 export async function POST(req: NextRequest) {
   try {
     const user = await requireAuthUser(req);
@@ -16,8 +24,6 @@ export async function POST(req: NextRequest) {
     const protocol = req.headers.get("x-forwarded-proto") || (requestHost.includes("localhost") ? "http" : "https");
     const requestOrigin = `${protocol}://${requestHost}`;
 
-    // Bachs requires a public HTTPS return URL for checkouts.
-    // If running on localhost, use NEXT_PUBLIC_APP_URL or APP_URL (e.g. ngrok) if provided.
     const appUrl = process.env.NEXT_PUBLIC_APP_URL || process.env.APP_URL;
     const origin = appUrl ? appUrl.replace(/\/$/, "") : requestOrigin;
 
@@ -44,18 +50,20 @@ export async function POST(req: NextRequest) {
     });
   } catch (err: unknown) {
     if (err instanceof Response) return err;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const bachsErr = (err as any)?.response?.data;
-    console.error("[Bachs Checkout API Error]:", bachsErr || (err as Error).message);
+    const errorObj = err as BachsErrorResponse;
+    const bachsErr = errorObj?.response?.data;
+    const errorMessage = errorObj?.message || "Failed to initialize Bachs checkout session";
+    const status = errorObj?.response?.status || 500;
 
-    const errorDetail = typeof bachsErr === "object" ? JSON.stringify(bachsErr) : (bachsErr || (err as Error).message || "Failed to initialize Bachs checkout session");
+    console.error("Bachs checkout error:", bachsErr || errorMessage);
+
+    const errorDetail = typeof bachsErr === "object" ? JSON.stringify(bachsErr) : (bachsErr || errorMessage);
     return NextResponse.json(
       {
         success: false,
         message: `Bachs Checkout Error: ${errorDetail}`,
       },
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      { status: (err as any)?.response?.status || 500 }
+      { status }
     );
   }
 }

@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { requireAuthUser } from "@/lib/auth";
 import { connectDB } from "@/lib/db";
-import EmailLog from "@/models/EmailLog";
-import mongoose from "mongoose";
+import EmailLog, { IEmailLog } from "@/models/EmailLog";
+import mongoose, { FilterQuery } from "mongoose";
 
 export async function GET(req: NextRequest) {
   try {
@@ -18,8 +18,7 @@ export async function GET(req: NextRequest) {
 
     await connectDB();
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const query: any = { userId: new mongoose.Types.ObjectId(user.id) };
+    const query: FilterQuery<IEmailLog> = { userId: new mongoose.Types.ObjectId(user.id) };
 
     if (status) {
       query.status = status;
@@ -28,7 +27,6 @@ export async function GET(req: NextRequest) {
       query.from = from;
     }
     if (search) {
-      // Escape special regex chars to prevent ReDoS
       const escapedSearch = search.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
       query.$or = [
         { to: { $regex: escapedSearch, $options: "i" } },
@@ -54,7 +52,7 @@ export async function GET(req: NextRequest) {
     });
   } catch (err) {
     if (err instanceof Response) return err;
-    console.error("/api/logs GET error:", err);
+    console.error("GET api/logs error:", err);
     return NextResponse.json({ success: false, message: "Internal server error" }, { status: 500 });
   }
 }
