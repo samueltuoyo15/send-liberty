@@ -19,6 +19,8 @@ export default function SettingsPage() {
   const { data: user, isLoading } = useMe();
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const isPro = (user as any)?.plan === "pro";
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const isCanceled = (user as any)?.subscriptionStatus === "canceled";
   const { mutate: updateProfile, isPending: isUpdating } = useUpdateProfile();
   const { mutate: logout, isPending: isLoggingOut } = useLogout();
   const [editName, setEditName] = useState("");
@@ -171,15 +173,17 @@ export default function SettingsPage() {
                 <HugeiconsIcon icon={CreditCardIcon} size={20} color='currentColor' strokeWidth={1.5} className="text-primary-sendlib" />
                 <h3 className="font-headline-md font-bold text-lg text-primary-sendlib">Plan & Billing</h3>
               </div>
-              <span className="px-3 py-1 rounded-full text-xs font-bold bg-primary-sendlib text-white uppercase tracking-wider">
-                {isPro ? "Pro Plan Active" : "Free Plan"}
+              <span className={`px-3 py-1 rounded-full text-xs font-bold text-white uppercase tracking-wider ${isCanceled ? 'bg-destructive/80' : 'bg-primary-sendlib'}`}>
+                {isPro ? (isCanceled ? "Pro Plan (Canceled)" : "Pro Plan Active") : "Free Plan"}
               </span>
             </div>
             
             <div className="space-y-4">
               <p className="text-sm text-secondary leading-relaxed max-w-[600px] mb-4">
                 {isPro
-                  ? "Your account is on the Pro Plan ($3.99/mo). You enjoy unlimited emails per month, higher rate limits, and up to 50 connected accounts."
+                  ? isCanceled 
+                    ? "Your Pro Plan has been canceled and will not renew. You still have access to Pro features until the end of your billing cycle."
+                    : "Your account is on the Pro Plan ($3.99/mo). You enjoy unlimited emails per month, higher rate limits, and up to 50 connected accounts."
                   : "You are currently on the Free Plan. Upgrade to Pro for $3.99/month to unlock higher rate limits, larger attachments, and up to 50 connected accounts."}
               </p>
 
@@ -196,18 +200,21 @@ export default function SettingsPage() {
                 </Button>
               ) : (
                 <div className="flex items-center gap-4">
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    className="rounded-lg border-destructive/40 text-destructive hover:bg-destructive/10 text-xs font-bold cursor-pointer"
-                    onClick={() => setCancelSubConfirmOpen(true)}
-                  >
-                    Cancel Subscription
-                  </Button>
+                  {!isCanceled && (
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="rounded-lg border-destructive/40 text-destructive hover:bg-destructive/10 text-xs font-bold cursor-pointer"
+                      onClick={() => setCancelSubConfirmOpen(true)}
+                    >
+                      Cancel Subscription
+                    </Button>
+                  )}
                   {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
                   {(user as any)?.lastPaymentAt && (
                     <span className="text-xs font-medium text-secondary">
-                      Renews on: {new Date(new Date((user as any).lastPaymentAt).setMonth(new Date((user as any).lastPaymentAt).getMonth() + 1)).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+                      {isCanceled ? "Cancels on: " : "Renews on: "}
+                      {new Date(new Date((user as any).lastPaymentAt).setMonth(new Date((user as any).lastPaymentAt).getMonth() + 1)).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
                     </span>
                   )}
                 </div>
