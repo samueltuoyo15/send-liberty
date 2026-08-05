@@ -97,8 +97,7 @@ export async function POST(req: NextRequest) {
     }
 
     // --- Rate limit ---
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const plan = (user as any).plan || "free";
+    const plan = user.plan || "free";
     const rl = await rateLimit("send", apiKeyId!.toString(), plan);
     const limit = plan === "pro" ? 300 : 60;
     

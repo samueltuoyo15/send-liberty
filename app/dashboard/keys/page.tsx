@@ -57,8 +57,7 @@ function KeysContent() {
     }
   }, [searchParams]);
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const isPro = (user as any)?.plan === "pro";
+  const isPro = user?.plan === "pro";
   const maxKeys = isPro ? 100 : 15;
   const activeKeyCount = apiKeys ? apiKeys.filter(k => !k.revoked).length : 0;
   const atKeyLimit = !isLoading && activeKeyCount >= maxKeys;

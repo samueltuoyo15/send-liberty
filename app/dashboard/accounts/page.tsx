@@ -61,8 +61,7 @@ function AccountsContent() {
     }
   }, [searchParams]);
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const isPro = (user as any)?.plan === "pro";
+  const isPro = user?.plan === "pro";
   const maxAccounts = isPro ? 50 : 10;
   const atAccountLimit = !isLoading && !!accounts && accounts.length >= maxAccounts;
 

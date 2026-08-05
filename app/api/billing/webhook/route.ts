@@ -23,14 +23,14 @@ export async function POST(req: NextRequest) {
     const webhookSecret = process.env.BACHS_WEBHOOK_SECRET?.trim();
 
     if (!webhookSecret) {
-      console.warn("[Bachs Webhook] BACHS_WEBHOOK_SECRET is not set. Skipping signature verification — set it in production!");
+      console.warn("Bachs Webhook BACHS_WEBHOOK_SECRET is not set. Skipping signature verification, set it in production!");
     } else if (!signature || !timestamp) {
-      console.warn("[Bachs Webhook] Request missing signature or timestamp headers — rejected.");
+      console.warn("Bachs Webhook Request missing signature or timestamp headers, rejected.");
       return NextResponse.json({ success: false, message: "Missing signature headers" }, { status: 401 });
     } else {
       const isValid = verifyBachsSignature(rawBody, webhookSecret, timestamp, signature);
       if (!isValid) {
-        console.warn("[Bachs Webhook] Invalid signature rejected.");
+        console.warn("Bachs Webhook Invalid signature rejected.");
         return NextResponse.json({ success: false, message: "Invalid signature" }, { status: 401 });
       }
     }

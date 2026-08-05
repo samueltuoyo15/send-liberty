@@ -299,8 +299,7 @@ export default function HomeClient() {
 
               {/* Free Card */}
               <div className="rounded-2xl border-2 border-primary-sendlib bg-white shadow-lg p-8 flex flex-col gap-6 relative">
-                {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
-                {(!user || (user as any)?.plan !== "pro") && (
+                {(!user || user.plan !== "pro") && (
                   <div className="absolute -top-3 left-6">
                     <span className="bg-primary-sendlib text-white text-xs font-bold px-3 py-1 rounded-full tracking-wide">CURRENT PLAN</span>
                   </div>
@@ -341,8 +340,7 @@ export default function HomeClient() {
               {/* Pro Card */}
               <div className="rounded-2xl border-2 border-primary-sendlib/80 bg-white shadow-xl p-8 flex flex-col gap-6 relative">
                 <div className="absolute -top-3 left-6">
-                  {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
-                  <span className="bg-emerald-600 text-white text-xs font-bold px-3 py-1 rounded-full tracking-wide">{(user as any)?.plan === "pro" ? "CURRENT PLAN" : "PRO PLAN"}</span>
+                  <span className="bg-emerald-600 text-white text-xs font-bold px-3 py-1 rounded-full tracking-wide">{user?.plan === "pro" ? "CURRENT PLAN" : "PRO PLAN"}</span>
                 </div>
 
                 <div>
@@ -372,8 +370,7 @@ export default function HomeClient() {
                   href={user ? "/dashboard/settings" : "/login"}
                   className="block w-full text-center bg-primary-sendlib hover:bg-primary-sendlib/90 text-white font-bold py-3 rounded-xl transition-all active:scale-95 shadow-md"
                 >
-                  {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
-                  {(user as any)?.plan === "pro" ? "Manage Subscription" : user ? "Upgrade to Pro ($3.99/mo)" : "Get Started Pro ($3.99/mo)"}
+                  {user?.plan === "pro" ? "Manage Subscription" : user ? "Upgrade to Pro ($3.99/mo)" : "Get Started Pro ($3.99/mo)"}
                 </Link>
               </div>
 

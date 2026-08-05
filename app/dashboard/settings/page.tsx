@@ -17,10 +17,8 @@ import { CreditCardIcon } from '@hugeicons/core-free-icons';
 
 export default function SettingsPage() {
   const { data: user, isLoading } = useMe();
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const isPro = (user as any)?.plan === "pro";
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const isCanceled = (user as any)?.subscriptionStatus === "canceled";
+  const isPro = user?.plan === "pro";
+  const isCanceled = user?.subscriptionStatus === "canceled";
   const { mutate: updateProfile, isPending: isUpdating } = useUpdateProfile();
   const { mutate: logout, isPending: isLoggingOut } = useLogout();
   const [editName, setEditName] = useState("");
@@ -210,11 +208,10 @@ export default function SettingsPage() {
                       Cancel Subscription
                     </Button>
                   )}
-                  {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
-                  {(user as any)?.lastPaymentAt && (
+                  {user?.lastPaymentAt && (
                     <span className="text-xs font-medium text-secondary">
                       {isCanceled ? "Cancels on: " : "Renews on: "}
-                      {new Date(new Date((user as any).lastPaymentAt).setMonth(new Date((user as any).lastPaymentAt).getMonth() + 1)).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+                      {new Date(new Date(user.lastPaymentAt).setMonth(new Date(user.lastPaymentAt).getMonth() + 1)).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
                     </span>
                   )}
                 </div>
