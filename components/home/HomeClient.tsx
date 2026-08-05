@@ -131,88 +131,79 @@ export default function HomeClient() {
 
         {/* Comparison Table */}
         <section id="compare" className="py-16 md:py-24 bg-white border-b border-outline-variant/60">
-          <div className="max-w-5xl mx-auto px-margin-mobile md:px-margin-desktop">
-            <div className="text-center mb-12 space-y-3">
-              <span className="px-4 py-1.5 rounded-full bg-primary-sendlib/10 text-primary-sendlib text-xs font-bold inline-block tracking-wide uppercase">Why SendLib</span>
+          <div className="max-w-4xl mx-auto px-4 sm:px-6">
+            <div className="flex flex-col items-center text-center mb-12 space-y-3 w-full">
+              <span className="px-4 py-1.5 rounded-full bg-primary-sendlib/10 text-primary-sendlib text-xs font-bold tracking-wide uppercase">Why SendLib</span>
               <h2 className="text-3xl md:text-4xl font-extrabold text-primary-sendlib">Stop verifying domains. Just send.</h2>
-              <p className="text-secondary max-w-xl mx-auto text-base leading-relaxed">
-                Every other provider makes you prove you own a domain before you can send a single email. SendLib uses the Gmail account your product already has.
+              <p className="text-secondary w-full max-w-2xl mx-auto text-base leading-relaxed">
+                Traditional email APIs force you to configure DNS records and verify custom domains before sending a single email. SendLib uses the Gmail account your product already has.
               </p>
             </div>
 
-            <div className="overflow-x-auto rounded-2xl border border-outline-variant shadow-sm">
-              <table className="w-full text-sm text-left">
+            <div className="overflow-x-auto rounded-2xl border border-outline-variant shadow-sm bg-white">
+              <table className="w-full text-sm text-left border-collapse">
                 <thead>
-                  <tr className="bg-surface-container-low border-b border-outline-variant">
-                    <th className="px-6 py-4 font-semibold text-secondary w-1/3"></th>
-                    <th className="px-6 py-4 text-center">
-                      <span className="bg-primary-sendlib text-white text-xs font-bold px-3 py-1 rounded-full">SendLib</span>
+                  <tr className="bg-surface-container-low border-b border-outline-variant text-on-background">
+                    <th className="px-6 py-4 font-bold text-secondary w-2/5">Feature</th>
+                    <th className="px-6 py-4 text-center w-3/10 bg-primary-sendlib/5 border-x border-outline-variant/40">
+                      <span className="bg-primary-sendlib text-white text-xs font-extrabold px-3.5 py-1 rounded-full shadow-xs inline-block">SendLib</span>
                     </th>
-                    <th className="px-6 py-4 text-center font-semibold text-secondary">Resend</th>
-                    <th className="px-6 py-4 text-center font-semibold text-secondary">Mailgun</th>
-                    <th className="px-6 py-4 text-center font-semibold text-secondary">SendGrid</th>
+                    <th className="px-6 py-4 text-center font-bold text-secondary w-3/10">Traditional Email APIs</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-outline-variant/50">
                   {[
                     {
-                      label: "Domain verification required",
-                      sendlib: false,
-                      resend: true,
-                      mailgun: true,
-                      sendgrid: true,
+                      feature: "Zero Domain Verification",
+                      sendlib: "✓ Instant (No domain needed)",
+                      sendlibGood: true,
+                      others: "✗ Required (DNS verification)",
+                      othersGood: false,
                     },
                     {
-                      label: "DNS / SPF / DKIM setup",
-                      sendlib: false,
-                      resend: true,
-                      mailgun: true,
-                      sendgrid: true,
+                      feature: "Zero DNS / SPF / DKIM Setup",
+                      sendlib: "✓ None required",
+                      sendlibGood: true,
+                      others: "✗ Complex DNS record setup",
+                      othersGood: false,
                     },
                     {
-                      label: "SMTP configuration",
-                      sendlib: false,
-                      resend: true,
-                      mailgun: true,
-                      sendgrid: true,
+                      feature: "Time to First Email",
+                      sendlib: "⚡ Under 60 seconds",
+                      sendlibGood: true,
+                      others: "⏳ Hours (DNS propagation)",
+                      othersGood: false,
                     },
                     {
-                      label: "Time to first email",
-                      sendlib: "Under 60 seconds",
-                      resend: "Hours (DNS wait)",
-                      mailgun: "Hours (DNS wait)",
-                      sendgrid: "Hours (DNS wait)",
+                      feature: "Free Emails Per Day",
+                      sendlib: "500 to 2,000 / account",
+                      sendlibGood: true,
+                      others: "100 / day",
+                      othersGood: false,
                     },
                     {
-                      label: "Free emails per day",
-                      sendlib: "500 to 2,000 per account",
-                      resend: "100 / day",
-                      mailgun: "100 / day (trial)",
-                      sendgrid: "100 / day",
+                      feature: "Uses Existing Product Gmail",
+                      sendlib: "✓ Yes (Google OAuth2)",
+                      sendlibGood: true,
+                      others: "✗ No (Requires SMTP server)",
+                      othersGood: false,
                     },
                     {
-                      label: "Uses your existing Gmail",
-                      sendlib: true,
-                      resend: false,
-                      mailgun: false,
-                      sendgrid: false,
+                      feature: "Bypasses Cloud SMTP Port Blocks",
+                      sendlib: "✓ Yes (HTTPS REST API)",
+                      sendlibGood: true,
+                      others: "✗ No (Standard SMTP blocked)",
+                      othersGood: false,
                     },
                   ].map((row) => (
-                    <tr key={row.label} className="bg-white hover:bg-surface-container-lowest/50 transition-colors">
-                      <td className="px-6 py-4 font-medium text-on-background">{row.label}</td>
-                      {[row.sendlib, row.resend, row.mailgun, row.sendgrid].map((val, i) => (
-                        <td key={i} className="px-6 py-4 text-center">
-                          {typeof val === "boolean" ? (
-                            val ? (
-                              <span className="inline-flex items-center justify-center w-6 h-6 rounded-full bg-red-100 text-red-500 text-xs font-bold">✗</span>
-                            ) : (
-                              <span className="inline-flex items-center justify-center w-6 h-6 rounded-full bg-emerald-100 text-emerald-600 text-xs font-bold">✓</span>
-                            )
-                          ) : (
-                            <span className={`text-xs font-semibold ${i === 0 ? "text-emerald-600" : "text-secondary"}`}>{val}</span>
-                          )}
-                        </td>
-                      ))}
+                    <tr key={row.feature} className="hover:bg-surface-container-lowest/50 transition-colors">
+                      <td className="px-6 py-4 font-semibold text-on-background">{row.feature}</td>
+                      <td className="px-6 py-4 text-center font-bold text-emerald-600 bg-primary-sendlib/5 border-x border-outline-variant/40 text-xs sm:text-sm">
+                        {row.sendlib}
+                      </td>
+                      <td className="px-6 py-4 text-center text-secondary text-xs sm:text-sm">
+                        {row.others}
+                      </td>
                     </tr>
                   ))}
                 </tbody>
