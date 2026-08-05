@@ -17,6 +17,8 @@ import { CreditCardIcon } from '@hugeicons/core-free-icons';
 
 export default function SettingsPage() {
   const { data: user, isLoading } = useMe();
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const isPro = (user as any)?.plan === "pro";
   const { mutate: updateProfile, isPending: isUpdating } = useUpdateProfile();
   const { mutate: logout, isPending: isLoggingOut } = useLogout();
   const [editName, setEditName] = useState("");
