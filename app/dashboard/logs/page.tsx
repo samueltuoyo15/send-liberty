@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from "@/components/ui/sheet";
-import { useEmailLogs } from "@/hooks/useEmailLogs";
+import { useEmailLogs, EmailLog } from "@/hooks/useEmailLogs";
 import { useGmailAccounts } from "@/hooks/useGmailAccounts";
 import { redactEmail } from "@/utils/redact";
 

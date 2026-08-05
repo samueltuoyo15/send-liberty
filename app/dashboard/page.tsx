@@ -27,7 +27,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 
 import { useApiKeys } from "@/hooks/useApiKeys";
 import { useGmailAccounts, useConnectGmail } from "@/hooks/useGmailAccounts";
-import { useEmailLogs } from "@/hooks/useEmailLogs";
+import { useEmailLogs, EmailLog } from "@/hooks/useEmailLogs";
 import { useState, useEffect } from "react";
 import confetti from "canvas-confetti";
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetFooter } from "@/components/ui/sheet";

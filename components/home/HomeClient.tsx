@@ -10,7 +10,9 @@ import TopNavBar from "@/components/home/TopNavBar";
 
 export default function HomeClient() {
   const { data: user } = useMe();
-  const [apiUrl, setApiUrl] = useState("https://sendlib.samueltuoyo.com");
+  const [apiUrl] = useState(() =>
+    typeof window !== "undefined" ? window.location.origin : "https://sendlib.samueltuoyo.com"
+  );
   const [activeTab, setActiveTab] = useState<CodeTab>("curl");
   const [isExpanded, setIsExpanded] = useState(false);
   const [isCopied, setIsCopied] = useState(false);
@@ -33,10 +35,6 @@ export default function HomeClient() {
     setIsCopied(true);
     setTimeout(() => setIsCopied(false), 2000);
   };
-
-  const [apiUrl, setApiUrl] = useState(() =>
-    typeof window !== "undefined" ? window.location.origin : "https://sendlib.samueltuoyo.com"
-  );
 
   return (
     <div className="flex flex-col min-h-screen bg-background-sendlib text-on-background font-body-md">

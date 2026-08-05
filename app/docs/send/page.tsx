@@ -10,6 +10,7 @@ export default function BasicSendPage() {
   const [apiUrl] = useState(() =>
     typeof window !== "undefined" ? window.location.origin : "https://sendlib.samueltuoyo.com"
   );
+  const [isCopied, setIsCopied] = useState(false);
 
   const handleCopyCode = () => {
     let snippet = "";
