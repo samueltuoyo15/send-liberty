@@ -315,7 +315,6 @@ export default function HomeClient() {
                 </div>
                 <ul className="space-y-3 text-sm text-secondary flex-1">
                   {[
-                    "Unlimited emails per month",
                     "No custom domain needed",
                     "Up to 10 connected Gmail accounts",
                     "500 emails / day per account",
