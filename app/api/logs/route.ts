@@ -28,10 +28,12 @@ export async function GET(req: NextRequest) {
       query.from = from;
     }
     if (search) {
+      // Escape special regex chars to prevent ReDoS
+      const escapedSearch = search.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
       query.$or = [
-        { to: { $regex: search, $options: "i" } },
-        { subject: { $regex: search, $options: "i" } },
-        { from: { $regex: search, $options: "i" } }
+        { to: { $regex: escapedSearch, $options: "i" } },
+        { subject: { $regex: escapedSearch, $options: "i" } },
+        { from: { $regex: escapedSearch, $options: "i" } }
       ];
     }
 

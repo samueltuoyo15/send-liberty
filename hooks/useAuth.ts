@@ -7,6 +7,9 @@ export interface User {
   displayName: string;
   avatar?: string;
   email?: string;
+  plan?: "free" | "pro";
+  subscriptionStatus?: "active" | "canceled" | "past_due" | "none";
+  lastPaymentAt?: string;
   createdAt: string;
 }
 
