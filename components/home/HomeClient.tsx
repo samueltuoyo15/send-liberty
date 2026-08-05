@@ -129,79 +129,143 @@ export default function HomeClient() {
           </div>
         </section>
 
-        {/* What is SendLib Section */}
-        <section id="what-is-sendlib" className="py-xl md:py-20 bg-white border-b border-outline-variant/60">
-          <div className="max-w-4xl mx-auto px-margin-mobile md:px-margin-desktop text-center space-y-md">
-            <span className="px-md py-xs rounded-full bg-primary-sendlib/10 text-primary-sendlib font-label-sm text-label-sm inline-block font-bold">
-              Application Purpose
-            </span>
-            <h2 className="font-headline-lg text-headline-lg text-primary-sendlib font-extrabold">
-              What is SendLib?
-            </h2>
-            <p className="font-body-lg text-body-lg text-on-surface-variant leading-relaxed max-w-3xl mx-auto">
-              SendLib is a transactional email API for developers. It allows applications to send emails using a connected Google account through OAuth 2.0. Developers can use SendLib for verification emails, notifications, password resets, and other application emails without configuring SMTP servers or dealing with blocked cloud ports.
-            </p>
+        {/* Comparison Table */}
+        <section id="compare" className="py-16 md:py-24 bg-white border-b border-outline-variant/60">
+          <div className="max-w-5xl mx-auto px-margin-mobile md:px-margin-desktop">
+            <div className="text-center mb-12 space-y-3">
+              <span className="px-4 py-1.5 rounded-full bg-primary-sendlib/10 text-primary-sendlib text-xs font-bold inline-block tracking-wide uppercase">Why SendLib</span>
+              <h2 className="text-3xl md:text-4xl font-extrabold text-primary-sendlib">Stop verifying domains. Just send.</h2>
+              <p className="text-secondary max-w-xl mx-auto text-base leading-relaxed">
+                Every other provider makes you prove you own a domain before you can send a single email. SendLib uses the Gmail account your product already has.
+              </p>
+            </div>
+
+            <div className="overflow-x-auto rounded-2xl border border-outline-variant shadow-sm">
+              <table className="w-full text-sm text-left">
+                <thead>
+                  <tr className="bg-surface-container-low border-b border-outline-variant">
+                    <th className="px-6 py-4 font-semibold text-secondary w-1/3"></th>
+                    <th className="px-6 py-4 text-center">
+                      <span className="bg-primary-sendlib text-white text-xs font-bold px-3 py-1 rounded-full">SendLib</span>
+                    </th>
+                    <th className="px-6 py-4 text-center font-semibold text-secondary">Resend</th>
+                    <th className="px-6 py-4 text-center font-semibold text-secondary">Mailgun</th>
+                    <th className="px-6 py-4 text-center font-semibold text-secondary">SendGrid</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-outline-variant/50">
+                  {[
+                    {
+                      label: "Domain verification required",
+                      sendlib: false,
+                      resend: true,
+                      mailgun: true,
+                      sendgrid: true,
+                    },
+                    {
+                      label: "DNS / SPF / DKIM setup",
+                      sendlib: false,
+                      resend: true,
+                      mailgun: true,
+                      sendgrid: true,
+                    },
+                    {
+                      label: "SMTP configuration",
+                      sendlib: false,
+                      resend: true,
+                      mailgun: true,
+                      sendgrid: true,
+                    },
+                    {
+                      label: "Time to first email",
+                      sendlib: "Under 60 seconds",
+                      resend: "Hours (DNS wait)",
+                      mailgun: "Hours (DNS wait)",
+                      sendgrid: "Hours (DNS wait)",
+                    },
+                    {
+                      label: "Free emails per day",
+                      sendlib: "500 to 2,000 per account",
+                      resend: "100 / day",
+                      mailgun: "100 / day (trial)",
+                      sendgrid: "100 / day",
+                    },
+                    {
+                      label: "Uses your existing Gmail",
+                      sendlib: true,
+                      resend: false,
+                      mailgun: false,
+                      sendgrid: false,
+                    },
+                  ].map((row) => (
+                    <tr key={row.label} className="bg-white hover:bg-surface-container-lowest/50 transition-colors">
+                      <td className="px-6 py-4 font-medium text-on-background">{row.label}</td>
+                      {[row.sendlib, row.resend, row.mailgun, row.sendgrid].map((val, i) => (
+                        <td key={i} className="px-6 py-4 text-center">
+                          {typeof val === "boolean" ? (
+                            val ? (
+                              <span className="inline-flex items-center justify-center w-6 h-6 rounded-full bg-red-100 text-red-500 text-xs font-bold">✗</span>
+                            ) : (
+                              <span className="inline-flex items-center justify-center w-6 h-6 rounded-full bg-emerald-100 text-emerald-600 text-xs font-bold">✓</span>
+                            )
+                          ) : (
+                            <span className={`text-xs font-semibold ${i === 0 ? "text-emerald-600" : "text-secondary"}`}>{val}</span>
+                          )}
+                        </td>
+                      ))}
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </div>
         </section>
 
-        {/* Features Bento Grid */}
-        <section id="features" className="py-xl md:py-32 bg-surface">
-          <div className="max-w-7xl mx-auto px-margin-mobile md:px-margin-desktop">
-            <div className="text-center max-w-[640px] mx-auto mb-16 space-y-md">
-              <h2 className="font-headline-lg text-headline-lg text-primary-sendlib">Features</h2>
-              <p className="font-body-lg text-body-lg text-on-surface-variant">
-                Everything you need to deliver mission-critical emails without blocked SMTP ports, domain verifications, or complex DNS configurations.
-              </p>
+        {/* How it works */}
+        <section id="how-it-works" className="py-16 md:py-24 bg-surface">
+          <div className="max-w-5xl mx-auto px-margin-mobile md:px-margin-desktop">
+            <div className="text-center mb-12 space-y-3">
+              <span className="px-4 py-1.5 rounded-full bg-primary-sendlib/10 text-primary-sendlib text-xs font-bold inline-block tracking-wide uppercase">Get started in 60 seconds</span>
+              <h2 className="text-3xl md:text-4xl font-extrabold text-primary-sendlib">Three steps, then you are sending</h2>
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-lg">
-              {/* Large Feature Card */}
-              <div className="md:col-span-2 border border-[#d8cbf9] p-xl rounded-2xl bg-[#eae3fc] transition-all hover:bg-[#eae3fc]/90 duration-300">
-                <svg className="w-10 h-10 text-[#6324f5] mb-md" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M13.19 8.688a4.5 4.5 0 011.242 7.244l-4.5 4.5a4.5 4.5 0 01-6.364-6.364l1.757-1.757m13.35-.622l1.757-1.757a4.5 4.5 0 00-6.364-6.364l-4.5 4.5a4.5 4.5 0 001.242 7.244" />
-                </svg>
-                <h3 className="font-headline-md text-headline-md mb-sm text-[#2e1065]">Send Without SMTP Restrictions</h3>
-                <p className="font-body-md text-body-md text-[#4c2d96] leading-relaxed">
-                  Most free cloud hosts block outbound SMTP ports. SendLib relays through your connected Google account with zero custom domain needed and no SMTP port configuration required. Improve deliverability by sending through Google&apos;s trusted mail infrastructure.
-                </p>
-              </div>
-              {/* Regular Card */}
-              <div className="border border-[#b0e8e0] p-xl rounded-2xl bg-[#cbf1ec] transition-all hover:bg-[#cbf1ec]/90 duration-300">
-                <svg className="w-10 h-10 text-[#0d9488] mb-md" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M5 12h14M5 12a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v4a2 2 0 01-2 2M5 12a2 2 0 00-2 2v4a2 2 0 002 2h14a2 2 0 002-2v-4a2 2 0 00-2-2m-2-4h.01M17 16h.01" />
-                </svg>
-                <h3 className="font-headline-md text-headline-md font-bold mb-sm text-[#064e45]">Zero DNS Setup</h3>
-                <p className="font-body-md text-body-md text-[#0f685c] leading-relaxed">No domain needed, no MX records, SPF, or DKIM to configure. Connect your Google account and start sending immediately.</p>
-              </div>
-              {/* Regular Card */}
-              <div className="border border-[#fbb3d3] p-xl rounded-2xl bg-[#fec8e1] transition-all hover:bg-[#fec8e1]/90 duration-300">
-                <svg className="w-10 h-10 text-[#ec4899] mb-md" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M14.25 9.75L16.5 12l-2.25 2.25m-4.5 0L7.5 12l2.25-2.25M6 20.25h12A2.25 2.25 0 0020.25 18V6A2.25 2.25 0 0018 3.75H6A2.25 2.25 0 006 20.25z" />
-                </svg>
-                <h3 className="font-headline-md text-headline-md font-bold mb-sm text-[#6d0935]">Simple API</h3>
-                <p className="font-body-md text-body-md text-[#9d1b54] leading-relaxed">One POST request. No SDK to install. Works from any language or framework.</p>
-              </div>
-              {/* Image Integration Card */}
-              <div className="md:col-span-2 relative h-64 md:h-auto overflow-hidden rounded-2xl border border-[#1e293b] bg-gradient-to-br from-[#0f172a] via-[#1d2b3e] to-[#090a0f] group p-xl flex flex-col justify-end">
-                <div className="absolute top-0 right-0 w-48 h-48 bg-emerald-500/10 rounded-full blur-2xl pointer-events-none" />
-                <div className="relative z-20 text-white">
-                  <h3 className="font-headline-md text-headline-md font-bold text-white mb-xs">Inbox Delivery</h3>
-                  <p className="font-body-md text-body-md opacity-90 text-white/90">Because emails are sent from your own or your product's Google account, they land in the inbox, not the spam folder.</p>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+              {[
+                {
+                  step: "01",
+                  title: "Connect your Gmail",
+                  body: "Sign in with Google OAuth. We never see your password, only an encrypted refresh token that you can revoke at any time.",
+                  color: "bg-[#eae3fc] border-[#d8cbf9] text-[#2e1065]",
+                  sub: "text-[#4c2d96]",
+                },
+                {
+                  step: "02",
+                  title: "Generate an API key",
+                  body: "Create a key in the dashboard. Scope it to specific origins if you want, or leave it open for server-side use.",
+                  color: "bg-[#cbf1ec] border-[#b0e8e0] text-[#064e45]",
+                  sub: "text-[#0f685c]",
+                },
+                {
+                  step: "03",
+                  title: "POST /api/send",
+                  body: "One JSON request from any language. No SDK, no library, no config file. Your email is in the inbox within seconds.",
+                  color: "bg-[#d7e6fc] border-[#bfd7fa] text-[#1e3a8a]",
+                  sub: "text-[#1d4ed8]",
+                },
+              ].map((item) => (
+                <div key={item.step} className={`rounded-2xl border p-8 flex flex-col gap-4 ${item.color}`}>
+                  <span className="text-5xl font-black opacity-20 leading-none">{item.step}</span>
+                  <h3 className="text-xl font-extrabold">{item.title}</h3>
+                  <p className={`text-sm leading-relaxed ${item.sub}`}>{item.body}</p>
                 </div>
-              </div>
-              {/* OAuth2 Card */}
-              <div className="md:col-span-2 border border-[#bfd7fa] p-xl rounded-2xl flex items-center gap-xl bg-[#d7e6fc] transition-all hover:bg-[#d7e6fc]/90 duration-300">
-                <div className="hidden sm:block shrink-0">
-                  <svg className="w-14 h-14 text-[#3b82f6]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.75}>
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" />
-                  </svg>
-                </div>
-                <div>
-                  <h3 className="font-headline-md text-headline-md mb-sm text-[#1e3a8a]">OAuth2 Secured</h3>
-                  <p className="font-body-md text-body-md text-[#1d4ed8] leading-relaxed">
-                    We connect to your Google account via OAuth2. We never see or store your password, only an encrypted access token you can revoke at any time.
-                  </p>
-                </div>
-              </div>
+              ))}
+            </div>
+            <div className="flex justify-center mt-10">
+              <Link
+                href="/login"
+                className="bg-primary-sendlib hover:bg-primary-sendlib/90 text-white font-bold px-8 py-3.5 rounded-xl transition-all active:scale-95 shadow-md text-sm"
+              >
+                Start for free. No credit card required.
+              </Link>
             </div>
           </div>
         </section>
