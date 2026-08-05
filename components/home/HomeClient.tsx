@@ -317,7 +317,6 @@ export default function HomeClient() {
                   {[
                     "No custom domain needed",
                     "Up to 10 connected Gmail accounts",
-                    "500 emails / day per account",
                     "15 API keys",
                     "60 API requests / minute",
                     "2MB HTML body · 1MB text body",
@@ -361,7 +360,7 @@ export default function HomeClient() {
                     "Up to 100 API keys",
                     "300 API requests / minute",
                     "5MB HTML body · 2MB text body",
-                    "Up to 20 attachments · 50MB total",
+                    "Up to 20 attachments · 25MB total",
                   ].map((f) => (
                     <li key={f} className="flex items-start gap-2">
                       <svg className="w-4 h-4 mt-0.5 text-emerald-500 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" /></svg>

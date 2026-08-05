@@ -85,8 +85,8 @@ export default function LimitsPage() {
               </tr>
               <tr className="hover:bg-surface-variant/20 transition-colors">
                 <td className="px-4 py-3 font-mono text-xs text-secondary"><code>attachments</code></td>
-                <td className="px-4 py-3 font-bold text-primary-sendlib">10 files · 25 MB total <span className="font-normal text-xs text-secondary block mt-1">(20 files · 50 MB total on Pro)</span></td>
-                <td className="px-4 py-3 text-secondary">Base64-encoded content (Max 10MB per file)</td>
+                <td className="px-4 py-3 font-bold text-primary-sendlib">10 files · 25 MB total <span className="font-normal text-xs text-secondary block mt-1">(20 files · 25 MB total on Pro)</span></td>
+                <td className="px-4 py-3 text-secondary">Base64-encoded content. Max 10MB per file. 25MB total is Gmail API&apos;s hard limit.</td>
               </tr>
             </tbody>
           </table>

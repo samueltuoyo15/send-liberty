@@ -8,12 +8,25 @@ import mongoose from "mongoose";
 import { rateLimit } from "@/lib/rateLimit";
 
 const MAX_SUBJECT_LENGTH = 998;
-const MAX_HTML_BYTES = 2 * 1024 * 1024;
-const MAX_TEXT_BYTES = 1 * 1024 * 1024;
 const MAX_RECIPIENTS = 50;
-const MAX_ATTACHMENTS = 10;
-const MAX_ATTACHMENT_BYTES = 10 * 1024 * 1024;
+// Gmail API hard limit is 25MB total per message regardless of plan
 const MAX_TOTAL_ATTACHMENT_BYTES = 25 * 1024 * 1024;
+
+// Plan-based limits
+const PLAN_LIMITS = {
+  free: {
+    maxHtmlBytes: 2 * 1024 * 1024,  // 2MB
+    maxTextBytes: 1 * 1024 * 1024,  // 1MB
+    maxAttachments: 10,
+    maxAttachmentBytes: 10 * 1024 * 1024, // 10MB per file
+  },
+  pro: {
+    maxHtmlBytes: 5 * 1024 * 1024,  // 5MB
+    maxTextBytes: 2 * 1024 * 1024,  // 2MB
+    maxAttachments: 20,
+    maxAttachmentBytes: 10 * 1024 * 1024, // 10MB per file
+  },
+};
 
 function isOriginAllowed(origin: string | null, allowed: string[]): boolean {
   if (!allowed || allowed.length === 0) return true;
@@ -171,16 +184,21 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    // --- Plan-based limits ---
+    const planLimits = plan === "pro" ? PLAN_LIMITS.pro : PLAN_LIMITS.free;
+
     // --- Body size ---
-    if (html && Buffer.byteLength(html, "utf8") > MAX_HTML_BYTES) {
+    if (html && Buffer.byteLength(html, "utf8") > planLimits.maxHtmlBytes) {
+      const maxMb = plan === "pro" ? "5MB" : "2MB";
       return NextResponse.json(
-        { success: false, message: "HTML body too large. Max allowed size is 5MB." },
+        { success: false, message: `HTML body too large. Your ${plan} plan allows up to ${maxMb}.` },
         { status: 413 }
       );
     }
-    if (text && Buffer.byteLength(text, "utf8") > MAX_TEXT_BYTES) {
+    if (text && Buffer.byteLength(text, "utf8") > planLimits.maxTextBytes) {
+      const maxMb = plan === "pro" ? "2MB" : "1MB";
       return NextResponse.json(
-        { success: false, message: "Text body too large. Max allowed size is 1MB." },
+        { success: false, message: `Text body too large. Your ${plan} plan allows up to ${maxMb}.` },
         { status: 413 }
       );
     }
@@ -214,9 +232,9 @@ export async function POST(req: NextRequest) {
 
     // --- Attachments ---
     if (attachments) {
-      if (attachments.length > MAX_ATTACHMENTS) {
+      if (attachments.length > planLimits.maxAttachments) {
         return NextResponse.json(
-          { success: false, message: `Too many attachments. Max ${MAX_ATTACHMENTS} files per request.` },
+          { success: false, message: `Too many attachments. Your ${plan} plan allows up to ${planLimits.maxAttachments} files per request.` },
           { status: 400 }
         );
       }
@@ -229,7 +247,7 @@ export async function POST(req: NextRequest) {
           );
         }
         const bytes = Buffer.byteLength(att.content, "base64");
-        if (bytes > MAX_ATTACHMENT_BYTES) {
+        if (bytes > planLimits.maxAttachmentBytes) {
           return NextResponse.json(
             { success: false, message: `Attachment '${att.filename}' is too large. Max 10MB per file.` },
             { status: 413 }
@@ -239,7 +257,7 @@ export async function POST(req: NextRequest) {
       }
       if (totalBytes > MAX_TOTAL_ATTACHMENT_BYTES) {
         return NextResponse.json(
-          { success: false, message: "Total attachment size exceeds the 25MB limit." },
+          { success: false, message: "Total attachment size exceeds the 25MB limit (enforced by Gmail API)." },
           { status: 413 }
         );
       }
