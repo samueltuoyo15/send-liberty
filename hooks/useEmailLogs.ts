@@ -11,6 +11,7 @@ export interface EmailLog {
   provider: "gmail";
   messageId?: string;
   error?: string;
+  apiKeyId?: string;
   createdAt: string;
 }
 
