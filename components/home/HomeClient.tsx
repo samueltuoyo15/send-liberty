@@ -56,7 +56,7 @@ export default function HomeClient() {
           <div className="max-w-7xl mx-auto px-margin-mobile md:px-margin-desktop pt-24 pb-xl md:pt-40 md:pb-32 grid md:grid-cols-2 gap-xl items-center relative z-10">
             <div className="space-y-lg">
               <h1 className="font-headline-lg-mobile md:font-headline-lg text-headline-lg-mobile md:text-headline-lg text-white font-extrabold drop-shadow-sm">
-                Zero-Config Email for Developers
+                Send Product Emails Without Verifying a Single Domain
               </h1>
               <p className="font-body-lg text-body-lg max-w-[500px] text-white/95 leading-relaxed drop-shadow-sm">
                 The fastest way for founders and devs to send transactional emails (welcome messages, password resets, receipts) using their product's existing Gmail account. Zero domains to verify. Zero SMTP server stress. Just connect and send.
@@ -155,45 +155,18 @@ export default function HomeClient() {
                   {[
                     {
                       feature: "Zero Domain Verification",
-                      sendlib: "✓ Instant (No domain needed)",
-                      sendlibGood: true,
-                      others: "✗ Required (DNS verification)",
-                      othersGood: false,
-                    },
-                    {
-                      feature: "Zero DNS / SPF / DKIM Setup",
-                      sendlib: "✓ None required",
-                      sendlibGood: true,
-                      others: "✗ Complex DNS record setup",
-                      othersGood: false,
-                    },
-                    {
-                      feature: "Time to First Email",
-                      sendlib: "⚡ Under 60 seconds",
-                      sendlibGood: true,
-                      others: "⏳ Hours (DNS propagation)",
-                      othersGood: false,
+                      sendlib: "Instant (No domain needed)",
+                      others: "Required (DNS verification)",
                     },
                     {
                       feature: "Free Emails Per Day",
                       sendlib: "500 to 2,000 / account",
-                      sendlibGood: true,
                       others: "100 / day",
-                      othersGood: false,
                     },
                     {
                       feature: "Uses Existing Product Gmail",
-                      sendlib: "✓ Yes (Google OAuth2)",
-                      sendlibGood: true,
-                      others: "✗ No (Requires SMTP server)",
-                      othersGood: false,
-                    },
-                    {
-                      feature: "Bypasses Cloud SMTP Port Blocks",
-                      sendlib: "✓ Yes (HTTPS REST API)",
-                      sendlibGood: true,
-                      others: "✗ No (Standard SMTP blocked)",
-                      othersGood: false,
+                      sendlib: "Yes (Google OAuth2)",
+                      others: "No (Requires SMTP server)",
                     },
                   ].map((row) => (
                     <tr key={row.feature} className="hover:bg-surface-container-lowest/50 transition-colors">
@@ -208,6 +181,97 @@ export default function HomeClient() {
                   ))}
                 </tbody>
               </table>
+            </div>
+          </div>
+        </section>
+
+        {/* Pricing Section */}
+        <section className="w-full py-xl md:py-32 bg-surface-container border-b border-outline-variant/60" id="pricing">
+          <div className="max-w-7xl mx-auto px-margin-mobile md:px-margin-desktop">
+            <div className="text-center mb-12 space-y-3">
+              <h2 className="font-headline-lg text-headline-lg text-primary-sendlib font-extrabold">Simple, Honest Pricing</h2>
+              <p className="text-secondary font-body-lg max-w-2xl mx-auto">Start for free, no credit card required.</p>
+            </div>
+
+            <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto items-start">
+
+              {/* Free Card */}
+              <div className="rounded-2xl border-2 border-primary-sendlib bg-white shadow-lg p-8 flex flex-col gap-6 relative">
+                {(!user || user.plan !== "pro") && (
+                  <div className="absolute -top-3 left-6">
+                    <span className="bg-primary-sendlib text-white text-xs font-bold px-3 py-1 rounded-full tracking-wide">CURRENT PLAN</span>
+                  </div>
+                )}
+                <div>
+                  <h3 className="text-2xl font-extrabold text-primary-sendlib">Free</h3>
+                  <div className="flex items-end gap-1 mt-1">
+                    <span className="text-4xl font-extrabold text-primary-sendlib">$0</span>
+                    <span className="text-secondary mb-1">/ forever</span>
+                  </div>
+                  <p className="text-sm text-secondary mt-2">No credit card. No expiry. No catch.</p>
+                </div>
+                <ul className="space-y-3 text-sm text-secondary flex-1">
+                  {[
+                    "No custom domain needed",
+                    "Up to 10 connected Gmail accounts",
+                    "15 API keys",
+                    "60 API requests / minute",
+                    "2MB HTML body · 1MB text body",
+                    "Up to 10 attachments · 25MB total",
+                    "50 recipients per field (to/cc/bcc)",
+                    "7 days email analytics",
+                  ].map((f) => (
+                    <li key={f} className="flex items-start gap-2">
+                      <svg className="w-4 h-4 mt-0.5 text-emerald-500 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" /></svg>
+                      {f}
+                    </li>
+                  ))}
+                </ul>
+                <Link
+                  href="/login"
+                  className="block w-full text-center bg-primary-sendlib hover:bg-primary-sendlib/90 text-white font-bold py-3 rounded-xl transition-all active:scale-95"
+                >
+                  Get Started Free
+                </Link>
+              </div>
+
+              {/* Pro Card */}
+              <div className="rounded-2xl border-2 border-primary-sendlib/80 bg-white shadow-xl p-8 flex flex-col gap-6 relative">
+                <div className="absolute -top-3 left-6">
+                  <span className="bg-emerald-600 text-white text-xs font-bold px-3 py-1 rounded-full tracking-wide">{user?.plan === "pro" ? "CURRENT PLAN" : "PRO PLAN"}</span>
+                </div>
+
+                <div>
+                  <h3 className="text-2xl font-extrabold text-primary-sendlib">Pro</h3>
+                  <div className="flex items-end gap-1 mt-1">
+                    <span className="text-4xl font-extrabold text-primary-sendlib">$3.99</span>
+                    <span className="text-secondary mb-1">/ month</span>
+                  </div>
+                  <p className="text-sm text-secondary mt-2">Higher limits & scale for growing applications.</p>
+                </div>
+                <ul className="space-y-3 text-sm text-secondary flex-1">
+                  {[
+                    "Everything in Free",
+                    "Up to 50 connected Gmail accounts",
+                    "Up to 100 API keys",
+                    "300 API requests / minute",
+                    "5MB HTML body · 2MB text body",
+                    "Up to 20 attachments · 25MB total",
+                  ].map((f) => (
+                    <li key={f} className="flex items-start gap-2">
+                      <svg className="w-4 h-4 mt-0.5 text-emerald-500 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" /></svg>
+                      {f}
+                    </li>
+                  ))}
+                </ul>
+                <Link
+                  href={user ? "/dashboard/settings" : "/login"}
+                  className="block w-full text-center bg-primary-sendlib hover:bg-primary-sendlib/90 text-white font-bold py-3 rounded-xl transition-all active:scale-95 shadow-md"
+                >
+                  {user?.plan === "pro" ? "Manage Subscription" : user ? "Upgrade to Pro ($3.99/mo)" : "Get Started Pro ($3.99/mo)"}
+                </Link>
+              </div>
+
             </div>
           </div>
         </section>
@@ -337,96 +401,7 @@ export default function HomeClient() {
           </div>
         </section>
 
-        {/* Pricing Section */}
-        <section className="w-full py-xl md:py-32 bg-surface-container" id="pricing">
-          <div className="max-w-7xl mx-auto px-margin-mobile md:px-margin-desktop">
-            <div className="text-center mb-12 space-y-3">
-              <h2 className="font-headline-lg text-headline-lg text-primary-sendlib font-extrabold">Simple, Honest Pricing</h2>
-              <p className="text-secondary font-body-lg max-w-2xl mx-auto">Start for free, no credit card required.</p>
-            </div>
 
-            <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto items-start">
-
-              {/* Free Card */}
-              <div className="rounded-2xl border-2 border-primary-sendlib bg-white shadow-lg p-8 flex flex-col gap-6 relative">
-                {(!user || user.plan !== "pro") && (
-                  <div className="absolute -top-3 left-6">
-                    <span className="bg-primary-sendlib text-white text-xs font-bold px-3 py-1 rounded-full tracking-wide">CURRENT PLAN</span>
-                  </div>
-                )}
-                <div>
-                  <h3 className="text-2xl font-extrabold text-primary-sendlib">Free</h3>
-                  <div className="flex items-end gap-1 mt-1">
-                    <span className="text-4xl font-extrabold text-primary-sendlib">$0</span>
-                    <span className="text-secondary mb-1">/ forever</span>
-                  </div>
-                  <p className="text-sm text-secondary mt-2">No credit card. No expiry. No catch.</p>
-                </div>
-                <ul className="space-y-3 text-sm text-secondary flex-1">
-                  {[
-                    "No custom domain needed",
-                    "Up to 10 connected Gmail accounts",
-                    "15 API keys",
-                    "60 API requests / minute",
-                    "2MB HTML body · 1MB text body",
-                    "Up to 10 attachments · 25MB total",
-                    "50 recipients per field (to/cc/bcc)",
-                    "7 days email analytics",
-                  ].map((f) => (
-                    <li key={f} className="flex items-start gap-2">
-                      <svg className="w-4 h-4 mt-0.5 text-emerald-500 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" /></svg>
-                      {f}
-                    </li>
-                  ))}
-                </ul>
-                <Link
-                  href="/login"
-                  className="block w-full text-center bg-primary-sendlib hover:bg-primary-sendlib/90 text-white font-bold py-3 rounded-xl transition-all active:scale-95"
-                >
-                  Get Started Free
-                </Link>
-              </div>
-
-              {/* Pro Card */}
-              <div className="rounded-2xl border-2 border-primary-sendlib/80 bg-white shadow-xl p-8 flex flex-col gap-6 relative">
-                <div className="absolute -top-3 left-6">
-                  <span className="bg-emerald-600 text-white text-xs font-bold px-3 py-1 rounded-full tracking-wide">{user?.plan === "pro" ? "CURRENT PLAN" : "PRO PLAN"}</span>
-                </div>
-
-                <div>
-                  <h3 className="text-2xl font-extrabold text-primary-sendlib">Pro</h3>
-                  <div className="flex items-end gap-1 mt-1">
-                    <span className="text-4xl font-extrabold text-primary-sendlib">$3.99</span>
-                    <span className="text-secondary mb-1">/ month</span>
-                  </div>
-                  <p className="text-sm text-secondary mt-2">Higher limits & scale for growing applications.</p>
-                </div>
-                <ul className="space-y-3 text-sm text-secondary flex-1">
-                  {[
-                    "Everything in Free",
-                    "Up to 50 connected Gmail accounts",
-                    "Up to 100 API keys",
-                    "300 API requests / minute",
-                    "5MB HTML body · 2MB text body",
-                    "Up to 20 attachments · 25MB total",
-                  ].map((f) => (
-                    <li key={f} className="flex items-start gap-2">
-                      <svg className="w-4 h-4 mt-0.5 text-emerald-500 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" /></svg>
-                      {f}
-                    </li>
-                  ))}
-                </ul>
-                <Link
-                  href={user ? "/dashboard/settings" : "/login"}
-                  className="block w-full text-center bg-primary-sendlib hover:bg-primary-sendlib/90 text-white font-bold py-3 rounded-xl transition-all active:scale-95 shadow-md"
-                >
-                  {user?.plan === "pro" ? "Manage Subscription" : user ? "Upgrade to Pro ($3.99/mo)" : "Get Started Pro ($3.99/mo)"}
-                </Link>
-              </div>
-
-            </div>
-          </div>
-        </section>
 
         {/* CTA Section */}
         <section className="w-full relative py-xl md:py-32 mt-xl overflow-hidden bg-[#1d2b3e]">
