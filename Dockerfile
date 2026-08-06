@@ -3,8 +3,6 @@ RUN apk add --no-cache tini && npm install -g pnpm@latest
 
 FROM base AS deps
 WORKDIR /app
-
-# Copy dependency manifests
 COPY package.json pnpm-lock.yaml ./
 RUN pnpm install --frozen-lockfile
 
@@ -16,16 +14,17 @@ COPY . .
 ENV NEXT_TELEMETRY_DISABLED=1
 ENV NODE_ENV=production
 
-RUN pnpm run build
+RUN npm run build
 
-# Production Runner
+# Purge any .env files created inside .next/standalone during build
+RUN find .next/standalone -name ".env*" -delete 2>/dev/null || true
+
 FROM base AS runner
 WORKDIR /app
 
 ENV NODE_ENV=production
 ENV NEXT_TELEMETRY_DISABLED=1
 
-# Non-root user for security
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
 
