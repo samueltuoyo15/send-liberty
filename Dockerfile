@@ -1,11 +1,13 @@
 FROM node:20-alpine AS base
 
+
 ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
 RUN apk add --no-cache tini
 FROM base AS deps
 WORKDIR /app
 
+RUN npm install -g pnpm
 COPY package.json pnpm-lock.yaml ./
 RUN pnpm install --frozen-lockfile
 
