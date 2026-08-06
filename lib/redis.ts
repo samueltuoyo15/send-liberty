@@ -9,9 +9,19 @@ export function getRedisClient(): Redis {
       maxRetriesPerRequest: 2,
       connectTimeout: 5000,
       enableOfflineQueue: false,
+      retryStrategy: (times) => {
+        if (times > 5) return null;
+        return Math.min(times * 200, 2000);
+      },
     });
     client.on("error", (err) => {
       console.error("Redis connection error:", err.message);
+    });
+    client.on("close", () => {
+      client = null;
+    });
+    client.on("end", () => {
+      client = null;
     });
   }
   return client;

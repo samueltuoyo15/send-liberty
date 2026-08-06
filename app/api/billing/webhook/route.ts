@@ -97,9 +97,15 @@ export async function POST(req: NextRequest) {
 
           await user.save();
         } else if (eventType && inactiveEvents.includes(eventType)) {
-          user.set("plan", "free");
-          user.set("subscriptionStatus", eventType.includes("failed") ? "past_due" : "canceled");
-          await user.save();
+          const thirtyFiveDaysAgo = new Date(Date.now() - 35 * 24 * 60 * 60 * 1000);
+          const paidRecently = user.lastPaymentAt && new Date(user.lastPaymentAt) > thirtyFiveDaysAgo;
+          if (!paidRecently) {
+            user.set("plan", "free");
+            user.set("subscriptionStatus", eventType.includes("failed") ? "past_due" : "canceled");
+            await user.save();
+          } else {
+            console.warn(`Skipping downgrade for user ${userId}: paid within last 35 days (${user.lastPaymentAt}), event: ${eventType}`);
+          }
         }
       }
     }
