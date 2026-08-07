@@ -5,7 +5,8 @@ let client: Redis | null = null;
 export function getRedisClient(): Redis {
   if (!client) {
     client = new Redis(process.env.REDIS_URL!, {
-      db: parseInt(process.env.REDIS_DB ?? "1", 10),
+      db: 0, // Zeabur default Redis doesn't support multiple DBs
+      keyPrefix: "sendlib_",
       maxRetriesPerRequest: 2,
       connectTimeout: 5000,
       enableOfflineQueue: false,
