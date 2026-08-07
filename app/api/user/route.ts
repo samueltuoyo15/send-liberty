@@ -39,18 +39,25 @@ export async function PATCH(req: NextRequest) {
     await connectDB();
 
     const { displayName: rawDisplayName, billingCurrency } = await req.json();
-    const displayName = String(rawDisplayName ?? "").trim();
+    const updateData: Record<string, any> = {};
 
-    if (!displayName || displayName.length === 0) {
-      return NextResponse.json({ success: false, message: "Display name cannot be empty." }, { status: 400 });
-    }
-    if (displayName.length > 35) {
-      return NextResponse.json({ success: false, message: "Display name is too long. Max 35 characters." }, { status: 400 });
+    if (rawDisplayName !== undefined) {
+      const displayName = String(rawDisplayName).trim();
+      if (!displayName || displayName.length === 0) {
+        return NextResponse.json({ success: false, message: "Display name cannot be empty." }, { status: 400 });
+      }
+      if (displayName.length > 35) {
+        return NextResponse.json({ success: false, message: "Display name is too long. Max 35 characters." }, { status: 400 });
+      }
+      updateData.displayName = displayName;
     }
 
-    const updateData: Record<string, any> = { displayName };
     if (billingCurrency !== undefined) {
       updateData.billingCurrency = billingCurrency;
+    }
+
+    if (Object.keys(updateData).length === 0) {
+      return NextResponse.json({ success: false, message: "No data provided to update." }, { status: 400 });
     }
 
     const user = await User.findByIdAndUpdate(

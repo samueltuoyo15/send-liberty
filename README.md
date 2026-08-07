@@ -1,10 +1,10 @@
-# SendLib: Transactional Email API for Your Customers — Without SMTP Headaches
+# SendLib: Transactional Email API for Your Customers 
 
-SendLib helps developers send transactional emails to their customers from any hosting environment, even those that block traditional SMTP ports. It lets you connect your Google account securely and send emails via a simple API, solving the headache of complex email server setup and ensuring reliable inbox delivery. You won't need to configure any DNS records or worry about SMTP blocks again.
+The fastest way for founders and devs to send transactional emails to your customers (welcome messages, password resets, receipts) using their product's existing Gmail account. Zero domains to verify. Zero SMTP server stress. Just connect and send.
 
-## Screenshots
+## Demo
 
-While there are no direct UI screenshots provided in the repository, you can see how the application looks and feels by visiting the [live demo](https://sendlib.samueltuoyo.com/).
+<video src="./public/demo.mp4" controls width="100%"></video>
 
 ## Features
 
