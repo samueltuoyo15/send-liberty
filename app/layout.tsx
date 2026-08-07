@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { Plus_Jakarta_Sans } from "next/font/google";
 import { ReactQueryProvider } from "@/components/providers/query-provider";
 import { Toaster } from "sonner";
-import { Analytics } from "@vercel/analytics/next";
 import siteMetadata from "../utils/siteMetaData";
 import "./globals.css";
 
@@ -67,7 +66,6 @@ export default function RootLayout({
         <ReactQueryProvider>
           {children}
           <Toaster position="top-right" theme="light" />
-          <Analytics />
         </ReactQueryProvider>
       </body>
     </html>
