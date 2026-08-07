@@ -10,6 +10,7 @@ export interface User {
   plan?: "free" | "pro";
   subscriptionStatus?: "active" | "canceled" | "past_due" | "none";
   lastPaymentAt?: string;
+  billingCurrency?: string;
   createdAt: string;
 }
 
@@ -47,7 +48,7 @@ export function useMe() {
 export function useUpdateProfile() {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: async (data: { displayName?: string }) => {
+    mutationFn: async (data: { displayName?: string; billingCurrency?: string }) => {
       const res = await api.patch<never, { success: boolean; data: User }>("/user", data);
       return res.data;
     },

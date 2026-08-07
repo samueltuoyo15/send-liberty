@@ -23,6 +23,7 @@ export async function GET(req: NextRequest) {
         email: user.email,
         displayName: user.displayName,
         avatar: user.avatar,
+        billingCurrency: user.billingCurrency,
         createdAt: user.createdAt,
       },
     });
@@ -37,7 +38,7 @@ export async function PATCH(req: NextRequest) {
     const authUser = await requireAuthUser(req);
     await connectDB();
 
-    const { displayName: rawDisplayName } = await req.json();
+    const { displayName: rawDisplayName, billingCurrency } = await req.json();
     const displayName = String(rawDisplayName ?? "").trim();
 
     if (!displayName || displayName.length === 0) {
@@ -47,9 +48,14 @@ export async function PATCH(req: NextRequest) {
       return NextResponse.json({ success: false, message: "Display name is too long. Max 35 characters." }, { status: 400 });
     }
 
+    const updateData: Record<string, any> = { displayName };
+    if (billingCurrency !== undefined) {
+      updateData.billingCurrency = billingCurrency;
+    }
+
     const user = await User.findByIdAndUpdate(
       authUser.id,
-      { displayName },
+      updateData,
       { new: true }
     ).select("-__v").lean();
 
@@ -64,6 +70,7 @@ export async function PATCH(req: NextRequest) {
         email: user.email,
         displayName: user.displayName,
         avatar: user.avatar,
+        billingCurrency: user.billingCurrency,
         createdAt: user.createdAt,
       },
     });

@@ -28,6 +28,8 @@ export default function SettingsPage() {
   const [cancelSubConfirmOpen, setCancelSubConfirmOpen] = useState(false);
   const [isCancelingSub, setIsCancelingSub] = useState(false);
   const [isRedirectingCheckout, setIsRedirectingCheckout] = useState(false);
+  const [currencyModalOpen, setCurrencyModalOpen] = useState(false);
+  const [selectedCurrency, setSelectedCurrency] = useState("USD");
   const router = useRouter();
 
   useEffect(() => {
@@ -60,6 +62,14 @@ export default function SettingsPage() {
   }, []);
 
   const handleBachsCheckout = async () => {
+    if (!isPro && !user?.billingCurrency) {
+      setCurrencyModalOpen(true);
+      return;
+    }
+    await processCheckout();
+  };
+
+  const processCheckout = async () => {
     try {
       setIsRedirectingCheckout(true);
       const res = await fetch("/api/billing/checkout", { method: "POST" });
@@ -74,6 +84,18 @@ export default function SettingsPage() {
     } finally {
       setIsRedirectingCheckout(false);
     }
+  };
+
+  const handleCurrencySubmit = () => {
+    updateProfile(
+      { billingCurrency: selectedCurrency },
+      {
+        onSuccess: () => {
+          setCurrencyModalOpen(false);
+          processCheckout();
+        },
+      }
+    );
   };
 
   const { mutate: deleteAccount, isPending: isDeletingAccount } = useMutation({
@@ -420,6 +442,45 @@ export default function SettingsPage() {
               disabled={isCancelingSub}
             >
               {isCancelingSub ? "Canceling..." : "Cancel Subscription"}
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
+      {/* Currency / Location Dialog */}
+      <Dialog open={currencyModalOpen} onOpenChange={setCurrencyModalOpen}>
+        <DialogContent>
+          <DialogHeader className="mb-2">
+            <DialogTitle className="text-xl font-headline-md font-bold text-primary-sendlib">Select Currency</DialogTitle>
+            <DialogDescription className="text-secondary text-sm leading-relaxed mt-1">
+              What currency would you like to pay in? Select your preferred currency below.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4 my-4">
+            <select
+              value={selectedCurrency}
+              onChange={(e) => setSelectedCurrency(e.target.value)}
+              className="w-full h-11 rounded-lg border border-outline-variant bg-surface-container-low px-3 text-sm text-on-background outline-none focus-visible:border-primary-sendlib cursor-pointer font-medium"
+            >
+              <option value="USD">United States / Global (USD)</option>
+              <option value="NGN">Nigeria (NGN)</option>
+              <option value="GHS">Ghana (GHS)</option>
+            </select>
+          </div>
+          <div className="flex flex-row gap-3 mt-2 pt-4 border-t border-outline-variant/60">
+            <Button 
+              variant="outline" 
+              className="flex-1 rounded-lg font-label-sm border border-outline-variant hover:bg-surface-container-low" 
+              onClick={() => setCurrencyModalOpen(false)}
+              disabled={isUpdating}
+            >
+              Cancel
+            </Button>
+            <Button 
+              className="flex-1 rounded-lg font-label-sm bg-primary-sendlib hover:bg-primary-sendlib/90 text-white" 
+              onClick={handleCurrencySubmit}
+              disabled={isUpdating}
+            >
+              {isUpdating ? "Saving..." : "Continue to Checkout"}
             </Button>
           </div>
         </DialogContent>

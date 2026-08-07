@@ -56,10 +56,10 @@ export default function HomeClient() {
           <div className="max-w-7xl mx-auto px-margin-mobile md:px-margin-desktop pt-24 pb-xl md:pt-40 md:pb-32 grid md:grid-cols-2 gap-xl items-center relative z-10">
             <div className="space-y-lg">
               <h1 className="font-headline-lg-mobile md:font-headline-lg text-headline-lg-mobile md:text-headline-lg text-white font-extrabold drop-shadow-sm">
-                Send Product Emails Without Verifying a Single Domain
+                Send Transactional Emails to Your Customers Without Verifying a Single Domain
               </h1>
               <p className="font-body-lg text-body-lg max-w-[500px] text-white/95 leading-relaxed drop-shadow-sm">
-                The fastest way for founders and devs to send transactional emails (welcome messages, password resets, receipts) using their product's existing Gmail account. Zero domains to verify. Zero SMTP server stress. Just connect and send.
+                The fastest way for founders and devs to send transactional emails to your customers (welcome messages, password resets, receipts) using their product's existing Gmail account. Zero domains to verify. Zero SMTP server stress. Just connect and send.
               </p>
               <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-md pt-md">
                 {user ? (
@@ -420,9 +420,9 @@ export default function HomeClient() {
           <div className="absolute top-1/2 right-1/4 -translate-y-1/2 w-64 h-64 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none" />
           
           <div className="relative z-10 max-w-5xl mx-auto px-margin-mobile md:px-margin-desktop text-center">
-            <h2 className="font-headline-lg text-headline-lg text-white mb-lg">Stop fighting your hosting provider.</h2>
+            <h2 className="font-headline-lg text-headline-lg text-white mb-lg">Stop fighting your hosting provider. Start delivering to your customers.</h2>
             <p className="font-body-lg text-body-lg text-white/80 mb-xl max-w-2xl mx-auto">
-              Join developers who have simplified their email delivery pipeline. Start sending in seconds.
+              Join developers who have simplified their email delivery pipeline and reliably reach their customers. Start sending in seconds.
             </p>
             {user ? (
               <Link href="/dashboard" className="bg-white text-primary-sendlib hover:bg-gray-100 px-xl py-lg rounded-xl font-label-sm text-label-sm transition-transform active:scale-95 shadow-sm inline-block">

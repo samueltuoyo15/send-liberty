@@ -2,14 +2,14 @@ import type { Metadata } from "next";
 import HomeClient from "@/components/home/HomeClient";
 
 export const metadata: Metadata = {
-  title: "SendLib - Send Transactional Emails Without SMTP Restrictions",
-  description: "Send transactional emails seamlessly from any cloud hosting environment via Google OAuth2 with zero domain or DNS configuration required.",
+  title: "SendLib - Send Transactional Emails to Your Customers Seamlessly",
+  description: "The fastest way for founders and developers to send transactional emails to their customers seamlessly, without any domain configuration required.",
   alternates: {
     canonical: "https://sendlib.samueltuoyo.com",
   },
   openGraph: {
-    title: "SendLib - Send Transactional Emails Without SMTP Restrictions",
-    description: "Send transactional emails seamlessly from any cloud hosting environment via Google OAuth2 with zero domain or DNS configuration required.",
+    title: "SendLib - Send Transactional Emails to Your Customers Seamlessly",
+    description: "The fastest way for founders and developers to send transactional emails to their customers seamlessly, without any domain configuration required.",
     url: "https://sendlib.samueltuoyo.com",
     siteName: "SendLib",
     type: "website",
@@ -23,8 +23,8 @@ const jsonLd = {
       "@type": "WebSite",
       "@id": "https://sendlib.samueltuoyo.com/#website",
       "url": "https://sendlib.samueltuoyo.com",
-      "name": "SendLib",
-      "description": "Send transactional emails seamlessly via Google OAuth2 without SMTP port restrictions",
+      "name": "Sendlib",
+      "description": "Send transactional emails seamlessly to their customers",
       "publisher": {
         "@id": "https://sendlib.samueltuoyo.com/#organization"
       }
@@ -35,7 +35,7 @@ const jsonLd = {
       "name": "SendLib",
       "url": "https://sendlib.samueltuoyo.com",
       "logo": "https://sendlib.samueltuoyo.com/logo.png",
-      "email": "motionpipehq@gmail.com"
+      "email": "samueltuoyo9082@gmail.com"
     },
     {
       "@type": "SoftwareApplication",
@@ -43,7 +43,7 @@ const jsonLd = {
       "name": "SendLib",
       "operatingSystem": "All",
       "applicationCategory": "DeveloperApplication",
-      "description": "SendLib enables developers to send transactional emails through their connected Google account without relying on SMTP.",
+      "description": "SendLib enables founders and developers to send transactional emails to their customers fast and seamlessly without any domain configuration.",
       "url": "https://sendlib.samueltuoyo.com",
       "offers": {
         "@type": "Offer",

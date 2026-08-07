@@ -26,6 +26,7 @@ export async function GET(req: NextRequest) {
         plan: user.plan,
         subscriptionStatus: user.subscriptionStatus,
         lastPaymentAt: user.lastPaymentAt,
+        billingCurrency: user.billingCurrency,
         createdAt: user.createdAt,
       },
     });
