@@ -2,6 +2,9 @@
   "name": "send-lib",
   "version": "0.1.0",
   "private": true,
+  "pnpm": {
+    "onlyBuiltDependencies": ["argon2", "sharp", "unrs-resolver"]
+  },
   "scripts": {
     "dev": "next dev",
     "build": "next build",
