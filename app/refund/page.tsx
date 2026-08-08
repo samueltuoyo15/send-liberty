@@ -1,5 +1,4 @@
 import { Navbar } from "@/components/home/Navbar";
-import { Footer } from "@/components/home/Footer";
 import Link from "next/link";
 import { Metadata } from "next";
 
@@ -27,22 +26,22 @@ export default function RefundPolicy() {
         <div className="prose prose-slate prose-headings:text-primary-sendlib prose-a:text-indigo-600 max-w-none text-secondary leading-relaxed space-y-8">
           
           <section>
-            <h2 className="text-2xl font-bold border-b border-outline-variant pb-2 mb-4">1. Satisfaction Guarantee (14-Day Refund)</h2>
+            <h2 className="text-2xl font-bold border-b border-outline-variant pb-2 mb-4">1. No Refunds</h2>
             <p>
-              We want you to be completely satisfied with SendLib. If you upgrade to our Pro plan and find that it doesn't meet your needs, you are eligible for a full refund within <strong>14 days of your initial purchase</strong>.
+              Due to the nature of our service and the costs associated with API infrastructure, <strong>all sales are final and non-refundable</strong>. Once a subscription is purchased and activated, we cannot issue any refunds, partial or otherwise.
             </p>
             <p>
-              To request a refund within this 14-day window, simply contact us at <a href="mailto:support@sendlib.com">support@sendlib.com</a> with your account details. We will process your refund no questions asked, though we always appreciate feedback on how we can improve.
+              We highly encourage all users to fully utilize our Free plan to test the API, explore the dashboard, and ensure SendLib meets your requirements before upgrading to the Pro plan.
             </p>
           </section>
 
           <section>
-            <h2 className="text-2xl font-bold border-b border-outline-variant pb-2 mb-4">2. Subscription Renewals</h2>
+            <h2 className="text-2xl font-bold border-b border-outline-variant pb-2 mb-4">2. Subscription Renewals & Cancellations</h2>
             <p>
               SendLib operates on an auto-renewing subscription model. You will be billed automatically at the start of each billing cycle.
             </p>
             <p>
-              <strong>Renewal payments are generally non-refundable.</strong> We do not offer prorated refunds for canceled subscriptions or for unused time in a billing cycle. You can cancel your subscription at any time from your dashboard to prevent future charges. When you cancel, you will retain access to Pro features until the end of your current billing period.
+              You may cancel your subscription at any time from your dashboard to prevent future charges. When you cancel, you will retain full access to all Pro features until the end of your current paid billing period. <strong>We do not offer prorated refunds for canceled subscriptions or for unused time in a billing cycle.</strong>
             </p>
           </section>
 
@@ -54,19 +53,16 @@ export default function RefundPolicy() {
           </section>
 
           <section>
-            <h2 className="text-2xl font-bold border-b border-outline-variant pb-2 mb-4">4. Exceptions and Abuse</h2>
+            <h2 className="text-2xl font-bold border-b border-outline-variant pb-2 mb-4">4. Account Suspension</h2>
             <p>
-              While we stand by our 14-day guarantee, we reserve the right to deny refund requests in cases of suspected abuse of our service (e.g., using SendLib to send spam, violating our terms of service, or repeatedly subscribing and requesting refunds).
-            </p>
-            <p>
-              If your account is terminated or suspended due to a violation of our Terms of Service, you will not be eligible for a refund.
+              If your account is terminated or suspended due to a violation of our Terms of Service (e.g., using SendLib to send spam or malicious content), your subscription will be canceled immediately, and you will not be eligible for a refund.
             </p>
           </section>
 
           <section>
             <h2 className="text-2xl font-bold border-b border-outline-variant pb-2 mb-4">5. Contact Us</h2>
             <p>
-              If you have any questions about this refund policy or need to request a refund, please contact us at:
+              If you have any questions about billing or this policy, please contact us at:
             </p>
             <ul>
               <li>Email: <a href="mailto:support@sendlib.com">support@sendlib.com</a></li>
@@ -76,7 +72,31 @@ export default function RefundPolicy() {
         </div>
       </main>
 
-      <Footer />
+      <footer className="w-full mt-auto bg-surface-container border-t border-outline-variant">
+        <div className="flex flex-col md:flex-row justify-between items-center px-6 py-10 gap-6 max-w-7xl mx-auto">
+          <div className="flex flex-col gap-2 text-center md:text-left">
+            <div className="font-bold text-primary-sendlib text-xl">SendLib</div>
+            <p className="text-sm text-secondary">© 2026 SendLib. All rights reserved.</p>
+          </div>
+          <div className="flex flex-wrap justify-center gap-6">
+            <Link href="/docs" className="text-sm text-secondary hover:text-primary-sendlib transition-colors underline">
+              Documentation
+            </Link>
+            <a href="mailto:hello@samueltuoyo.com" className="text-sm text-secondary hover:text-primary-sendlib transition-colors underline">
+              Contact Support
+            </a>
+            <Link href="/privacy-policy" className="text-sm text-secondary hover:text-primary-sendlib transition-colors underline">
+              Privacy Policy
+            </Link>
+            <Link href="/terms-of-service" className="text-sm text-secondary hover:text-primary-sendlib transition-colors underline">
+              Terms of Service
+            </Link>
+            <Link href="/refund" className="text-sm text-secondary hover:text-primary-sendlib transition-colors underline">
+              Refund Policy
+            </Link>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 }

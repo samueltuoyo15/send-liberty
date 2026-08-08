@@ -458,6 +458,9 @@ export default function HomeClient() {
             <Link href="/terms-of-service" className="font-label-sm text-label-sm text-on-surface-variant hover:text-primary-sendlib transition-colors underline">
               Terms of Service
             </Link>
+            <Link href="/refund" className="font-label-sm text-label-sm text-on-surface-variant hover:text-primary-sendlib transition-colors underline">
+              Refund Policy
+            </Link>
           </div>
         </div>
       </footer>
