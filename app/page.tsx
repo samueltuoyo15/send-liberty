@@ -107,7 +107,7 @@ const jsonLd = {
           "name": "How does this compare to the free tier of Resend, Mailgun, or SendGrid?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "Other platforms limit you to only 100 free emails per day on their free plans and require strict domain verification. With SendLib, you can send up to 500 emails/day per connected personal/product Gmail account, or up to 2,000 emails/day per connected Google Workspace account."
+            "text": "Other platforms limit you to only 100 free emails per day on their free plans and require strict domain verification. With SendLib, you can send up to 200 emails/day per connected personal Gmail account (500/day on Pro), or up to 1,000 emails/day per connected Google Workspace account (2,000/day on Pro)."
           }
         },
         {

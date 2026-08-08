@@ -38,13 +38,6 @@ export default function LimitsPage() {
                 <td className="px-4 py-3 text-secondary">per minute</td>
                 <td className="px-4 py-3 text-secondary">API key</td>
               </tr>
-              <tr className="hover:bg-surface-variant/20 transition-colors">
-                <td className="px-4 py-3 font-mono text-xs text-secondary"><code>GET /api/auth/*</code></td>
-                <td className="px-4 py-3 font-bold text-primary-sendlib">10 req</td>
-                <td className="px-4 py-3 font-bold text-primary-sendlib">10 req</td>
-                <td className="px-4 py-3 text-secondary">per minute</td>
-                <td className="px-4 py-3 text-secondary">IP address</td>
-              </tr>
             </tbody>
           </table>
         </div>
@@ -136,15 +129,15 @@ export default function LimitsPage() {
               </tr>
               <tr className="hover:bg-surface-variant/20 transition-colors">
                 <td className="px-4 py-3 text-secondary">Personal Gmail (<code className="text-xs bg-surface-variant px-1 rounded">@gmail.com</code>)</td>
+                <td className="px-4 py-3 font-bold text-primary-sendlib">200 emails / day</td>
                 <td className="px-4 py-3 font-bold text-primary-sendlib">500 emails / day</td>
-                <td className="px-4 py-3 font-bold text-primary-sendlib">500 emails / day</td>
-                <td className="px-4 py-3 text-secondary">Resets daily at UTC midnight (enforced by Google)</td>
+                <td className="px-4 py-3 text-secondary">Resets daily at UTC midnight. Google hard cap is 500.</td>
               </tr>
               <tr className="hover:bg-surface-variant/20 transition-colors">
                 <td className="px-4 py-3 text-secondary">Google Workspace Account</td>
+                <td className="px-4 py-3 font-bold text-primary-sendlib">1,000 emails / day</td>
                 <td className="px-4 py-3 font-bold text-primary-sendlib">2,000 emails / day</td>
-                <td className="px-4 py-3 font-bold text-primary-sendlib">2,000 emails / day</td>
-                <td className="px-4 py-3 text-secondary">Resets daily at UTC midnight (enforced by Google)</td>
+                <td className="px-4 py-3 text-secondary">Resets daily at UTC midnight. Google hard cap is 2,000.</td>
               </tr>
             </tbody>
           </table>

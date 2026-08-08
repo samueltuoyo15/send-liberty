@@ -273,6 +273,7 @@ export async function POST(req: NextRequest) {
       attachments,
       apiKeyId: apiKeyId || undefined,
       retentionDays,
+      plan: plan as "free" | "pro",
     });
 
     return NextResponse.json({ success: true, messageId: result.messageId });

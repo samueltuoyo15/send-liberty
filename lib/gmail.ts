@@ -120,6 +120,7 @@ export type GmailSendOptions = {
   from?: string;
   apiKeyId?: string | mongoose.Types.ObjectId;
   retentionDays?: number;
+  plan?: "free" | "pro";
   attachments?: {
     filename: string;
     content: string;
@@ -165,7 +166,10 @@ export async function sendGmailEmail(
   });
 
   const isWorkspace = !senderEmail.endsWith("@gmail.com") && !senderEmail.endsWith("@googlemail.com");
-  const limit = isWorkspace ? 2000 : 500;
+  const isPro = options.plan === "pro";
+  const limit = isWorkspace
+    ? isPro ? 2000 : 1000
+    : isPro ? 500 : 200;
 
   if (sentCount >= limit) {
     throw new Error(`Daily limit reached: Connected Gmail '${senderEmail}' has already sent ${sentCount} of its ${limit} daily allowed emails today.`);

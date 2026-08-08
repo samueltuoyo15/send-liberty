@@ -160,7 +160,7 @@ export default function HomeClient() {
                     },
                     {
                       feature: "Free Emails Per Day",
-                      sendlib: "500 to 2,000 / account",
+                      sendlib: "200 to 1,000 / account",
                       others: "100 / day",
                     },
                     {
@@ -355,7 +355,7 @@ export default function HomeClient() {
                   Can I send from my custom domain (e.g. hello@mycompany.com)?
                 </h3>
                 <p className="text-sm text-secondary leading-relaxed pl-4">
-                  Yes! If your custom company domain is connected to Google Workspace, simply link that account to SendLib via Google OAuth. SendLib will send transactional emails directly from your custom domain (e.g. <code className="bg-surface-variant/80 px-1.5 py-0.5 rounded text-xs">hello@mycompany.com</code>) with zero extra DNS or SPF configuration required on SendLib. Plus, Google Workspace accounts get <strong>2,000 emails/day</strong> per account!
+                  Yes! If your custom company domain is connected to Google Workspace, simply link that account to SendLib via Google OAuth. SendLib will send transactional emails directly from your custom domain (e.g. <code className="bg-surface-variant/80 px-1.5 py-0.5 rounded text-xs">hello@mycompany.com</code>) with zero extra DNS or SPF configuration required on SendLib. Plus, Google Workspace accounts get up to <strong>1,000 emails/day on Free</strong> (2,000/day on Pro) per account!
                 </p>
               </div>
 
@@ -375,7 +375,7 @@ export default function HomeClient() {
                   How does this compare to the free tier of Resend, Mailgun, or SendGrid?
                 </h3>
                 <p className="text-sm text-secondary leading-relaxed pl-4">
-                  Other platforms limit you to only 100 free emails per day on their free plans and require strict domain verification. With SendLib, you can send up to <strong>500 emails/day</strong> per connected personal/product Gmail account, or up to <strong>2,000 emails/day</strong> per connected Google Workspace account.
+                  Other platforms limit you to only 100 free emails per day on their free plans and require strict domain verification. With SendLib, you can send up to <strong>200 emails/day</strong> per connected personal Gmail account (500/day on Pro), or up to <strong>1,000 emails/day</strong> per connected Google Workspace account (2,000/day on Pro).
                 </p>
               </div>
 

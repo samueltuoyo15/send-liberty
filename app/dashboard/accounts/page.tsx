@@ -105,11 +105,11 @@ function AccountsContent() {
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs text-secondary">
           <div className="bg-white/80 p-2.5 rounded-lg border border-indigo-100/60">
             <span className="font-bold text-primary-sendlib block mb-0.5">Standard Gmail (yourproduct@gmail.com)</span>
-            <span>Up to <strong className="text-primary-sendlib">500 emails/day</strong> per connected account.</span>
+            <span>Up to <strong className="text-primary-sendlib">{isPro ? "500 emails/day" : "200 emails/day"}</strong> per account{!isPro && " (500 on Pro)"}.</span>
           </div>
           <div className="bg-white/80 p-2.5 rounded-lg border border-indigo-100/60">
             <span className="font-bold text-primary-sendlib block mb-0.5">Google Workspace Custom Domain</span>
-            <span>Up to <strong className="text-primary-sendlib">2,000 emails/day</strong> (e.g. hello@yourprodct.com).</span>
+            <span>Up to <strong className="text-primary-sendlib">{isPro ? "2,000 emails/day" : "1,000 emails/day"}</strong>{!isPro && " (2,000 on Pro)"}.</span>
           </div>
         </div>
       </div>
