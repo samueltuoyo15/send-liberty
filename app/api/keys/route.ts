@@ -68,7 +68,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json(
         {
           success: false,
-          message: `You have reached the maximum of ${maxKeys} active API keys. Please revoke an existing key before creating a new one.`,
+          message: `You have reached the maximum of ${maxKeys} active API keys. Please revoke an existing key before creating a new one.${dbUser?.plan === "free" ? " Upgrade to Pro to create up to 100 API keys." : ""}`,
         },
         { status: 429 }
       );

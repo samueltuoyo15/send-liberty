@@ -172,7 +172,7 @@ export async function sendGmailEmail(
     : isPro ? 500 : 200;
 
   if (sentCount >= limit) {
-    throw new Error(`Daily limit reached: Connected Gmail '${senderEmail}' has already sent ${sentCount} of its ${limit} daily allowed emails today.`);
+    throw new Error(`Daily limit reached: Connected Gmail '${senderEmail}' has already sent ${sentCount} of its ${limit} daily allowed emails today.${!isPro ? " Upgrade to Pro to unlock higher daily sending limits." : ""}`);
   }
 
   const bufferMs = 5 * 60 * 1000;

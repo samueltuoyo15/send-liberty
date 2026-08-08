@@ -187,14 +187,14 @@ export async function POST(req: NextRequest) {
     if (html && Buffer.byteLength(html, "utf8") > planLimits.maxHtmlBytes) {
       const maxMb = plan === "pro" ? "5MB" : "2MB";
       return NextResponse.json(
-        { success: false, message: `HTML body too large. Your ${plan} plan allows up to ${maxMb}.` },
+        { success: false, message: `HTML body too large. Your ${plan} plan allows up to ${maxMb}.${plan === "free" ? " Upgrade to Pro for larger payloads." : ""}` },
         { status: 413 }
       );
     }
     if (text && Buffer.byteLength(text, "utf8") > planLimits.maxTextBytes) {
       const maxMb = plan === "pro" ? "2MB" : "1MB";
       return NextResponse.json(
-        { success: false, message: `Text body too large. Your ${plan} plan allows up to ${maxMb}.` },
+        { success: false, message: `Text body too large. Your ${plan} plan allows up to ${maxMb}.${plan === "free" ? " Upgrade to Pro for larger payloads." : ""}` },
         { status: 413 }
       );
     }
@@ -230,7 +230,7 @@ export async function POST(req: NextRequest) {
     if (attachments) {
       if (attachments.length > planLimits.maxAttachments) {
         return NextResponse.json(
-          { success: false, message: `Too many attachments. Your ${plan} plan allows up to ${planLimits.maxAttachments} files per request.` },
+          { success: false, message: `Too many attachments. Your ${plan} plan allows up to ${planLimits.maxAttachments} files per request.${plan === "free" ? " Upgrade to Pro to send more attachments." : ""}` },
           { status: 400 }
         );
       }
@@ -246,7 +246,7 @@ export async function POST(req: NextRequest) {
         if (bytes > planLimits.maxAttachmentBytes) {
           const maxMb = plan === "pro" ? "10MB" : "1MB";
           return NextResponse.json(
-            { success: false, message: `Attachment '${att.filename}' is too large. Your ${plan} plan allows up to ${maxMb} per file.` },
+            { success: false, message: `Attachment '${att.filename}' is too large. Your ${plan} plan allows up to ${maxMb} per file.${plan === "free" ? " Upgrade to Pro for larger attachments." : ""}` },
             { status: 413 }
           );
         }

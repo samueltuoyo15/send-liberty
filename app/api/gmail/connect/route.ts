@@ -22,7 +22,7 @@ export async function GET(req: NextRequest) {
     
     if (count >= maxAccounts) {
       return NextResponse.json(
-        { success: false, message: `You have reached the maximum of ${maxAccounts} connected Gmail accounts.` },
+        { success: false, message: `You have reached the maximum of ${maxAccounts} connected Gmail accounts.${dbUser.plan === "free" ? " Upgrade to Pro to connect up to 50 accounts." : ""}` },
         { status: 429 }
       );
     }
