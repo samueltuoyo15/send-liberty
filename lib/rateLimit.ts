@@ -1,8 +1,39 @@
-import { RateLimiterMemory, RateLimiterRes } from "rate-limiter-flexible";
+import { RateLimiterRedis, RateLimiterMemory, RateLimiterRes } from "rate-limiter-flexible";
+import { getRedisClient } from "./redis";
 
-const sendLimiterFree = new RateLimiterMemory({ points: 30, duration: 60, keyPrefix: "rl_send" });
-const sendLimiterPro = new RateLimiterMemory({ points: 300, duration: 60, keyPrefix: "rl_send_pro" });
-const authLimiter = new RateLimiterMemory({ points: 10, duration: 60, keyPrefix: "rl_auth" });
+let sendLimiterFree: RateLimiterRedis | RateLimiterMemory;
+let sendLimiterPro: RateLimiterRedis | RateLimiterMemory;
+let authLimiter: RateLimiterRedis | RateLimiterMemory;
+
+function getSendLimiter(plan: "free" | "pro" = "free"): RateLimiterRedis | RateLimiterMemory {
+  if (plan === "pro") {
+    if (!sendLimiterPro) {
+      const opts = { points: 300, duration: 60, keyPrefix: "rl_send_pro" };
+      sendLimiterPro = process.env.REDIS_URL
+        ? new RateLimiterRedis({ storeClient: getRedisClient(), ...opts })
+        : new RateLimiterMemory(opts);
+    }
+    return sendLimiterPro;
+  }
+
+  if (!sendLimiterFree) {
+    const opts = { points: 30, duration: 60, keyPrefix: "rl_send" };
+    sendLimiterFree = process.env.REDIS_URL
+      ? new RateLimiterRedis({ storeClient: getRedisClient(), ...opts })
+      : new RateLimiterMemory(opts);
+  }
+  return sendLimiterFree;
+}
+
+function getAuthLimiter(): RateLimiterRedis | RateLimiterMemory {
+  if (!authLimiter) {
+    const opts = { points: 10, duration: 60, keyPrefix: "rl_auth" };
+    authLimiter = process.env.REDIS_URL
+      ? new RateLimiterRedis({ storeClient: getRedisClient(), ...opts })
+      : new RateLimiterMemory(opts);
+  }
+  return authLimiter;
+}
 
 export type LimiterType = "send" | "auth";
 
@@ -16,13 +47,7 @@ export async function rateLimit(
   key: string,
   plan: "free" | "pro" = "free"
 ): Promise<RateLimitResult> {
-  const limiter =
-    type === "send"
-      ? plan === "pro"
-        ? sendLimiterPro
-        : sendLimiterFree
-      : authLimiter;
-
+  const limiter = type === "send" ? getSendLimiter(plan) : getAuthLimiter();
   try {
     await limiter.consume(key);
     return { success: true, resetInSeconds: 0 };
