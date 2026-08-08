@@ -9,22 +9,20 @@ import { rateLimit } from "@/lib/rateLimit";
 
 const MAX_SUBJECT_LENGTH = 998;
 const MAX_RECIPIENTS = 50;
-// Gmail API hard limit is 25MB total per message regardless of plan
 const MAX_TOTAL_ATTACHMENT_BYTES = 25 * 1024 * 1024;
 
-// Plan-based limits
 const PLAN_LIMITS = {
   free: {
-    maxHtmlBytes: 2 * 1024 * 1024,  // 2MB
-    maxTextBytes: 1 * 1024 * 1024,  // 1MB
-    maxAttachments: 10,
-    maxAttachmentBytes: 10 * 1024 * 1024, // 10MB per file
+    maxHtmlBytes: 2 * 1024 * 1024,
+    maxTextBytes: 1 * 1024 * 1024,
+    maxAttachments: 5,
+    maxAttachmentBytes: 1 * 1024 * 1024,
   },
   pro: {
-    maxHtmlBytes: 5 * 1024 * 1024,  // 5MB
-    maxTextBytes: 2 * 1024 * 1024,  // 2MB
+    maxHtmlBytes: 5 * 1024 * 1024,
+    maxTextBytes: 2 * 1024 * 1024,
     maxAttachments: 20,
-    maxAttachmentBytes: 10 * 1024 * 1024, // 10MB per file
+    maxAttachmentBytes: 10 * 1024 * 1024,
   },
 };
 
@@ -98,7 +96,7 @@ export async function POST(req: NextRequest) {
     // --- Rate limit ---
     const plan = user.plan || "free";
     const rl = await rateLimit("send", apiKeyId!.toString(), plan);
-    const limit = plan === "pro" ? 300 : 60;
+    const limit = plan === "pro" ? 300 : 30;
     
     if (!rl.success) {
       return NextResponse.json(
@@ -246,8 +244,9 @@ export async function POST(req: NextRequest) {
         }
         const bytes = Buffer.byteLength(att.content, "base64");
         if (bytes > planLimits.maxAttachmentBytes) {
+          const maxMb = plan === "pro" ? "10MB" : "1MB";
           return NextResponse.json(
-            { success: false, message: `Attachment '${att.filename}' is too large. Max 10MB per file.` },
+            { success: false, message: `Attachment '${att.filename}' is too large. Your ${plan} plan allows up to ${maxMb} per file.` },
             { status: 413 }
           );
         }
@@ -261,6 +260,7 @@ export async function POST(req: NextRequest) {
       }
     }
 
+    const retentionDays = plan === "pro" ? 90 : 5;
     const result = await sendGmailEmail(authenticatedUserId, {
       to: toArr.length === 1 ? toArr[0] : toArr,
       subject: subjectStr,
@@ -272,6 +272,7 @@ export async function POST(req: NextRequest) {
       from,
       attachments,
       apiKeyId: apiKeyId || undefined,
+      retentionDays,
     });
 
     return NextResponse.json({ success: true, messageId: result.messageId });

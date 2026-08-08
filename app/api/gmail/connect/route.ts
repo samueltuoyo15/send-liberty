@@ -5,7 +5,7 @@ import { connectDB } from "@/lib/db";
 import GmailAccount from "@/models/GmailAccount";
 import User from "@/models/User";
 
-const MAX_GMAIL_ACCOUNTS = 10;
+const MAX_GMAIL_ACCOUNTS = 3;
 
 export async function GET(req: NextRequest) {
   try {

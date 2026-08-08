@@ -36,7 +36,7 @@ export async function GET(req: NextRequest) {
   }
 }
 
-const MAX_KEYS_PER_USER = 15;
+const MAX_KEYS_PER_USER = 5;
 
 export async function POST(req: NextRequest) {
   try {

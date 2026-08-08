@@ -10,6 +10,7 @@ export interface IEmailLog extends Document {
   provider: "gmail";
   messageId?: string;
   error?: string;
+  expiresAt: Date;
   createdAt: Date;
 }
 
@@ -24,6 +25,7 @@ const EmailLogSchema = new Schema<IEmailLog>(
     provider: { type: String, enum: ["gmail"], default: "gmail" },
     messageId: { type: String },
     error: { type: String },
+    expiresAt: { type: Date, required: true, index: { expireAfterSeconds: 0 } },
   },
   { timestamps: true }
 );

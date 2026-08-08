@@ -17,7 +17,7 @@ function getSendLimiter(plan: "free" | "pro" = "free"): RateLimiterRedis | RateL
   }
 
   if (!sendLimiterFree) {
-    const opts = { points: 60, duration: 60, keyPrefix: "rl_send" };
+    const opts = { points: 30, duration: 60, keyPrefix: "rl_send" };
     sendLimiterFree = process.env.REDIS_URL
       ? new RateLimiterRedis({ storeClient: getRedisClient(), ...opts })
       : new RateLimiterMemory(opts);

@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { requireAuthUser } from "@/lib/auth";
 import { connectDB } from "@/lib/db";
 import EmailLog, { IEmailLog } from "@/models/EmailLog";
+import User from "@/models/User";
 import mongoose, { FilterQuery } from "mongoose";
 
 export async function GET(req: NextRequest) {
@@ -18,7 +19,15 @@ export async function GET(req: NextRequest) {
 
     await connectDB();
 
-    const query: FilterQuery<IEmailLog> = { userId: new mongoose.Types.ObjectId(user.id) };
+    const dbUser = await User.findById(user.id).select("plan").lean();
+    const retentionDays = dbUser?.plan === "pro" ? 90 : 5;
+    const cutoff = new Date();
+    cutoff.setDate(cutoff.getDate() - retentionDays);
+
+    const query: FilterQuery<IEmailLog> = {
+      userId: new mongoose.Types.ObjectId(user.id),
+      createdAt: { $gte: cutoff },
+    };
 
     if (status) {
       query.status = status;
@@ -31,7 +40,7 @@ export async function GET(req: NextRequest) {
       query.$or = [
         { to: { $regex: escapedSearch, $options: "i" } },
         { subject: { $regex: escapedSearch, $options: "i" } },
-        { from: { $regex: escapedSearch, $options: "i" } }
+        { from: { $regex: escapedSearch, $options: "i" } },
       ];
     }
 
@@ -48,7 +57,7 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({
       success: true,
       data: logs,
-      meta: { page, limit, total, totalPages: Math.ceil(total / limit) },
+      meta: { page, limit, total, totalPages: Math.ceil(total / limit), retentionDays },
     });
   } catch (err) {
     if (err instanceof Response) return err;

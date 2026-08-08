@@ -5,7 +5,7 @@ export default function LimitsPage() {
     <div className="max-w-3xl space-y-8">
       <div className="mb-10">
         <h1 className="text-3xl md:text-4xl font-bold tracking-tight text-primary-sendlib mb-4">
-          Limits & Quotas
+          Limits &amp; Quotas
         </h1>
         <p className="text-secondary text-lg leading-relaxed">
           Overview of API rate limits, request payload limits, and daily Gmail quotas.
@@ -24,7 +24,8 @@ export default function LimitsPage() {
             <thead>
               <tr className="border-b border-outline-variant bg-surface-variant/40">
                 <th className="text-left px-4 py-3 font-semibold text-primary-sendlib">Endpoint</th>
-                <th className="text-left px-4 py-3 font-semibold text-primary-sendlib">Limit</th>
+                <th className="text-left px-4 py-3 font-semibold text-primary-sendlib">Free</th>
+                <th className="text-left px-4 py-3 font-semibold text-primary-sendlib">Pro</th>
                 <th className="text-left px-4 py-3 font-semibold text-primary-sendlib">Window</th>
                 <th className="text-left px-4 py-3 font-semibold text-primary-sendlib">Keyed By</th>
               </tr>
@@ -32,13 +33,15 @@ export default function LimitsPage() {
             <tbody className="divide-y divide-outline-variant/50">
               <tr className="hover:bg-surface-variant/20 transition-colors">
                 <td className="px-4 py-3 font-mono text-xs text-secondary"><code>POST /api/send</code></td>
-                <td className="px-4 py-3 font-bold text-primary-sendlib">60 requests <span className="font-normal text-xs text-secondary block mt-1">(300 on Pro)</span></td>
+                <td className="px-4 py-3 font-bold text-primary-sendlib">30 req</td>
+                <td className="px-4 py-3 font-bold text-primary-sendlib">300 req</td>
                 <td className="px-4 py-3 text-secondary">per minute</td>
                 <td className="px-4 py-3 text-secondary">API key</td>
               </tr>
               <tr className="hover:bg-surface-variant/20 transition-colors">
                 <td className="px-4 py-3 font-mono text-xs text-secondary"><code>GET /api/auth/*</code></td>
-                <td className="px-4 py-3 font-bold text-primary-sendlib">10 requests</td>
+                <td className="px-4 py-3 font-bold text-primary-sendlib">10 req</td>
+                <td className="px-4 py-3 font-bold text-primary-sendlib">10 req</td>
                 <td className="px-4 py-3 text-secondary">per minute</td>
                 <td className="px-4 py-3 text-secondary">IP address</td>
               </tr>
@@ -58,35 +61,41 @@ export default function LimitsPage() {
             <thead>
               <tr className="border-b border-outline-variant bg-surface-variant/40">
                 <th className="text-left px-4 py-3 font-semibold text-primary-sendlib">Field</th>
-                <th className="text-left px-4 py-3 font-semibold text-primary-sendlib">Limit</th>
+                <th className="text-left px-4 py-3 font-semibold text-primary-sendlib">Free</th>
+                <th className="text-left px-4 py-3 font-semibold text-primary-sendlib">Pro</th>
                 <th className="text-left px-4 py-3 font-semibold text-primary-sendlib">Notes</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-outline-variant/50">
               <tr className="hover:bg-surface-variant/20 transition-colors">
                 <td className="px-4 py-3 font-mono text-xs text-secondary"><code>subject</code></td>
-                <td className="px-4 py-3 font-bold text-primary-sendlib">998 characters</td>
+                <td className="px-4 py-3 font-bold text-primary-sendlib">998 chars</td>
+                <td className="px-4 py-3 font-bold text-primary-sendlib">998 chars</td>
                 <td className="px-4 py-3 text-secondary">RFC 2822 maximum</td>
               </tr>
               <tr className="hover:bg-surface-variant/20 transition-colors">
                 <td className="px-4 py-3 font-mono text-xs text-secondary"><code>html</code></td>
-                <td className="px-4 py-3 font-bold text-primary-sendlib">2 MB <span className="font-normal text-xs text-secondary block mt-1">(5 MB on Pro)</span></td>
+                <td className="px-4 py-3 font-bold text-primary-sendlib">2 MB</td>
+                <td className="px-4 py-3 font-bold text-primary-sendlib">5 MB</td>
                 <td className="px-4 py-3 text-secondary">UTF-8 encoded</td>
               </tr>
               <tr className="hover:bg-surface-variant/20 transition-colors">
                 <td className="px-4 py-3 font-mono text-xs text-secondary"><code>text</code></td>
-                <td className="px-4 py-3 font-bold text-primary-sendlib">1 MB <span className="font-normal text-xs text-secondary block mt-1">(2 MB on Pro)</span></td>
+                <td className="px-4 py-3 font-bold text-primary-sendlib">1 MB</td>
+                <td className="px-4 py-3 font-bold text-primary-sendlib">2 MB</td>
                 <td className="px-4 py-3 text-secondary">UTF-8 encoded</td>
               </tr>
               <tr className="hover:bg-surface-variant/20 transition-colors">
                 <td className="px-4 py-3 font-mono text-xs text-secondary"><code>to</code> / <code>cc</code> / <code>bcc</code></td>
-                <td className="px-4 py-3 font-bold text-primary-sendlib">50 recipients each</td>
+                <td className="px-4 py-3 font-bold text-primary-sendlib">50 each</td>
+                <td className="px-4 py-3 font-bold text-primary-sendlib">50 each</td>
                 <td className="px-4 py-3 text-secondary">String or array of strings</td>
               </tr>
               <tr className="hover:bg-surface-variant/20 transition-colors">
                 <td className="px-4 py-3 font-mono text-xs text-secondary"><code>attachments</code></td>
-                <td className="px-4 py-3 font-bold text-primary-sendlib">10 files · 25 MB total <span className="font-normal text-xs text-secondary block mt-1">(20 files · 25 MB total on Pro)</span></td>
-                <td className="px-4 py-3 text-secondary">Base64-encoded content. Max 10MB per file. 25MB total is Gmail API&apos;s hard limit.</td>
+                <td className="px-4 py-3 font-bold text-primary-sendlib">5 files · 1 MB/file</td>
+                <td className="px-4 py-3 font-bold text-primary-sendlib">20 files · 10 MB/file</td>
+                <td className="px-4 py-3 text-secondary">Base64-encoded. 25 MB total cap enforced by Gmail.</td>
               </tr>
             </tbody>
           </table>
@@ -95,34 +104,45 @@ export default function LimitsPage() {
 
       {/* Section 3: Account & Daily Limits */}
       <div className="space-y-4 pt-4">
-        <h2 className="text-xl font-bold text-primary-sendlib">Account & Daily Limits</h2>
+        <h2 className="text-xl font-bold text-primary-sendlib">Account &amp; Daily Limits</h2>
         <div className="overflow-x-auto rounded-xl border border-outline-variant">
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b border-outline-variant bg-surface-variant/40">
                 <th className="text-left px-4 py-3 font-semibold text-primary-sendlib">Resource</th>
-                <th className="text-left px-4 py-3 font-semibold text-primary-sendlib">Limit</th>
+                <th className="text-left px-4 py-3 font-semibold text-primary-sendlib">Free</th>
+                <th className="text-left px-4 py-3 font-semibold text-primary-sendlib">Pro</th>
                 <th className="text-left px-4 py-3 font-semibold text-primary-sendlib">Notes</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-outline-variant/50">
               <tr className="hover:bg-surface-variant/20 transition-colors">
                 <td className="px-4 py-3 text-secondary">Connected Gmail Accounts</td>
-                <td className="px-4 py-3 font-bold text-primary-sendlib">10 accounts max <span className="font-normal text-xs text-secondary block mt-1">(50 max on Pro)</span></td>
+                <td className="px-4 py-3 font-bold text-primary-sendlib">3</td>
+                <td className="px-4 py-3 font-bold text-primary-sendlib">50</td>
                 <td className="px-4 py-3 text-secondary">Per SendLib user account</td>
               </tr>
               <tr className="hover:bg-surface-variant/20 transition-colors">
                 <td className="px-4 py-3 text-secondary">Active API Keys</td>
-                <td className="px-4 py-3 font-bold text-primary-sendlib">15 keys max <span className="font-normal text-xs text-secondary block mt-1">(100 max on Pro)</span></td>
+                <td className="px-4 py-3 font-bold text-primary-sendlib">5</td>
+                <td className="px-4 py-3 font-bold text-primary-sendlib">100</td>
                 <td className="px-4 py-3 text-secondary">Per SendLib user account</td>
               </tr>
               <tr className="hover:bg-surface-variant/20 transition-colors">
+                <td className="px-4 py-3 text-secondary">Email Log Retention</td>
+                <td className="px-4 py-3 font-bold text-primary-sendlib">5 days</td>
+                <td className="px-4 py-3 font-bold text-primary-sendlib">90 days</td>
+                <td className="px-4 py-3 text-secondary">Logs are automatically deleted after this period</td>
+              </tr>
+              <tr className="hover:bg-surface-variant/20 transition-colors">
                 <td className="px-4 py-3 text-secondary">Personal Gmail (<code className="text-xs bg-surface-variant px-1 rounded">@gmail.com</code>)</td>
+                <td className="px-4 py-3 font-bold text-primary-sendlib">500 emails / day</td>
                 <td className="px-4 py-3 font-bold text-primary-sendlib">500 emails / day</td>
                 <td className="px-4 py-3 text-secondary">Resets daily at UTC midnight (enforced by Google)</td>
               </tr>
               <tr className="hover:bg-surface-variant/20 transition-colors">
                 <td className="px-4 py-3 text-secondary">Google Workspace Account</td>
+                <td className="px-4 py-3 font-bold text-primary-sendlib">2,000 emails / day</td>
                 <td className="px-4 py-3 font-bold text-primary-sendlib">2,000 emails / day</td>
                 <td className="px-4 py-3 text-secondary">Resets daily at UTC midnight (enforced by Google)</td>
               </tr>

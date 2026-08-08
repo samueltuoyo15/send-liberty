@@ -203,8 +203,8 @@ export default function SettingsPage() {
                 {isPro
                   ? isCanceled 
                     ? "Your Pro Plan has been canceled and will not renew. You still have access to Pro features until the end of your billing cycle."
-                    : "Your account is on the Pro Plan for just $3.99/month. You enjoy higher rate limits, larger attachments, and up to 50 connected accounts."
-                  : "You are currently on the Free Plan. Upgrade to Pro for $3.99/month to unlock higher rate limits, larger attachments, and up to 50 connected accounts."}
+                    : "Your account is on the Pro Plan for just $3.99/month. You enjoy 300 req/min, up to 50 connected accounts, and 90 days of email log retention."
+                  : "You are currently on the Free Plan. Upgrade to Pro for $3.99/month to unlock 300 req/min, up to 50 connected accounts, and 90 days of log retention."}
               </p>
 
               {!isPro ? (

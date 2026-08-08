@@ -119,9 +119,10 @@ export type GmailSendOptions = {
   bcc?: string | string[];
   from?: string;
   apiKeyId?: string | mongoose.Types.ObjectId;
+  retentionDays?: number;
   attachments?: {
     filename: string;
-    content: string; // Base64
+    content: string;
     type?: string;
   }[];
 };
@@ -239,6 +240,9 @@ export async function sendGmailEmail(
       requestBody: { raw: encodedMessage },
     });
 
+    const expiresAt = new Date();
+    expiresAt.setDate(expiresAt.getDate() + (options.retentionDays ?? 5));
+
     await EmailLog.create({
       userId,
       apiKeyId: options.apiKeyId,
@@ -248,11 +252,14 @@ export async function sendGmailEmail(
       status: "sent",
       provider: "gmail",
       messageId: result.data.id ?? null,
+      expiresAt,
     });
 
     return { messageId: result.data.id ?? null };
   } catch (err: unknown) {
     const errMsg = err instanceof Error ? err.message : "Unknown error";
+    const expiresAt = new Date();
+    expiresAt.setDate(expiresAt.getDate() + (options.retentionDays ?? 5));
     await EmailLog.create({
       userId,
       apiKeyId: options.apiKeyId,
@@ -262,6 +269,7 @@ export async function sendGmailEmail(
       status: "failed",
       provider: "gmail",
       error: errMsg,
+      expiresAt,
     });
     throw new Error(`Failed to send email via Gmail: ${errMsg}`);
   }
