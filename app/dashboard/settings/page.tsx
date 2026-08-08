@@ -62,11 +62,7 @@ export default function SettingsPage() {
   }, []);
 
   const handleBachsCheckout = async () => {
-    if (!isPro && !user?.billingCurrency) {
-      setCurrencyModalOpen(true);
-      return;
-    }
-    await processCheckout();
+    setCurrencyModalOpen(true);
   };
 
   const processCheckout = async () => {
@@ -466,8 +462,8 @@ export default function SettingsPage() {
               style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%236b7280' d='M6 8L1 3h10z'/%3E%3C/svg%3E")`, backgroundRepeat: 'no-repeat', backgroundPosition: 'right 14px center' }}
             >
               <option value="USD">United States / Global (USD)</option>
-              <option value="NGN">🇳🇬 Nigeria (NGN)</option>
-              <option value="GHS">🇬🇭 Ghana (GHS)</option>
+              <option value="NGN" disabled className="text-gray-400">Nigeria (NGN) - Coming Soon</option>
+              <option value="GHS" disabled className="text-gray-400">Ghana (GHS) - Coming Soon</option>
             </select>
           </div>
           <div className="flex flex-row gap-3 mt-2 pt-4 border-t border-outline-variant/60">
