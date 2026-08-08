@@ -61,7 +61,7 @@ function AccountsContent() {
   }, [searchParams]);
 
   const isPro = user?.plan === "pro";
-  const maxAccounts = isPro ? 50 : 10;
+  const maxAccounts = isPro ? 50 : 3;
   const atAccountLimit = !isLoading && !!accounts && accounts.length >= maxAccounts;
 
   return (

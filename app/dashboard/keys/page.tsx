@@ -58,7 +58,7 @@ function KeysContent() {
   }, [searchParams]);
 
   const isPro = user?.plan === "pro";
-  const maxKeys = isPro ? 100 : 15;
+  const maxKeys = isPro ? 100 : 5;
   const activeKeyCount = apiKeys ? apiKeys.filter(k => !k.revoked).length : 0;
   const atKeyLimit = !isLoading && activeKeyCount >= maxKeys;
 
