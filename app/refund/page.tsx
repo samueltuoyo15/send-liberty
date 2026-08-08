@@ -1,4 +1,4 @@
-import { Navbar } from "@/components/home/Navbar";
+import TopNavBar from "@/components/home/TopNavBar";
 import Link from "next/link";
 import { Metadata } from "next";
 
@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 export default function RefundPolicy() {
   return (
     <div className="min-h-screen bg-background flex flex-col font-sans">
-      <Navbar />
+      <TopNavBar />
 
       <main className="flex-1 max-w-4xl w-full mx-auto px-6 py-20 mt-16">
         <div className="space-y-4 mb-12">
