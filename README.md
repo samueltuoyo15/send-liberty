@@ -4,7 +4,7 @@ The fastest way for founders and devs to send transactional emails to your custo
 
 ## Demo
 
-<video src="./public/demo.mp4" controls width="100%"></video>
+<video src="https://res.cloudinary.com/dpswl8vzgkk/video/upload/q_auto,w_1000/v1786180780/fadfas_fakwqx.mp4" controls width="100%" poster="https://res.cloudinary.com/dpswl8vzgkk/video/upload/f_jpg,q_auto,w_1000/v1786180780/fadfas_fakwqx.jpg"></video>
 
 ## Features
 
