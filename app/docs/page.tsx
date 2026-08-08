@@ -39,7 +39,7 @@ export default function DocsIntroduction() {
            </div>
            <div className="p-5 rounded-xl border border-outline-variant/60 bg-white">
               <h3 className="font-bold text-primary-sendlib mb-2">High Daily Limits</h3>
-              <p className="text-sm text-secondary">Send up to 500 emails per day for free personal Gmail accounts, or up to 2,000 for Google Workspace.</p>
+              <p className="text-sm text-secondary">Send up to 200 emails/day on Free (500/day on Pro) for personal/product Gmail accounts, or up to 1,000 on Free (2,000/day on Pro) for Google Workspace.</p>
            </div>
         </div>
       </div>
