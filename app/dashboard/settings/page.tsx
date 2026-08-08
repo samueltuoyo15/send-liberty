@@ -455,29 +455,20 @@ export default function SettingsPage() {
               What currency would you like to pay in? Select your preferred currency below.
             </DialogDescription>
           </DialogHeader>
-          <div className="space-y-3 my-4">
-            {[
-              { value: "USD", label: "United States / Global (USD)" },
-              { value: "NGN", label: "Nigeria (NGN)" },
-              { value: "GHS", label: "Ghana (GHS)" },
-            ].map((option) => (
-              <div
-                key={option.value}
-                onClick={() => setSelectedCurrency(option.value)}
-                className={`flex items-center justify-between p-3.5 rounded-xl border cursor-pointer transition-all active:scale-[0.98] ${
-                  selectedCurrency === option.value
-                    ? "border-primary-sendlib bg-primary-sendlib/[0.03] shadow-sm ring-1 ring-primary-sendlib/20"
-                    : "border-outline-variant bg-surface-container-low hover:border-primary-sendlib/30 hover:bg-surface-container-low/80"
-                }`}
-              >
-                <span className={`text-sm ${selectedCurrency === option.value ? "text-primary-sendlib font-bold" : "text-on-background font-medium"}`}>
-                  {option.label}
-                </span>
-                <div className={`w-4 h-4 rounded-full border flex items-center justify-center shrink-0 transition-colors ${selectedCurrency === option.value ? "border-primary-sendlib bg-primary-sendlib" : "border-outline-variant bg-white"}`}>
-                  {selectedCurrency === option.value && <div className="w-1.5 h-1.5 rounded-full bg-white shadow-sm" />}
-                </div>
-              </div>
-            ))}
+          <div className="my-4">
+            <label className="text-xs font-label-xs uppercase tracking-wider text-on-background/60 mb-2 block font-semibold">
+              Preferred Currency
+            </label>
+            <select
+              value={selectedCurrency}
+              onChange={(e) => setSelectedCurrency(e.target.value)}
+              className="w-full rounded-lg border border-outline-variant bg-surface-container-low px-3.5 py-2.5 text-sm text-on-background font-medium outline-none cursor-pointer focus:border-primary-sendlib focus:ring-1 focus:ring-primary-sendlib/20 transition-colors appearance-none"
+              style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%236b7280' d='M6 8L1 3h10z'/%3E%3C/svg%3E")`, backgroundRepeat: 'no-repeat', backgroundPosition: 'right 14px center' }}
+            >
+              <option value="USD">🌍 United States / Global (USD)</option>
+              <option value="NGN">🇳🇬 Nigeria (NGN)</option>
+              <option value="GHS">🇬🇭 Ghana (GHS)</option>
+            </select>
           </div>
           <div className="flex flex-row gap-3 mt-2 pt-4 border-t border-outline-variant/60">
             <Button 
