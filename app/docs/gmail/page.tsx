@@ -17,7 +17,7 @@ export default function GmailOAuthPage() {
         </p>
         
         <div className="p-4 border border-indigo-100 bg-indigo-50/50 rounded-xl text-[#505f76] text-sm">
-          <strong className="text-primary-sendlib">Daily Limits:</strong> Standard Gmail accounts are limited to 500 emails per day. Google Workspace accounts can send up to 2,000 emails per day.
+          <strong className="text-primary-sendlib">Daily Limits:</strong> Personal Gmail accounts send up to 200 emails/day on Free (500/day on Pro). Google Workspace accounts send up to 1,000 emails/day on Free (2,000/day on Pro).
         </div>
 
         <div className="p-4 border border-emerald-100 bg-emerald-50/50 rounded-xl text-emerald-900 text-sm space-y-1">
