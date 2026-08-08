@@ -1,7 +1,6 @@
 import Link from "next/link";
 import type { Metadata } from "next";
 import { HugeiconsIcon } from "@hugeicons/react";
-import { ArrowLeft01Icon } from "@hugeicons/core-free-icons";
 
 export const metadata: Metadata = {
   title: "Privacy Policy | SendLib",
@@ -20,7 +19,6 @@ export default function PrivacyPage() {
           href="/" 
           className="inline-flex items-center gap-xs font-label-sm text-label-sm text-secondary hover:text-primary-sendlib transition-colors mb-8"
         >
-          <HugeiconsIcon icon={ArrowLeft01Icon} size={20} />
           Back to Home
         </Link>
 
