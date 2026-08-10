@@ -45,7 +45,7 @@ export default function HomeClient() {
         <section className="w-full relative overflow-hidden bg-[#1d2b3e]">
           <Image
             src="/forest_background/forest-background.webp"
-            alt="SendLib Hero Background"
+            alt="Sendlib Hero Background"
             fill
             priority
             quality={100}
@@ -133,10 +133,10 @@ export default function HomeClient() {
         <section id="compare" className="py-16 md:py-24 bg-white border-b border-outline-variant/60">
           <div className="max-w-4xl mx-auto px-4 sm:px-6">
             <div className="flex flex-col items-center text-center mb-12 space-y-3 w-full">
-              <span className="px-4 py-1.5 rounded-full bg-primary-sendlib/10 text-primary-sendlib text-xs font-bold tracking-wide uppercase">Why SendLib</span>
+              <span className="px-4 py-1.5 rounded-full bg-primary-sendlib/10 text-primary-sendlib text-xs font-bold tracking-wide uppercase">Why Sendlib</span>
               <h2 className="text-3xl md:text-4xl font-extrabold text-primary-sendlib">Stop verifying domains. Just send.</h2>
               <p className="text-secondary w-full max-w-2xl mx-auto text-base leading-relaxed">
-                Traditional email APIs force you to configure DNS records and verify custom domains before sending a single email. SendLib uses the Gmail account your product already has.
+                Traditional email APIs force you to configure DNS records and verify custom domains before sending a single email. Sendlib uses the Gmail account your product already has.
               </p>
             </div>
 
@@ -146,7 +146,7 @@ export default function HomeClient() {
                   <tr className="bg-surface-container-low border-b border-outline-variant text-on-background">
                     <th className="px-6 py-4 font-bold text-secondary w-2/5">Feature</th>
                     <th className="px-6 py-4 text-center w-3/10 bg-primary-sendlib/5 border-x border-outline-variant/40">
-                      <span className="bg-primary-sendlib text-white text-xs font-extrabold px-3.5 py-1 rounded-full shadow-xs inline-block">SendLib</span>
+                      <span className="bg-primary-sendlib text-white text-xs font-extrabold px-3.5 py-1 rounded-full shadow-xs inline-block">Sendlib</span>
                     </th>
                     <th className="px-6 py-4 text-center font-bold text-secondary w-3/10">Traditional Email APIs</th>
                   </tr>
@@ -340,7 +340,7 @@ export default function HomeClient() {
             <div className="text-center mb-16 space-y-3">
               <h2 className="font-headline-lg text-headline-lg text-primary-sendlib">Frequently Asked Questions</h2>
               <p className="font-body-lg text-body-lg text-on-surface-variant max-w-[600px] mx-auto">
-                Got questions about how SendLib is different from other transactional email sending platforms? We have answers.
+                Got questions about how Sendlib is different from other transactional email sending platforms? We have answers.
               </p>
             </div>
             
@@ -351,7 +351,7 @@ export default function HomeClient() {
                   Do I need to verify my domain or configure DNS records?
                 </h3>
                 <p className="text-sm text-secondary leading-relaxed pl-4">
-                  No! Because SendLib routes your email relay requests securely through your already verified, connected Google accounts, there is absolutely zero DNS configuration required. You do not need to add SPF, DKIM, MX, or TXT records to start sending immediately.
+                  No! Because Sendlib routes your email relay requests securely through your already verified, connected Google accounts, there is absolutely zero DNS configuration required. You do not need to add SPF, DKIM, MX, or TXT records to start sending immediately.
                 </p>
               </div>
 
@@ -361,7 +361,7 @@ export default function HomeClient() {
                   Can I send from my custom domain (e.g. hello@mycompany.com)?
                 </h3>
                 <p className="text-sm text-secondary leading-relaxed pl-4">
-                  Yes! If your custom company domain is connected to Google Workspace, simply link that account to SendLib via Google OAuth. SendLib will send transactional emails directly from your custom domain (e.g. <code className="bg-surface-variant/80 px-1.5 py-0.5 rounded text-xs">hello@mycompany.com</code>) with zero extra DNS or SPF configuration required on SendLib. Plus, Google Workspace accounts get up to <strong>1,000 emails/day on Free</strong> (2,000/day on Pro) per account!
+                  Yes! If your custom company domain is connected to Google Workspace, simply link that account to Sendlib via Google OAuth. Sendlib will send transactional emails directly from your custom domain (e.g. <code className="bg-surface-variant/80 px-1.5 py-0.5 rounded text-xs">hello@mycompany.com</code>) with zero extra DNS or SPF configuration required on Sendlib. Plus, Google Workspace accounts get up to <strong>1,000 emails/day on Free</strong> (2,000/day on Pro) per account!
                 </p>
               </div>
 
@@ -381,7 +381,7 @@ export default function HomeClient() {
                   How does this compare to the free tier of Resend, Mailgun, or SendGrid?
                 </h3>
                 <p className="text-sm text-secondary leading-relaxed pl-4">
-                  Other platforms limit you to only 100 free emails per day on their free plans and require strict domain verification. With SendLib, you can send up to <strong>200 emails/day</strong> per connected personal Gmail account (500/day on Pro), or up to <strong>1,000 emails/day</strong> per connected Google Workspace account (2,000/day on Pro).
+                  Other platforms limit you to only 100 free emails per day on their free plans and require strict domain verification. With Sendlib, you can send up to <strong>200 emails/day</strong> per connected personal Gmail account (500/day on Pro), or up to <strong>1,000 emails/day</strong> per connected Google Workspace account (2,000/day on Pro).
                 </p>
               </div>
 
@@ -450,10 +450,10 @@ export default function HomeClient() {
           <div className="flex flex-col gap-xs text-center md:text-left">
             <img 
               src="/logo.png" 
-              alt="SendLib Logo" 
+              alt="Sendlib Logo" 
               className="h-6 w-auto object-contain mx-auto md:mx-0"
             />
-            <p className="font-label-sm text-label-sm text-on-surface-variant">© 2026 SendLib. All rights reserved.</p>
+            <p className="font-label-sm text-label-sm text-on-surface-variant">© 2026 Sendlib. All rights reserved.</p>
           </div>
           <div className="flex flex-wrap justify-center gap-md">
             <Link href="/docs" className="font-label-sm text-label-sm text-on-surface-variant hover:text-primary-sendlib transition-colors underline">

@@ -113,13 +113,13 @@ export default function LimitsPage() {
                 <td className="px-4 py-3 text-secondary">Connected Gmail Accounts</td>
                 <td className="px-4 py-3 font-bold text-primary-sendlib">3</td>
                 <td className="px-4 py-3 font-bold text-primary-sendlib">50</td>
-                <td className="px-4 py-3 text-secondary">Per SendLib user account</td>
+                <td className="px-4 py-3 text-secondary">Per Sendlib user account</td>
               </tr>
               <tr className="hover:bg-surface-variant/20 transition-colors">
                 <td className="px-4 py-3 text-secondary">Active API Keys</td>
                 <td className="px-4 py-3 font-bold text-primary-sendlib">5</td>
                 <td className="px-4 py-3 font-bold text-primary-sendlib">100</td>
-                <td className="px-4 py-3 text-secondary">Per SendLib user account</td>
+                <td className="px-4 py-3 text-secondary">Per Sendlib user account</td>
               </tr>
               <tr className="hover:bg-surface-variant/20 transition-colors">
                 <td className="px-4 py-3 text-secondary">Monthly Sending Limit</td>
@@ -149,7 +149,7 @@ export default function LimitsPage() {
           </table>
         </div>
         <p className="text-xs text-secondary">
-          Daily sending quotas are set and enforced directly by Google&apos;s Gmail API. SendLib monitors your send volume and resets your limit tracking daily at UTC midnight.
+          Daily sending quotas are set and enforced directly by Google&apos;s Gmail API. Sendlib monitors your send volume and resets your limit tracking daily at UTC midnight.
         </p>
       </div>
 

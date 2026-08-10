@@ -461,7 +461,7 @@ export default function DashboardPage() {
                           <HugeiconsIcon icon={FileTypeIcon} size={40} color='currentColor' strokeWidth={1.5} className="text-[#1d2b3e] opacity-40 mb-0.5" />
                           <h4 className="text-base font-headline-md font-bold text-[#1d2b3e]">No email logs found</h4>
                           <p className="text-xs text-[#1d2b3e]/80 leading-relaxed">
-                            Sent emails will appear here automatically once you send through the SendLib API.
+                            Sent emails will appear here automatically once you send through the Sendlib API.
                           </p>
                           <div className="pt-1 flex items-center gap-2.5">
                             <Link href="/docs/send">
@@ -619,7 +619,7 @@ export default function DashboardPage() {
           <DialogHeader className="mb-2">
             <DialogTitle className="text-xl font-headline-md font-bold text-primary-sendlib">Connect Gmail Account</DialogTitle>
             <DialogDescription className="text-secondary text-sm leading-relaxed mt-1">
-              Connect your Google account via secure OAuth 2.0. SendLib will only request the narrow permissions required to relay transactional emails on your behalf, and your credentials are never seen or stored.
+              Connect your Google account via secure OAuth 2.0. Sendlib will only request the narrow permissions required to relay transactional emails on your behalf, and your credentials are never seen or stored.
             </DialogDescription>
           </DialogHeader>
           <label className="flex items-start gap-3 mt-3 p-3.5 rounded-xl bg-surface-container-low border border-outline-variant/80 hover:border-primary-sendlib/40 transition-colors text-xs text-secondary cursor-pointer select-none">

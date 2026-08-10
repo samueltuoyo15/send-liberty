@@ -1,4 +1,4 @@
-# SendLib: Transactional Email API for Your Customers 
+# Sendlib: Transactional Email API for Your Customers 
 
 The fastest way for founders and devs to send transactional emails to your customers (welcome messages, password resets, receipts) using their product's existing Gmail account. Zero domains to verify. Zero stress. Just connect and send.
 
@@ -6,14 +6,14 @@ The fastest way for founders and devs to send transactional emails to your custo
 
 <a href="https://res.cloudinary.com/dpswl8vzgkk/video/upload/q_auto/v1786180780/fadfas_fakwqx.mp4" target="_blank">
   <br />
-  <b>🎥 Click here to watch the 60-second SendLib demo</b>
+  <b>🎥 Click here to watch the 60-second Sendlib demo</b>
 </a>
 
 ## Features
 
 ### Secure Gmail Integration
 
-Easily connect your personal or Google Workspace Gmail accounts using secure OAuth 2.0. SendLib only requests the minimum necessary permissions to send emails on your behalf, and your credentials are never stored directly. This approach ensures high deliverability, as emails are sent from a trusted Google server.
+Easily connect your personal or Google Workspace Gmail accounts using secure OAuth 2.0. Sendlib only requests the minimum necessary permissions to send emails on your behalf, and your credentials are never stored directly. This approach ensures high deliverability, as emails are sent from a trusted Google server.
 
 ```mermaid
 sequenceDiagram
@@ -39,7 +39,7 @@ sequenceDiagram
 
 ### Effortless Email Sending via API
 
-Send transactional emails with a single, straightforward REST API call. Whether you're sending welcome emails, password resets, or notifications, SendLib handles the delivery without needing any SMTP port configuration.
+Send transactional emails with a single, straightforward REST API call. Whether you're sending welcome emails, password resets, or notifications, Sendlib handles the delivery without needing any SMTP port configuration.
 
 ```mermaid
 sequenceDiagram
@@ -73,7 +73,7 @@ Keep an eye on your email sending activity with a dashboard that provides daily 
 
 ## System Architecture / Design
 
-SendLib leverages a Next.js application for both its frontend dashboard and backend API routes. User authentication is handled via GitHub or Google OAuth, and connected Gmail accounts are used to relay emails through the Gmail API. All user and application data is persisted in a MongoDB database.
+Sendlib leverages a Next.js application for both its frontend dashboard and backend API routes. User authentication is handled via GitHub or Google OAuth, and connected Gmail accounts are used to relay emails through the Gmail API. All user and application data is persisted in a MongoDB database.
 
 ```mermaid
 flowchart LR
@@ -111,7 +111,7 @@ flowchart LR
 
 ## Installation
 
-To get SendLib up and running on your local machine, follow these steps:
+To get Sendlib up and running on your local machine, follow these steps:
 
 1.  **Clone the Repository**:
     ```bash
@@ -168,7 +168,7 @@ To get SendLib up and running on your local machine, follow these steps:
 
 ## Usage
 
-Once your SendLib instance is running and you've connected a Gmail account and generated an API key from the dashboard, you can start sending emails via the `/api/send` endpoint.
+Once your Sendlib instance is running and you've connected a Gmail account and generated an API key from the dashboard, you can start sending emails via the `/api/send` endpoint.
 
 Here's how you can use the API in various languages:
 
@@ -181,9 +181,9 @@ curl -X POST http://localhost:3000/api/send \
   -d '{
     "from": "sender@gmail.com",
     "to": "user@example.com",
-    "subject": "Hello via SendLib Webhook!",
-    "html": "<p>This email was sent with <strong>SendLib</strong> — delivering straight to your customers!</p>",
-    "text": "This email was sent with SendLib — delivering straight to your customers!",
+    "subject": "Hello via Sendlib Webhook!",
+    "html": "<p>This email was sent with <strong>Sendlib</strong> — delivering straight to your customers!</p>",
+    "text": "This email was sent with Sendlib — delivering straight to your customers!",
     "replyTo": "support@yourdomain.com",
     "cc": "anotheruser@example.com",
     "bcc": ["audit@example.com"],
@@ -209,9 +209,9 @@ const response = await fetch('http://localhost:3000/api/send', {
   body: JSON.stringify({
     from: 'sender@gmail.com',
     to: 'user@example.com',
-    subject: 'Hello via SendLib Webhook!',
-    html: '<p>This email was sent with <strong>SendLib</strong>, delivering straight to your customers!</p>',
-    text: 'This email was sent with SendLib, delivering straight to your customers!',
+    subject: 'Hello via Sendlib Webhook!',
+    html: '<p>This email was sent with <strong>Sendlib</strong>, delivering straight to your customers!</p>',
+    text: 'This email was sent with Sendlib, delivering straight to your customers!',
     replyTo: 'support@yourdomain.com',
     cc: 'anotheruser@example.com',
     bcc: ['audit@example.com'],
@@ -243,9 +243,9 @@ headers = {
 payload = {
   "from": "sender@gmail.com",
   "to": "user@example.com",
-  "subject": "Hello via SendLib Webhook!",
-  "html": "<p>This email was sent with <strong>SendLib</strong>, delivering straight to your customers!</p>",
-  "text": "This email was sent with SendLib, delivering straight to your customers!",
+  "subject": "Hello via Sendlib Webhook!",
+  "html": "<p>This email was sent with <strong>Sendlib</strong>, delivering straight to your customers!</p>",
+  "text": "This email was sent with Sendlib, delivering straight to your customers!",
   "replyTo": "support@yourdomain.com",
   "cc": "anotheruser@example.com",
   "bcc": ["audit@example.com"],
@@ -278,9 +278,9 @@ func main() {
 	payload := map[string]interface{}{
 		"from":    "sender@gmail.com",
 		"to":      "user@example.com",
-		"subject": "Hello via SendLib Webhook!",
-		"html":    "<p>This email was sent with <strong>SendLib</strong>, delivering straight to your customers!</p>",
-		"text":    "This email was sent with SendLib, delivering straight to your customers!",
+		"subject": "Hello via Sendlib Webhook!",
+		"html":    "<p>This email was sent with <strong>Sendlib</strong>, delivering straight to your customers!</p>",
+		"text":    "This email was sent with Sendlib, delivering straight to your customers!",
 		"replyTo": "support@yourdomain.com",
 		"cc":      "anotheruser@example.com",
 		"bcc":     []string{"audit@example.com"},
@@ -324,9 +324,9 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let payload = json!({
         "from": "sender@gmail.com",
         "to": "user@example.com",
-        "subject": "Hello via SendLib Webhook!",
-        "html": "<p>This email was sent with <strong>SendLib</strong>, delivering straight to your customers!</p>",
-        "text": "This email was sent with SendLib, delivering straight to your customers!",
+        "subject": "Hello via Sendlib Webhook!",
+        "html": "<p>This email was sent with <strong>Sendlib</strong>, delivering straight to your customers!</p>",
+        "text": "This email was sent with Sendlib, delivering straight to your customers!",
         "replyTo": "support@yourdomain.com",
         "cc": "anotheruser@example.com",
         "bcc": ["audit@example.com"],
@@ -362,9 +362,9 @@ $apiKey = 'YOUR_SECRET_API_KEY';
 $payload = [
     'from' => 'sender@gmail.com',
     'to' => 'user@example.com',
-    'subject' => 'Hello via SendLib Webhook!',
-    'html' => '<p>This email was sent with <strong>SendLib</strong>, delivering straight to your customers!</p>',
-    'text' => 'This email was sent with SendLib, delivering straight to your customers!',
+    'subject' => 'Hello via Sendlib Webhook!',
+    'html' => '<p>This email was sent with <strong>Sendlib</strong>, delivering straight to your customers!</p>',
+    'text' => 'This email was sent with Sendlib, delivering straight to your customers!',
     'replyTo' => 'support@yourdomain.com',
     'cc' => 'anotheruser@example.com',
     'bcc' => ['audit@example.com'],
@@ -417,9 +417,9 @@ public class EmailSender
         {
             from = "sender@gmail.com",
             to = "user@example.com",
-            subject = "Hello via SendLib Webhook!",
-            html = "<p>This email was sent with <strong>SendLib</strong>, delivering straight to your customers!</p>",
-            text = "This email was sent with SendLib, delivering straight to your customers!",
+            subject = "Hello via Sendlib Webhook!",
+            html = "<p>This email was sent with <strong>Sendlib</strong>, delivering straight to your customers!</p>",
+            text = "This email was sent with Sendlib, delivering straight to your customers!",
             replyTo = "support@yourdomain.com",
             cc = "anotheruser@example.com",
             bcc = new[] { "audit@example.com" },
@@ -463,9 +463,9 @@ public class EmailSender {
             {
               "from": "sender@gmail.com",
               "to": "user@example.com",
-              "subject": "Hello via SendLib Webhook!",
-              "html": "<p>This email was sent with <strong>SendLib</strong>, delivering straight to your customers!</p>",
-              "text": "This email was sent with SendLib, delivering straight to your customers!",
+              "subject": "Hello via Sendlib Webhook!",
+              "html": "<p>This email was sent with <strong>Sendlib</strong>, delivering straight to your customers!</p>",
+              "text": "This email was sent with Sendlib, delivering straight to your customers!",
               "replyTo": "support@yourdomain.com",
               "cc": "anotheruser@example.com",
               "bcc": ["audit@example.com"],
@@ -514,7 +514,7 @@ public class EmailSender {
 
 ## Contributing
 
-We welcome contributions! If you're interested in improving SendLib, please feel free to fork the repository, make your changes, and submit a pull request. We appreciate all efforts to make this project better.
+We welcome contributions! If you're interested in improving Sendlib, please feel free to fork the repository, make your changes, and submit a pull request. We appreciate all efforts to make this project better.
 
 ## Author Info
 

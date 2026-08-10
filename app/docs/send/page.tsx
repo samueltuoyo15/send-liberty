@@ -46,13 +46,13 @@ export default function BasicSendPage() {
       <div className="mb-10">
         <h1 className="text-3xl font-bold tracking-tight text-primary-sendlib mb-4">Basic Send</h1>
         <p className="text-secondary text-lg leading-relaxed">
-          Send a single transactional email instantly using the SendLib REST API.
+          Send a single transactional email instantly using the Sendlib REST API.
         </p>
       </div>
 
       <div className="space-y-6 text-secondary leading-relaxed">
         <p>
-          To send an email, make a secure HTTP <code>POST</code> request to the <code>/api/send</code> endpoint. If you have connected multiple Gmail accounts, you can specify which one to use by passing the <code>from</code> field in your request body. If omitted, SendLib automatically defaults to your first connected Gmail account.
+          To send an email, make a secure HTTP <code>POST</code> request to the <code>/api/send</code> endpoint. If you have connected multiple Gmail accounts, you can specify which one to use by passing the <code>from</code> field in your request body. If omitted, Sendlib automatically defaults to your first connected Gmail account.
         </p>
 
         <div className="mt-8">
@@ -283,7 +283,7 @@ System.out.println(response.body());`
         <div className="p-5 rounded-xl border border-outline-variant bg-[#1d2b3e]/[0.02] mt-8 space-y-2">
           <h4 className="font-bold text-[#1d2b3e] text-base">Authentication Headers</h4>
           <p className="text-sm text-[#75777d]">
-            You can authenticate your requests with SendLib in two ways:
+            You can authenticate your requests with Sendlib in two ways:
           </p>
           <ul className="list-disc pl-5 text-sm text-[#75777d] space-y-2">
             <li><strong>Authorization Header:</strong> Send your API key as a Bearer token: <code>Authorization: Bearer YOUR_API_KEY</code></li>

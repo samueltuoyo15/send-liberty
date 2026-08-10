@@ -2,16 +2,16 @@ import type { Metadata } from "next";
 import HomeClient from "@/components/home/HomeClient";
 
 export const metadata: Metadata = {
-  title: "SendLib - Send Transactional Emails to Your Customers Seamlessly",
+  title: "Sendlib - Send Transactional Emails to Your Customers Seamlessly",
   description: "The fastest way for founders and developers to send transactional emails to their customers seamlessly, without any domain configuration required.",
   alternates: {
     canonical: "https://sendlib.samueltuoyo.com",
   },
   openGraph: {
-    title: "SendLib - Send Transactional Emails to Your Customers Seamlessly",
+    title: "Sendlib - Send Transactional Emails to Your Customers Seamlessly",
     description: "The fastest way for founders and developers to send transactional emails to their customers seamlessly, without any domain configuration required.",
     url: "https://sendlib.samueltuoyo.com",
-    siteName: "SendLib",
+    siteName: "Sendlib",
     type: "website",
   },
 };
@@ -32,7 +32,7 @@ const jsonLd = {
     {
       "@type": "Organization",
       "@id": "https://sendlib.samueltuoyo.com/#organization",
-      "name": "SendLib",
+      "name": "Sendlib",
       "url": "https://sendlib.samueltuoyo.com",
       "logo": "https://sendlib.samueltuoyo.com/logo.png",
       "email": "samueltuoyo9082@gmail.com"
@@ -40,10 +40,10 @@ const jsonLd = {
     {
       "@type": "SoftwareApplication",
       "@id": "https://sendlib.samueltuoyo.com/#software",
-      "name": "SendLib",
+      "name": "Sendlib",
       "operatingSystem": "All",
       "applicationCategory": "DeveloperApplication",
-      "description": "SendLib enables founders and developers to send transactional emails to their customers fast and seamlessly without any domain configuration.",
+      "description": "Sendlib enables founders and developers to send transactional emails to their customers fast and seamlessly without any domain configuration.",
       "url": "https://sendlib.samueltuoyo.com",
       "offers": {
         "@type": "Offer",
@@ -83,7 +83,7 @@ const jsonLd = {
           "name": "Do I need to verify my domain or configure DNS records?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "No! Because SendLib routes your email relay requests securely through your already verified, connected Google accounts, there is absolutely zero DNS configuration required. You do not need to add SPF, DKIM, MX, or TXT records to start sending immediately."
+            "text": "No! Because Sendlib routes your email relay requests securely through your already verified, connected Google accounts, there is absolutely zero DNS configuration required. You do not need to add SPF, DKIM, MX, or TXT records to start sending immediately."
           }
         },
         {
@@ -91,7 +91,7 @@ const jsonLd = {
           "name": "Can I send from my custom domain (e.g. hello@mycompany.com)?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "Yes! If your custom company domain is connected to Google Workspace, simply link that account to SendLib via Google OAuth. SendLib will send emails directly from your custom domain (e.g. hello@mycompany.com) with zero extra DNS setup required on SendLib."
+            "text": "Yes! If your custom company domain is connected to Google Workspace, simply link that account to Sendlib via Google OAuth. Sendlib will send emails directly from your custom domain (e.g. hello@mycompany.com) with zero extra DNS setup required on Sendlib."
           }
         },
         {
@@ -107,7 +107,7 @@ const jsonLd = {
           "name": "How does this compare to the free tier of Resend, Mailgun, or SendGrid?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "Other platforms limit you to only 100 free emails per day on their free plans and require strict domain verification. With SendLib, you can send up to 200 emails/day per connected personal Gmail account (500/day on Pro), or up to 1,000 emails/day per connected Google Workspace account (2,000/day on Pro)."
+            "text": "Other platforms limit you to only 100 free emails per day on their free plans and require strict domain verification. With Sendlib, you can send up to 200 emails/day per connected personal Gmail account (500/day on Pro), or up to 1,000 emails/day per connected Google Workspace account (2,000/day on Pro)."
           }
         },
         {

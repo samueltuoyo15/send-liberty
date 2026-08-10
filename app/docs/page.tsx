@@ -12,17 +12,17 @@ export default function DocsIntroduction() {
           Introduction
         </h1>
         <p className="text-xl text-secondary leading-relaxed">
-          Welcome to the SendLib documentation. Learn how to connect your Gmail via OAuth and send transactional emails using our REST API.
+          Welcome to the Sendlib documentation. Learn how to connect your Gmail via OAuth and send transactional emails using our REST API.
         </p>
       </div>
 
       {/* Section 1 */}
       <div className="space-y-6">
         <h2 className="text-2xl font-bold tracking-tight text-primary-sendlib border-b border-outline-variant pb-2">
-          What is SendLib?
+          What is Sendlib?
         </h2>
         <p className="text-secondary leading-relaxed">
-          SendLib removes the friction of configuring ancient SMTP ports, storing risky App Passwords, and managing strict firewall rules. By using secure Google OAuth2 flows, you grant SendLib temporary, revokable access to relay messages securely through your own connected Gmail accounts.
+          Sendlib removes the friction of configuring ancient SMTP ports, storing risky App Passwords, and managing strict firewall rules. By using secure Google OAuth2 flows, you grant Sendlib temporary, revokable access to relay messages securely through your own connected Gmail accounts.
         </p>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
            <div className="p-5 rounded-xl border border-outline-variant/60 bg-white">

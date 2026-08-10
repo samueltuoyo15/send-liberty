@@ -39,7 +39,7 @@ export default function TopNavBar() {
         >
           <img 
             src="/logo.png" 
-            alt="SendLib Logo" 
+            alt="Sendlib Logo" 
             className={`h-8 md:h-10 w-auto object-contain transition-all duration-300 ${
               isScrolled ? "" : "brightness-0 invert"
             }`}

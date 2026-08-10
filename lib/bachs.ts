@@ -121,7 +121,7 @@ export async function cancelBachsSubscription(subscriptionId: string) {
     },
     data: {
       cancel_at_period_end: true,
-      reason: "User requested cancellation via SendLib dashboard",
+      reason: "User requested cancellation via Sendlib dashboard",
     },
   });
 

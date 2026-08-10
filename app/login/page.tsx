@@ -31,7 +31,7 @@ export default function LoginPage() {
   }
 
   return (
-    <SEO title="Login / Sign Up" description="Log in or create a new SendLib account to manage your API keys and SMTP integrations.">
+    <SEO title="Login / Sign Up" description="Log in or create a new Sendlib account to manage your API keys and SMTP integrations.">
       <div className="min-h-screen grid grid-cols-1 md:grid-cols-2 bg-background-sendlib">
         
         {/* Left side: Login forms (Top on mobile) */}
@@ -47,7 +47,7 @@ export default function LoginPage() {
           <div className="w-full max-w-105 mx-auto space-y-xl">
             <div className="space-y-sm">
               <h1 className="font-headline-lg text-headline-lg text-primary-sendlib">
-                Welcome to SendLib
+                Welcome to Sendlib
               </h1>
               <p className="font-body-md text-body-md text-on-surface-variant">
                 Log in or create an account to manage your API keys, and start sending emails in seconds.
@@ -97,10 +97,10 @@ export default function LoginPage() {
           <Link href="/" className="flex items-center gap-2 font-headline-md text-headline-md font-bold text-white relative z-10 hover:opacity-90 transition-opacity">
             <img 
               src="/logo.png" 
-              alt="SendLib Logo" 
+              alt="Sendlib Logo" 
               className="h-8 w-auto object-contain brightness-0 invert"
             />
-            <span>SendLib</span>
+            <span>Sendlib</span>
           </Link>
 
           <div className="space-y-md max-w-115 relative z-10">

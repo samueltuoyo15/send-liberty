@@ -13,7 +13,7 @@ export default function ApiKeysPage() {
 
       <div className="space-y-6 text-secondary leading-relaxed">
         <p>
-          To interact with the SendLib API, you must include a valid API key in your request header.
+          To interact with the Sendlib API, you must include a valid API key in your request header.
         </p>
 
         <h3 className="text-xl font-bold text-primary-sendlib mt-8 mb-4">Generating a Key</h3>

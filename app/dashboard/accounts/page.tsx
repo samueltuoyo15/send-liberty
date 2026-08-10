@@ -229,7 +229,7 @@ function AccountsContent() {
           <DialogHeader className="mb-2">
             <DialogTitle className="text-xl font-headline-md font-bold text-primary-sendlib">Connect Gmail Account</DialogTitle>
             <DialogDescription className="text-secondary text-sm leading-relaxed mt-1">
-              Connect your Google account via secure OAuth 2.0. SendLib will only request the narrow permissions required to relay transactional emails on your behalf, and your credentials are never seen or stored.
+              Connect your Google account via secure OAuth 2.0. Sendlib will only request the narrow permissions required to relay transactional emails on your behalf, and your credentials are never seen or stored.
             </DialogDescription>
           </DialogHeader>
           {atAccountLimit ? (
@@ -286,7 +286,7 @@ function AccountsContent() {
           <DialogHeader className="mb-2">
             <DialogTitle className="text-xl font-headline-md font-bold text-destructive">Disconnect Gmail Account</DialogTitle>
             <DialogDescription className="text-secondary text-sm leading-relaxed mt-1">
-              Are you sure you want to disconnect <strong className="font-bold text-on-background">{disconnectEmail}</strong>? SendLib will no longer be able to send transactional emails on behalf of this account.
+              Are you sure you want to disconnect <strong className="font-bold text-on-background">{disconnectEmail}</strong>? Sendlib will no longer be able to send transactional emails on behalf of this account.
             </DialogDescription>
           </DialogHeader>
           <div className="flex flex-row gap-3 mt-4 pt-4 border-t border-outline-variant/60">

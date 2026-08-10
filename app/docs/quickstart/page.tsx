@@ -14,7 +14,7 @@ export default function QuickstartPage() {
       <div className="mb-10">
         <h1 className="text-3xl font-bold tracking-tight text-primary-sendlib mb-4">Quick Start</h1>
         <p className="text-secondary text-lg leading-relaxed">
-          Get up and running with SendLib in under 5 minutes.
+          Get up and running with Sendlib in under 5 minutes.
         </p>
       </div>
 
@@ -55,8 +55,8 @@ export default function QuickstartPage() {
   -d '{
     "from": "sender@gmail.com",
     "to": "recipient@example.com",
-    "subject": "Welcome to SendLib!",
-    "html": "<p>This email was sent via SendLib REST API.</p>"
+    "subject": "Welcome to Sendlib!",
+    "html": "<p>This email was sent via Sendlib REST API.</p>"
   }'`}
           </pre>
         </div>

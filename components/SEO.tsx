@@ -10,7 +10,7 @@ interface SEOProps {
 
 export default function SEO({ title, description, children }: SEOProps) {
   useEffect(() => {
-    document.title = `${title} | SendLib`;
+    document.title = `${title} | Sendlib`;
     
     if (description) {
       const metaDescription = document.querySelector('meta[name="description"]');

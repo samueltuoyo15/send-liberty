@@ -102,7 +102,7 @@ function KeysContent() {
           <div>
             <p className="font-bold text-sm">No Gmail account connected</p>
             <p className="text-xs text-amber-800 mt-0.5">
-              You must connect at least one Gmail account before creating API keys so SendLib knows where to dispatch your emails.
+              You must connect at least one Gmail account before creating API keys so Sendlib knows where to dispatch your emails.
             </p>
           </div>
           <Link href="/dashboard/accounts">
@@ -176,7 +176,7 @@ function KeysContent() {
                         <HugeiconsIcon icon={Key01Icon} size={40} color='currentColor' strokeWidth={1.5} className="text-[#4a358c] opacity-40 mb-0.5" />
                         <h4 className="text-base font-headline-md font-bold text-[#2c1075]">No API keys found</h4>
                         <p className="text-xs text-[#4a358c]/80 leading-relaxed">
-                          You haven&apos;t generated any API keys yet. Create one to start using the SendLib API.
+                          You haven&apos;t generated any API keys yet. Create one to start using the Sendlib API.
                         </p>
                         <div className="pt-1">
                           <Button 

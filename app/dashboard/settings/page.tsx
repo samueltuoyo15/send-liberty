@@ -247,7 +247,7 @@ export default function SettingsPage() {
                   <h3 className="font-headline-md font-bold text-base text-destructive">Sign Out</h3>
                 </div>
                 <p className="text-sm text-secondary leading-relaxed">
-                  Sign out of your SendLib account on this device.
+                  Sign out of your Sendlib account on this device.
                 </p>
               </div>
               <Button 
@@ -343,7 +343,7 @@ export default function SettingsPage() {
           <DialogHeader className="mb-2">
             <DialogTitle className="text-xl font-headline-md font-bold text-destructive">Sign Out</DialogTitle>
             <DialogDescription className="text-secondary text-sm leading-relaxed mt-1">
-              Are you sure you want to sign out of your SendLib account? You will need to log in again to access your dashboard.
+              Are you sure you want to sign out of your Sendlib account? You will need to log in again to access your dashboard.
             </DialogDescription>
           </DialogHeader>
           <div className="flex flex-row gap-3 mt-4 pt-4 border-t border-outline-variant/60">
@@ -374,7 +374,7 @@ export default function SettingsPage() {
           <DialogHeader className="mb-2">
             <DialogTitle className="text-xl font-headline-md font-bold text-destructive">Delete Account</DialogTitle>
             <DialogDescription className="text-secondary text-sm leading-relaxed mt-1">
-              This will permanently delete your SendLib account and all associated data, including connected Gmail accounts, email logs, and API keys. This action is <strong>irreversible</strong>.
+              This will permanently delete your Sendlib account and all associated data, including connected Gmail accounts, email logs, and API keys. This action is <strong>irreversible</strong>.
             </DialogDescription>
           </DialogHeader>
           <div className="flex flex-row gap-3 mt-4 pt-4 border-t border-outline-variant/60">

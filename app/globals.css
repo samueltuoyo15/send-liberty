@@ -42,7 +42,7 @@
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
 
-  /* SendLib Design System */
+  /* Sendlib Design System */
   --color-surface-container: #eceef0;
   --color-on-tertiary-container: #c3a881;
   --color-background-sendlib: #f7f9fb;

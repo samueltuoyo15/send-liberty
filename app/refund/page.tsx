@@ -3,8 +3,8 @@ import type { Metadata } from "next";
 import { HugeiconsIcon } from "@hugeicons/react";
 
 export const metadata: Metadata = {
-  title: "Refund Policy | SendLib",
-  description: "SendLib Refund Policy",
+  title: "Refund Policy | Sendlib",
+  description: "Sendlib Refund Policy",
   alternates: {
     canonical: "https://sendlib.samueltuoyo.com/refund",
   },
@@ -34,14 +34,14 @@ export default function RefundPolicy() {
               Due to the nature of our service and the costs associated with API infrastructure, <strong>all sales are final and non-refundable</strong>. Once a subscription is purchased and activated, we cannot issue any refunds, partial or otherwise.
             </p>
             <p>
-              We highly encourage all users to fully utilize our Free plan to test the API, explore the dashboard, and ensure SendLib meets your requirements before upgrading to the Pro plan.
+              We highly encourage all users to fully utilize our Free plan to test the API, explore the dashboard, and ensure Sendlib meets your requirements before upgrading to the Pro plan.
             </p>
           </section>
 
           <section className="space-y-sm">
             <h2 className="font-headline-sm text-headline-sm text-primary-sendlib">2. Subscription Renewals & Cancellations</h2>
             <p>
-              SendLib operates on an auto-renewing subscription model. You will be billed automatically at the start of each billing cycle.
+              Sendlib operates on an auto-renewing subscription model. You will be billed automatically at the start of each billing cycle.
             </p>
             <p>
               You may cancel your subscription at any time from your dashboard to prevent future charges. When you cancel, you will retain full access to all Pro features until the end of your current paid billing period. <strong>We do not offer prorated refunds for canceled subscriptions or for unused time in a billing cycle.</strong>
@@ -58,7 +58,7 @@ export default function RefundPolicy() {
           <section className="space-y-sm">
             <h2 className="font-headline-sm text-headline-sm text-primary-sendlib">4. Account Suspension</h2>
             <p>
-              If your account is terminated or suspended due to a violation of our Terms of Service (e.g., using SendLib to send spam or malicious content), your subscription will be canceled immediately, and you will not be eligible for a refund.
+              If your account is terminated or suspended due to a violation of our Terms of Service (e.g., using Sendlib to send spam or malicious content), your subscription will be canceled immediately, and you will not be eligible for a refund.
             </p>
           </section>
 

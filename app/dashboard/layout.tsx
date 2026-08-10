@@ -83,7 +83,7 @@ export default function DashboardLayout({
             <Link href="/" className="flex items-center gap-2 transition-opacity">
               <img 
                 src="/logo.png" 
-                alt="SendLib Logo" 
+                alt="Sendlib Logo" 
                 className="h-7 md:h-8 w-auto object-contain"
               />
             </Link>
@@ -191,7 +191,7 @@ export default function DashboardLayout({
           <DialogHeader className="mb-2">
             <DialogTitle className="text-xl font-headline-md font-bold text-destructive">Sign Out</DialogTitle>
             <DialogDescription className="text-secondary text-sm leading-relaxed mt-1">
-              Are you sure you want to sign out of your SendLib account? You will need to log in again to access your dashboard.
+              Are you sure you want to sign out of your Sendlib account? You will need to log in again to access your dashboard.
             </DialogDescription>
           </DialogHeader>
           <div className="flex flex-row gap-3 mt-4 pt-4 border-t border-outline-variant/60">
