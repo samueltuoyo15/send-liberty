@@ -5,7 +5,6 @@ The fastest way for founders and devs to send transactional emails to your custo
 ## Demo
 
 <a href="https://res.cloudinary.com/dpswl8vzgkk/video/upload/q_auto/v1786180780/fadfas_fakwqx.mp4" target="_blank">
-  <img src="https://res.cloudinary.com/dpswl8vzgkk/video/upload/f_jpg,q_auto,w_800/v1786180780/fadfas_fakwqx.jpg" alt="SendLib Demo Video - Click to Watch" width="100%" />
   <br />
   <b>🎥 Click here to watch the 60-second SendLib demo</b>
 </a>
