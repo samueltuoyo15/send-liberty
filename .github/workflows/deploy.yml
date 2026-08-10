@@ -60,11 +60,11 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
-  trigger-zeabur:
+  trigger-service-redeploy:
     needs: build-and-push
     runs-on: ubuntu-latest
     steps:
-      - name: Trigger Zeabur Redeploy via GraphQL API
+      - name: Trigger service redeploy
         env:
           ZEABUR_API_TOKEN: ${{ secrets.ZEABUR_API_TOKEN }}
           SERVICE_ID: ${{ secrets.ZEABUR_SERVICE_ID }}
