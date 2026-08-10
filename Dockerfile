@@ -31,6 +31,7 @@ RUN adduser --system --uid 1001 nextjs
 COPY --from=builder /app/public ./public
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
+COPY resolve-ipv4.js ./
 
 USER nextjs
 
@@ -38,7 +39,7 @@ EXPOSE 3000
 
 ENV PORT=3000
 ENV HOSTNAME="0.0.0.0"
-ENV NODE_OPTIONS="--dns-result-order=ipv4first"
+ENV NODE_OPTIONS="--require ./resolve-ipv4.js --dns-result-order=ipv4first"
 
 ENTRYPOINT ["/sbin/tini", "--"]
 
