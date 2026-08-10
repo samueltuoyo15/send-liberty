@@ -1,39 +1,4 @@
-import { RateLimiterRedis, RateLimiterMemory, RateLimiterRes } from "rate-limiter-flexible";
 import { getRedisClient } from "./redis";
-
-let sendLimiterFree: RateLimiterRedis | RateLimiterMemory;
-let sendLimiterPro: RateLimiterRedis | RateLimiterMemory;
-let authLimiter: RateLimiterRedis | RateLimiterMemory;
-
-function getSendLimiter(plan: "free" | "pro" = "free"): RateLimiterRedis | RateLimiterMemory {
-  if (plan === "pro") {
-    if (!sendLimiterPro) {
-      const opts = { points: 300, duration: 60, keyPrefix: "rl_send_pro" };
-      sendLimiterPro = process.env.REDIS_URL
-        ? new RateLimiterRedis({ storeClient: getRedisClient(), ...opts })
-        : new RateLimiterMemory(opts);
-    }
-    return sendLimiterPro;
-  }
-
-  if (!sendLimiterFree) {
-    const opts = { points: 30, duration: 60, keyPrefix: "rl_send" };
-    sendLimiterFree = process.env.REDIS_URL
-      ? new RateLimiterRedis({ storeClient: getRedisClient(), ...opts })
-      : new RateLimiterMemory(opts);
-  }
-  return sendLimiterFree;
-}
-
-function getAuthLimiter(): RateLimiterRedis | RateLimiterMemory {
-  if (!authLimiter) {
-    const opts = { points: 10, duration: 60, keyPrefix: "rl_auth" };
-    authLimiter = process.env.REDIS_URL
-      ? new RateLimiterRedis({ storeClient: getRedisClient(), ...opts })
-      : new RateLimiterMemory(opts);
-  }
-  return authLimiter;
-}
 
 export type LimiterType = "send" | "auth";
 
@@ -47,16 +12,46 @@ export async function rateLimit(
   key: string,
   plan: "free" | "pro" = "free"
 ): Promise<RateLimitResult> {
-  const limiter = type === "send" ? getSendLimiter(plan) : getAuthLimiter();
+  const windowSeconds = 60;
+  
+  // Determine the limit based on type and plan
+  let limit = 30; // default send free
+  if (type === "auth") {
+    limit = 10;
+  } else if (plan === "pro") {
+    limit = 300;
+  }
+
   try {
-    await limiter.consume(key);
-    return { success: true, resetInSeconds: 0 };
-  } catch (res: unknown) {
-    if (res instanceof RateLimiterRes) {
-      const resetInSeconds = Math.ceil(res.msBeforeNext / 1000) || 1;
+    const client = getRedisClient();
+    
+    // Create a predictable, visible key
+    const limitKey = `rl_${type}:${plan}:${key}`;
+
+    // Increment the number stored at key by one. If the key does not exist, it is set to 0 first.
+    const current = await client.incr(limitKey);
+
+    // If this is the first request in the window, set the expiration
+    if (current === 1) {
+      await client.expire(limitKey, windowSeconds);
+    }
+
+    // Check if the current request count exceeds the limit
+    if (current > limit) {
+      // Get the remaining TTL to tell the user when they can try again
+      const ttl = await client.ttl(limitKey);
+      const resetInSeconds = ttl > 0 ? ttl : windowSeconds;
       return { success: false, resetInSeconds };
     }
-    console.error("Rate limit error, allowing request:", res);
+
+    return { success: true, resetInSeconds: 0 };
+  } catch (error) {
+    // If Redis is offline or crashes, fail open so we don't break the whole app
+    if (error instanceof Error && error.message.includes("enableOfflineQueue")) {
+      console.warn(`Redis offline. Rate limit bypassed. (${error.message})`);
+    } else {
+      console.error("Rate limit error, bypassing and allowing request:", error);
+    }
     return { success: true, resetInSeconds: 0 };
   }
 }
