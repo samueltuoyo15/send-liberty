@@ -142,9 +142,6 @@ export default function DashboardPage() {
                     <span className="flex items-center gap-1.5">
                       <HugeiconsIcon icon={CheckmarkCircle01Icon} size={14} color='currentColor' strokeWidth={1.5} className="text-[#5a36cf]" /> Relay API is fully active
                     </span>
-                    <span className="text-[11px] text-[#4a358c]/80 pl-5">
-                      Monthly Usage: {isLoadingUser ? "..." : `${user?.monthlySentCount ?? 0} / ${isPro ? "Unlimited" : "3,500"}`}
-                    </span>
                   </div>
                 </>
               )}
