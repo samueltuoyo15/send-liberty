@@ -48,18 +48,18 @@ export default function HomeClient() {
             alt="SendLib Hero Background"
             fill
             priority
-            quality={60}
+            quality={100}
             sizes="100vw"
-            className="object-cover object-top md:object-center pointer-events-none opacity-55 md:opacity-70 transition-opacity"
+            className="object-cover object-top md:object-center pointer-events-none transition-opacity"
           />
-          <div className="absolute inset-0 bg-gradient-to-b from-[#1d2b3e]/60 via-[#1d2b3e]/30 to-[#1d2b3e]/20 md:from-[#1d2b3e]/30 md:via-[#1d2b3e]/10 md:to-[#1d2b3e]/40 pointer-events-none" />
+          <div className="absolute inset-0 bg-gradient-to-b from-[#1d2b3e]/30 via-[#1d2b3e]/10 to-[#1d2b3e]/20 md:from-[#1d2b3e]/10 md:via-transparent md:to-[#1d2b3e]/20 pointer-events-none" />
           <div className="max-w-7xl mx-auto px-margin-mobile md:px-margin-desktop pt-24 pb-xl md:pt-40 md:pb-32 grid md:grid-cols-2 gap-xl items-center relative z-10">
             <div className="space-y-lg">
               <h1 className="font-headline-lg-mobile md:font-headline-lg text-headline-lg-mobile md:text-headline-lg text-white font-extrabold drop-shadow-sm">
                 Send Transactional Emails to Your Customers Without Verifying a Single Domain
               </h1>
               <p className="font-body-lg text-body-lg max-w-[500px] text-white/95 leading-relaxed drop-shadow-sm">
-                The fastest way for founders and devs to send transactional emails to your customers (welcome messages, password resets, receipts) using their product's existing Gmail account. Zero domains to verify. Zero SMTP server stress. Just connect and send.
+                The fastest way for founders and devs to send transactional emails to your customers (welcome messages, password resets, receipts) using their product's existing Gmail account. Zero domains to verify. Zero stress. Just connect and send.
               </p>
               <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-md pt-md">
                 {user ? (
@@ -160,7 +160,7 @@ export default function HomeClient() {
                     },
                     {
                       feature: "Free Emails Per Day",
-                      sendlib: "200 to 1,000 / account",
+                      sendlib: "500 to 2,000 / account",
                       others: "100 / day",
                     },
                     {
@@ -212,6 +212,9 @@ export default function HomeClient() {
                 </div>
                 <ul className="space-y-3 text-sm text-secondary flex-1">
                   {[
+                    "Up to 200 emails/day per connected Gmail",
+                    "Up to 1,000 emails/day per Workspace account",
+                    "Max 3,500 emails/month total",
                     "No custom domain needed",
                     "Up to 3 connected Gmail accounts",
                     "5 API keys",
@@ -251,7 +254,10 @@ export default function HomeClient() {
                 </div>
                 <ul className="space-y-3 text-sm text-secondary flex-1">
                   {[
-                    "Everything in Free",
+                    "Up to 500 emails/day per connected Gmail",
+                    "Up to 2,000 emails/day per Workspace account",
+                    "Unlimited emails/month total",
+                    "Everything in Free (with higher limits)",
                     "Up to 50 connected Gmail accounts",
                     "Up to 100 API keys",
                     "300 API requests / minute",
@@ -442,7 +448,11 @@ export default function HomeClient() {
       <footer className="w-full mt-auto bg-surface-container border-t border-outline-variant">
         <div className="flex flex-col md:flex-row justify-between items-center px-margin-mobile md:px-margin-desktop py-xl gap-md max-w-7xl mx-auto">
           <div className="flex flex-col gap-xs text-center md:text-left">
-            <div className="font-headline-md text-headline-md font-bold text-primary-sendlib">SendLib</div>
+            <img 
+              src="/logo.png" 
+              alt="SendLib Logo" 
+              className="h-6 w-auto object-contain mx-auto md:mx-0"
+            />
             <p className="font-label-sm text-label-sm text-on-surface-variant">© 2026 SendLib. All rights reserved.</p>
           </div>
           <div className="flex flex-wrap justify-center gap-md">

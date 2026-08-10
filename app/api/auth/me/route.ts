@@ -27,6 +27,8 @@ export async function GET(req: NextRequest) {
         subscriptionStatus: user.subscriptionStatus,
         lastPaymentAt: user.lastPaymentAt,
         billingCurrency: user.billingCurrency,
+        monthlySentCount: user.monthlySentCount,
+        monthlyLimitResetAt: user.monthlyLimitResetAt,
         createdAt: user.createdAt,
       },
     });

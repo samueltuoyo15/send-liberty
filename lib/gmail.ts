@@ -3,6 +3,7 @@ import { encrypt, decrypt } from "./encryption";
 import { connectDB } from "./db";
 import GmailAccount from "@/models/GmailAccount";
 import EmailLog from "@/models/EmailLog";
+import User from "@/models/User";
 import MailComposer from "nodemailer/lib/mail-composer";
 import mongoose from "mongoose";
 import crypto from "crypto";
@@ -156,6 +157,36 @@ export async function sendGmailEmail(
   }
   if (!account.connected) throw new Error(`Gmail account '${account.gmailEmail}' is disconnected. Please reconnect.`);
 
+  const user = await User.findById(userId);
+  if (!user) {
+    throw new Error("User not found.");
+  }
+
+  const isPro = options.plan === "pro";
+
+  // Check and reset monthly quota if reset date has passed
+  const now = new Date();
+  if (user.monthlyLimitResetAt && now >= user.monthlyLimitResetAt) {
+    let nextReset = new Date(user.monthlyLimitResetAt);
+    nextReset.setMonth(nextReset.getMonth() + 1);
+    while (nextReset <= now) {
+      nextReset.setMonth(nextReset.getMonth() + 1);
+    }
+    user.monthlySentCount = 0;
+    user.monthlyLimitResetAt = nextReset;
+    await user.save();
+  } else if (!user.monthlyLimitResetAt) {
+    const nextReset = new Date();
+    nextReset.setMonth(nextReset.getMonth() + 1);
+    user.monthlyLimitResetAt = nextReset;
+    user.monthlySentCount = 0;
+    await user.save();
+  }
+
+  if (!isPro && (user.monthlySentCount || 0) >= 3500) {
+    throw new Error("Monthly limit reached: You have already sent 3,500 emails this month (limit for the Free plan). Please upgrade to Pro to unlock unlimited monthly sending.");
+  }
+
   const senderEmail = account.gmailEmail;
   const startOfToday = new Date();
   startOfToday.setUTCHours(0, 0, 0, 0);
@@ -166,7 +197,6 @@ export async function sendGmailEmail(
   });
 
   const isWorkspace = !senderEmail.endsWith("@gmail.com") && !senderEmail.endsWith("@googlemail.com");
-  const isPro = options.plan === "pro";
   const limit = isWorkspace
     ? isPro ? 2000 : 1000
     : isPro ? 500 : 200;
@@ -258,6 +288,9 @@ export async function sendGmailEmail(
       messageId: result.data.id ?? null,
       expiresAt,
     });
+
+    user.monthlySentCount = (user.monthlySentCount || 0) + 1;
+    await user.save();
 
     return { messageId: result.data.id ?? null };
   } catch (err: unknown) {

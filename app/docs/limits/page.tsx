@@ -122,6 +122,12 @@ export default function LimitsPage() {
                 <td className="px-4 py-3 text-secondary">Per SendLib user account</td>
               </tr>
               <tr className="hover:bg-surface-variant/20 transition-colors">
+                <td className="px-4 py-3 text-secondary">Monthly Sending Limit</td>
+                <td className="px-4 py-3 font-bold text-primary-sendlib">3,500 emails / month</td>
+                <td className="px-4 py-3 font-bold text-primary-sendlib">Unlimited</td>
+                <td className="px-4 py-3 text-secondary">Resets monthly based on your account sign-up date</td>
+              </tr>
+              <tr className="hover:bg-surface-variant/20 transition-colors">
                 <td className="px-4 py-3 text-secondary">Email Log Retention</td>
                 <td className="px-4 py-3 font-bold text-primary-sendlib">5 days</td>
                 <td className="px-4 py-3 font-bold text-primary-sendlib">90 days</td>

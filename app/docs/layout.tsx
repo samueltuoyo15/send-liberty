@@ -12,8 +12,8 @@ export default function DocsLayout({
       {/* Top Navbar specifically for Docs */}
       <nav className="fixed top-0 left-0 right-0 h-16 border-b border-outline-variant bg-white/80 backdrop-blur-md z-50 flex items-center justify-between px-6">
         <div className="flex items-center gap-3">
-          <Link href="/" className="flex items-center gap-3 hover:opacity-80 transition-opacity">
-             <span className="font-bold text-lg text-primary-sendlib tracking-tight">SendLib <span className="text-secondary font-normal">Docs</span></span>
+          <Link href="/" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
+             <img src="/logo.png" alt="SendLib Logo" className="h-7 w-auto object-contain" />
           </Link>
         </div>
         <div className="flex items-center gap-4">

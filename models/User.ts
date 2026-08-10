@@ -12,6 +12,8 @@ export interface IUser extends Document {
   subscriptionStatus?: "active" | "canceled" | "past_due" | "none";
   lastPaymentAt?: Date;
   billingCurrency?: string;
+  monthlySentCount?: number;
+  monthlyLimitResetAt?: Date;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -28,6 +30,8 @@ const UserSchema = new Schema<IUser>(
     subscriptionStatus: { type: String, enum: ["active", "canceled", "past_due", "none"], default: "none" },
     lastPaymentAt: { type: Date },
     billingCurrency: { type: String },
+    monthlySentCount: { type: Number, default: 0 },
+    monthlyLimitResetAt: { type: Date, default: () => new Date() },
   },
   { timestamps: true }
 );

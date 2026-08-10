@@ -11,6 +11,8 @@ export interface User {
   subscriptionStatus?: "active" | "canceled" | "past_due" | "none";
   lastPaymentAt?: string;
   billingCurrency?: string;
+  monthlySentCount?: number;
+  monthlyLimitResetAt?: string;
   createdAt: string;
 }
 

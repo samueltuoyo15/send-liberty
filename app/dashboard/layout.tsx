@@ -80,8 +80,12 @@ export default function DashboardLayout({
             <Button variant="ghost" size="icon" className="lg:hidden text-on-surface-variant cursor-pointer" onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
               <HugeiconsIcon icon={isMobileMenuOpen ? Cancel01Icon : Menu01Icon} size={20} color='currentColor' strokeWidth={1.5} />
             </Button>
-            <Link href="/" className="text-xl font-headline-md font-bold tracking-tight text-primary-sendlib hover:opacity-90 transition-opacity">
-              SendLib
+            <Link href="/" className="flex items-center gap-2 transition-opacity">
+              <img 
+                src="/logo.png" 
+                alt="SendLib Logo" 
+                className="h-7 md:h-8 w-auto object-contain"
+              />
             </Link>
           </div>
 

@@ -94,8 +94,13 @@ export default function LoginPage() {
             backgroundPosition: "center",
           }}
         >
-          <Link href="/" className="font-headline-md text-headline-md font-bold text-white relative z-10">
-            SendLib
+          <Link href="/" className="flex items-center gap-2 font-headline-md text-headline-md font-bold text-white relative z-10 hover:opacity-90 transition-opacity">
+            <img 
+              src="/logo.png" 
+              alt="SendLib Logo" 
+              className="h-8 w-auto object-contain brightness-0 invert"
+            />
+            <span>SendLib</span>
           </Link>
 
           <div className="space-y-md max-w-115 relative z-10">

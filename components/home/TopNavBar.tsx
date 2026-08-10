@@ -35,11 +35,15 @@ export default function TopNavBar() {
       <nav className="flex justify-between items-center px-margin-mobile md:px-margin-desktop py-md max-w-7xl mx-auto">
         <Link 
           href="/" 
-          className={`font-headline-md text-headline-md font-bold transition-colors duration-300 ${
-            isScrolled ? "text-primary-sendlib" : "text-white"
-          }`}
+          className="flex items-center gap-2 transition-colors duration-300"
         >
-          SendLib
+          <img 
+            src="/logo.png" 
+            alt="SendLib Logo" 
+            className={`h-8 md:h-10 w-auto object-contain transition-all duration-300 ${
+              isScrolled ? "" : "brightness-0 invert"
+            }`}
+          />
         </Link>
         <div className="hidden md:flex items-center gap-xl">
           <Link 

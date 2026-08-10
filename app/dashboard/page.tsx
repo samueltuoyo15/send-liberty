@@ -28,6 +28,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { useApiKeys } from "@/hooks/useApiKeys";
 import { useGmailAccounts, useConnectGmail } from "@/hooks/useGmailAccounts";
 import { useEmailLogs, EmailLog } from "@/hooks/useEmailLogs";
+import { useMe } from "@/hooks/useAuth";
 import { useState, useEffect } from "react";
 import confetti from "canvas-confetti";
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetFooter } from "@/components/ui/sheet";
@@ -42,6 +43,8 @@ export default function DashboardPage() {
   const { data: gmailAccounts, isLoading: isLoadingAccounts } = useGmailAccounts();
   const { data: logsData, isLoading: isLoadingLogs, refetch: refetchLogs, isFetching: isFetchingLogs } = useEmailLogs(1, 5);
   const { mutate: connectGmail, isPending: isConnecting } = useConnectGmail();
+  const { data: user, isLoading: isLoadingUser } = useMe();
+  const isPro = user?.plan === "pro";
   const [newKeyDialog, setNewKeyDialog] = useState<{ key: string; hint: string } | null>(null);
   const [connectConfirmOpen, setConnectConfirmOpen] = useState(false);
   const [milestoneDialogOpen, setMilestoneDialogOpen] = useState(false);
@@ -135,9 +138,14 @@ export default function DashboardPage() {
                   <div className="text-4xl font-headline-md font-bold tracking-tight text-[#2c1075]">
                     {totalEmailsSent.toLocaleString()}
                   </div>
-                  <p className="text-sm text-[#4a358c] mt-3 font-medium flex items-center gap-1.5">
-                    <HugeiconsIcon icon={CheckmarkCircle01Icon} size={14} color='currentColor' strokeWidth={1.5} className="text-[#5a36cf]" /> Relay API is fully active
-                  </p>
+                  <div className="text-xs text-[#4a358c] mt-3 font-medium flex flex-col gap-1">
+                    <span className="flex items-center gap-1.5">
+                      <HugeiconsIcon icon={CheckmarkCircle01Icon} size={14} color='currentColor' strokeWidth={1.5} className="text-[#5a36cf]" /> Relay API is fully active
+                    </span>
+                    <span className="text-[11px] text-[#4a358c]/80 pl-5">
+                      Monthly Usage: {isLoadingUser ? "..." : `${user?.monthlySentCount ?? 0} / ${isPro ? "Unlimited" : "3,500"}`}
+                    </span>
+                  </div>
                 </>
               )}
             </CardContent>

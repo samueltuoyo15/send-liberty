@@ -102,7 +102,7 @@ function AccountsContent() {
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-indigo-100/70 pb-2.5">
           <h3 className="font-bold text-primary-sendlib text-sm">Gmail & Custom Domain Limits</h3>
         </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs text-secondary">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs text-secondary">
           <div className="bg-white/80 p-2.5 rounded-lg border border-indigo-100/60">
             <span className="font-bold text-primary-sendlib block mb-0.5">Personal Gmail (yourproduct@gmail.com)</span>
             <span>Up to <strong className="text-primary-sendlib">{isPro ? "500 emails/day" : "200 emails/day"}</strong> per account{!isPro && " (500 on Pro)"}.</span>
@@ -110,6 +110,10 @@ function AccountsContent() {
           <div className="bg-white/80 p-2.5 rounded-lg border border-indigo-100/60">
             <span className="font-bold text-primary-sendlib block mb-0.5">Google Workspace Custom Domain</span>
             <span>Up to <strong className="text-primary-sendlib">{isPro ? "2,000 emails/day" : "1,000 emails/day"}</strong>{!isPro && " (2,000 on Pro)"}.</span>
+          </div>
+          <div className="bg-white/80 p-2.5 rounded-lg border border-indigo-100/60">
+            <span className="font-bold text-primary-sendlib block mb-0.5">Monthly Sending Limit</span>
+            <span>Up to <strong className="text-primary-sendlib">{isPro ? "Unlimited" : "3,500 emails/month"}</strong>{!isPro && " (Unlimited on Pro)"}.</span>
           </div>
         </div>
       </div>
