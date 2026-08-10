@@ -1,10 +1,13 @@
 import { getRedisClient } from "./redis";
+import crypto from "crypto";
 
-export type LimiterType = "send" | "auth";
+export type LimiterType = "send" | "auth" | "login" | "signup" | "password_reset";
 
 export interface RateLimitResult {
   success: boolean;
-  resetInSeconds: number;
+  limit: number;
+  remaining: number;
+  resetTimestamp: number;
 }
 
 export async function rateLimit(
@@ -13,45 +16,34 @@ export async function rateLimit(
   plan: "free" | "pro" = "free"
 ): Promise<RateLimitResult> {
   const windowSeconds = 60;
+  const limit = (type === "auth" || type === "login" || type === "signup" || type === "password_reset") ? 10 : plan === "pro" ? 300 : 30;
   
-  // Determine the limit based on type and plan
-  let limit = 30; // default send free
-  if (type === "auth") {
-    limit = 10;
-  } else if (plan === "pro") {
-    limit = 300;
-  }
+  const safeKey = crypto.createHash("sha256").update(`${type}:${plan}:${key}`).digest("hex");
+  const limitKey = `rl_${safeKey}`;
 
   try {
     const client = getRedisClient();
-    
-    // Create a predictable, visible key
-    const limitKey = `rl_${type}:${plan}:${key}`;
+    const script = `
+      local current = redis.call("INCR", KEYS[1])
+      if current == 1 then
+        redis.call("EXPIRE", KEYS[1], ARGV[1])
+      end
+      return current
+    `;
 
-    // Increment the number stored at key by one. If the key does not exist, it is set to 0 first.
-    const current = await client.incr(limitKey);
+    const current = await client.eval(script, 1, limitKey, windowSeconds) as number;
+    const ttl = await client.ttl(limitKey);
+    const resetTimestamp = Math.floor(Date.now() / 1000) + (ttl > 0 ? ttl : windowSeconds);
+    const remaining = Math.max(0, limit - current);
 
-    // If this is the first request in the window, set the expiration
-    if (current === 1) {
-      await client.expire(limitKey, windowSeconds);
-    }
-
-    // Check if the current request count exceeds the limit
     if (current > limit) {
-      // Get the remaining TTL to tell the user when they can try again
-      const ttl = await client.ttl(limitKey);
-      const resetInSeconds = ttl > 0 ? ttl : windowSeconds;
-      return { success: false, resetInSeconds };
+      return { success: false, limit, remaining: 0, resetTimestamp };
     }
 
-    return { success: true, resetInSeconds: 0 };
+    return { success: true, limit, remaining, resetTimestamp };
   } catch (error) {
-    // If Redis is offline or crashes, fail open so we don't break the whole app
-    if (error instanceof Error && error.message.includes("enableOfflineQueue")) {
-      console.warn(`Redis offline. Rate limit bypassed. (${error.message})`);
-    } else {
-      console.error("Rate limit error, bypassing and allowing request:", error);
-    }
-    return { success: true, resetInSeconds: 0 };
+    console.error("Rate limiter unavailable", { type, error: error instanceof Error ? error.message : "Unknown" });
+    const success = type === "send";
+    return { success, limit, remaining: success ? limit : 0, resetTimestamp: Math.floor(Date.now() / 1000) + windowSeconds };
   }
 }

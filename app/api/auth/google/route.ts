@@ -6,7 +6,7 @@ import crypto from "crypto";
 export async function GET(req: NextRequest) {
   // Rate limit: 10 auth attempts per minute per IP
   const ip = req.headers.get("x-forwarded-for")?.split(",")[0].trim() ?? "unknown";
-  const rl = await rateLimit("auth", `google:${ip}`);
+  const rl = await rateLimit("login", `google:${ip}`);
   if (!rl.success) {
     return new NextResponse("Too many auth requests. Try again in a minute.", { status: 429 });
   }

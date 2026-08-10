@@ -7,7 +7,7 @@ const { GITHUB_CLIENT_ID } = process.env;
 export async function GET(req: NextRequest) {
   // Rate limit: 10 auth attempts per minute per IP
   const ip = req.headers.get("x-forwarded-for")?.split(",")[0].trim() ?? "unknown";
-  const rl = await rateLimit("auth", `github:${ip}`);
+  const rl = await rateLimit("login", `github:${ip}`);
   if (!rl.success) {
     return new NextResponse("Too many auth requests. Try again in a minute.", { status: 429 });
   }

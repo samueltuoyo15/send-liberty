@@ -96,20 +96,21 @@ export async function POST(req: NextRequest) {
     // --- Rate limit ---
     const plan = user.plan || "free";
     const rl = await rateLimit("send", apiKeyId!.toString(), plan);
-    const limit = plan === "pro" ? 300 : 30;
     
     if (!rl.success) {
+      const waitSeconds = Math.max(0, rl.resetTimestamp - Math.floor(Date.now() / 1000));
       return NextResponse.json(
         {
           success: false,
-          message: `Rate limit exceeded. You can send up to ${limit} requests/minute per API key. Try again in ${rl.resetInSeconds} second${rl.resetInSeconds === 1 ? "" : "s"}.`,
+          message: `Rate limit exceeded. You can send up to ${rl.limit} requests/minute per API key. Try again in ${waitSeconds} second${waitSeconds === 1 ? "" : "s"}.`,
         },
         {
           status: 429,
           headers: {
-            "X-RateLimit-Limit": String(limit),
-            "X-RateLimit-Remaining": "0",
-            "Retry-After": String(rl.resetInSeconds),
+            "X-RateLimit-Limit": String(rl.limit),
+            "X-RateLimit-Remaining": String(rl.remaining),
+            "X-RateLimit-Reset": String(rl.resetTimestamp),
+            "Retry-After": String(waitSeconds),
           },
         }
       );
@@ -276,7 +277,16 @@ export async function POST(req: NextRequest) {
       plan: plan as "free" | "pro",
     });
 
-    return NextResponse.json({ success: true, messageId: result.messageId });
+    return NextResponse.json(
+      { success: true, messageId: result.messageId },
+      {
+        headers: {
+          "X-RateLimit-Limit": String(rl.limit),
+          "X-RateLimit-Remaining": String(rl.remaining),
+          "X-RateLimit-Reset": String(rl.resetTimestamp),
+        }
+      }
+    );
   } catch (err) {
     const errMsg = err instanceof Error ? err.message : "Failed to send email";
     console.error("/api/send error:", err);
