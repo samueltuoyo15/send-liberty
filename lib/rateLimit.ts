@@ -1,4 +1,4 @@
-import { getRedisClient } from "./redis";
+import { connectToRedis } from "./redis";
 import crypto from "crypto";
 
 export type LimiterType = "send" | "auth" | "login" | "signup" | "password_reset";
@@ -22,7 +22,7 @@ export async function rateLimit(
   const limitKey = `rl_${safeKey}`;
 
   try {
-    const client = getRedisClient();
+    const client = connectToRedis();
     const script = `
       local current = redis.call("INCR", KEYS[1])
       if current == 1 then

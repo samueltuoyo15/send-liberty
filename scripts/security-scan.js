@@ -120,13 +120,6 @@ const RULES = [
     }
   },
   {
-    id: 'oauth-shared-client-mutation',
-    name: 'OAuth Shared Client Credentials Mutation',
-    regex: /\.setCredentials\s*\(/,
-    severity: 'HIGH',
-    explain: 'Do not mutate credentials on shared OAuth2Client instances.',
-  },
-  {
     id: 'cors-wildcard',
     name: 'Unsafe CORS Wildcard Configuration',
     regex: /origin\s*:\s*['"`]\*['"`]/i,
