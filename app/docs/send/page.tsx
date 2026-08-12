@@ -306,7 +306,7 @@ System.out.println(response.body());`
                 By default, if you just send your email address (e.g. <code>yourproduct@gmail.com or in my case, samueltuoyo9082@gmail.com</code>), that is exactly what your recipients will see in their inbox. This can look unprofessional.
               </p>
               <p className="text-sm text-[#463a5d]">
-                Instead, we highly recommend wrapping your email with a <strong>Display Name</strong>. This makes your brand name stand out in the inbox perfectly.
+                Instead, we highly recommend adding a <strong>Display Name</strong>. Just format your address like this:
               </p>
               <div className="rounded-lg overflow-hidden border border-[#d3c5ff]/60 shadow-sm my-4">
                 <img src="/compare.png" alt="Comparison between using a display name and not using one" className="w-full h-auto block" />
