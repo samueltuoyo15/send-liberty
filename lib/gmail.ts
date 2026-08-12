@@ -1,4 +1,5 @@
 import { google } from "googleapis";
+import axios from "axios";
 import { encrypt, decrypt } from "./encryption";
 import { connectDB } from "./db";
 import GmailAccount from "@/models/GmailAccount";
@@ -65,19 +66,31 @@ export function getGmailAuthUrl(userId: string): string {
 
 export async function handleGmailCallback(code: string, userId: string) {
   await connectDB();
-  const oauth2Client = createOAuthClient();
-  const { tokens } = await oauth2Client.getToken(code);
 
+  const tokenRes = await axios.post(
+    "https://oauth2.googleapis.com/token",
+    new URLSearchParams({
+      code,
+      client_id: GOOGLE_CLIENT_ID!,
+      client_secret: GOOGLE_CLIENT_SECRET!,
+      redirect_uri: GMAIL_CALLBACK_URL!,
+      grant_type: "authorization_code",
+    }).toString(),
+    { headers: { "Content-Type": "application/x-www-form-urlencoded" } }
+  );
+
+  const tokens = tokenRes.data;
   if (!tokens.access_token) throw new Error("Failed to get access token from Google");
 
-  oauth2Client.setCredentials(tokens);
-  const oauth2 = google.oauth2({ auth: oauth2Client, version: "v2" });
-  const userInfo = await oauth2.userinfo.get();
-  const gmailEmail = userInfo.data.email;
+  const userInfoRes = await axios.get("https://www.googleapis.com/oauth2/v2/userinfo", {
+    headers: { Authorization: `Bearer ${tokens.access_token}` },
+  });
+
+  const gmailEmail = userInfoRes.data.email;
   if (!gmailEmail) throw new Error("Failed to get Gmail email from Google");
 
-  const tokenExpiresAt = tokens.expiry_date
-    ? new Date(tokens.expiry_date)
+  const tokenExpiresAt = tokens.expires_in
+    ? new Date(Date.now() + tokens.expires_in * 1000)
     : new Date(Date.now() + 3600 * 1000);
 
   const existingAccount = await GmailAccount.findOne({ userId, gmailEmail });
@@ -209,17 +222,25 @@ export async function sendGmailEmail(
   let accessToken = decrypt(account.encryptedAccessToken);
 
   if (account.tokenExpiresAt.getTime() - bufferMs <= Date.now()) {
-    const oauth2Client = createOAuthClient();
-    oauth2Client.setCredentials({ refresh_token: decrypt(account.encryptedRefreshToken) });
     try {
-      const { credentials } = await oauth2Client.refreshAccessToken();
-      if (!credentials.access_token) throw new Error("Refresh returned no access token");
-      account.encryptedAccessToken = encrypt(credentials.access_token);
-      account.tokenExpiresAt = credentials.expiry_date
-        ? new Date(credentials.expiry_date)
+      const refreshRes = await axios.post(
+        "https://oauth2.googleapis.com/token",
+        new URLSearchParams({
+          client_id: GOOGLE_CLIENT_ID!,
+          client_secret: GOOGLE_CLIENT_SECRET!,
+          refresh_token: decrypt(account.encryptedRefreshToken),
+          grant_type: "refresh_token",
+        }).toString(),
+        { headers: { "Content-Type": "application/x-www-form-urlencoded" } }
+      );
+      const refreshed = refreshRes.data;
+      if (!refreshed.access_token) throw new Error("Refresh returned no access token");
+      account.encryptedAccessToken = encrypt(refreshed.access_token);
+      account.tokenExpiresAt = refreshed.expires_in
+        ? new Date(Date.now() + refreshed.expires_in * 1000)
         : new Date(Date.now() + 3600 * 1000);
       await account.save();
-      accessToken = credentials.access_token;
+      accessToken = refreshed.access_token;
     } catch (err) {
       account.connected = false;
       account.lastError = String(err);
