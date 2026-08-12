@@ -58,7 +58,7 @@ export default function DashboardPage() {
   const maxVal = Math.max(...volume.map(d => d.sent + d.failed), 10);
 
   useEffect(() => {
-    if (!isLoadingAccounts && connectedGmailsCount > 0) {
+    if (!isLoadingAccounts && connectedGmailsCount > 0 && activeKeysCount === 0) {
       const seen = localStorage.getItem("sendlib_confetti_step1_seen");
       if (!seen) {
         confetti({
@@ -70,7 +70,7 @@ export default function DashboardPage() {
         localStorage.setItem("sendlib_confetti_step1_seen", "true");
       }
     }
-  }, [isLoadingAccounts, connectedGmailsCount]);
+  }, [isLoadingAccounts, connectedGmailsCount, activeKeysCount]);
 
   return (
     <div className="space-y-6">

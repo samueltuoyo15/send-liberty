@@ -2,7 +2,7 @@
 
 import { HugeiconsIcon } from '@hugeicons/react';
 import { MailIcon, CheckmarkCircle01Icon, CancelCircleIcon } from '@hugeicons/core-free-icons';
-import { useState, useEffect, Suspense } from "react";
+import { useState, useEffect, useRef, Suspense } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
@@ -33,30 +33,30 @@ function AccountsContent() {
   const [agreeTerms, setAgreeTerms] = useState(false);
 
   const searchParams = useSearchParams();
-
+  const handledRef = useRef(false);
 
   useEffect(() => {
+    if (handledRef.current) return;
+
     if (searchParams.get("gmail_connected") === "true") {
+      handledRef.current = true;
       confetti({
         particleCount: 300,
         spread: 120,
         origin: { y: 0.6 }
       });
-      const timer = setTimeout(() => setSuccessDialogOpen(true), 0);
+      setTimeout(() => setSuccessDialogOpen(true), 0);
       toast.success("Gmail account connected successfully!");
-
-      const newUrl = window.location.pathname;
-      window.history.replaceState({}, document.title, newUrl);
+      window.history.replaceState({}, document.title, window.location.pathname);
     } else if (searchParams.get("gmail_updated") === "true") {
+      handledRef.current = true;
       const email = searchParams.get("email");
       toast.success(
-        email 
-          ? `Gmail account (${email}) re-authenticated & tokens updated!` 
+        email
+          ? `Gmail account (${email}) re-authenticated & tokens updated!`
           : "Gmail account re-authenticated & tokens updated!"
       );
-
-      const newUrl = window.location.pathname;
-      window.history.replaceState({}, document.title, newUrl);
+      window.history.replaceState({}, document.title, window.location.pathname);
     }
   }, [searchParams]);
 
