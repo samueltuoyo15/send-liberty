@@ -39,7 +39,7 @@ export async function GET(req: NextRequest) {
     if (checkoutId) {
       try {
         const session = await getBachsCheckoutSession(checkoutId);
-        if (session && (session.status === "COMPLETED" || session.status === "completed" || session.status === "OPEN" || session.status === "open")) {
+        if (session && (session.status === "COMPLETED" || session.status === "completed")) {
           user.set("plan", "pro");
           user.set("subscriptionStatus", "active");
           user.set("lastPaymentAt", new Date());

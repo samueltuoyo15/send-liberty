@@ -157,8 +157,8 @@ export function verifyBachsSignature(
     }
 
     return crypto.timingSafeEqual(
-      Buffer.from(expected, "utf8"),
-      Buffer.from(cleanSig, "utf8")
+      Buffer.from(expected, "hex"),
+      Buffer.from(cleanSig, "hex")
     );
   } catch (err) {
     console.error("Signature verification exception:", err);

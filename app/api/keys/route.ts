@@ -43,6 +43,9 @@ export async function POST(req: NextRequest) {
     const user = await requireAuthUser(req);
     await connectDB();
     const dbUser = await User.findById(user.id).lean();
+    if (!dbUser) {
+      return NextResponse.json({ success: false, message: "User not found" }, { status: 404 });
+    }
 
     const connectedAccountCount = await GmailAccount.countDocuments({
       userId: new mongoose.Types.ObjectId(user.id),

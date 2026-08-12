@@ -239,7 +239,7 @@ function KeysContent() {
                             size="icon-xs"
                             className="h-7 w-7 text-destructive hover:bg-destructive/10 rounded-md cursor-pointer"
                             onClick={() => setDeleteKeyId(key.id)}
-                            disabled={isDeleting}
+                            disabled={isDeleting && deleteKeyId === key.id}
                           >
                             <HugeiconsIcon icon={Delete01Icon} size={14} color='currentColor' strokeWidth={1.5} />
                           </Button>
@@ -402,8 +402,15 @@ function KeysContent() {
               className="flex-1 rounded-lg font-label-sm bg-destructive hover:bg-destructive/90 text-white" 
               onClick={() => {
                 if (deleteKeyId) {
-                  deleteKey(deleteKeyId);
-                  setDeleteKeyId(null);
+                  deleteKey(deleteKeyId, {
+                    onSuccess: () => {
+                      setDeleteKeyId(null);
+                      toast.success("API key deleted successfully");
+                    },
+                    onError: (error) => {
+                      toast.error(error.message || "Failed to delete API key");
+                    }
+                  });
                 }
               }}
               disabled={isDeleting}

@@ -43,7 +43,11 @@ export function verifyGmailState(state: string): string {
   const userId = parts[0];
 
   const expected = crypto.createHmac("sha256", JWT_SECRET!).update(payload).digest("hex");
-  if (!crypto.timingSafeEqual(Buffer.from(hmac, "hex"), Buffer.from(expected, "hex"))) {
+  try {
+    if (!crypto.timingSafeEqual(Buffer.from(hmac, "hex"), Buffer.from(expected, "hex"))) {
+      throw new Error("State signature mismatch — possible CSRF attempt");
+    }
+  } catch {
     throw new Error("State signature mismatch — possible CSRF attempt");
   }
 
@@ -204,6 +208,7 @@ export async function sendGmailEmail(
   const startOfToday = new Date();
   startOfToday.setUTCHours(0, 0, 0, 0);
   const sentCount = await EmailLog.countDocuments({
+    userId: account.userId,
     from: senderEmail,
     status: "sent",
     createdAt: { $gte: startOfToday }
@@ -310,8 +315,7 @@ export async function sendGmailEmail(
       expiresAt,
     });
 
-    user.monthlySentCount = (user.monthlySentCount || 0) + 1;
-    await user.save();
+    await User.findByIdAndUpdate(userId, { $inc: { monthlySentCount: 1 } });
 
     return { messageId: result.data.id ?? null };
   } catch (err: unknown) {

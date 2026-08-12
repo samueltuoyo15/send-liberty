@@ -302,9 +302,15 @@ function AccountsContent() {
               onClick={() => {
                 if (disconnectEmail) {
                   const targetEmail = disconnectEmail;
-                  setDisconnectEmail(null);
-                  toast.success(`Disconnected ${targetEmail}`);
-                  disconnectGmail(targetEmail);
+                  disconnectGmail(targetEmail, {
+                    onSuccess: () => {
+                      setDisconnectEmail(null);
+                      toast.success(`Disconnected ${targetEmail}`);
+                    },
+                    onError: (err) => {
+                      toast.error(err.message || "Failed to disconnect");
+                    }
+                  });
                 }
               }}
               disabled={isDisconnecting}

@@ -30,6 +30,9 @@ export async function GET(req: NextRequest) {
     };
 
     if (status) {
+      if (!["sent", "failed"].includes(status)) {
+        return NextResponse.json({ success: false, message: "Invalid status filter. Must be 'sent' or 'failed'." }, { status: 400 });
+      }
       query.status = status;
     }
     if (from) {

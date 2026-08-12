@@ -13,6 +13,10 @@ export async function DELETE(
     const { id } = await params;
     await connectDB();
 
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return NextResponse.json({ success: false, message: "Invalid key ID" }, { status: 400 });
+    }
+
     const key = await ApiKey.findOne({
       _id: new mongoose.Types.ObjectId(id),
       userId: new mongoose.Types.ObjectId(user.id),
@@ -40,6 +44,10 @@ export async function PATCH(
     const user = await requireAuthUser(req);
     const { id } = await params;
     await connectDB();
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return NextResponse.json({ success: false, message: "Invalid key ID" }, { status: 400 });
+    }
 
     const key = await ApiKey.findOne({
       _id: new mongoose.Types.ObjectId(id),

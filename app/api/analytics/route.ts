@@ -20,6 +20,7 @@ export async function GET(req: NextRequest) {
     const caps = await Promise.all(
       accounts.map(async (account) => {
         const sentCount = await EmailLog.countDocuments({
+          userId,
           from: account.gmailEmail,
           status: "sent",
           createdAt: { $gte: startOfToday }
@@ -38,7 +39,7 @@ export async function GET(req: NextRequest) {
     // Fetch send volume for the last 7 days (grouped by date)
     const sevenDaysAgo = new Date();
     sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 6); // Cover exactly 7 days including today
-    sevenDaysAgo.setHours(0, 0, 0, 0);
+    sevenDaysAgo.setUTCHours(0, 0, 0, 0);
 
     const volumeData = await EmailLog.aggregate([
       {

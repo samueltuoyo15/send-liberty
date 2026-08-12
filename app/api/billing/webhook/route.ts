@@ -38,16 +38,19 @@ export async function POST(req: NextRequest) {
     const webhookSecret = process.env.BACHS_WEBHOOK_SECRET?.trim();
 
     if (!webhookSecret) {
-      console.warn("Bachs webhook secret not set. Skipping signature verification.");
-    } else if (!signature || !timestamp) {
+      console.error("BACHS_WEBHOOK_SECRET is not set. Rejecting webhook.");
+      return NextResponse.json({ success: false, message: "Webhook not configured" }, { status: 500 });
+    }
+
+    if (!signature || !timestamp) {
       console.warn("Bachs webhook missing signature or timestamp headers.");
       return NextResponse.json({ success: false, message: "Missing signature headers" }, { status: 401 });
-    } else {
-      const isValid = verifyBachsSignature(rawBody, webhookSecret, timestamp, signature);
-      if (!isValid) {
-        console.warn("Bachs webhook invalid signature.");
-        return NextResponse.json({ success: false, message: "Invalid signature" }, { status: 401 });
-      }
+    }
+
+    const isValid = verifyBachsSignature(rawBody, webhookSecret, timestamp, signature);
+    if (!isValid) {
+      console.warn("Bachs webhook invalid signature.");
+      return NextResponse.json({ success: false, message: "Invalid signature" }, { status: 401 });
     }
 
     let payload: WebhookPayload = {};

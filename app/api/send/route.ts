@@ -50,7 +50,7 @@ export async function POST(req: NextRequest) {
   try {
     const rawKey =
       req.headers.get("x-api-key") ??
-      req.headers.get("authorization")?.replace("Bearer ", "");
+      req.headers.get("authorization")?.replace(/^bearer\s+/i, "");
 
     if (!rawKey) {
       return NextResponse.json(

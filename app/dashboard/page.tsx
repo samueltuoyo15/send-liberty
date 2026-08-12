@@ -68,6 +68,7 @@ export default function DashboardPage() {
         });
         const timer = setTimeout(() => setMilestoneDialogOpen(true), 0);
         localStorage.setItem("sendlib_confetti_step1_seen", "true");
+        return () => clearTimeout(timer);
       }
     }
   }, [isLoadingAccounts, connectedGmailsCount, activeKeysCount]);
@@ -600,9 +601,13 @@ export default function DashboardPage() {
           <SheetFooter className="p-0 mt-6 pt-4 border-t border-outline-variant">
             <Button 
               className="w-full rounded-lg font-label-sm bg-primary-sendlib hover:bg-primary-sendlib/90 text-white py-2.5" 
-              onClick={() => {
-                navigator.clipboard.writeText(newKeyDialog?.key || "");
-                toast.success("API Key copied to clipboard!");
+              onClick={async () => {
+                try {
+                  await navigator.clipboard.writeText(newKeyDialog?.key || "");
+                  toast.success("API Key copied to clipboard!");
+                } catch (err) {
+                  toast.error("Failed to copy API key");
+                }
                 setNewKeyDialog(null);
               }}
             >

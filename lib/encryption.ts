@@ -4,7 +4,8 @@ const ALGORITHM = "aes-256-cbc";
 const IV_LENGTH = 16;
 
 function getKey(): Buffer {
-  const hex = process.env.ENCRYPTION_KEY || "0000000000000000000000000000000000000000000000000000000000000000";
+  const hex = process.env.ENCRYPTION_KEY;
+  if (!hex) throw new Error("ENCRYPTION_KEY environment variable is not set. Cannot encrypt or decrypt tokens.");
   return Buffer.from(hex, "hex");
 }
 

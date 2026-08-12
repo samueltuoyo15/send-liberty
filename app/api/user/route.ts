@@ -53,7 +53,11 @@ export async function PATCH(req: NextRequest) {
     }
 
     if (billingCurrency !== undefined) {
-      updateData.billingCurrency = billingCurrency;
+      const ALLOWED_CURRENCIES = ["USD", "NGN", "GHS", "EUR", "GBP", "KES", "ZAR", "CAD", "AUD"];
+      if (!ALLOWED_CURRENCIES.includes(String(billingCurrency).toUpperCase())) {
+        return NextResponse.json({ success: false, message: "Invalid billing currency." }, { status: 400 });
+      }
+      updateData.billingCurrency = String(billingCurrency).toUpperCase();
     }
 
     if (Object.keys(updateData).length === 0) {

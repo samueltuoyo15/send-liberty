@@ -17,7 +17,7 @@ export async function GET(req: NextRequest) {
       return NextResponse.json({ success: false, message: "User not found" }, { status: 404 });
     }
 
-    const count = await GmailAccount.countDocuments({ userId: user.id });
+    const count = await GmailAccount.countDocuments({ userId: user.id, connected: true });
     const maxAccounts = dbUser.plan === "pro" ? 50 : MAX_GMAIL_ACCOUNTS;
     
     if (count >= maxAccounts) {
