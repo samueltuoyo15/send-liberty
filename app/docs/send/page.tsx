@@ -297,6 +297,26 @@ System.out.println(response.body());`
             <strong>from</strong> (string, optional): The connected Gmail email address you want to send this email from. 
             You can optionally include a custom display name by using the format <code>"Motion pipe" &lt;motionpipehq@gmail.com&gt;</code>. 
             If not supplied, it defaults to your first connected Gmail account.
+
+            <div className="mt-4 mb-2 p-6 rounded-xl border border-[#d3c5ff]/40 bg-[#f7f5ff] space-y-4">
+              <div className="flex items-center gap-2 mb-2">
+                <span className="bg-[#2c1075] text-white text-xs font-bold px-2 py-1 rounded uppercase tracking-wider">Pro Tip</span>
+                <h4 className="font-bold text-[#2c1075] text-lg m-0">Look Professional with Display Names</h4>
+              </div>
+              <p className="text-sm text-[#463a5d]">
+                By default, if you just send your email address (e.g. <code>motionpipehq@gmail.com</code>), that is exactly what your recipients will see in their inbox. This can look unprofessional.
+              </p>
+              <p className="text-sm text-[#463a5d]">
+                Instead, we highly recommend wrapping your email with a <strong>Display Name</strong>. This makes your brand name stand out in the inbox perfectly, exactly how professional platforms like Resend or Stripe do it.
+              </p>
+              <div className="rounded-lg overflow-hidden border border-[#d3c5ff]/60 shadow-sm my-4">
+                <img src="/compare.png" alt="Comparison between using a display name and not using one" className="w-full h-auto block" />
+              </div>
+              <p className="text-xs text-[#75777d] italic">
+                <strong>Top:</strong> Format using <code>"Sendlib" &lt;samueltuoyo9082@gmail.com&gt;</code><br/>
+                <strong>Bottom:</strong> Format using just <code>samueltuoyo9082@gmail.com</code>
+              </p>
+            </div>
           </li>
           <li><strong>to</strong> (string or array of strings): The recipient&apos;s email address (or array of addresses).</li>
           <li><strong>subject</strong> (string): The subject line of the email.</li>
@@ -314,26 +334,6 @@ System.out.println(response.body());`
             </ul>
           </li>
         </ul>
-
-        <div className="mt-8 p-6 rounded-xl border border-[#d3c5ff]/40 bg-[#f7f5ff] space-y-4">
-          <div className="flex items-center gap-2 mb-2">
-            <span className="bg-[#2c1075] text-white text-xs font-bold px-2 py-1 rounded uppercase tracking-wider">Pro Tip</span>
-            <h4 className="font-bold text-[#2c1075] text-lg m-0">Look Professional with Display Names</h4>
-          </div>
-          <p className="text-sm text-[#463a5d]">
-            By default, if you just send your email address (e.g. <code>motionpipehq@gmail.com</code>), that is exactly what your recipients will see in their inbox. This can look unprofessional.
-          </p>
-          <p className="text-sm text-[#463a5d]">
-            Instead, we highly recommend wrapping your email with a <strong>Display Name</strong>. This makes your brand name stand out in the inbox perfectly, exactly how professional platforms like Resend or Stripe do it.
-          </p>
-          <div className="rounded-lg overflow-hidden border border-[#d3c5ff]/60 shadow-sm my-4">
-            <img src="/compare.png" alt="Comparison between using a display name and not using one" className="w-full h-auto block" />
-          </div>
-          <p className="text-xs text-[#75777d] italic">
-            <strong>Top:</strong> Format using <code>"Motion pipe" &lt;motionpipehq@gmail.com&gt;</code><br/>
-            <strong>Bottom:</strong> Format using just <code>motionpipehq@gmail.com</code>
-          </p>
-        </div>
 
         <div className="p-4 border border-outline-variant/60 bg-surface-container-low rounded-xl text-sm text-secondary mt-8">
           Need details on rate limits or request body size caps? Check out the <a href="/docs/limits" className="font-bold text-primary-sendlib hover:underline">Limits & Quotas</a> documentation page.
