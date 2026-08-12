@@ -15,11 +15,11 @@ export default function BasicSendPage() {
   const handleCopyCode = () => {
     let snippet = "";
     if (lang === "curl") {
-      snippet = `curl -X POST ${apiUrl}/api/send \\\n  -H "Authorization: Bearer YOUR_API_KEY" \\\n  -H "Content-Type: application/json" \\\n  -d '{\n    "from": "mysecondgmail@gmail.com",\n    "to": "user@example.com",\n    "subject": "Hello via REST API",\n    "html": "<p>No SMTP configuration needed!</p>",\n    "replyTo": "support@yourdomain.com",\n    "attachments": [\n      { "filename": "invoice.pdf", "content": "JVBERi0xLjQKJ..." }\n    ]\n  }'`;
+      snippet = `curl -X POST ${apiUrl}/api/send \\\n  -H "Authorization: Bearer YOUR_API_KEY" \\\n  -H "Content-Type: application/json" \\\n  -d '{\n    "from": '"Motion pipe" <motionpipehq@gmail.com>',\n    "to": "user@example.com",\n    "subject": "Hello via REST API",\n    "html": "<p>No SMTP configuration needed!</p>",\n    "replyTo": "support@yourdomain.com",\n    "attachments": [\n      { "filename": "invoice.pdf", "content": "JVBERi0xLjQKJ..." }\n    ]\n  }'`;
     } else if (lang === "js") {
-      snippet = `await fetch('${apiUrl}/api/send', {\n  method: 'POST',\n  headers: {\n    'Authorization': 'Bearer YOUR_API_KEY',\n    'Content-Type': 'application/json'\n  },\n  body: JSON.stringify({\n    from: 'mysecondgmail@gmail.com',\n    to: 'user@example.com',\n    subject: 'Hello via Fetch!',\n    html: '<p>No SMTP configuration needed!</p>',\n    replyTo: 'support@yourdomain.com',\n    attachments: [\n      { filename: 'invoice.pdf', content: 'JVBERi0xLjQKJ...' }\n    ]\n  })\n});`;
+      snippet = `await fetch('${apiUrl}/api/send', {\n  method: 'POST',\n  headers: {\n    'Authorization': 'Bearer YOUR_API_KEY',\n    'Content-Type': 'application/json'\n  },\n  body: JSON.stringify({\n    from: '"Motion pipe" <motionpipehq@gmail.com>',\n    to: 'user@example.com',\n    subject: 'Hello via Fetch!',\n    html: '<p>No SMTP configuration needed!</p>',\n    replyTo: 'support@yourdomain.com',\n    attachments: [\n      { filename: 'invoice.pdf', content: 'JVBERi0xLjQKJ...' }\n    ]\n  })\n});`;
     } else if (lang === "python") {
-      snippet = `import requests\n\nurl = "${apiUrl}/api/send"\nheaders = {\n  "Authorization": "Bearer YOUR_API_KEY",\n  "Content-Type": "application/json"\n}\npayload = {\n  "from": "mysecondgmail@gmail.com",\n  "to": "user@example.com",\n  "subject": "Hello via Python!",\n  "html": "<p>No SMTP configuration needed!</p>",\n  "replyTo": "support@yourdomain.com",\n  "attachments": [\n    { "filename": "invoice.pdf", "content": "JVBERi0xLjQKJ..." }\n  ]\n}\n\nres = requests.post(url, json=payload, headers=headers)`;
+      snippet = `import requests\n\nurl = "${apiUrl}/api/send"\nheaders = {\n  "Authorization": "Bearer YOUR_API_KEY",\n  "Content-Type": "application/json"\n}\npayload = {\n  "from": '"Motion pipe" <motionpipehq@gmail.com>',\n  "to": "user@example.com",\n  "subject": "Hello via Python!",\n  "html": "<p>No SMTP configuration needed!</p>",\n  "replyTo": "support@yourdomain.com",\n  "attachments": [\n    { "filename": "invoice.pdf", "content": "JVBERi0xLjQKJ..." }\n  ]\n}\n\nres = requests.post(url, json=payload, headers=headers)`;
     } else {
       snippet = `POST ${apiUrl}/api/send`;
     }
@@ -101,7 +101,7 @@ export default function BasicSendPage() {
   -H "Authorization: Bearer YOUR_API_KEY" \\
   -H "Content-Type: application/json" \\
   -d '{
-    "from": "mysecondgmail@gmail.com",
+    "from": '"Motion pipe" <motionpipehq@gmail.com>',
     "to": "user@example.com",
     "subject": "Hello via REST API",
     "html": "<p>No SMTP configuration needed!</p>",
@@ -120,7 +120,7 @@ export default function BasicSendPage() {
     'Content-Type': 'application/json'
   },
   body: JSON.stringify({
-    from: 'mysecondgmail@gmail.com',
+    from: '"Motion pipe" <motionpipehq@gmail.com>',
     to: 'user@example.com',
     subject: 'Hello via Fetch!',
     html: '<p>No SMTP configuration needed!</p>',
@@ -141,7 +141,7 @@ headers = {
   "Content-Type": "application/json"
 }
 payload = {
-  "from": "mysecondgmail@gmail.com",
+  "from": '"Motion pipe" <motionpipehq@gmail.com>',
   "to": "user@example.com",
   "subject": "Hello via Python!",
   "html": "<p>No SMTP configuration needed!</p>",
@@ -166,7 +166,7 @@ import (
 
 func main() {
   payload, _ := json.Marshal(map[string]interface{}{
-    "from":    "mysecondgmail@gmail.com",
+    "from":    '"Motion pipe" <motionpipehq@gmail.com>',
     "to":      "user@example.com",
     "subject": "Hello via Go!",
     "html":    "<p>No SMTP configuration needed!</p>",
@@ -187,7 +187,7 @@ func main() {
 async fn main() -> Result<(), reqwest::Error> {
   let client = reqwest::Client::new();
   let payload = json!({
-    "from": "mysecondgmail@gmail.com",
+    "from": '"Motion pipe" <motionpipehq@gmail.com>',
     "to": "user@example.com",
     "subject": "Hello via Rust!",
     "html": "<p>No SMTP configuration needed!</p>",
@@ -214,7 +214,7 @@ curl_setopt($ch, CURLOPT_HTTPHEADER, [
   'Content-Type: application/json'
 ]);
 curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode([
-  'from' => 'mysecondgmail@gmail.com',
+  'from' => '"Motion pipe" <motionpipehq@gmail.com>',
   'to' => 'user@example.com',
   'subject' => 'Hello via PHP!',
   'html' => '<p>No SMTP configuration needed!</p>',
@@ -233,7 +233,7 @@ var client = new HttpClient();
 client.DefaultRequestHeaders.Add("Authorization", "Bearer YOUR_API_KEY");
 
 var payload = new {
-  from = "mysecondgmail@gmail.com",
+  from = '"Motion pipe" <motionpipehq@gmail.com>',
   to = "user@example.com",
   subject = "Hello via .NET!",
   html = "<p>No SMTP configuration needed!</p>",
@@ -256,7 +256,7 @@ import java.net.http.HttpResponse;
 var client = HttpClient.newHttpClient();
 var payload = """
     {
-      "from": "mysecondgmail@gmail.com",
+      "from": '"Motion pipe" <motionpipehq@gmail.com>',
       "to": "user@example.com",
       "subject": "Hello via Java!",
       "html": "<p>No SMTP configuration needed!</p>",
@@ -293,7 +293,11 @@ System.out.println(response.body());`
 
         <h3 className="text-xl font-bold text-primary-sendlib mt-8 mb-4">Request Body Parameters</h3>
         <ul className="list-disc pl-5 space-y-4 text-[#75777d]">
-          <li><strong>from</strong> (string, optional): The connected Gmail email address you want to send this email from (e.g. <code>mysecondgmail@gmail.com</code>). If not supplied, it defaults to your first connected Gmail account.</li>
+          <li>
+            <strong>from</strong> (string, optional): The connected Gmail email address you want to send this email from. 
+            You can optionally include a custom display name by using the format <code>"Motion pipe" &lt;motionpipehq@gmail.com&gt;</code>. 
+            If not supplied, it defaults to your first connected Gmail account.
+          </li>
           <li><strong>to</strong> (string or array of strings): The recipient&apos;s email address (or array of addresses).</li>
           <li><strong>subject</strong> (string): The subject line of the email.</li>
           <li><strong>html</strong> (string): The HTML body content of the email.</li>
@@ -310,6 +314,26 @@ System.out.println(response.body());`
             </ul>
           </li>
         </ul>
+
+        <div className="mt-8 p-6 rounded-xl border border-[#d3c5ff]/40 bg-[#f7f5ff] space-y-4">
+          <div className="flex items-center gap-2 mb-2">
+            <span className="bg-[#2c1075] text-white text-xs font-bold px-2 py-1 rounded uppercase tracking-wider">Pro Tip</span>
+            <h4 className="font-bold text-[#2c1075] text-lg m-0">Look Professional with Display Names</h4>
+          </div>
+          <p className="text-sm text-[#463a5d]">
+            By default, if you just send your email address (e.g. <code>motionpipehq@gmail.com</code>), that is exactly what your recipients will see in their inbox. This can look unprofessional.
+          </p>
+          <p className="text-sm text-[#463a5d]">
+            Instead, we highly recommend wrapping your email with a <strong>Display Name</strong>. This makes your brand name stand out in the inbox perfectly, exactly how professional platforms like Resend or Stripe do it.
+          </p>
+          <div className="rounded-lg overflow-hidden border border-[#d3c5ff]/60 shadow-sm my-4">
+            <img src="/compare.png" alt="Comparison between using a display name and not using one" className="w-full h-auto block" />
+          </div>
+          <p className="text-xs text-[#75777d] italic">
+            <strong>Top:</strong> Format using <code>"Motion pipe" &lt;motionpipehq@gmail.com&gt;</code><br/>
+            <strong>Bottom:</strong> Format using just <code>motionpipehq@gmail.com</code>
+          </p>
+        </div>
 
         <div className="p-4 border border-outline-variant/60 bg-surface-container-low rounded-xl text-sm text-secondary mt-8">
           Need details on rate limits or request body size caps? Check out the <a href="/docs/limits" className="font-bold text-primary-sendlib hover:underline">Limits & Quotas</a> documentation page.
