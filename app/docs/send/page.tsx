@@ -15,11 +15,11 @@ export default function BasicSendPage() {
   const handleCopyCode = () => {
     let snippet = "";
     if (lang === "curl") {
-      snippet = `curl -X POST ${apiUrl}/api/send \\\n  -H "Authorization: Bearer YOUR_API_KEY" \\\n  -H "Content-Type: application/json" \\\n  -d '{\n    "from": '"Motion pipe" <motionpipehq@gmail.com>',\n    "to": "user@example.com",\n    "subject": "Hello via REST API",\n    "html": "<p>No SMTP configuration needed!</p>",\n    "replyTo": "support@yourdomain.com",\n    "attachments": [\n      { "filename": "invoice.pdf", "content": "JVBERi0xLjQKJ..." }\n    ]\n  }'`;
+      snippet = `curl -X POST ${apiUrl}/api/send \\\n  -H "Authorization: Bearer YOUR_API_KEY" \\\n  -H "Content-Type: application/json" \\\n  -d '{\n    "from": '"Your Brand Name" <yourproduct@gmail.com>',\n    "to": "user@example.com",\n    "subject": "Hello via REST API",\n    "html": "<p>No SMTP configuration needed!</p>",\n    "replyTo": "support@yourdomain.com",\n    "attachments": [\n      { "filename": "invoice.pdf", "content": "JVBERi0xLjQKJ..." }\n    ]\n  }'`;
     } else if (lang === "js") {
-      snippet = `await fetch('${apiUrl}/api/send', {\n  method: 'POST',\n  headers: {\n    'Authorization': 'Bearer YOUR_API_KEY',\n    'Content-Type': 'application/json'\n  },\n  body: JSON.stringify({\n    from: '"Motion pipe" <motionpipehq@gmail.com>',\n    to: 'user@example.com',\n    subject: 'Hello via Fetch!',\n    html: '<p>No SMTP configuration needed!</p>',\n    replyTo: 'support@yourdomain.com',\n    attachments: [\n      { filename: 'invoice.pdf', content: 'JVBERi0xLjQKJ...' }\n    ]\n  })\n});`;
+      snippet = `await fetch('${apiUrl}/api/send', {\n  method: 'POST',\n  headers: {\n    'Authorization': 'Bearer YOUR_API_KEY',\n    'Content-Type': 'application/json'\n  },\n  body: JSON.stringify({\n    from: '"Your Brand Name" <yourproduct@gmail.com>',\n    to: 'user@example.com',\n    subject: 'Hello via Fetch!',\n    html: '<p>No SMTP configuration needed!</p>',\n    replyTo: 'support@yourdomain.com',\n    attachments: [\n      { filename: 'invoice.pdf', content: 'JVBERi0xLjQKJ...' }\n    ]\n  })\n});`;
     } else if (lang === "python") {
-      snippet = `import requests\n\nurl = "${apiUrl}/api/send"\nheaders = {\n  "Authorization": "Bearer YOUR_API_KEY",\n  "Content-Type": "application/json"\n}\npayload = {\n  "from": '"Motion pipe" <motionpipehq@gmail.com>',\n  "to": "user@example.com",\n  "subject": "Hello via Python!",\n  "html": "<p>No SMTP configuration needed!</p>",\n  "replyTo": "support@yourdomain.com",\n  "attachments": [\n    { "filename": "invoice.pdf", "content": "JVBERi0xLjQKJ..." }\n  ]\n}\n\nres = requests.post(url, json=payload, headers=headers)`;
+      snippet = `import requests\n\nurl = "${apiUrl}/api/send"\nheaders = {\n  "Authorization": "Bearer YOUR_API_KEY",\n  "Content-Type": "application/json"\n}\npayload = {\n  "from": '"Your Brand Name" <yourproduct@gmail.com>',\n  "to": "user@example.com",\n  "subject": "Hello via Python!",\n  "html": "<p>No SMTP configuration needed!</p>",\n  "replyTo": "support@yourdomain.com",\n  "attachments": [\n    { "filename": "invoice.pdf", "content": "JVBERi0xLjQKJ..." }\n  ]\n}\n\nres = requests.post(url, json=payload, headers=headers)`;
     } else {
       snippet = `POST ${apiUrl}/api/send`;
     }
@@ -101,7 +101,7 @@ export default function BasicSendPage() {
   -H "Authorization: Bearer YOUR_API_KEY" \\
   -H "Content-Type: application/json" \\
   -d '{
-    "from": '"Motion pipe" <motionpipehq@gmail.com>',
+    "from": '"Your Brand Name" <yourproduct@gmail.com>',
     "to": "user@example.com",
     "subject": "Hello via REST API",
     "html": "<p>No SMTP configuration needed!</p>",
@@ -120,7 +120,7 @@ export default function BasicSendPage() {
     'Content-Type': 'application/json'
   },
   body: JSON.stringify({
-    from: '"Motion pipe" <motionpipehq@gmail.com>',
+    from: '"Your Brand Name" <yourproduct@gmail.com>',
     to: 'user@example.com',
     subject: 'Hello via Fetch!',
     html: '<p>No SMTP configuration needed!</p>',
@@ -141,7 +141,7 @@ headers = {
   "Content-Type": "application/json"
 }
 payload = {
-  "from": '"Motion pipe" <motionpipehq@gmail.com>',
+  "from": '"Your Brand Name" <yourproduct@gmail.com>',
   "to": "user@example.com",
   "subject": "Hello via Python!",
   "html": "<p>No SMTP configuration needed!</p>",
@@ -166,7 +166,7 @@ import (
 
 func main() {
   payload, _ := json.Marshal(map[string]interface{}{
-    "from":    '"Motion pipe" <motionpipehq@gmail.com>',
+    "from":    '"Your Brand Name" <yourproduct@gmail.com>',
     "to":      "user@example.com",
     "subject": "Hello via Go!",
     "html":    "<p>No SMTP configuration needed!</p>",
@@ -187,7 +187,7 @@ func main() {
 async fn main() -> Result<(), reqwest::Error> {
   let client = reqwest::Client::new();
   let payload = json!({
-    "from": '"Motion pipe" <motionpipehq@gmail.com>',
+    "from": '"Your Brand Name" <yourproduct@gmail.com>',
     "to": "user@example.com",
     "subject": "Hello via Rust!",
     "html": "<p>No SMTP configuration needed!</p>",
@@ -214,7 +214,7 @@ curl_setopt($ch, CURLOPT_HTTPHEADER, [
   'Content-Type: application/json'
 ]);
 curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode([
-  'from' => '"Motion pipe" <motionpipehq@gmail.com>',
+  'from' => '"Your Brand Name" <yourproduct@gmail.com>',
   'to' => 'user@example.com',
   'subject' => 'Hello via PHP!',
   'html' => '<p>No SMTP configuration needed!</p>',
@@ -233,7 +233,7 @@ var client = new HttpClient();
 client.DefaultRequestHeaders.Add("Authorization", "Bearer YOUR_API_KEY");
 
 var payload = new {
-  from = '"Motion pipe" <motionpipehq@gmail.com>',
+  from = '"Your Brand Name" <yourproduct@gmail.com>',
   to = "user@example.com",
   subject = "Hello via .NET!",
   html = "<p>No SMTP configuration needed!</p>",
@@ -256,7 +256,7 @@ import java.net.http.HttpResponse;
 var client = HttpClient.newHttpClient();
 var payload = """
     {
-      "from": '"Motion pipe" <motionpipehq@gmail.com>',
+      "from": '"Your Brand Name" <yourproduct@gmail.com>',
       "to": "user@example.com",
       "subject": "Hello via Java!",
       "html": "<p>No SMTP configuration needed!</p>",
@@ -295,7 +295,7 @@ System.out.println(response.body());`
         <ul className="list-disc pl-5 space-y-4 text-[#75777d]">
           <li>
             <strong>from</strong> (string, required): The connected Gmail email address you want to send this email from. 
-            You can optionally include a custom display name by using the format <code>"Motion pipe" &lt;motionpipehq@gmail.com&gt;</code>. 
+            You can optionally include a custom display name by using the format <code>"Your Brand Name" &lt;yourproduct@gmail.com&gt;</code>. 
 
             <div className="mt-4 mb-2 p-6 rounded-xl border border-[#d3c5ff]/40 bg-[#f7f5ff] space-y-4">
               <div className="flex items-center gap-2 mb-2">
