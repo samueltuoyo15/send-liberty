@@ -161,16 +161,13 @@ export async function sendGmailEmail(
   }
 
   let account;
-  if (lookupEmail) {
-    account = await GmailAccount.findOne({ userId, gmailEmail: lookupEmail });
-    if (!account) {
-      throw new Error(`Gmail account '${lookupEmail}' is not connected. Please go to your Sendlib dashboard, connect this Gmail account, and try again.`);
-    }
-  } else {
-    account = await GmailAccount.findOne({ userId });
-    if (!account) {
-      throw new Error("No Gmail account connected. Please go to your Sendlib dashboard, connect a Gmail account, and try again.");
-    }
+  if (!lookupEmail) {
+    throw new Error("The 'from' field is required.");
+  }
+  
+  account = await GmailAccount.findOne({ userId, gmailEmail: lookupEmail });
+  if (!account) {
+    throw new Error(`Gmail account '${lookupEmail}' is not connected. Please go to your Sendlib dashboard, connect this Gmail account, and try again.`);
   }
   if (!account.connected) throw new Error(`Gmail account '${account.gmailEmail}' is disconnected. Please reconnect.`);
 

@@ -158,9 +158,9 @@ export async function POST(req: NextRequest) {
     };
 
     // --- Required fields ---
-    if (!rawTo || !subject) {
+    if (!rawTo || !subject || !from) {
       return NextResponse.json(
-        { success: false, message: "Missing required fields: to, subject." },
+        { success: false, message: "Missing required fields: from, to, subject." },
         { status: 400 }
       );
     }

@@ -294,9 +294,8 @@ System.out.println(response.body());`
         <h3 className="text-xl font-bold text-primary-sendlib mt-8 mb-4">Request Body Parameters</h3>
         <ul className="list-disc pl-5 space-y-4 text-[#75777d]">
           <li>
-            <strong>from</strong> (string, optional): The connected Gmail email address you want to send this email from. 
+            <strong>from</strong> (string, required): The connected Gmail email address you want to send this email from. 
             You can optionally include a custom display name by using the format <code>"Motion pipe" &lt;motionpipehq@gmail.com&gt;</code>. 
-            If not supplied, it defaults to your first connected Gmail account.
 
             <div className="mt-4 mb-2 p-6 rounded-xl border border-[#d3c5ff]/40 bg-[#f7f5ff] space-y-4">
               <div className="flex items-center gap-2 mb-2">
@@ -304,10 +303,10 @@ System.out.println(response.body());`
                 <h4 className="font-bold text-[#2c1075] text-lg m-0">Look Professional with Display Names</h4>
               </div>
               <p className="text-sm text-[#463a5d]">
-                By default, if you just send your email address (e.g. <code>motionpipehq@gmail.com</code>), that is exactly what your recipients will see in their inbox. This can look unprofessional.
+                By default, if you just send your email address (e.g. <code>yourproduct@gmail.com or in my case, samueltuoyo9082@gmail.com</code>), that is exactly what your recipients will see in their inbox. This can look unprofessional.
               </p>
               <p className="text-sm text-[#463a5d]">
-                Instead, we highly recommend wrapping your email with a <strong>Display Name</strong>. This makes your brand name stand out in the inbox perfectly, exactly how professional platforms like Resend or Stripe do it.
+                Instead, we highly recommend wrapping your email with a <strong>Display Name</strong>. This makes your brand name stand out in the inbox perfectly.
               </p>
               <div className="rounded-lg overflow-hidden border border-[#d3c5ff]/60 shadow-sm my-4">
                 <img src="/compare.png" alt="Comparison between using a display name and not using one" className="w-full h-auto block" />
