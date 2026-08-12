@@ -1,12 +1,12 @@
 const https = require("https");
 
-const API_KEY = "sl_8603f203_411fb89ff4ae12f085b637490283e820d1a622faaac24460b6b5b42d";
+const API_KEY = "afsdfsfafsfs";
 const FROM = '"Sendlib" <samueltuoyo9082@gmail.com>';
 const BASE_URL = "sendlib.samueltuoyo.com";
 
 const AFFECTED_USERS = [
-  { email: "ardaariozsoy@gmail.com", name: "Arda" },
-  { email: "blogaspanel502@gmail.com", name: "there" },
+  { email: "", name: "" },
+
 ];
 
 function sendEmail(to, name) {
