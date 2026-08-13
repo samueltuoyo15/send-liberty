@@ -8,7 +8,10 @@ import User from "@/models/User";
 import MailComposer from "nodemailer/lib/mail-composer";
 import mongoose from "mongoose";
 import crypto from "crypto";
+import dns from "dns";
 
+// Fix for Zeabur DNS resolution issue (IPv4 only)
+dns.setDefaultResultOrder("ipv4first");
 const { GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, GMAIL_CALLBACK_URL, JWT_SECRET } = process.env;
 
 export function createOAuthClient(redirectUri?: string) {
@@ -251,9 +254,7 @@ export async function sendGmailEmail(
     }
   }
 
-  const oauth2Client = createOAuthClient();
-  oauth2Client.setCredentials({ access_token: accessToken });
-  const gmail = google.gmail({ version: "v1", auth: oauth2Client });
+  // Using direct axios instead of googleapis to avoid native fetch IPv4 DNS issues on Zeabur
 
   const toAddress = Array.isArray(options.to) ? options.to.join(", ") : options.to;
   const ccAddress = options.cc
@@ -292,10 +293,16 @@ export async function sendGmailEmail(
     .replace(/=+$/, "");
 
   try {
-    const result = await gmail.users.messages.send({
-      userId: "me",
-      requestBody: { raw: encodedMessage },
-    });
+    const result = await axios.post(
+      "https://gmail.googleapis.com/upload/gmail/v1/users/me/messages/send",
+      { raw: encodedMessage },
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
 
     const expiresAt = new Date();
     expiresAt.setDate(expiresAt.getDate() + (options.retentionDays ?? 5));

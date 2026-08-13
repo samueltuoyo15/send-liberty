@@ -124,6 +124,7 @@ export default function DashboardLayout({
                       width={32}
                       height={32}
                       className="h-8 w-8 rounded-full object-cover border border-outline-variant"
+                      unoptimized={true}
                       onError={() => setAvatarError(true)}
                     />
                   ) : (
@@ -133,6 +134,7 @@ export default function DashboardLayout({
                       width={32}
                       height={32}
                       className="h-8 w-8 rounded-full object-cover border border-outline-variant" 
+                      unoptimized={true}
                     />
                   )}
                 </DropdownMenuTrigger>
