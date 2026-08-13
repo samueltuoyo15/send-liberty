@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { requireAuthUser } from "@/lib/auth";
 import { connectDB } from "@/lib/db";
-import { createOAuthClient } from "@/lib/gmail";
 import { decrypt } from "@/lib/encryption";
+import axios from "axios";
 import GmailAccount from "@/models/GmailAccount";
 import EmailLog from "@/models/EmailLog";
 import mongoose from "mongoose";
@@ -54,13 +54,15 @@ export async function DELETE(req: NextRequest) {
 
       try {
         const refreshToken = decrypt(account.encryptedRefreshToken);
-        const oauth2Client = createOAuthClient();
-        await oauth2Client.revokeToken(refreshToken);
+        await axios.post("https://oauth2.googleapis.com/revoke", `token=${refreshToken}`, {
+          headers: { "Content-Type": "application/x-www-form-urlencoded" }
+        });
       } catch {
         try {
           const accessToken = decrypt(account.encryptedAccessToken);
-          const oauth2Client = createOAuthClient();
-          await oauth2Client.revokeToken(accessToken);
+          await axios.post("https://oauth2.googleapis.com/revoke", `token=${accessToken}`, {
+            headers: { "Content-Type": "application/x-www-form-urlencoded" }
+          });
         } catch {}
       }
 
@@ -74,13 +76,15 @@ export async function DELETE(req: NextRequest) {
       for (const account of accounts) {
         try {
           const refreshToken = decrypt(account.encryptedRefreshToken);
-          const oauth2Client = createOAuthClient();
-          await oauth2Client.revokeToken(refreshToken);
+          await axios.post("https://oauth2.googleapis.com/revoke", `token=${refreshToken}`, {
+            headers: { "Content-Type": "application/x-www-form-urlencoded" }
+          });
         } catch {
           try {
             const accessToken = decrypt(account.encryptedAccessToken);
-            const oauth2Client = createOAuthClient();
-            await oauth2Client.revokeToken(accessToken);
+            await axios.post("https://oauth2.googleapis.com/revoke", `token=${accessToken}`, {
+              headers: { "Content-Type": "application/x-www-form-urlencoded" }
+            });
           } catch {}
         }
       }

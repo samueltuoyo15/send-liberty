@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { google } from "googleapis";
+import axios from "axios";
 import { connectDB } from "@/lib/db";
 import { generateAccessToken } from "@/lib/auth";
 import { createOAuthClient } from "@/lib/gmail";
@@ -19,13 +19,25 @@ export async function GET(req: NextRequest) {
 
   try {
     const redirectUri = process.env.GOOGLE_CALLBACK_URL || `${NEXT_PUBLIC_APP_URL}/api/auth/google/callback`;
-    const oauth2Client = createOAuthClient(redirectUri);
-    const { tokens } = await oauth2Client.getToken(code);
-    oauth2Client.setCredentials(tokens);
+    
+    // Use axios instead of googleapis to avoid Zeabur native fetch failures
+    const tokenRes = await axios.post(
+      "https://oauth2.googleapis.com/token",
+      new URLSearchParams({
+        code,
+        client_id: process.env.GOOGLE_CLIENT_ID!,
+        client_secret: process.env.GOOGLE_CLIENT_SECRET!,
+        redirect_uri: redirectUri,
+        grant_type: "authorization_code",
+      }).toString(),
+      { headers: { "Content-Type": "application/x-www-form-urlencoded" } }
+    );
+    const tokens = tokenRes.data;
 
-    const oauth2 = google.oauth2({ auth: oauth2Client, version: "v2" });
-    const userInfo = await oauth2.userinfo.get();
-    const { id, email, name, picture } = userInfo.data;
+    const userInfoRes = await axios.get("https://www.googleapis.com/oauth2/v2/userinfo", {
+      headers: { Authorization: `Bearer ${tokens.access_token}` },
+    });
+    const { id, email, name, picture } = userInfoRes.data;
 
     if (!id) {
       return NextResponse.redirect(`${NEXT_PUBLIC_APP_URL}/login?error=google_profile`);
