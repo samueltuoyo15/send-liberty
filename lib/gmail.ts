@@ -294,7 +294,7 @@ export async function sendGmailEmail(
 
   try {
     const result = await axios.post(
-      "https://gmail.googleapis.com/upload/gmail/v1/users/me/messages/send",
+      "https://gmail.googleapis.com/gmail/v1/users/me/messages/send",
       { raw: encodedMessage },
       {
         headers: {
