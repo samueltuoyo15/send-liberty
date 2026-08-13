@@ -1,4 +1,4 @@
-import { google } from "googleapis";
+// googleapis removed — all Google API calls use axios directly
 import axios from "axios";
 import { encrypt, decrypt } from "./encryption";
 import { connectDB } from "./db";
@@ -14,12 +14,10 @@ import dns from "dns";
 dns.setDefaultResultOrder("ipv4first");
 const { GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, GMAIL_CALLBACK_URL, JWT_SECRET } = process.env;
 
-export function createOAuthClient(redirectUri?: string) {
-  return new google.auth.OAuth2(
-    GOOGLE_CLIENT_ID,
-    GOOGLE_CLIENT_SECRET,
-    redirectUri || GMAIL_CALLBACK_URL
-  );
+export function buildGoogleAuthUrl(params: Record<string, string>): string {
+  const base = "https://accounts.google.com/o/oauth2/v2/auth";
+  const query = new URLSearchParams(params).toString();
+  return `${base}?${query}`;
 }
 
 export function signGmailState(userId: string): string {
@@ -62,11 +60,13 @@ export function verifyGmailState(state: string): string {
 }
 
 export function getGmailAuthUrl(userId: string): string {
-  const oauth2Client = createOAuthClient();
-  return oauth2Client.generateAuthUrl({
+  return buildGoogleAuthUrl({
+    client_id: GOOGLE_CLIENT_ID!,
+    redirect_uri: GMAIL_CALLBACK_URL!,
+    response_type: "code",
     access_type: "offline",
     prompt: "consent select_account",
-    scope: ["https://www.googleapis.com/auth/gmail.send", "email"],
+    scope: "https://www.googleapis.com/auth/gmail.send email",
     state: signGmailState(userId),
   });
 }

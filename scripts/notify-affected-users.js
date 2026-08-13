@@ -5,7 +5,8 @@ const FROM = '"Sendlib" <samueltuoyo9082@gmail.com>';
 const BASE_URL = "sendlib.samueltuoyo.com";
 
 const AFFECTED_USERS = [
-  { email: "", name: "" },
+  { email: "bridgedeen@gmail.com", name: "Bridgedeen" },
+  { email: "blogaspanel502@gmail.com", name: "Blogaspanel" },
 
 ];
 
@@ -21,7 +22,7 @@ function sendEmail(to, name) {
           <p>We recently fixed an issue with the Gmail OAuth integration on Sendlib that may have caused your connected Gmail account to appear disconnected.</p>
           <p>To get back up and running, please log in to your Sendlib dashboard, navigate to <strong>Gmail Accounts</strong>, and reconnect your account. It only takes a few seconds.</p>
           <p>Sorry for the inconvenience. The fix is now live and this should not happen again.</p>
-          <p>— The Sendlib Team</p>
+          <p>The Sendlib Team</p>
         </div>
       `,
     });
