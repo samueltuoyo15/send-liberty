@@ -323,7 +323,12 @@ export async function sendGmailEmail(
 
     return { messageId: result.data.id ?? null };
   } catch (err: unknown) {
-    const errMsg = err instanceof Error ? err.message : "Unknown error";
+    let errMsg = "Unknown error";
+    if (axios.isAxiosError(err)) {
+      errMsg = err.response?.data?.error?.message || err.message;
+    } else if (err instanceof Error) {
+      errMsg = err.message;
+    }
     const expiresAt = new Date();
     expiresAt.setDate(expiresAt.getDate() + (options.retentionDays ?? 5));
     await EmailLog.create({
