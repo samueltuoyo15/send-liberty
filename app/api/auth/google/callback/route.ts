@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import axios from "axios";
+import axios from "@/lib/axios";
 import { connectDB } from "@/lib/db";
 import { generateAccessToken } from "@/lib/auth";
 import User from "@/models/User";

@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { requireAuthUser } from "@/lib/auth";
 import { connectDB } from "@/lib/db";
 import { decrypt } from "@/lib/encryption";
-import axios from "axios";
+import axios from "@/lib/axios";
 import GmailAccount from "@/models/GmailAccount";
 import EmailLog from "@/models/EmailLog";
 import mongoose from "mongoose";

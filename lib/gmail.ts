@@ -1,5 +1,5 @@
 // googleapis removed — all Google API calls use axios directly
-import axios from "axios";
+import axios from "@/lib/axios";
 import { encrypt, decrypt } from "./encryption";
 import { connectDB } from "./db";
 import GmailAccount from "@/models/GmailAccount";
