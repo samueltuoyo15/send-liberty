@@ -2,7 +2,6 @@ import { NextRequest, NextResponse } from "next/server";
 import axios from "axios";
 import { connectDB } from "@/lib/db";
 import { generateAccessToken } from "@/lib/auth";
-import { createOAuthClient } from "@/lib/gmail";
 import User from "@/models/User";
 
 const { NEXT_PUBLIC_APP_URL } = process.env;

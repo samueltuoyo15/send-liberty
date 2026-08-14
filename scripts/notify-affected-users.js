@@ -4,11 +4,7 @@ const API_KEY = "afsdfsfafsfs";
 const FROM = '"Sendlib" <samueltuoyo9082@gmail.com>';
 const BASE_URL = "sendlib.samueltuoyo.com";
 
-const AFFECTED_USERS = [
-  { email: "bridgedeen@gmail.com", name: "Bridgedeen" },
-  { email: "blogaspanel502@gmail.com", name: "Blogaspanel" },
-
-];
+const AFFECTED_USERS = [];
 
 function sendEmail(to, name) {
   return new Promise((resolve, reject) => {
