@@ -1,5 +1,6 @@
 // googleapis removed — all Google API calls use axios directly
-import axios from "@/lib/axios";
+import axios, { isAxiosError } from "axios";
+import axiosSrv from "@/lib/axios";
 import { encrypt, decrypt } from "./encryption";
 import { connectDB } from "./db";
 import GmailAccount from "@/models/GmailAccount";
@@ -74,7 +75,7 @@ export function getGmailAuthUrl(userId: string): string {
 export async function handleGmailCallback(code: string, userId: string) {
   await connectDB();
 
-  const tokenRes = await axios.post(
+  const tokenRes = await axiosSrv.post(
     "https://oauth2.googleapis.com/token",
     new URLSearchParams({
       code,
@@ -89,7 +90,7 @@ export async function handleGmailCallback(code: string, userId: string) {
   const tokens = tokenRes.data;
   if (!tokens.access_token) throw new Error("Failed to get access token from Google");
 
-  const userInfoRes = await axios.get("https://www.googleapis.com/oauth2/v2/userinfo", {
+  const userInfoRes = await axiosSrv.get("https://www.googleapis.com/oauth2/v2/userinfo", {
     headers: { Authorization: `Bearer ${tokens.access_token}` },
   });
 
@@ -228,7 +229,7 @@ export async function sendGmailEmail(
 
   if (account.tokenExpiresAt.getTime() - bufferMs <= Date.now()) {
     try {
-      const refreshRes = await axios.post(
+      const refreshRes = await axiosSrv.post(
         "https://oauth2.googleapis.com/token",
         new URLSearchParams({
           client_id: GOOGLE_CLIENT_ID!,
@@ -293,7 +294,7 @@ export async function sendGmailEmail(
     .replace(/=+$/, "");
 
   try {
-    const result = await axios.post(
+    const result = await axiosSrv.post(
       "https://gmail.googleapis.com/gmail/v1/users/me/messages/send",
       { raw: encodedMessage },
       {
@@ -324,7 +325,7 @@ export async function sendGmailEmail(
     return { messageId: result.data.id ?? null };
   } catch (err: unknown) {
     let errMsg = "Unknown error";
-    if (axios.isAxiosError(err)) {
+    if (isAxiosError(err)) {
       errMsg = err.response?.data?.error?.message || err.message;
     } else if (err instanceof Error) {
       errMsg = err.message;
