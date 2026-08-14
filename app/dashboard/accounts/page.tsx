@@ -166,9 +166,12 @@ function AccountsContent() {
                           Active
                         </span>
                       ) : (
-                        <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold bg-rose-100 text-rose-800 border border-rose-200">
+                        <span 
+                          title="This account is disconnected. Please click Disconnect and then Connect New Account to re-authenticate."
+                          className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold bg-rose-100 text-rose-800 border border-rose-200"
+                        >
                           <HugeiconsIcon icon={CancelCircleIcon} size={12} color='currentColor' strokeWidth={2} />
-                          Needs Re-auth
+                          Disconnect & Reconnect
                         </span>
                       )}
                     </td>
