@@ -62,6 +62,7 @@ async function processBatchJob(jobId: string): Promise<void> {
   // Mark as processing
   job.status = "processing";
   await job.save();
+  console.log(`[BatchWorker] Starting to process job ${jobId} with ${job.recipients.length} recipients...`);
 
   const retentionDays = 90;
   // Extract the raw email from the stored from field before determining delay.
@@ -78,6 +79,8 @@ async function processBatchJob(jobId: string): Promise<void> {
       const html = job.html ? interpolate(job.html, recipient.variables ?? {}) : undefined;
       const text = job.text ? interpolate(job.text, recipient.variables ?? {}) : undefined;
       const subject = interpolate(job.subject, recipient.variables ?? {});
+
+      console.log(`[BatchWorker] Sending to ${recipient.email} (recipient ${i + 1}/${job.recipients.length})...`);
 
       const result = await sendGmailEmail(job.userId.toString(), {
         from: job.from,
@@ -103,6 +106,7 @@ async function processBatchJob(jobId: string): Promise<void> {
           $inc: { sent: 1 },
         }
       );
+      console.log(`[BatchWorker] Sent successfully to ${recipient.email}. MessageId: ${result.messageId}`);
     } catch (err) {
       const errMsg = err instanceof Error ? err.message : "Unknown error";
       
@@ -134,7 +138,10 @@ async function processBatchJob(jobId: string): Promise<void> {
 
   // Mark job as done
   await BatchJob.updateOne({ _id: job._id }, { $set: { status: "done" } });
-  console.log(`[BatchWorker] Job ${jobId} completed.`);
+  
+  // Reload job to get accurate final counts (or rely on atomic increments)
+  const finalJob = await BatchJob.findById(job._id);
+  console.log(`[BatchWorker] Job ${jobId} completed successfully! Total sent: ${finalJob?.sent ?? 0}, Total failed: ${finalJob?.failed ?? 0}`);
 }
 
 /**

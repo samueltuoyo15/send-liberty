@@ -135,8 +135,10 @@ export async function POST(req: NextRequest) {
     const parsed = BatchRequestSchema.safeParse(body);
     if (!parsed.success) {
       const first = parsed.error.issues[0];
+      const path = first.path.join(".");
+      const msg = path ? `Invalid input for '${path}': ${first.message}` : `Invalid input: ${first.message}`;
       return NextResponse.json(
-        { success: false, message: first.message },
+        { success: false, message: msg },
         { status: 400 }
       );
     }
@@ -222,6 +224,7 @@ export async function POST(req: NextRequest) {
 
     // 6. Push the job ID into the Redis queue — worker picks it up immediately
     await enqueueBatchJob(job._id.toString());
+    console.log(`[API /batch] Successfully created and enqueued job: ${job._id.toString()}`);
 
     return NextResponse.json(
       {

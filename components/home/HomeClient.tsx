@@ -152,7 +152,7 @@ export default function HomeClient() {
         </section>
 
         {/* Comparison Table */}
-        <section id="compare" className="py-16 md:py-24 bg-surface-container-lowest border-b border-outline-variant/60">
+        <section id="features" className="py-16 md:py-24 bg-surface-container-lowest border-b border-outline-variant/60">
           <div className="max-w-4xl mx-auto px-4 sm:px-6">
             <div className="flex flex-col items-center text-center mb-12 space-y-3 w-full">
               <h2 className="text-3xl md:text-4xl font-extrabold text-primary-sendlib">Stop worrying about domains. Just send.</h2>

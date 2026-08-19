@@ -34,24 +34,24 @@ export function DocsSidebar() {
   const pathname = usePathname();
 
   return (
-    <aside className="w-64 shrink-0 h-[calc(100vh-64px)] overflow-y-auto border-r border-outline-variant bg-surface p-6 hidden md:block">
+    <aside className="w-56 shrink-0 h-[calc(100vh-64px)] overflow-y-auto border-r border-outline-variant bg-background-sendlib px-4 py-6 hidden md:block">
       <div className="space-y-8">
         {DOC_SECTIONS.map((section, idx) => (
           <div key={idx}>
-            <h4 className="font-bold text-xs uppercase tracking-[0.15em] text-secondary/80 mb-3">
+            <h4 className="font-bold text-xs uppercase tracking-[0.15em] text-secondary/80 mb-3 px-1">
               {section.title}
             </h4>
-            <ul className="space-y-1">
+            <ul className="space-y-1.5">
               {section.links.map((link) => {
                 const isActive = pathname === link.href;
                 return (
                   <li key={link.href}>
                     <Link
                       href={link.href}
-                      className={`flex items-center gap-3 px-3 py-2 rounded-md text-[14px] font-medium transition-colors ${
+                      className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm transition-all cursor-pointer ${
                         isActive
-                          ? "bg-white/10 text-white font-bold"
-                          : "text-secondary hover:bg-white/5 hover:text-white"
+                          ? "bg-surface-container-low text-primary-sendlib font-semibold"
+                          : "text-secondary hover:bg-surface-container-low hover:text-on-background"
                       }`}
                     >
                       <HugeiconsIcon 

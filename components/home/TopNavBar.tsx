@@ -47,17 +47,29 @@ export default function TopNavBar() {
             Features
           </Link>
           <Link 
-            href="#about-oauth" 
+            href="#how-it-works" 
             className="font-body-md text-body-md text-white/80 hover:text-white transition-colors duration-300"
           >
-            About
+            How It Works
+          </Link>
+          <Link 
+            href="#pricing" 
+            className="font-body-md text-body-md text-white/80 hover:text-white transition-colors duration-300"
+          >
+            Pricing
           </Link>
           <Link 
             href="/docs" 
             className="font-body-md text-body-md text-white/80 hover:text-white transition-colors duration-300"
           >
-            API Docs
+            Docs
           </Link>
+          <a 
+            href="mailto:hello@samueltuoyo.com" 
+            className="font-body-md text-body-md text-white/80 hover:text-white transition-colors duration-300"
+          >
+            Contact
+          </a>
         </div>
         <div className="flex items-center gap-md">
           {mounted && user ? (
