@@ -4,6 +4,7 @@ import { enqueueBatchJob } from "@/lib/batchWorker";
 import ApiKey, { IApiKey } from "@/models/ApiKey";
 import User from "@/models/User";
 import BatchJob from "@/models/BatchJob";
+import GmailAccount from "@/models/GmailAccount";
 import EmailLog from "@/models/EmailLog";
 import argon2 from "argon2";
 import mongoose from "mongoose";
@@ -148,6 +149,22 @@ export async function POST(req: NextRequest) {
     // Extract raw email from "Display Name <email>" format if needed
     const fromEmailMatch = from.match(/<([^>]+)>/) ?? null;
     const fromEmail = fromEmailMatch ? fromEmailMatch[1].trim() : from.trim();
+    
+    // Synchronous validation: ensure the Gmail account exists and is connected
+    const account = await GmailAccount.findOne({ userId, gmailEmail: fromEmail });
+    if (!account) {
+      return NextResponse.json(
+        { success: false, message: `Gmail account '${fromEmail}' is not connected. Please go to your Sendlib dashboard, connect this Gmail account, and try again.` },
+        { status: 400 }
+      );
+    }
+    if (!account.connected) {
+      return NextResponse.json(
+        { success: false, message: `Gmail account '${fromEmail}' is disconnected. Please reconnect it from your dashboard.` },
+        { status: 400 }
+      );
+    }
+
     const maxRecipients = getMaxRecipients(fromEmail);
 
     // Calculate how many they've already sent today from this account

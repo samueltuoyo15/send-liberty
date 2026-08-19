@@ -247,8 +247,8 @@ export default function DashboardPage() {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3 }}
-          className="flex flex-col"
+          transition={{ delay: 0.35 }}
+          className="flex flex-col order-2"
         >
           <Card className="h-full flex flex-col border border-outline-variant bg-surface shadow-none rounded-xl overflow-hidden hover:bg-surface-container-low transition-colors">
             <CardHeader className="flex flex-row items-center justify-between pb-3">
@@ -382,8 +382,8 @@ export default function DashboardPage() {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.35 }}
-          className="flex flex-col"
+          transition={{ delay: 0.3 }}
+          className="flex flex-col order-1"
         >
           <Card className="h-full flex flex-col border border-outline-variant bg-surface shadow-none rounded-xl overflow-hidden hover:bg-surface-container-low transition-colors">
             <CardHeader className="pb-3">

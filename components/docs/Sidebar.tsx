@@ -34,7 +34,7 @@ export function DocsSidebar() {
   const pathname = usePathname();
 
   return (
-    <aside className="w-56 shrink-0 h-[calc(100vh-64px)] overflow-y-auto border-r border-outline-variant bg-background-sendlib px-4 py-6 hidden md:block">
+    <aside className="w-56 shrink-0 h-[calc(100vh-64px)] overflow-y-auto border-r border-outline-variant bg-background-sendlib px-4 py-6 hidden md:block sticky top-16">
       <div className="space-y-8">
         {DOC_SECTIONS.map((section, idx) => (
           <div key={idx}>
