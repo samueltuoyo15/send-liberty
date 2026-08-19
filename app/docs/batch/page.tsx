@@ -431,6 +431,43 @@ System.out.println(response.body());`
               <li><strong>Avoid spam trigger words:</strong> Do not use highly commercial language like &quot;Action Required&quot;, &quot;Free Trial&quot;, &quot;Buy Now&quot;, or &quot;Upgrade&quot;.</li>
               <li><strong>Only email expecting recipients:</strong> Sendlib automatically throttles your sending speed to keep you under Google&apos;s radar, but if a high percentage of recipients manually click &quot;Report Spam&quot;, Google will permanently penalize your connected account.</li>
             </ul>
+
+            <div className="mt-8 mb-6">
+              <h3 className="font-bold text-primary-sendlib text-sm mb-3">Example: Avoiding Spam Triggers</h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="p-4 rounded-xl border border-red-500/30 bg-red-500/5">
+                  <div className="flex items-center gap-2 mb-3">
+                    <span className="bg-red-500/20 text-red-500 text-[10px] uppercase font-bold px-2 py-1 rounded">High Spam Risk</span>
+                  </div>
+                  <div className="space-y-2 text-xs">
+                    <div className="flex gap-2"><span className="text-secondary w-16">Subject:</span><span className="text-on-background font-semibold">Action Required: Your Account is Disconnected!</span></div>
+                    <div className="flex gap-2"><span className="text-secondary w-16">From:</span><span className="text-on-background">hello@company.com</span></div>
+                    <div className="mt-4 pt-3 border-t border-red-500/10 text-secondary leading-relaxed">
+                      <p className="mb-2"><strong>URGENT:</strong> We detected an error.</p>
+                      <p className="mb-3">Click the button below to fix it immediately or lose access.</p>
+                      <button className="bg-blue-600 text-white px-4 py-2 rounded pointer-events-none">FIX NOW</button>
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="p-4 rounded-xl border border-emerald-500/30 bg-emerald-500/5">
+                  <div className="flex items-center gap-2 mb-3">
+                    <span className="bg-emerald-500/20 text-emerald-500 text-[10px] uppercase font-bold px-2 py-1 rounded">Inbox Friendly</span>
+                  </div>
+                  <div className="space-y-2 text-xs">
+                    <div className="flex gap-2"><span className="text-secondary w-16">Subject:</span><span className="text-on-background font-semibold">Quick update regarding your connection</span></div>
+                    <div className="flex gap-2"><span className="text-secondary w-16">From:</span><span className="text-on-background">"Alex at Company" &lt;hello@company.com&gt;</span></div>
+                    <div className="mt-4 pt-3 border-t border-emerald-500/10 text-secondary leading-relaxed">
+                      <p className="mb-2">Hi John,</p>
+                      <p className="mb-2">We recently rolled out an update that might have disconnected your account.</p>
+                      <p className="mb-3">You can easily restore it by visiting your dashboard.</p>
+                      <p>Thanks,<br/>Alex</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
             <div className="mt-4 p-4 bg-primary-sendlib/5 border border-primary-sendlib/20 rounded-lg">
               <h3 className="font-bold text-primary-sendlib text-sm mb-3">Ideal Use Cases</h3>
               <p className="text-sm text-secondary leading-relaxed mb-3">
