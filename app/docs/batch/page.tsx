@@ -299,6 +299,21 @@ export default function BatchSendPage() {
           </div>
         </div>
 
+        {/* Deliverability Best Practices */}
+        <div className="mt-12 mb-8">
+          <h2 className="text-xl font-bold text-primary-sendlib mb-4">Best Practices for Deliverability</h2>
+          <div className="p-6 rounded-xl border border-outline-variant bg-surface-container-low space-y-4">
+            <p className="text-sm text-secondary leading-relaxed">
+              When sending bulk emails from a personal <code>@gmail.com</code> account (as opposed to a verified Google Workspace custom domain), Google&apos;s spam filters can be highly aggressive. To ensure your batch reaches the primary inbox rather than the spam folder, we strongly recommend the following:
+            </p>
+            <ul className="list-disc pl-5 space-y-2 text-sm text-secondary">
+              <li><strong>Send plain text or light HTML:</strong> Avoid heavy layouts, large images, and giant colorful buttons. The more your email looks like a genuine 1-on-1 human email, the better.</li>
+              <li><strong>Minimize links:</strong> Try to include zero or at most one link in your first cold email to a new recipient.</li>
+              <li><strong>Avoid spam trigger words:</strong> Do not use highly commercial language like &quot;Action Required&quot;, &quot;Free Trial&quot;, &quot;Buy Now&quot;, or &quot;Upgrade&quot;.</li>
+              <li><strong>Only email expecting recipients:</strong> Sendlib automatically throttles your sending speed to keep you under Google&apos;s radar, but if a high percentage of recipients manually click &quot;Report Spam&quot;, Google will permanently penalize your connected account.</li>
+            </ul>
+          </div>
+        </div>
       </div>
 
       <DocsPagination

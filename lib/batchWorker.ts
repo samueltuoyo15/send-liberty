@@ -27,8 +27,16 @@ function sleep(ms: number): Promise<void> {
  * Interpolate template variables into a string.
  * Replaces {{name}}, {{company}}, etc. with values from the variables map.
  */
-function interpolate(template: string, variables: Record<string, string> = {}): string {
-  return template.replace(/\{\{(\w+)\}\}/g, (_, key) => variables[key] ?? `{{${key}}}`);
+function interpolate(template: string, variables: any = {}): string {
+  return template.replace(/\{\{(\w+)\}\}/g, (_, key) => {
+    let val;
+    if (variables && typeof variables.get === 'function') {
+      val = variables.get(key);
+    } else if (variables) {
+      val = variables[key];
+    }
+    return val ?? `{{${key}}}`;
+  });
 }
 
 /**
