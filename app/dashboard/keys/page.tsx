@@ -128,7 +128,7 @@ function KeysContent() {
         </div>
         <Button 
           size="lg"
-          className="rounded-lg font-label-sm bg-surface-container-low border border-outline-variant/60 hover:bg-surface-container text-white shadow-sm transition-all active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer" 
+          className="rounded-lg font-label-sm bg-emerald-500 hover:bg-emerald-600 text-black border-0 font-bold shadow-sm transition-all active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer" 
           onClick={() => {
             if (!hasConnectedAccounts) {
               toast.error("Please connect at least one Gmail account first.");
@@ -180,7 +180,7 @@ function KeysContent() {
                         <div className="pt-1">
                           <Button 
                             size="sm"
-                            className="rounded-lg font-label-sm bg-surface-container-low border border-outline-variant/60 hover:bg-surface-container text-white shadow-sm px-3.5 h-8 cursor-pointer" 
+                            className="rounded-lg font-label-sm bg-emerald-500 hover:bg-emerald-600 text-black border-0 font-bold shadow-sm px-3.5 h-8 cursor-pointer" 
                             onClick={() => setGenerateDialog(true)}
                             disabled={!hasConnectedAccounts}
                           >
@@ -308,7 +308,7 @@ function KeysContent() {
               Cancel
             </Button>
             <Button 
-              className="flex-1 rounded-lg font-label-sm bg-surface-container-low border border-outline-variant/60 hover:bg-surface-container text-white disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer" 
+              className="flex-1 rounded-lg font-label-sm bg-emerald-500 hover:bg-emerald-600 text-black border-0 font-bold disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer" 
               onClick={handleGenerate} 
               disabled={isGenerating || atKeyLimit || keyLabel.length > 25 || allowedOriginsText.length > 200}
             >
@@ -352,7 +352,7 @@ function KeysContent() {
           </div>
           <div className="flex flex-row gap-3 mt-4 pt-4 border-t border-outline-variant/60">
             <Button 
-              className="w-full rounded-lg font-label-sm bg-surface-container-low border border-outline-variant/60 hover:bg-surface-container text-white py-2.5 cursor-pointer" 
+              className="w-full rounded-lg font-label-sm bg-emerald-500 hover:bg-emerald-600 text-black border-0 font-bold py-2.5 cursor-pointer" 
               onClick={() => {
                 if (newKeyDialog?.key) {
                   copyToClipboard(newKeyDialog.key);

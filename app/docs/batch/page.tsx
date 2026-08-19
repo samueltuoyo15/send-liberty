@@ -3,6 +3,8 @@
 import { useState, useEffect } from "react";
 import { DocsPagination } from "@/components/docs/DocsPagination";
 
+import { EditableCodeBlock } from "@/components/docs/EditableCodeBlock";
+
 export default function BatchSendPage() {
   const [apiUrl, setApiUrl] = useState("https://sendlib.samueltuoyo.com");
   
@@ -11,43 +13,6 @@ export default function BatchSendPage() {
       setApiUrl(window.location.origin);
     }
   }, []);
-
-  const [isCopied, setIsCopied] = useState(false);
-  const [isStatusCopied, setIsStatusCopied] = useState(false);
-
-  const sendSnippet = `curl -X POST ${apiUrl}/api/batch \\
-  -H "Authorization: Bearer YOUR_API_KEY" \\
-  -H "Content-Type: application/json" \\
-  -d '{
-    "from": "Your App <yourapp@gmail.com>",
-    "subject": "Hey {{name}}, big news!",
-    "html": "<p>Hi {{name}}, welcome to {{company}}!</p>",
-    "recipients": [
-      { "email": "john@example.com", "variables": { "name": "John", "company": "Acme" } },
-      { "email": "jane@example.com", "variables": { "name": "Jane", "company": "Beta" } }
-    ]
-  }'`;
-
-  const statusSnippet = `curl ${apiUrl}/api/batch/BATCH_ID \\
-  -H "Authorization: Bearer YOUR_API_KEY"`;
-
-  const copy = (text: string, setFn: (v: boolean) => void) => {
-    if (navigator.clipboard && window.isSecureContext) {
-      navigator.clipboard.writeText(text);
-    } else {
-      const ta = document.createElement("textarea");
-      ta.value = text;
-      ta.style.position = "fixed";
-      ta.style.left = "-999999px";
-      document.body.appendChild(ta);
-      ta.focus();
-      ta.select();
-      document.execCommand("copy");
-      ta.remove();
-    }
-    setFn(true);
-    setTimeout(() => setFn(false), 2000);
-  };
 
   return (
     <div className="max-w-3xl">
@@ -87,18 +52,171 @@ export default function BatchSendPage() {
         {/* Step 1 — Send the batch */}
         <div>
           <h2 className="text-xl font-bold text-primary-sendlib mb-3">Step 1: Send the batch</h2>
-          <div className="flex justify-between items-center mb-3">
-            <code className="text-sm font-mono text-primary-sendlib bg-primary-sendlib/5 px-3 py-1 rounded-lg border border-primary-sendlib/20">POST /api/batch</code>
-            <button
-              onClick={() => copy(sendSnippet, setIsCopied)}
-              className="text-xs font-mono bg-surface border border-outline-variant hover:bg-surface-container-low text-primary-sendlib px-3 py-1.5 rounded-lg transition-colors cursor-pointer"
-            >
-              {isCopied ? "✓ Copied" : "Copy"}
-            </button>
-          </div>
-          <pre className="p-4 bg-surface-container-high border border-outline-variant/50 rounded-lg text-sm font-mono text-white/95 overflow-x-auto whitespace-pre leading-relaxed">
-            {sendSnippet}
-          </pre>
+          <EditableCodeBlock
+            title="POST /api/batch"
+            snippets={{
+              curl: `curl -X POST ${apiUrl}/api/batch \\
+  -H "Authorization: Bearer YOUR_API_KEY" \\
+  -H "Content-Type: application/json" \\
+  -d '{
+    "from": "Your App <yourapp@gmail.com>",
+    "subject": "Hey {{name}}, big news!",
+    "html": "<p>Hi {{name}}, welcome to {{company}}!</p>",
+    "recipients": [
+      { "email": "john@example.com", "variables": { "name": "John", "company": "Acme" } },
+      { "email": "jane@example.com", "variables": { "name": "Jane", "company": "Beta" } }
+    ]
+  }'`,
+              js: `await fetch('${apiUrl}/api/batch', {
+  method: 'POST',
+  headers: {
+    'Authorization': 'Bearer YOUR_API_KEY',
+    'Content-Type': 'application/json'
+  },
+  body: JSON.stringify({
+    from: 'Your App <yourapp@gmail.com>',
+    subject: 'Hey {{name}}, big news!',
+    html: '<p>Hi {{name}}, welcome to {{company}}!</p>',
+    recipients: [
+      { email: 'john@example.com', variables: { name: 'John', company: 'Acme' } },
+      { email: 'jane@example.com', variables: { name: 'Jane', company: 'Beta' } }
+    ]
+  })
+});`,
+              python: `import requests
+
+url = "${apiUrl}/api/batch"
+headers = {
+  "Authorization": "Bearer YOUR_API_KEY",
+  "Content-Type": "application/json"
+}
+payload = {
+  "from": "Your App <yourapp@gmail.com>",
+  "subject": "Hey {{name}}, big news!",
+  "html": "<p>Hi {{name}}, welcome to {{company}}!</p>",
+  "recipients": [
+    { "email": "john@example.com", "variables": { "name": "John", "company": "Acme" } },
+    { "email": "jane@example.com", "variables": { "name": "Jane", "company": "Beta" } }
+  ]
+}
+
+res = requests.post(url, json=payload, headers=headers)`,
+              go: `package main
+
+import (
+  "bytes"
+  "encoding/json"
+  "net/http"
+)
+
+func main() {
+  payload, _ := json.Marshal(map[string]interface{}{
+    "from":    "Your App <yourapp@gmail.com>",
+    "subject": "Hey {{name}}, big news!",
+    "html":    "<p>Hi {{name}}, welcome to {{company}}!</p>",
+    "recipients": []map[string]interface{}{
+      {"email": "john@example.com", "variables": map[string]string{"name": "John", "company": "Acme"}},
+      {"email": "jane@example.com", "variables": map[string]string{"name": "Jane", "company": "Beta"}},
+    },
+  })
+  req, _ := http.NewRequest("POST", "${apiUrl}/api/batch", bytes.NewBuffer(payload))
+  req.Header.Set("Authorization", "Bearer YOUR_API_KEY")
+  req.Header.Set("Content-Type", "application/json")
+  
+  http.DefaultClient.Do(req)
+}`,
+              rust: `use serde_json::json;
+
+#[tokio::main]
+async fn main() -> Result<(), reqwest::Error> {
+  let client = reqwest::Client::new();
+  let payload = json!({
+    "from": "Your App <yourapp@gmail.com>",
+    "subject": "Hey {{name}}, big news!",
+    "html": "<p>Hi {{name}}, welcome to {{company}}!</p>",
+    "recipients": [
+      { "email": "john@example.com", "variables": { "name": "John", "company": "Acme" } },
+      { "email": "jane@example.com", "variables": { "name": "Jane", "company": "Beta" } }
+    ]
+  });
+  
+  client.post("${apiUrl}/api/batch")
+    .header("Authorization", "Bearer YOUR_API_KEY")
+    .json(&payload)
+    .send()
+    .await?;
+    
+  Ok(())
+}`,
+              php: `<?php
+$ch = curl_init('${apiUrl}/api/batch');
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+curl_setopt($ch, CURLOPT_POST, true);
+curl_setopt($ch, CURLOPT_HTTPHEADER, [
+  'Authorization: Bearer YOUR_API_KEY',
+  'Content-Type: application/json'
+]);
+curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode([
+  'from' => 'Your App <yourapp@gmail.com>',
+  'subject' => 'Hey {{name}}, big news!',
+  'html' => '<p>Hi {{name}}, welcome to {{company}}!</p>',
+  'recipients' => [
+    [ 'email' => 'john@example.com', 'variables' => [ 'name' => 'John', 'company' => 'Acme' ] ],
+    [ 'email' => 'jane@example.com', 'variables' => [ 'name' => 'Jane', 'company' => 'Beta' ] ]
+  ]
+]));
+
+curl_exec($ch);`,
+              net: `using System.Net.Http;
+using System.Text;
+using System.Text.Json;
+
+var client = new HttpClient();
+client.DefaultRequestHeaders.Add("Authorization", "Bearer YOUR_API_KEY");
+
+var payload = new {
+  from = "Your App <yourapp@gmail.com>",
+  subject = "Hey {{name}}, big news!",
+  html = "<p>Hi {{name}}, welcome to {{company}}!</p>",
+  recipients = new[] { 
+    new { email = "john@example.com", variables = new { name = "John", company = "Acme" } },
+    new { email = "jane@example.com", variables = new { name = "Jane", company = "Beta" } }
+  }
+};
+
+var content = new StringContent(JsonSerializer.Serialize(payload), Encoding.UTF8, "application/json");
+var response = await client.PostAsync("${apiUrl}/api/batch", content);
+var result = await response.Content.ReadAsStringAsync();
+Console.WriteLine(result);`,
+              java: `import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+
+var client = HttpClient.newHttpClient();
+var payload = """
+    {
+      "from": "Your App <yourapp@gmail.com>",
+      "subject": "Hey {{name}}, big news!",
+      "html": "<p>Hi {{name}}, welcome to {{company}}!</p>",
+      "recipients": [
+        { "email": "john@example.com", "variables": { "name": "John", "company": "Acme" } },
+        { "email": "jane@example.com", "variables": { "name": "Jane", "company": "Beta" } }
+      ]
+    }
+    """;
+
+var request = HttpRequest.newBuilder()
+  .uri(URI.create("${apiUrl}/api/batch"))
+  .header("Authorization", "Bearer YOUR_API_KEY")
+  .header("Content-Type", "application/json")
+  .POST(HttpRequest.BodyPublishers.ofString(payload))
+  .build();
+
+var response = client.send(request, HttpResponse.BodyHandlers.ofString());
+System.out.println(response.body());`
+            }}
+          />
 
           <h3 className="text-base font-bold text-primary-sendlib mt-6 mb-3">Request body fields</h3>
           <div className="overflow-x-auto rounded-xl border border-outline-variant">
@@ -171,18 +289,19 @@ export default function BatchSendPage() {
         {/* Step 2 — Poll progress */}
         <div>
           <h2 className="text-xl font-bold text-primary-sendlib mb-3">Step 2: Poll for progress</h2>
-          <div className="flex justify-between items-center mb-3">
-            <code className="text-sm font-mono text-primary-sendlib bg-primary-sendlib/5 px-3 py-1 rounded-lg border border-primary-sendlib/20">GET /api/batch/:batchId</code>
-            <button
-              onClick={() => copy(statusSnippet, setIsStatusCopied)}
-              className="text-xs font-mono bg-surface border border-outline-variant hover:bg-surface-container-low text-primary-sendlib px-3 py-1.5 rounded-lg transition-colors cursor-pointer"
-            >
-              {isStatusCopied ? "✓ Copied" : "Copy"}
-            </button>
-          </div>
-          <pre className="p-4 bg-surface-container-high border border-outline-variant/50 rounded-lg text-sm font-mono text-white/95 overflow-x-auto whitespace-pre leading-relaxed">
-            {statusSnippet}
-          </pre>
+          <EditableCodeBlock
+            title="GET /api/batch/:batchId"
+            snippets={{
+              curl: `curl ${apiUrl}/api/batch/BATCH_ID \\\n  -H "Authorization: Bearer YOUR_API_KEY"`,
+              js: `await fetch('${apiUrl}/api/batch/BATCH_ID', {\n  headers: { 'Authorization': 'Bearer YOUR_API_KEY' }\n});`,
+              python: `import requests\n\nres = requests.get(\n  "${apiUrl}/api/batch/BATCH_ID",\n  headers={"Authorization": "Bearer YOUR_API_KEY"}\n)`,
+              go: `package main\n\nimport "net/http"\n\nfunc main() {\n  req, _ := http.NewRequest("GET", "${apiUrl}/api/batch/BATCH_ID", nil)\n  req.Header.Set("Authorization", "Bearer YOUR_API_KEY")\n  http.DefaultClient.Do(req)\n}`,
+              rust: `let client = reqwest::Client::new();\nclient.get("${apiUrl}/api/batch/BATCH_ID")\n  .header("Authorization", "Bearer YOUR_API_KEY")\n  .send()\n  .await?;`,
+              php: `<?php\n$ch = curl_init('${apiUrl}/api/batch/BATCH_ID');\ncurl_setopt($ch, CURLOPT_HTTPHEADER, ['Authorization: Bearer YOUR_API_KEY']);\ncurl_exec($ch);`,
+              net: `using System.Net.Http;\n\nvar client = new HttpClient();\nclient.DefaultRequestHeaders.Add("Authorization", "Bearer YOUR_API_KEY");\nvar response = await client.GetAsync("${apiUrl}/api/batch/BATCH_ID");`,
+              java: `import java.net.URI;\nimport java.net.http.HttpClient;\nimport java.net.http.HttpRequest;\n\nvar request = HttpRequest.newBuilder()\n  .uri(URI.create("${apiUrl}/api/batch/BATCH_ID"))\n  .header("Authorization", "Bearer YOUR_API_KEY")\n  .GET()\n  .build();`
+            }}
+          />
 
           <h3 className="text-base font-bold text-primary-sendlib mt-5 mb-2">Response</h3>
           <pre className="p-4 bg-surface-container-high border border-outline-variant/50 rounded-lg text-sm font-mono text-white/95 overflow-x-auto whitespace-pre leading-relaxed">{`{

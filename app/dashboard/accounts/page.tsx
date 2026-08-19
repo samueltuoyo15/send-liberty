@@ -82,7 +82,7 @@ function AccountsContent() {
         </div>
         <Button
           size="lg"
-          className="rounded-lg font-label-sm bg-surface-container-low border border-outline-variant/60 hover:bg-surface-container text-white shadow-sm transition-all active:scale-95 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+          className="rounded-lg font-label-sm bg-emerald-500 hover:bg-emerald-600 text-black border-0 font-bold shadow-sm transition-all active:scale-95 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
           onClick={() => {
             if (atAccountLimit) {
               toast.error(`Account limit reached: ${maxAccounts} / ${maxAccounts} accounts connected. Please disconnect an account first.`);
@@ -130,7 +130,7 @@ function AccountsContent() {
           <p className="max-w-[420px] mx-auto mb-6 text-sm text-secondary leading-relaxed">Connect a Gmail account to start sending emails on its behalf.</p>
           <Button 
             size="lg"
-            className="rounded-lg font-label-sm bg-surface-container-low border border-outline-variant/60 hover:bg-surface-container text-white shadow-sm transition-all active:scale-95 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed" 
+            className="rounded-lg font-label-sm bg-emerald-500 hover:bg-emerald-600 text-black border-0 font-bold shadow-sm transition-all active:scale-95 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed" 
             onClick={() => setConnectConfirmOpen(true)}
             disabled={isConnecting}
           >
@@ -218,7 +218,7 @@ function AccountsContent() {
             </Button>
             <Link href="/dashboard/keys" className="flex-1">
               <Button 
-                className="w-full rounded-lg font-label-sm bg-surface-container-low border border-outline-variant/60 hover:bg-surface-container text-white shadow-sm cursor-pointer" 
+                className="w-full rounded-lg font-label-sm bg-emerald-500 hover:bg-emerald-600 text-black border-0 font-bold shadow-sm cursor-pointer" 
               >
                 Create API Key
               </Button>
@@ -261,7 +261,7 @@ function AccountsContent() {
               Cancel
             </Button>
             <Button 
-              className="flex-1 rounded-lg font-label-sm bg-surface-container-low border border-outline-variant/60 hover:bg-surface-container text-white cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed" 
+              className="flex-1 rounded-lg font-label-sm bg-emerald-500 hover:bg-emerald-600 text-black border-0 font-bold cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed" 
               onClick={() => {
                 if (atAccountLimit) {
                   toast.error(`Account limit reached: ${maxAccounts} / ${maxAccounts} accounts connected.`);

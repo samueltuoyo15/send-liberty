@@ -137,7 +137,7 @@ export default function SettingsPage() {
           </p>
         </div>
         <Button 
-          className="rounded-lg font-label-sm bg-surface-container-low border border-outline-variant/60 hover:bg-surface-container text-white shadow-sm transition-all active:scale-95 px-4 py-2 cursor-pointer"
+          className="rounded-lg font-label-sm bg-emerald-500 hover:bg-emerald-600 text-black border-0 font-bold shadow-sm transition-all active:scale-95 px-4 py-2 cursor-pointer"
           onClick={handleEditClick}
         >
           <HugeiconsIcon icon={PencilEdit01Icon} size={16} color='currentColor' strokeWidth={1.5} />
@@ -213,7 +213,7 @@ export default function SettingsPage() {
 
               {!isPro ? (
                 <Button
-                  className="font-label-sm rounded-lg bg-surface-container-low border border-outline-variant/60 hover:bg-surface-container text-white cursor-pointer active:scale-95 transition-all shadow-sm disabled:opacity-50"
+                  className="font-label-sm rounded-lg bg-emerald-500 hover:bg-emerald-600 text-black border-0 font-bold cursor-pointer active:scale-95 transition-all shadow-sm disabled:opacity-50"
                   onClick={handleBachsCheckout}
                   disabled={isRedirectingCheckout}
                 >
@@ -337,7 +337,7 @@ export default function SettingsPage() {
             <Button variant="outline" className="flex-1 rounded-lg font-label-sm border border-outline-variant" onClick={() => setIsEditOpen(false)}>
               Cancel
             </Button>
-            <Button className="flex-1 rounded-lg font-label-sm bg-surface-container-low border border-outline-variant/60 hover:bg-surface-container text-white" onClick={handleSave} disabled={isUpdating || editName.length > 30 || !editName.trim()}>
+            <Button className="flex-1 rounded-lg font-label-sm bg-emerald-500 hover:bg-emerald-600 text-black border-0 font-bold" onClick={handleSave} disabled={isUpdating || editName.length > 30 || !editName.trim()}>
               <HugeiconsIcon icon={FloppyDiskIcon} size={16} color='currentColor' strokeWidth={1.5} className="mr-2" />
               {isUpdating ? "Saving..." : "Save Changes"}
             </Button>
@@ -484,7 +484,7 @@ export default function SettingsPage() {
               Cancel
             </Button>
             <Button 
-              className="flex-1 rounded-lg font-label-sm bg-surface-container-low border border-outline-variant/60 hover:bg-surface-container text-white" 
+              className="flex-1 rounded-lg font-label-sm bg-emerald-500 hover:bg-emerald-600 text-black border-0 font-bold" 
               onClick={handleCurrencySubmit}
               disabled={isUpdating}
             >

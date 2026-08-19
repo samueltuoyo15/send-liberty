@@ -3,10 +3,9 @@
 import { useState, useEffect } from "react";
 import { DocsPagination } from "@/components/docs/DocsPagination";
 
-type Language = "curl" | "js" | "python" | "go" | "rust" | "php" | "net" | "java";
+import { EditableCodeBlock } from "@/components/docs/EditableCodeBlock";
 
 export default function BasicSendPage() {
-  const [lang, setLang] = useState<Language>("curl");
   const [apiUrl, setApiUrl] = useState("https://sendlib.samueltuoyo.com");
   
   useEffect(() => {
@@ -14,37 +13,6 @@ export default function BasicSendPage() {
       setApiUrl(window.location.origin);
     }
   }, []);
-
-  const [isCopied, setIsCopied] = useState(false);
-
-  const handleCopyCode = () => {
-    let snippet = "";
-    if (lang === "curl") {
-      snippet = `curl -X POST ${apiUrl}/api/send \\\n  -H "Authorization: Bearer YOUR_API_KEY" \\\n  -H "Content-Type: application/json" \\\n  -d '{\n    "from": '"Your Brand Name" <yourproduct@gmail.com>',\n    "to": "user@example.com",\n    "subject": "Hello via REST API",\n    "html": "<p>No SMTP configuration needed!</p>",\n    "replyTo": "support@yourdomain.com",\n    "attachments": [\n      { "filename": "invoice.pdf", "content": "JVBERi0xLjQKJ..." }\n    ]\n  }'`;
-    } else if (lang === "js") {
-      snippet = `await fetch('${apiUrl}/api/send', {\n  method: 'POST',\n  headers: {\n    'Authorization': 'Bearer YOUR_API_KEY',\n    'Content-Type': 'application/json'\n  },\n  body: JSON.stringify({\n    from: '"Your Brand Name" <yourproduct@gmail.com>',\n    to: 'user@example.com',\n    subject: 'Hello via Fetch!',\n    html: '<p>No SMTP configuration needed!</p>',\n    replyTo: 'support@yourdomain.com',\n    attachments: [\n      { filename: 'invoice.pdf', content: 'JVBERi0xLjQKJ...' }\n    ]\n  })\n});`;
-    } else if (lang === "python") {
-      snippet = `import requests\n\nurl = "${apiUrl}/api/send"\nheaders = {\n  "Authorization": "Bearer YOUR_API_KEY",\n  "Content-Type": "application/json"\n}\npayload = {\n  "from": '"Your Brand Name" <yourproduct@gmail.com>',\n  "to": "user@example.com",\n  "subject": "Hello via Python!",\n  "html": "<p>No SMTP configuration needed!</p>",\n  "replyTo": "support@yourdomain.com",\n  "attachments": [\n    { "filename": "invoice.pdf", "content": "JVBERi0xLjQKJ..." }\n  ]\n}\n\nres = requests.post(url, json=payload, headers=headers)`;
-    } else {
-      snippet = `POST ${apiUrl}/api/send`;
-    }
-
-    if (navigator.clipboard && window.isSecureContext) {
-      navigator.clipboard.writeText(snippet);
-    } else {
-      const textArea = document.createElement("textarea");
-      textArea.value = snippet;
-      textArea.style.position = "fixed";
-      textArea.style.left = "-999999px";
-      document.body.appendChild(textArea);
-      textArea.focus();
-      textArea.select();
-      document.execCommand("copy");
-      textArea.remove();
-    }
-    setIsCopied(true);
-    setTimeout(() => setIsCopied(false), 2000);
-  };
 
   return (
     <div className="max-w-3xl">
@@ -61,52 +29,14 @@ export default function BasicSendPage() {
         </p>
 
         <div className="mt-8">
-          <div className="flex justify-between items-center mb-4 flex-wrap gap-2">
-            <h3 className="text-xl font-bold text-primary-sendlib">Example Request</h3>
-            <div className="flex items-center gap-2">
-              <div className="flex rounded-lg bg-surface border border-outline-variant p-1 text-xs font-mono overflow-x-auto max-w-full">
-                {(["curl", "js", "python", "go", "rust", "php", "net", "java"] as Language[]).map((tab) => (
-                  <button
-                    key={tab}
-                    onClick={() => setLang(tab)}
-                    className={`px-3 py-1 rounded-md transition-colors cursor-pointer whitespace-nowrap ${
-                      lang === tab ? "bg-primary-sendlib/10 text-primary-sendlib font-bold" : "text-[#75777d] hover:text-primary-sendlib"
-                    }`}
-                  >
-                    {tab === "curl"
-                      ? "cURL"
-                      : tab === "js"
-                      ? "JavaScript"
-                      : tab === "python"
-                      ? "Python"
-                      : tab === "go"
-                      ? "Go"
-                      : tab === "rust"
-                      ? "Rust"
-                      : tab === "php"
-                      ? "PHP"
-                      : tab === "net"
-                      ? ".NET"
-                      : "Java"}
-                  </button>
-                ))}
-              </div>
-              <button
-                onClick={handleCopyCode}
-                className="text-xs font-mono bg-surface border border-outline-variant hover:bg-surface-container-low text-primary-sendlib px-3 py-1.5 rounded-lg transition-colors cursor-pointer"
-              >
-                {isCopied ? "✓ Copied" : "Copy Code"}
-              </button>
-            </div>
-          </div>
-
-          <pre className="p-4 bg-surface-container-high border border-outline-variant/50 rounded-lg text-sm font-mono text-white/95 overflow-x-auto whitespace-pre leading-relaxed">
-            {lang === "curl" && (
-              `curl -X POST ${apiUrl}/api/send \\
+          <EditableCodeBlock 
+            title="Example Request"
+            snippets={{
+              curl: `curl -X POST ${apiUrl}/api/send \\
   -H "Authorization: Bearer YOUR_API_KEY" \\
   -H "Content-Type: application/json" \\
   -d '{
-    "from": '"Your Brand Name" <yourproduct@gmail.com>',
+    "from": "\\"Your Brand Name\\" <yourproduct@gmail.com>",
     "to": "user@example.com",
     "subject": "Hello via REST API",
     "html": "<p>No SMTP configuration needed!</p>",
@@ -114,11 +44,8 @@ export default function BasicSendPage() {
     "attachments": [
       { "filename": "invoice.pdf", "content": "JVBERi0xLjQKJ..." }
     ]
-  }'`
-            )}
-
-            {lang === "js" && (
-              `await fetch('${apiUrl}/api/send', {
+  }'`,
+              js: `await fetch('${apiUrl}/api/send', {
   method: 'POST',
   headers: {
     'Authorization': 'Bearer YOUR_API_KEY',
@@ -134,11 +61,8 @@ export default function BasicSendPage() {
       { filename: 'invoice.pdf', content: 'JVBERi0xLjQKJ...' }
     ]
   })
-});`
-            )}
-
-            {lang === "python" && (
-              `import requests
+});`,
+              python: `import requests
 
 url = "${apiUrl}/api/send"
 headers = {
@@ -157,11 +81,8 @@ payload = {
 }
 
 response = requests.post(url, json=payload, headers=headers)
-print(response.json())`
-            )}
-
-            {lang === "go" && (
-              `package main
+print(response.json())`,
+              go: `package main
 
 import (
   "bytes"
@@ -182,11 +103,8 @@ func main() {
   req.Header.Set("Content-Type", "application/json")
   
   http.DefaultClient.Do(req)
-}`
-            )}
-
-            {lang === "rust" && (
-              `use serde_json::json;
+}`,
+              rust: `use serde_json::json;
 
 #[tokio::main]
 async fn main() -> Result<(), reqwest::Error> {
@@ -206,11 +124,8 @@ async fn main() -> Result<(), reqwest::Error> {
     .await?;
     
   Ok(())
-}`
-            )}
-
-            {lang === "php" && (
-              `<?php
+}`,
+              php: `<?php
 $ch = curl_init('${apiUrl}/api/send');
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 curl_setopt($ch, CURLOPT_POST, true);
@@ -226,11 +141,8 @@ curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode([
   'replyTo' => 'support@yourdomain.com'
 ]));
 
-curl_exec($ch);`
-            )}
-
-            {lang === "net" && (
-              `using System.Net.Http;
+curl_exec($ch);`,
+              net: `using System.Net.Http;
 using System.Text;
 using System.Text.Json;
 
@@ -249,11 +161,8 @@ var payload = new {
 var content = new StringContent(JsonSerializer.Serialize(payload), Encoding.UTF8, "application/json");
 var response = await client.PostAsync("${apiUrl}/api/send", content);
 var result = await response.Content.ReadAsStringAsync();
-Console.WriteLine(result);`
-            )}
-
-            {lang === "java" && (
-              `import java.net.URI;
+Console.WriteLine(result);`,
+              java: `import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
@@ -261,7 +170,7 @@ import java.net.http.HttpResponse;
 var client = HttpClient.newHttpClient();
 var payload = """
     {
-      "from": '"Your Brand Name" <yourproduct@gmail.com>',
+      "from": "\\"Your Brand Name\\" <yourproduct@gmail.com>",
       "to": "user@example.com",
       "subject": "Hello via Java!",
       "html": "<p>No SMTP configuration needed!</p>",
@@ -281,8 +190,8 @@ var request = HttpRequest.newBuilder()
 
 var response = client.send(request, HttpResponse.BodyHandlers.ofString());
 System.out.println(response.body());`
-            )}
-          </pre>
+            }} 
+          />
         </div>
 
         <div className="p-5 rounded-xl border border-outline-variant bg-surface-container-low mt-8 space-y-2">
