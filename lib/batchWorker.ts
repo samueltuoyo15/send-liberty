@@ -149,7 +149,7 @@ async function processBatchJob(jobId: string): Promise<void> {
   
   // Reload job to get accurate final counts (or rely on atomic increments)
   const finalJob = await BatchJob.findById(job._id);
-  console.log(`[BatchWorker] Job ${jobId} completed successfully! Total sent: ${finalJob?.sent ?? 0}, Total failed: ${finalJob?.failed ?? 0}`);
+  console.log(`[BatchWorker] Job ${jobId} completed successfully! Total sent: ${finalJob?.sent ?? 0}, Not delivered: ${finalJob?.failed ?? 0}`);
 }
 
 /**

@@ -355,6 +355,36 @@ System.out.println(response.body());`
               <li><strong>Avoid spam trigger words:</strong> Do not use highly commercial language like &quot;Action Required&quot;, &quot;Free Trial&quot;, &quot;Buy Now&quot;, or &quot;Upgrade&quot;.</li>
               <li><strong>Only email expecting recipients:</strong> Sendlib automatically throttles your sending speed to keep you under Google&apos;s radar, but if a high percentage of recipients manually click &quot;Report Spam&quot;, Google will permanently penalize your connected account.</li>
             </ul>
+            <div className="mt-4 p-4 bg-primary-sendlib/5 border border-primary-sendlib/20 rounded-lg">
+              <h3 className="font-bold text-primary-sendlib text-sm mb-3">Ideal Use Cases</h3>
+              <p className="text-sm text-secondary leading-relaxed mb-3">
+                Sendlib is intentionally designed for high-deliverability 1-on-1 communication. It is <strong>not</strong> designed for heavy, image-packed marketing blasts.
+              </p>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <h4 className="text-xs font-bold text-emerald-600 uppercase tracking-wider mb-2">Great for Sendlib</h4>
+                  <ul className="list-disc pl-4 space-y-1 text-sm text-secondary">
+                    <li>Password resets & Magic links</li>
+                    <li>Payment receipts & Invoices</li>
+                    <li>System alerts & Downtime Notifications</li>
+                    <li>Welcome emails from the founder</li>
+                    <li>Personalized cold outreach</li>
+                    <li>New feature announcements to active users</li>
+                    <li>Trial expiration warnings</li>
+                    <li>Weekly usage summary reports</li>
+                  </ul>
+                </div>
+                <div>
+                  <h4 className="text-xs font-bold text-red-500 uppercase tracking-wider mb-2">Bad for Sendlib</h4>
+                  <ul className="list-disc pl-4 space-y-1 text-sm text-secondary">
+                    <li>Weekly marketing newsletters</li>
+                    <li>Image-heavy promotional blasts</li>
+                    <li>E-commerce product catalogs</li>
+                    <li>Discount code mass mailings</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>

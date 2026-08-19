@@ -93,7 +93,7 @@ export default function DashboardPage() {
         >
           <Button 
             size="lg"
-            className="flex-1 sm:flex-initial rounded-lg font-label-sm bg-surface-container-low border border-outline-variant/60 hover:bg-surface-container text-white shadow-sm transition-all active:scale-95 group cursor-pointer" 
+            className="flex-1 sm:flex-initial rounded-lg font-label-sm border-0 bg-emerald-500 hover:bg-emerald-600 text-black font-bold shadow-none transition-all active:scale-95 group cursor-pointer" 
             onClick={() => {
               setConnectConfirmOpen(true);
             }}
@@ -105,8 +105,7 @@ export default function DashboardPage() {
           <Link href="/dashboard/keys?generate=true" className="flex-1 sm:flex-initial">
             <Button 
               size="lg"
-              variant="outline" 
-              className="w-full rounded-lg font-label-sm border border-outline-variant bg-surface text-primary-sendlib shadow-xs hover:bg-surface-container-low transition-all active:scale-95 cursor-pointer"
+              className="w-full rounded-lg font-label-sm bg-surface-container-low border border-outline-variant/60 hover:bg-surface-container text-white shadow-none transition-all active:scale-95 cursor-pointer"
             >
               <HugeiconsIcon icon={Key01Icon} size={16} color='currentColor' strokeWidth={1.5} />
               <span className="ml-2">Generate Key</span>
@@ -154,21 +153,20 @@ export default function DashboardPage() {
                     </div>
                   </div>
                   
-                  {/* Right side sparkline */}
-                  <div className="w-[120px] h-[70px] opacity-100 z-0 hidden sm:block relative">
-                    <svg viewBox="0 0 120 70" className="w-full h-full overflow-visible">
-                      <defs>
-                        <linearGradient id="sparkline-gradient-1" x1="0" y1="0" x2="0" y2="1">
-                          <stop offset="0%" stopColor="#10b981" stopOpacity="0.25" />
-                          <stop offset="100%" stopColor="#10b981" stopOpacity="0" />
-                        </linearGradient>
-                      </defs>
-                      {/* Area */}
-                      <path d="M0,50 C20,50 30,35 50,40 C70,45 80,25 100,30 C110,32 115,20 120,20 L120,70 L0,70 Z" fill="url(#sparkline-gradient-1)" />
-                      {/* Line */}
-                      <path d="M0,50 C20,50 30,35 50,40 C70,45 80,25 100,30 C110,32 115,20 120,20" fill="none" stroke="#10b981" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
-                      {/* Point */}
-                      <circle cx="120" cy="20" r="3.5" fill="#020403" stroke="#10b981" strokeWidth="2.5" />
+                  {/* Right side circular chart */}
+                  <div className="w-[70px] h-[70px] opacity-100 z-0 hidden sm:block relative mr-4">
+                    <svg viewBox="0 0 100 100" className="w-full h-full transform -rotate-90">
+                      <circle cx="50" cy="50" r="38" fill="transparent" stroke="currentColor" strokeWidth="12" className="text-outline-variant/10" />
+                      <circle 
+                        cx="50" cy="50" r="38" 
+                        fill="transparent" 
+                        stroke="currentColor" 
+                        strokeWidth="12" 
+                        strokeDasharray={2 * Math.PI * 38}
+                        strokeDashoffset={(2 * Math.PI * 38) * (1 - Math.min(totalEmailsSent / 500, 1))}
+                        strokeLinecap="round"
+                        className="text-emerald-500 transition-all duration-1000 ease-out" 
+                      />
                     </svg>
                   </div>
                 </>
@@ -220,18 +218,31 @@ export default function DashboardPage() {
                     </div>
                   </div>
 
-                  {/* Right side sparkline */}
+                  {/* Right side mini bar chart */}
                   <div className="w-[120px] h-[70px] opacity-100 z-0 hidden sm:block relative">
                     <svg viewBox="0 0 120 70" className="w-full h-full overflow-visible">
-                      <defs>
-                        <linearGradient id="sparkline-gradient-2" x1="0" y1="0" x2="0" y2="1">
-                          <stop offset="0%" stopColor="#10b981" stopOpacity="0.25" />
-                          <stop offset="100%" stopColor="#10b981" stopOpacity="0" />
-                        </linearGradient>
-                      </defs>
-                      <path d="M0,60 C30,60 40,40 60,45 C80,50 90,30 120,25 L120,70 L0,70 Z" fill="url(#sparkline-gradient-2)" />
-                      <path d="M0,60 C30,60 40,40 60,45 C80,50 90,30 120,25" fill="none" stroke="#10b981" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
-                      <circle cx="120" cy="25" r="3.5" fill="#020403" stroke="#10b981" strokeWidth="2.5" />
+                      <g className="text-emerald-500">
+                        {/* Tracks */}
+                        <rect x="0" y="0" width="8" height="70" className="fill-outline-variant/10" rx="4" />
+                        <rect x="18" y="0" width="8" height="70" className="fill-outline-variant/10" rx="4" />
+                        <rect x="36" y="0" width="8" height="70" className="fill-outline-variant/10" rx="4" />
+                        <rect x="54" y="0" width="8" height="70" className="fill-outline-variant/10" rx="4" />
+                        <rect x="72" y="0" width="8" height="70" className="fill-outline-variant/10" rx="4" />
+                        <rect x="90" y="0" width="8" height="70" className="fill-outline-variant/10" rx="4" />
+                        <rect x="108" y="0" width="8" height="70" className="fill-outline-variant/10" rx="4" />
+
+                        {/* Dynamic Bars based on volume data */}
+                        {volume.map((day, idx) => {
+                          const maxVol = Math.max(...volume.map(d => d.sent + d.failed), 10);
+                          const total = day.sent + day.failed;
+                          // Scale total to a max height of 60 (out of 70 track height)
+                          const height = Math.max(4, (total / maxVol) * 60);
+                          const y = 70 - height;
+                          return (
+                            <rect key={day.date} x={idx * 18} y={y} width="8" height={height} fill="currentColor" rx="4" />
+                          );
+                        })}
+                      </g>
                     </svg>
                   </div>
                 </>
@@ -258,11 +269,11 @@ export default function DashboardPage() {
               </div>
               <div className="flex items-center gap-4 text-xs font-semibold text-secondary">
                 <div className="flex items-center gap-1.5">
-                  <span className="w-2.5 h-2.5 rounded bg-indigo-500"></span>
+                  <span className="w-2.5 h-2.5 rounded bg-emerald-500"></span>
                   <span>Sent</span>
                 </div>
                 <div className="flex items-center gap-1.5">
-                  <span className="w-2.5 h-2.5 rounded bg-rose-500"></span>
+                  <span className="w-2.5 h-2.5 rounded bg-sky-400"></span>
                   <span>Failed</span>
                 </div>
               </div>
@@ -298,7 +309,7 @@ export default function DashboardPage() {
                       // Positions
                       const sentY = 180 - sentHeight;
                       const failedY = sentY - failedHeight;
-                      const barWidth = 24;
+                      const barWidth = 14;
 
                       return (
                         <g key={day.date} className="group/bar cursor-pointer">
@@ -310,31 +321,43 @@ export default function DashboardPage() {
                             height="170"
                             fill="currentColor"
                             opacity="0"
-                            className="text-white hover:opacity-[0.05] transition-opacity duration-200"
+                            className="text-white hover:opacity-[0.03] transition-opacity duration-200"
                             rx="8"
                           />
 
-                          {/* Sent Bar (Indigo) */}
+                          {/* Bar Track (Light background pill) */}
+                          <rect
+                            x={colCenter - barWidth / 2}
+                            y="40"
+                            width={barWidth}
+                            height="140"
+                            fill="currentColor"
+                            className="text-outline-variant/20"
+                            rx="7"
+                          />
+
+                          {/* Sent Bar (Emerald) */}
                           {day.sent > 0 && (
                             <rect
                               x={colCenter - barWidth / 2}
                               y={sentY}
                               width={barWidth}
                               height={sentHeight}
-                              fill="#4f46e5"
-                              rx={day.failed > 0 ? 0 : 4}
+                              fill="#10b981"
+                              rx={day.failed > 0 ? 0 : 7}
+                              className={day.failed > 0 ? "[clip-path:inset(0_0_7px_0_round_0_0_7px_7px)]" : ""}
                             />
                           )}
 
-                          {/* Failed Bar (Rose) */}
+                          {/* Failed Bar (Sky) */}
                           {day.failed > 0 && (
                             <rect
                               x={colCenter - barWidth / 2}
                               y={failedY}
                               width={barWidth}
                               height={failedHeight}
-                              fill="#ef4444"
-                              rx="4"
+                              fill="#38bdf8"
+                              rx="7"
                             />
                           )}
 
@@ -390,48 +413,67 @@ export default function DashboardPage() {
               <CardTitle className="text-lg font-headline-md font-bold text-primary-sendlib">Daily Cap Usage</CardTitle>
               <p className="text-xs text-secondary mt-0.5">Google daily relay limits per connected account</p>
             </CardHeader>
-            <CardContent className="flex-1 p-6 pt-2 flex flex-col justify-center space-y-4">
+            <CardContent className="flex-1 p-6 pt-2">
               {isLoadingAnalytics ? (
                 <div className="space-y-4">
-                  <Skeleton className="h-12 w-full rounded-lg bg-outline-variant/10" />
-                  <Skeleton className="h-12 w-full rounded-lg bg-outline-variant/10" />
+                  <Skeleton className="h-24 w-full rounded-lg bg-outline-variant/10" />
                 </div>
               ) : caps.length === 0 ? (
                 <div className="text-center py-6 text-sm text-secondary italic">
                   No Gmail accounts connected.
                 </div>
               ) : (
-                caps.map((account) => {
-                  const pct = Math.min((account.sentCount / account.limit) * 100, 100);
-                  const isHigh = pct >= 80;
-                  return (
-                    <div key={account.email} className="space-y-2">
-                      <div className="flex justify-between items-center text-xs">
-                        <span className="font-bold text-primary-sendlib">{redactEmail(account.email)}</span>
-                        <span className="font-bold font-mono text-secondary">
-                          {account.sentCount} / {account.limit}
+                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                  {caps.map((account) => {
+                    const pct = Math.min((account.sentCount / account.limit) * 100, 100);
+                    const isHigh = pct >= 80;
+                    const radius = 38;
+                    const circumference = 2 * Math.PI * radius;
+                    const offset = circumference - (pct / 100) * circumference;
+
+                    return (
+                      <div key={account.email} className="bg-surface-container-lowest border border-outline-variant/50 rounded-xl p-4 flex flex-col items-center justify-center text-center shadow-sm hover:shadow-md hover:border-outline-variant transition-all">
+                        
+                        <div className="relative w-28 h-28 mb-3">
+                          <svg viewBox="0 0 100 100" className="w-full h-full transform -rotate-90">
+                            {/* Background Track */}
+                            <circle cx="50" cy="50" r={radius} fill="transparent" stroke="currentColor" strokeWidth="10" className="text-outline-variant/20" />
+                            {/* Progress Ring */}
+                            <circle 
+                              cx="50" cy="50" r={radius} 
+                              fill="transparent" 
+                              stroke="currentColor" 
+                              strokeWidth="10" 
+                              strokeDasharray={circumference}
+                              strokeDashoffset={offset}
+                              strokeLinecap="round"
+                              className={isHigh ? "text-rose-500 transition-all duration-1000 ease-out" : "text-emerald-500 transition-all duration-1000 ease-out"} 
+                            />
+                          </svg>
+                          <div className="absolute inset-0 flex items-center justify-center flex-col pt-1">
+                            <span className="text-2xl font-bold font-mono text-on-background tracking-tighter">
+                              {Math.round(pct)}<span className="text-sm font-medium text-secondary ml-[2px]">%</span>
+                            </span>
+                          </div>
+                        </div>
+                        
+                        <span className="font-bold text-xs text-primary-sendlib truncate w-full mb-1.5" title={account.email}>
+                          {redactEmail(account.email)}
+                        </span>
+                        
+                        <div className="flex items-center gap-1.5 mb-2.5">
+                          <span className="text-[10px] font-bold text-secondary bg-surface-container px-2 py-0.5 rounded-full border border-outline-variant/30">
+                            {account.sentCount} / {account.limit}
+                          </span>
+                        </div>
+                        
+                        <span className="font-bold uppercase tracking-widest text-[8px] text-secondary/60">
+                          {account.limit === 2000 ? "WORKSPACE" : "PERSONAL"}
                         </span>
                       </div>
-                      
-                      {/* Progress Bar */}
-                      <div className="w-full h-2.5 rounded-full bg-outline-variant/30 overflow-hidden">
-                        <div
-                          className={`h-full rounded-full transition-all duration-500 ${
-                            isHigh ? "bg-rose-500" : "bg-primary-sendlib"
-                          }`}
-                          style={{ width: `${pct}%` }}
-                        />
-                      </div>
-                      
-                      <div className="flex justify-between items-center text-[10px] text-secondary font-medium">
-                        <span>Resetting daily</span>
-                        <span className="font-bold uppercase tracking-wider text-[9px]">
-                          {account.limit === 2000 ? "Workspace" : "Gmail Personal"}
-                        </span>
-                      </div>
-                    </div>
-                  );
-                })
+                    );
+                  })}
+                </div>
               )}
             </CardContent>
           </Card>

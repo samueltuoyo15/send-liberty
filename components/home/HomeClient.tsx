@@ -50,62 +50,71 @@ export default function HomeClient() {
         {/* Hero Section */}
         {/* Hero Section */}
         <section className="w-full relative overflow-hidden bg-background-sendlib flex flex-col items-center justify-center pt-32 pb-24 md:pt-48 md:pb-32 px-margin-mobile md:px-margin-desktop text-center">
-          {/* Background: wrapper is oversized and rotated so the image waves run horizontally */}
-          <div
-            className="absolute pointer-events-none"
-            style={{
-              inset: "-50%",
-              transform: "rotate(-90deg)",
-            }}
-          >
-            <img
-              src="/hero-background.png"
-              alt=""
-              aria-hidden
-              style={{
-                width: "100%",
-                height: "100%",
-                objectFit: "cover",
-                objectPosition: "center",
-                opacity: 0.65,
-              }}
-            />
+          {/* Ambient Background Blurred Blocks - Out of focus shapes */}
+          <div className="absolute left-[5%] top-[15%] w-[350px] h-[350px] pointer-events-none opacity-30 hidden sm:block blur-lg z-0">
+            <Image src="/block.svg" alt="" fill priority aria-hidden style={{ objectFit: "contain", transform: "rotate(-15deg)" }} />
           </div>
-          {/* Fade out to page background */}
-          <div className="absolute inset-0 pointer-events-none bg-gradient-to-b from-background-sendlib/20 via-transparent to-background-sendlib" />
+          <div className="absolute left-[25%] top-[-10%] w-[250px] h-[250px] pointer-events-none opacity-40 hidden sm:block blur-md z-0">
+            <Image src="/block.svg" alt="" fill priority aria-hidden style={{ objectFit: "contain", transform: "rotate(45deg)" }} />
+          </div>
+          <div className="absolute left-[30%] bottom-[5%] w-[400px] h-[400px] pointer-events-none opacity-20 hidden sm:block blur-xl z-0">
+            <Image src="/block.svg" alt="" fill priority aria-hidden style={{ objectFit: "contain", transform: "rotate(90deg)" }} />
+          </div>
+          <div className="absolute right-[10%] top-[-5%] w-[300px] h-[300px] pointer-events-none opacity-30 hidden sm:block blur-lg z-0">
+            <Image src="/block.svg" alt="" fill priority aria-hidden style={{ objectFit: "contain", transform: "rotate(-45deg)" }} />
+          </div>
+          <div className="absolute right-[25%] bottom-[15%] w-[280px] h-[280px] pointer-events-none opacity-40 hidden sm:block blur-md z-0">
+            <Image src="/block.svg" alt="" fill priority aria-hidden style={{ objectFit: "contain", transform: "rotate(120deg)" }} />
+          </div>
+          <div className="absolute right-[15%] top-[35%] w-[350px] h-[350px] pointer-events-none opacity-20 hidden sm:block blur-xl z-0">
+            <Image src="/block.svg" alt="" fill priority aria-hidden style={{ objectFit: "contain", transform: "rotate(180deg)" }} />
+          </div>
+
+          {/* Sharp Edge Foreground Blocks - Perfectly Horizontally Aligned and Half-Hidden */}
+          <div className="absolute left-0 top-[7%] -translate-x-[45%] w-[350px] h-[350px] md:w-[600px] md:h-[600px] pointer-events-none opacity-90 hidden sm:block z-0">
+            <Image src="/block.svg" alt="" fill priority aria-hidden style={{ objectFit: "contain", transform: "scaleX(-1)" }} />
+          </div>
+          <div className="absolute right-0 top-[-5%] translate-x-[55%] w-[350px] h-[350px] md:w-[600px] md:h-[600px] pointer-events-none opacity-90 hidden sm:block z-0">
+            <Image src="/block.svg" alt="" fill priority aria-hidden style={{ objectFit: "contain" }} />
+          </div>
 
           <div className="relative z-10 max-w-4xl mx-auto flex flex-col items-center w-full">
-            <h1 className="font-headline-lg-mobile md:text-[64px] lg:text-[72px] md:leading-[1.1] text-white font-extrabold tracking-tight drop-shadow-sm mb-6">
+            <h1 className="font-headline-lg-mobile md:text-[56px] lg:text-[64px] md:leading-[1.1] text-white font-extrabold tracking-tight drop-shadow-sm mb-6">
               Send Transactional Emails<br />Without Needing a Domain.
             </h1>
             
-            <p className="font-body-lg text-lg md:text-xl max-w-[600px] text-secondary leading-relaxed mb-10">
+            <p className="font-body-lg text-base md:text-lg max-w-[600px] text-secondary leading-relaxed mb-10">
               The fastest way for founders and devs to send transactional emails using their product's existing Gmail. Zero domains needed. Zero stress.
             </p>
 
             <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-md pt-2 mb-16 w-full">
               {user ? (
-                <Link href="/dashboard" className="bg-surface-container-low border border-outline-variant/60 hover:bg-surface-container text-white font-bold px-10 py-4 rounded-xl font-label-sm text-label-sm transition-all active:scale-95 shadow-lg text-center inline-block">
+                <Link href="/dashboard" className="bg-surface-container-lowest/10 hover:bg-surface-container-lowest/20 text-white border border-white/25 px-10 py-4 rounded-xl font-label-sm text-label-sm transition-all active:scale-95 backdrop-blur-md text-center inline-block">
                   Open Console
                 </Link>
               ) : (
-                <Link href="/login" className="bg-surface-container-low border border-outline-variant/60 hover:bg-surface-container text-white font-bold px-10 py-4 rounded-xl font-label-sm text-label-sm transition-all active:scale-95 shadow-lg text-center inline-block">
+                <Link href="/login" className="bg-surface-container-lowest/10 hover:bg-surface-container-lowest/20 text-white border border-white/25 px-10 py-4 rounded-xl font-label-sm text-label-sm transition-all active:scale-95 backdrop-blur-md text-center inline-block">
                   Get Started For Free
                 </Link>
               )}
-              <Link href="/docs" className="bg-surface-container-lowest/10 hover:bg-surface-container-lowest/20 text-white border border-white/25 px-10 py-4 rounded-xl font-label-sm text-label-sm transition-all active:scale-95 backdrop-blur-md text-center inline-block">
+              <Link href="/docs" className="bg-emerald-500 hover:bg-emerald-600 border-0 text-black font-bold px-10 py-4 rounded-xl font-label-sm text-label-sm transition-all active:scale-95 text-center inline-block">
                 Read Documentation
               </Link>
             </div>
+          </div>
+        </section>
 
-            <div className="w-full max-w-3xl mx-auto bg-[#090a0f] text-white rounded-2xl font-mono border border-zinc-800 overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.8)] flex flex-col transition-all hover:border-zinc-700 text-left">
+        {/* Code Snippet Section */}
+        <section className="w-full bg-background-sendlib pb-24 px-margin-mobile md:px-margin-desktop relative z-20">
+          <div className="max-w-6xl mx-auto">
+            <div className="w-full bg-[#090a0f] text-white rounded-2xl font-mono border border-zinc-800 overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.8)] flex flex-col transition-all hover:border-zinc-700 text-left">
               <div className="flex justify-between items-center px-4 py-3 bg-[#12131a] border-b border-zinc-800 gap-2">
                 <div className="flex items-center rounded-xl bg-[#07080c] border border-zinc-800/80 p-1 text-xs overflow-x-auto max-w-full flex-1 [ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
                   {(["curl", "js", "python", "go", "rust", "php", "net", "java"] as const).map((tab) => (
                     <button
                       key={tab}
                       onClick={() => setActiveTab(tab)}
-                      className={`px-3 py-1 rounded-lg transition-all cursor-pointer whitespace-nowrap font-sans text-[11px] font-medium ${
+                      className={`px-3 py-1.5 rounded-lg transition-all cursor-pointer whitespace-nowrap font-sans text-xs md:text-sm font-medium ${
                         activeTab === tab 
                           ? "bg-zinc-800 text-white shadow-sm font-bold" 
                           : "text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800/50"
@@ -131,15 +140,15 @@ export default function HomeClient() {
                 </div>
                 <button
                   onClick={handleCopyCode}
-                  className="text-xs font-sans font-medium text-zinc-300 hover:text-white bg-[#07080c] border border-zinc-800 hover:bg-zinc-800 px-3 py-1.5 rounded-lg transition-colors cursor-pointer flex items-center gap-1.5 shrink-0"
+                  className="text-xs md:text-sm font-sans font-medium text-zinc-300 hover:text-white bg-[#07080c] border border-zinc-800 hover:bg-zinc-800 px-4 py-2 rounded-lg transition-colors cursor-pointer flex items-center gap-1.5 shrink-0"
                 >
                   {isCopied ? "✓ Copied" : "Copy Code"}
                 </button>
               </div>
-              <pre className="text-sm overflow-auto max-h-[360px] leading-relaxed text-white p-6 custom-scrollbar font-mono">
+              <pre className="text-xs md:text-[15px] overflow-auto max-h-[500px] leading-loose text-white p-6 md:p-8 custom-scrollbar font-mono">
                 {getCodeSnippet(activeTab, isExpanded, apiUrl)}
               </pre>
-              <div className="flex justify-between items-center border-t border-zinc-800 text-xs px-6 py-3 bg-[#12131a]">
+              <div className="flex justify-between items-center border-t border-zinc-800 text-xs px-6 py-4 bg-[#12131a]">
                 <button
                   onClick={() => setIsExpanded(!isExpanded)}
                   className="text-emerald-400 hover:text-emerald-300 font-medium cursor-pointer flex items-center gap-1.5 transition-colors outline-none font-sans"

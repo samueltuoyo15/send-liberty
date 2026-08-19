@@ -36,6 +36,9 @@ export async function GET(req: NextRequest) {
       })
     );
 
+    // Sort caps by highest percentage used descending
+    caps.sort((a, b) => (b.sentCount / b.limit) - (a.sentCount / a.limit));
+
     // Fetch send volume for the last 7 days (grouped by date)
     const sevenDaysAgo = new Date();
     sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 6); // Cover exactly 7 days including today

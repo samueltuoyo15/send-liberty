@@ -6,7 +6,7 @@
 @theme {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: "Plus Jakarta Sans", sans-serif;
+  --font-sans: var(--font-plus-jakarta), sans-serif;
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -92,13 +92,13 @@
   --color-tertiary-container: #503d1e;
 
   /* Typography */
-  --font-headline-md: "Plus Jakarta Sans", sans-serif;
-  --font-label-xs: "Plus Jakarta Sans", sans-serif;
-  --font-body-md: "Plus Jakarta Sans", sans-serif;
-  --font-headline-lg: "Plus Jakarta Sans", sans-serif;
-  --font-label-sm: "Plus Jakarta Sans", sans-serif;
-  --font-body-lg: "Plus Jakarta Sans", sans-serif;
-  --font-headline-lg-mobile: "Plus Jakarta Sans", sans-serif;
+  --font-headline-md: var(--font-plus-jakarta), sans-serif;
+  --font-label-xs: var(--font-plus-jakarta), sans-serif;
+  --font-body-md: var(--font-plus-jakarta), sans-serif;
+  --font-headline-lg: var(--font-plus-jakarta), sans-serif;
+  --font-label-sm: var(--font-plus-jakarta), sans-serif;
+  --font-body-lg: var(--font-plus-jakarta), sans-serif;
+  --font-headline-lg-mobile: var(--font-plus-jakarta), sans-serif;
 
   /* Text Settings */
   --text-headline-md: 24px;

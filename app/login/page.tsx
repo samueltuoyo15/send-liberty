@@ -57,7 +57,7 @@ export default function LoginPage() {
             <div className="space-y-md">
               <button
                 onClick={() => { window.location.href = "/api/auth/github"; }}
-                className="w-full font-label-sm text-label-sm bg-primary-sendlib text-on-primary h-12 flex items-center justify-center gap-md rounded-xl transition-transform active:scale-95 hover:bg-primary-sendlib/95 shadow-sm cursor-pointer"
+                className="w-full font-label-sm text-label-sm bg-emerald-500 text-black h-12 flex items-center justify-center gap-md rounded-xl transition-transform active:scale-95 hover:bg-emerald-600 shadow-none cursor-pointer"
               >
                 <HugeiconsIcon icon={GithubIcon} className="w-5 h-5" />
                 Continue with GitHub
@@ -95,11 +95,6 @@ export default function LoginPage() {
           }}
         >
           <Link href="/" className="flex items-center gap-2 font-headline-md text-headline-md font-bold text-white relative z-10 hover:opacity-90 transition-opacity">
-            <img 
-              src="/logo.png" 
-              alt="Sendlib Logo" 
-              className="h-8 w-auto object-contain brightness-0 invert"
-            />
             <span>Sendlib</span>
           </Link>
 
