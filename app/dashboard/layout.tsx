@@ -112,8 +112,8 @@ export default function DashboardLayout({
             
             {/* Left: Sidebar Toggle (Desktop) & Mobile Brand */}
             <div className="flex items-center gap-3">
-              <Button variant="ghost" size="icon" className="lg:hidden text-on-surface-variant cursor-pointer" onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
-                <HugeiconsIcon icon={isMobileMenuOpen ? Cancel01Icon : Menu01Icon} size={20} color='currentColor' strokeWidth={1.5} />
+              <Button variant="ghost" size="icon" className="lg:hidden text-on-surface-variant cursor-pointer" onClick={() => setIsMobileMenuOpen(true)}>
+                <HugeiconsIcon icon={Menu01Icon} size={20} color='currentColor' strokeWidth={1.5} />
               </Button>
               <Button 
                 variant="outline" 
@@ -190,29 +190,7 @@ export default function DashboardLayout({
             </div>
           </div>
 
-          {/* Mobile Dropdown Navigation */}
-          {isMobileMenuOpen && (
-            <div className="lg:hidden border-t border-outline-variant bg-surface-container-lowest px-4 py-3 space-y-1 shadow-md absolute w-full left-0 z-50">
-              {navigation.map((item) => {
-                const isActive = pathname === item.href;
-                return (
-                  <Link
-                    key={item.href}
-                    href={item.href}
-                    onClick={closeMobileMenu}
-                    className={`flex items-center gap-3 rounded-lg px-3.5 py-2.5 text-sm font-label-sm transition-all cursor-pointer ${
-                      isActive 
-                        ? "bg-surface-container-low text-primary-sendlib font-semibold" 
-                        : "text-secondary hover:bg-surface-container-low hover:text-on-background"
-                    }`}
-                  >
-                    <HugeiconsIcon icon={item.icon} size={18} color='currentColor' strokeWidth={1.5} />
-                    {item.name}
-                  </Link>
-                );
-              })}
-            </div>
-          )}
+
         </header>
 
         {/* Content Area */}
@@ -224,6 +202,72 @@ export default function DashboardLayout({
         
         {/* Search Modal */}
         <SearchModal />
+
+        {/* Search Modal */}
+        <SearchModal />
+      </div>
+
+      {/* Mobile Slide Navigation */}
+      <div 
+        className={`lg:hidden fixed inset-0 z-[100] bg-black/60 backdrop-blur-sm transition-opacity duration-300 ease-in-out ${isMobileMenuOpen ? "opacity-100" : "opacity-0 pointer-events-none"}`}
+        onClick={closeMobileMenu}
+      />
+      <div className={`lg:hidden fixed inset-y-0 left-0 z-[110] w-[280px] sm:w-[320px] bg-surface-container-lowest border-r border-outline-variant shadow-2xl transition-transform duration-300 ease-in-out flex flex-col ${isMobileMenuOpen ? "translate-x-0" : "-translate-x-full"}`}>
+        <div className="h-16 flex items-center justify-between px-4 border-b border-outline-variant">
+          <div className="flex items-center gap-3">
+            <Button variant="ghost" size="icon" className="text-on-surface-variant cursor-pointer -ml-2" onClick={closeMobileMenu}>
+              <HugeiconsIcon icon={Cancel01Icon} size={20} color='currentColor' strokeWidth={1.5} />
+            </Button>
+            <span className="text-lg font-headline-md font-bold tracking-tight text-primary-sendlib">Sendlib</span>
+          </div>
+          
+          {/* Avatar in mobile nav */}
+          {user && (
+            <div className="flex h-8 w-8 items-center justify-center rounded-full overflow-hidden border border-outline-variant">
+              {user.avatar && !avatarError ? (
+                <Image 
+                  src={user.avatar} 
+                  alt="Avatar" 
+                  width={32}
+                  height={32}
+                  className="h-full w-full object-cover"
+                  unoptimized={true}
+                  onError={() => setAvatarError(true)}
+                />
+              ) : (
+                <Image 
+                  src={`https://api.dicebear.com/7.x/initials/svg?seed=${encodeURIComponent(user.displayName || user.email || "U")}`} 
+                  alt="Avatar" 
+                  width={32}
+                  height={32}
+                  className="h-full w-full object-cover" 
+                  unoptimized={true}
+                />
+              )}
+            </div>
+          )}
+        </div>
+        
+        <div className="px-4 py-6 space-y-1.5 overflow-y-auto flex-1">
+          {navigation.map((item) => {
+            const isActive = pathname === item.href;
+            return (
+              <Link
+                key={item.href}
+                href={item.href}
+                onClick={closeMobileMenu}
+                className={`flex items-center gap-3 rounded-lg px-3.5 py-2.5 text-sm font-label-sm transition-all cursor-pointer ${
+                  isActive 
+                    ? "bg-surface-container-low text-primary-sendlib font-semibold" 
+                    : "text-secondary hover:bg-surface-container-low hover:text-on-background"
+                }`}
+              >
+                <HugeiconsIcon icon={item.icon} size={18} color='currentColor' strokeWidth={1.5} />
+                {item.name}
+              </Link>
+            );
+          })}
+        </div>
       </div>
 
       {/* Sign Out Confirmation Dialog */}

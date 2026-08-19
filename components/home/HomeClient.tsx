@@ -22,6 +22,40 @@ export default function HomeClient() {
   const [activeTab, setActiveTab] = useState<CodeTab>("curl");
   const [isExpanded, setIsExpanded] = useState(false);
   const [isCopied, setIsCopied] = useState(false);
+  const [openFaq, setOpenFaq] = useState<number | null>(null);
+
+  const faqs = [
+    {
+      color: "bg-indigo-500",
+      question: "Do I need to verify my domain or configure DNS records?",
+      answer: "No! Because Sendlib routes your email relay requests securely through your already verified, connected Google accounts, there is absolutely zero DNS configuration required. You do not need to add SPF, DKIM, MX, or TXT records to start sending immediately."
+    },
+    {
+      color: "bg-purple-500",
+      question: "Can I send from my custom domain (e.g. hello@mycompany.com)?",
+      answer: <>Yes! If your custom company domain is connected to Google Workspace, simply link that account to Sendlib via Google OAuth. Sendlib will send transactional emails directly from your custom domain (e.g. <code className="bg-surface-variant/80 px-1.5 py-0.5 rounded text-xs">hello@mycompany.com</code>) with zero extra DNS or SPF configuration required on Sendlib. Plus, Google Workspace accounts get up to <strong>1,000 emails/day on Free</strong> (2,000/day on Pro) per account!</>
+    },
+    {
+      color: "bg-emerald-500",
+      question: "Will my emails land in the inbox?",
+      answer: "Yes, absolutely. Because the emails are sent using Google's official, highly trusted outbound mail servers, they inherit the absolute highest deliverability rates out of the box."
+    },
+    {
+      color: "bg-pink-500",
+      question: "How does this compare to the free tier of Resend, Mailgun, or SendGrid?",
+      answer: <>Other platforms limit you to only 100 free emails per day on their free plans and require strict domain verification. With Sendlib, you can send up to <strong>200 emails/day</strong> per connected personal Gmail account (500/day on Pro), or up to <strong>1,000 emails/day</strong> per connected Google Workspace account (2,000/day on Pro).</>
+    },
+    {
+      color: "bg-amber-500",
+      question: "Can I send attachments and CC/BCC recipients?",
+      answer: "Yes, our REST API supports complete transactional payloads. You can specify a custom Reply-To header, carbon copies (CC), blind carbon copies (BCC), and pass an array of base64-encoded attachments."
+    },
+    {
+      color: "bg-blue-500",
+      question: "Is my Google account password secure?",
+      answer: "We never see, ask for, or store your Google password. Authorization is done entirely through standard, secure Google OAuth2 credentials. We only store encrypted access and refresh tokens, which you can manually revoke from your Google Account settings page at any time."
+    }
+  ];
 
   const handleCopyCode = () => {
     const code = getCodeSnippet(activeTab, isExpanded, apiUrl);
@@ -49,57 +83,61 @@ export default function HomeClient() {
       <main className="flex-grow">
         {/* Hero Section */}
         {/* Hero Section */}
-        <section className="w-full relative overflow-hidden bg-background-sendlib flex flex-col items-center justify-center pt-32 pb-24 md:pt-48 md:pb-32 px-margin-mobile md:px-margin-desktop text-center">
-          {/* Ambient Background Blurred Blocks - Out of focus shapes */}
-          <div className="absolute left-[5%] top-[15%] w-[350px] h-[350px] pointer-events-none opacity-30 hidden sm:block blur-lg z-0">
-            <Image src="/block.svg" alt="" fill priority aria-hidden style={{ objectFit: "contain", transform: "rotate(-15deg)" }} />
-          </div>
-          <div className="absolute left-[25%] top-[-10%] w-[250px] h-[250px] pointer-events-none opacity-40 hidden sm:block blur-md z-0">
-            <Image src="/block.svg" alt="" fill priority aria-hidden style={{ objectFit: "contain", transform: "rotate(45deg)" }} />
-          </div>
-          <div className="absolute left-[30%] bottom-[5%] w-[400px] h-[400px] pointer-events-none opacity-20 hidden sm:block blur-xl z-0">
-            <Image src="/block.svg" alt="" fill priority aria-hidden style={{ objectFit: "contain", transform: "rotate(90deg)" }} />
-          </div>
-          <div className="absolute right-[10%] top-[-5%] w-[300px] h-[300px] pointer-events-none opacity-30 hidden sm:block blur-lg z-0">
-            <Image src="/block.svg" alt="" fill priority aria-hidden style={{ objectFit: "contain", transform: "rotate(-45deg)" }} />
-          </div>
-          <div className="absolute right-[25%] bottom-[15%] w-[280px] h-[280px] pointer-events-none opacity-40 hidden sm:block blur-md z-0">
-            <Image src="/block.svg" alt="" fill priority aria-hidden style={{ objectFit: "contain", transform: "rotate(120deg)" }} />
-          </div>
-          <div className="absolute right-[15%] top-[35%] w-[350px] h-[350px] pointer-events-none opacity-20 hidden sm:block blur-xl z-0">
-            <Image src="/block.svg" alt="" fill priority aria-hidden style={{ objectFit: "contain", transform: "rotate(180deg)" }} />
-          </div>
-
-          {/* Sharp Edge Foreground Blocks - Perfectly Horizontally Aligned and Half-Hidden */}
-          <div className="absolute left-0 top-[7%] -translate-x-[45%] w-[350px] h-[350px] md:w-[600px] md:h-[600px] pointer-events-none opacity-90 hidden sm:block z-0">
-            <Image src="/block.svg" alt="" fill priority aria-hidden style={{ objectFit: "contain", transform: "scaleX(-1)" }} />
-          </div>
-          <div className="absolute right-0 top-[-5%] translate-x-[55%] w-[350px] h-[350px] md:w-[600px] md:h-[600px] pointer-events-none opacity-90 hidden sm:block z-0">
-            <Image src="/block.svg" alt="" fill priority aria-hidden style={{ objectFit: "contain" }} />
-          </div>
-
-          <div className="relative z-10 max-w-4xl mx-auto flex flex-col items-center w-full">
-            <h1 className="font-headline-lg-mobile md:text-[56px] lg:text-[64px] md:leading-[1.1] text-white font-extrabold tracking-tight drop-shadow-sm mb-6">
-              Send Transactional Emails<br />Without Needing a Domain.
-            </h1>
+        <section className="w-full relative bg-background-sendlib pt-28 pb-16 md:pt-48 md:pb-32 px-4 md:px-margin-desktop flex flex-col items-center justify-center">
+          <div className="relative w-full max-w-7xl mx-auto flex flex-col items-center justify-center rounded-[2.5rem] md:rounded-none bg-surface-container md:bg-transparent border border-white/10 md:border-none shadow-2xl md:shadow-none overflow-hidden md:overflow-visible px-6 py-16 md:p-0">
             
-            <p className="font-body-lg text-base md:text-lg max-w-[600px] text-secondary leading-relaxed mb-10">
-              The fastest way for founders and devs to send transactional emails using their product's existing Gmail. Zero domains needed. Zero stress.
-            </p>
+            {/* Ambient Background Blurred Blocks - Out of focus shapes */}
+            <div className="absolute left-[5%] top-[15%] w-[350px] h-[350px] pointer-events-none opacity-10 md:opacity-30 blur-md md:blur-lg z-0">
+              <Image src="/block.svg" alt="" fill priority aria-hidden style={{ objectFit: "contain", transform: "rotate(-15deg)" }} />
+            </div>
+            <div className="absolute left-[25%] top-[-10%] w-[250px] h-[250px] pointer-events-none opacity-15 md:opacity-40 blur-sm md:blur-md z-0">
+              <Image src="/block.svg" alt="" fill priority aria-hidden style={{ objectFit: "contain", transform: "rotate(45deg)" }} />
+            </div>
+            <div className="absolute left-[30%] bottom-[5%] w-[400px] h-[400px] pointer-events-none opacity-10 md:opacity-20 blur-lg md:blur-xl z-0">
+              <Image src="/block.svg" alt="" fill priority aria-hidden style={{ objectFit: "contain", transform: "rotate(90deg)" }} />
+            </div>
+            <div className="absolute right-[10%] top-[-5%] w-[300px] h-[300px] pointer-events-none opacity-10 md:opacity-30 blur-md md:blur-lg z-0">
+              <Image src="/block.svg" alt="" fill priority aria-hidden style={{ objectFit: "contain", transform: "rotate(-45deg)" }} />
+            </div>
+            <div className="absolute right-[25%] bottom-[15%] w-[280px] h-[280px] pointer-events-none opacity-15 md:opacity-40 blur-sm md:blur-md z-0">
+              <Image src="/block.svg" alt="" fill priority aria-hidden style={{ objectFit: "contain", transform: "rotate(120deg)" }} />
+            </div>
+            <div className="absolute right-[15%] top-[35%] w-[350px] h-[350px] pointer-events-none opacity-10 md:opacity-20 blur-lg md:blur-xl z-0">
+              <Image src="/block.svg" alt="" fill priority aria-hidden style={{ objectFit: "contain", transform: "rotate(180deg)" }} />
+            </div>
 
-            <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-md pt-2 mb-16 w-full">
-              {user ? (
-                <Link href="/dashboard" className="bg-surface-container-lowest/10 hover:bg-surface-container-lowest/20 text-white border border-white/25 px-10 py-4 rounded-xl font-label-sm text-label-sm transition-all active:scale-95 backdrop-blur-md text-center inline-block">
-                  Open Console
+            {/* Sharp Edge Foreground Blocks - Perfectly Horizontally Aligned and Half-Hidden */}
+            <div className="absolute left-0 top-[7%] -translate-x-[45%] w-[350px] h-[350px] md:w-[600px] md:h-[600px] pointer-events-none opacity-90 hidden sm:block z-0">
+              <Image src="/block.svg" alt="" fill priority aria-hidden style={{ objectFit: "contain", transform: "scaleX(-1)" }} />
+            </div>
+            <div className="absolute right-0 top-[-5%] translate-x-[55%] w-[350px] h-[350px] md:w-[600px] md:h-[600px] pointer-events-none opacity-90 hidden sm:block z-0">
+              <Image src="/block.svg" alt="" fill priority aria-hidden style={{ objectFit: "contain" }} />
+            </div>
+
+            <div className="relative z-10 max-w-4xl mx-auto flex flex-col items-center w-full">
+              <h1 className="text-[40px] leading-[1.1] md:text-[56px] lg:text-[64px] font-headline-lg-mobile text-center text-white font-extrabold tracking-tight drop-shadow-sm mb-6">
+                <span className="md:hidden">Zero Domain<br />Transactional<br />Emails.</span>
+                <span className="hidden md:block">Send Transactional Emails<br />Without Needing a Domain.</span>
+              </h1>
+              
+              <p className="font-body-lg text-base md:text-lg max-w-[600px] text-center text-secondary leading-relaxed mb-10 px-4 md:px-0">
+                The fastest way for founders and devs to send transactional emails using their product's existing Gmail. Zero domains needed. Zero stress.
+              </p>
+
+              <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-2 mb-4 md:mb-16 w-full">
+                {user ? (
+                  <Link href="/dashboard" className="hidden md:inline-block bg-surface-container-lowest/10 hover:bg-surface-container-lowest/20 text-white border border-white/25 px-10 py-4 rounded-xl font-label-sm text-label-sm transition-all active:scale-95 backdrop-blur-md text-center w-full sm:w-auto">
+                    Open Console
+                  </Link>
+                ) : (
+                  <Link href="/login" className="hidden md:inline-block bg-surface-container-lowest/10 hover:bg-surface-container-lowest/20 text-white border border-white/25 px-10 py-4 rounded-xl font-label-sm text-label-sm transition-all active:scale-95 backdrop-blur-md text-center w-full sm:w-auto">
+                    Get Started For Free
+                  </Link>
+                )}
+                <Link href="/docs" className="bg-emerald-500 hover:bg-emerald-600 border-0 text-black font-bold px-8 py-3.5 md:px-10 md:py-4 rounded-full md:rounded-xl font-label-sm text-label-sm transition-all active:scale-95 text-center inline-block w-auto">
+                  Read Documentation
                 </Link>
-              ) : (
-                <Link href="/login" className="bg-surface-container-lowest/10 hover:bg-surface-container-lowest/20 text-white border border-white/25 px-10 py-4 rounded-xl font-label-sm text-label-sm transition-all active:scale-95 backdrop-blur-md text-center inline-block">
-                  Get Started For Free
-                </Link>
-              )}
-              <Link href="/docs" className="bg-emerald-500 hover:bg-emerald-600 border-0 text-black font-bold px-10 py-4 rounded-xl font-label-sm text-label-sm transition-all active:scale-95 text-center inline-block">
-                Read Documentation
-              </Link>
+              </div>
             </div>
           </div>
         </section>
@@ -314,53 +352,7 @@ export default function HomeClient() {
           </div>
         </section>
 
-        {/* How it works */}
-        <section id="how-it-works" className="py-16 md:py-24 bg-surface">
-          <div className="max-w-5xl mx-auto px-margin-mobile md:px-margin-desktop">
-            <div className="text-center mb-12 space-y-3">
-              <h2 className="text-3xl md:text-4xl font-extrabold text-primary-sendlib">Three steps, then you are sending</h2>
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              {[
-                {
-                  step: "01",
-                  title: "Connect your Gmail",
-                  body: "Sign in with Google OAuth. We never see your password, only an encrypted refresh token that you can revoke at any time.",
-                  color: "bg-surface-container border-outline-variant text-primary-sendlib",
-                  sub: "text-secondary",
-                },
-                {
-                  step: "02",
-                  title: "Generate an API key",
-                  body: "Create a key in the dashboard. Scope it to specific origins if you want, or leave it open for server-side use.",
-                  color: "bg-surface-container border-outline-variant text-primary-sendlib",
-                  sub: "text-secondary",
-                },
-                {
-                  step: "03",
-                  title: "POST /api/send",
-                  body: "One JSON request from any language. No SDK, no library, no config file. Your email is in the inbox within seconds.",
-                  color: "bg-surface-container border-outline-variant text-primary-sendlib",
-                  sub: "text-secondary",
-                },
-              ].map((item) => (
-                <div key={item.step} className={`rounded-2xl border p-8 flex flex-col gap-4 ${item.color}`}>
-                  <span className="text-5xl font-black opacity-20 leading-none">{item.step}</span>
-                  <h3 className="text-xl font-extrabold">{item.title}</h3>
-                  <p className={`text-sm leading-relaxed ${item.sub}`}>{item.body}</p>
-                </div>
-              ))}
-            </div>
-            <div className="flex justify-center mt-10">
-              <Link
-                href="/login"
-                className="bg-surface-container-low border border-outline-variant/60 hover:bg-surface-container text-white font-bold px-8 py-3.5 rounded-xl transition-all active:scale-95 shadow-md text-sm"
-              >
-                Start for free. No credit card required.
-              </Link>
-            </div>
-          </div>
-        </section>
+
 
 
 
@@ -374,127 +366,62 @@ export default function HomeClient() {
               </p>
             </div>
             
-            <div className="space-y-6">
-              <div className="p-6 rounded-2xl border border-outline-variant bg-surface-container-lowest/70 hover:bg-surface-container-lowest transition-colors duration-300">
-                <h3 className="font-bold text-base text-on-background mb-2 flex items-center gap-2">
-                  <span className="w-2 h-2 rounded-full bg-indigo-500"></span>
-                  Do I need to verify my domain or configure DNS records?
-                </h3>
-                <p className="text-sm text-secondary leading-relaxed pl-4">
-                  No! Because Sendlib routes your email relay requests securely through your already verified, connected Google accounts, there is absolutely zero DNS configuration required. You do not need to add SPF, DKIM, MX, or TXT records to start sending immediately.
-                </p>
-              </div>
-
-              <div className="p-6 rounded-2xl border border-outline-variant bg-surface-container-lowest/70 hover:bg-surface-container-lowest transition-colors duration-300">
-                <h3 className="font-bold text-base text-on-background mb-2 flex items-center gap-2">
-                  <span className="w-2 h-2 rounded-full bg-purple-500"></span>
-                  Can I send from my custom domain (e.g. hello@mycompany.com)?
-                </h3>
-                <p className="text-sm text-secondary leading-relaxed pl-4">
-                  Yes! If your custom company domain is connected to Google Workspace, simply link that account to Sendlib via Google OAuth. Sendlib will send transactional emails directly from your custom domain (e.g. <code className="bg-surface-variant/80 px-1.5 py-0.5 rounded text-xs">hello@mycompany.com</code>) with zero extra DNS or SPF configuration required on Sendlib. Plus, Google Workspace accounts get up to <strong>1,000 emails/day on Free</strong> (2,000/day on Pro) per account!
-                </p>
-              </div>
-
-              <div className="p-6 rounded-2xl border border-outline-variant bg-surface-container-lowest/70 hover:bg-surface-container-lowest transition-colors duration-300">
-                <h3 className="font-bold text-base text-on-background mb-2 flex items-center gap-2">
-                  <span className="w-2 h-2 rounded-full bg-emerald-500"></span>
-                  Will my emails land in the inbox?
-                </h3>
-                <p className="text-sm text-secondary leading-relaxed pl-4">
-                  Yes, absolutely. Because the emails are sent using Google&apos;s official, highly trusted outbound mail servers, they inherit the absolute highest deliverability rates out of the box.
-                </p>
-              </div>
-
-              <div className="p-6 rounded-2xl border border-outline-variant bg-surface-container-lowest/70 hover:bg-surface-container-lowest transition-colors duration-300">
-                <h3 className="font-bold text-base text-on-background mb-2 flex items-center gap-2">
-                  <span className="w-2 h-2 rounded-full bg-pink-500"></span>
-                  How does this compare to the free tier of Resend, Mailgun, or SendGrid?
-                </h3>
-                <p className="text-sm text-secondary leading-relaxed pl-4">
-                  Other platforms limit you to only 100 free emails per day on their free plans and require strict domain verification. With Sendlib, you can send up to <strong>200 emails/day</strong> per connected personal Gmail account (500/day on Pro), or up to <strong>1,000 emails/day</strong> per connected Google Workspace account (2,000/day on Pro).
-                </p>
-              </div>
-
-              <div className="p-6 rounded-2xl border border-outline-variant bg-surface-container-lowest/70 hover:bg-surface-container-lowest transition-colors duration-300">
-                <h3 className="font-bold text-base text-on-background mb-2 flex items-center gap-2">
-                  <span className="w-2 h-2 rounded-full bg-amber-500"></span>
-                  Can I send attachments and CC/BCC recipients?
-                </h3>
-                <p className="text-sm text-secondary leading-relaxed pl-4">
-                  Yes, our REST API supports complete transactional payloads. You can specify a custom Reply-To header, carbon copies (CC), blind carbon copies (BCC), and pass an array of base64-encoded attachments.
-                </p>
-              </div>
-              
-              <div className="p-6 rounded-2xl border border-outline-variant bg-surface-container-lowest/70 hover:bg-surface-container-lowest transition-colors duration-300">
-                <h3 className="font-bold text-base text-on-background mb-2 flex items-center gap-2">
-                  <span className="w-2 h-2 rounded-full bg-blue-500"></span>
-                  Is my Google account password secure?
-                </h3>
-                <p className="text-sm text-secondary leading-relaxed pl-4">
-                  We never see, ask for, or store your Google password. Authorization is done entirely through standard, secure Google OAuth2 credentials. We only store encrypted access and refresh tokens, which you can manually revoke from your Google Account settings page at any time.
-                </p>
-              </div>
+            <div className="space-y-4">
+              {faqs.map((faq, index) => {
+                const isOpen = openFaq === index;
+                return (
+                  <div 
+                    key={index}
+                    className={`p-5 md:p-6 rounded-2xl border transition-all duration-300 cursor-pointer ${isOpen ? "bg-surface-container-lowest border-outline-variant/60 shadow-md" : "border-outline-variant/40 bg-surface-container-lowest/40 hover:bg-surface-container-lowest/70"}`}
+                    onClick={() => setOpenFaq(isOpen ? null : index)}
+                  >
+                    <div className="flex items-center justify-between gap-4">
+                      <h3 className="font-bold text-base text-on-background flex items-start md:items-center gap-3">
+                        <span className="flex-1">{faq.question}</span>
+                      </h3>
+                      <div className="flex-shrink-0 flex items-center justify-center w-8 h-8 rounded-full bg-surface-container-low text-secondary transition-transform duration-300">
+                        <svg className={`w-5 h-5 transform transition-transform duration-300 ${isOpen ? "rotate-180" : ""}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                        </svg>
+                      </div>
+                    </div>
+                    <div className={`grid transition-all duration-300 ease-in-out ${isOpen ? "grid-rows-[1fr] mt-4 opacity-100" : "grid-rows-[0fr] opacity-0"}`}>
+                      <div className="overflow-hidden">
+                        <p className="text-sm md:text-base text-secondary leading-relaxed pl-0 md:pl-5">
+                          {faq.answer}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
             </div>
           </div>
         </section>
 
-
-
-        {/* CTA Section */}
-        <section className="w-full relative py-xl md:py-32 mt-xl overflow-hidden bg-background-sendlib">
-          <Image
-            src="/forest_background/forest-background.webp"
-            alt=""
-            fill
-            quality={50}
-            sizes="100vw"
-            className="object-cover object-center pointer-events-none"
-            aria-hidden="true"
-          />
-          <div className="absolute inset-0 bg-background-sendlib/75 pointer-events-none" />
-          {/* Blur blobs for premium aesthetic */}
-          <div className="absolute top-1/2 left-1/4 -translate-y-1/2 w-64 h-64 bg-indigo-500/20 rounded-full blur-3xl pointer-events-none" />
-          <div className="absolute top-1/2 right-1/4 -translate-y-1/2 w-64 h-64 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none" />
-          
-          <div className="relative z-10 max-w-5xl mx-auto px-margin-mobile md:px-margin-desktop text-center">
-            <h2 className="font-headline-lg text-headline-lg text-white mb-lg">Stop fighting your email infrastructure. Start delivering to your customers.</h2>
-            <p className="font-body-lg text-body-lg text-white/80 mb-xl max-w-2xl mx-auto">
-              Join developers who have simplified their email delivery pipeline and reliably reach their customers. Start sending in seconds.
-            </p>
-            {user ? (
-              <Link href="/dashboard" className="bg-surface-container-low border border-outline-variant/60 hover:bg-surface-container text-white px-xl py-lg rounded-xl font-label-sm text-label-sm transition-transform active:scale-95 shadow-sm inline-block font-bold">
-                Go to Dashboard
-              </Link>
-            ) : (
-              <Link href="/login" className="bg-surface-container-low border border-outline-variant/60 hover:bg-surface-container text-white px-xl py-lg rounded-xl font-label-sm text-label-sm transition-transform active:scale-95 shadow-sm inline-block font-bold">
-                Create Free Account
-              </Link>
-            )}
-          </div>
-        </section>
       </main>
 
       {/* Footer */}
       <footer className="w-full mt-auto bg-surface-container border-t border-outline-variant">
-        <div className="flex flex-col md:flex-row justify-between items-center px-margin-mobile md:px-margin-desktop py-xl gap-md max-w-7xl mx-auto">
-          <div className="flex flex-col gap-xs text-center md:text-left">
-            <span className="text-xl font-headline-md font-bold tracking-tight text-white mx-auto md:mx-0">Sendlib</span>
-            <p className="font-label-sm text-label-sm text-on-surface-variant">© 2026 Sendlib. All rights reserved.</p>
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center px-margin-mobile md:px-margin-desktop py-xl gap-10 max-w-7xl mx-auto">
+          <div className="flex flex-col gap-xs text-left">
+            <span className="text-xl font-headline-md font-bold tracking-tight text-white">Sendlib</span>
+            <p className="font-label-sm text-label-sm text-on-surface-variant max-w-[250px] md:max-w-none">© 2026 Sendlib. All rights reserved.</p>
           </div>
-          <div className="flex flex-wrap justify-center gap-md">
-            <Link href="/docs" className="font-label-sm text-label-sm text-on-surface-variant hover:text-primary-sendlib transition-colors underline">
+          <div className="grid grid-cols-2 md:flex md:flex-wrap md:justify-end gap-x-8 gap-y-4 w-full md:w-auto">
+            <Link href="/docs" className="font-label-sm text-label-sm text-on-surface-variant hover:text-primary-sendlib transition-colors">
               Documentation
             </Link>
-            <a href="mailto:hello@samueltuoyo.com" className="font-label-sm text-label-sm text-on-surface-variant hover:text-primary-sendlib transition-colors underline">
+            <a href="mailto:hello@samueltuoyo.com" className="font-label-sm text-label-sm text-on-surface-variant hover:text-primary-sendlib transition-colors">
               Contact Support
             </a>
-            <Link href="/privacy-policy" className="font-label-sm text-label-sm text-on-surface-variant hover:text-primary-sendlib transition-colors underline">
+            <Link href="/privacy-policy" className="font-label-sm text-label-sm text-on-surface-variant hover:text-primary-sendlib transition-colors">
               Privacy Policy
             </Link>
-            <Link href="/terms-of-service" className="font-label-sm text-label-sm text-on-surface-variant hover:text-primary-sendlib transition-colors underline">
+            <Link href="/terms-of-service" className="font-label-sm text-label-sm text-on-surface-variant hover:text-primary-sendlib transition-colors">
               Terms of Service
             </Link>
-            <Link href="/refund" className="font-label-sm text-label-sm text-on-surface-variant hover:text-primary-sendlib transition-colors underline">
+            <Link href="/refund" className="font-label-sm text-label-sm text-on-surface-variant hover:text-primary-sendlib transition-colors">
               Refund Policy
             </Link>
           </div>

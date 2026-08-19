@@ -154,7 +154,7 @@ export default function DashboardPage() {
                   </div>
                   
                   {/* Right side circular chart */}
-                  <div className="w-[70px] h-[70px] opacity-100 z-0 hidden sm:block relative mr-4">
+                  <div className="w-[70px] h-[70px] opacity-100 z-0 relative mr-4">
                     <svg viewBox="0 0 100 100" className="w-full h-full transform -rotate-90">
                       <circle cx="50" cy="50" r="38" fill="transparent" stroke="currentColor" strokeWidth="12" className="text-outline-variant/10" />
                       <circle 
@@ -219,7 +219,7 @@ export default function DashboardPage() {
                   </div>
 
                   {/* Right side mini bar chart */}
-                  <div className="w-[120px] h-[70px] opacity-100 z-0 hidden sm:block relative">
+                  <div className="w-[120px] h-[70px] opacity-100 z-0 relative">
                     <svg viewBox="0 0 120 70" className="w-full h-full overflow-visible">
                       <g className="text-emerald-500">
                         {/* Tracks */}
@@ -720,7 +720,7 @@ export default function DashboardPage() {
               Cancel
             </Button>
             <Button 
-              className="flex-1 rounded-lg font-label-sm bg-surface-container-low border border-outline-variant/60 hover:bg-surface-container text-white cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed" 
+              className="flex-1 rounded-lg font-label-sm bg-emerald-500 hover:bg-emerald-600 text-black font-bold border-0 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed" 
               onClick={() => {
                 if (!agreeTerms) {
                   toast.error("Please agree to the transactional usage terms first.");
