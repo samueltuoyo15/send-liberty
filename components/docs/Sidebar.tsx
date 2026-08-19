@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { HugeiconsIcon } from '@hugeicons/react';
-import { BookOpenIcon, FileTypeIcon, Key01Icon, MailIcon, ShieldIcon, ZapIcon } from '@hugeicons/core-free-icons';
+import { BookOpenIcon, FileTypeIcon, Key01Icon, MailIcon, ShieldIcon, ZapIcon, MailUpload01Icon } from '@hugeicons/core-free-icons';
 
 const DOC_SECTIONS = [
   {
@@ -25,6 +25,7 @@ const DOC_SECTIONS = [
     title: "Sending Emails",
     links: [
       { name: "Basic Send", href: "/docs/send", icon: MailIcon },
+      { name: "Batch Send", href: "/docs/batch", icon: MailUpload01Icon },
     ],
   },
 ];
@@ -33,11 +34,11 @@ export function DocsSidebar() {
   const pathname = usePathname();
 
   return (
-    <aside className="w-64 shrink-0 h-[calc(100vh-64px)] overflow-y-auto border-r border-outline-variant bg-[#f7f9fb] p-6 hidden md:block">
+    <aside className="w-64 shrink-0 h-[calc(100vh-64px)] overflow-y-auto border-r border-outline-variant bg-surface p-6 hidden md:block">
       <div className="space-y-8">
         {DOC_SECTIONS.map((section, idx) => (
           <div key={idx}>
-            <h4 className="font-bold text-xs uppercase tracking-[0.15em] text-[#75777d]/80 mb-3">
+            <h4 className="font-bold text-xs uppercase tracking-[0.15em] text-secondary/80 mb-3">
               {section.title}
             </h4>
             <ul className="space-y-1">
@@ -49,8 +50,8 @@ export function DocsSidebar() {
                       href={link.href}
                       className={`flex items-center gap-3 px-3 py-2 rounded-md text-[14px] font-medium transition-colors ${
                         isActive
-                          ? "bg-primary-sendlib/10 text-primary-sendlib font-bold"
-                          : "text-[#505f76] hover:bg-primary-sendlib/5 hover:text-primary-sendlib"
+                          ? "bg-white/10 text-white font-bold"
+                          : "text-secondary hover:bg-white/5 hover:text-white"
                       }`}
                     >
                       <HugeiconsIcon 
@@ -58,7 +59,7 @@ export function DocsSidebar() {
                         size={16} 
                         color='currentColor' 
                         strokeWidth={1.5} 
-                        className={isActive ? "text-primary-sendlib" : "text-[#75777d]"}
+                        className={isActive ? "text-white" : "text-secondary"}
                       />
                       {link.name}
                     </Link>

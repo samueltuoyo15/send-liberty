@@ -82,7 +82,7 @@ function AccountsContent() {
         </div>
         <Button
           size="lg"
-          className="rounded-lg font-label-sm bg-primary-sendlib hover:bg-primary-sendlib/90 text-white shadow-sm transition-all active:scale-95 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+          className="rounded-lg font-label-sm bg-surface-container-low border border-outline-variant/60 hover:bg-surface-container text-white shadow-sm transition-all active:scale-95 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
           onClick={() => {
             if (atAccountLimit) {
               toast.error(`Account limit reached: ${maxAccounts} / ${maxAccounts} accounts connected. Please disconnect an account first.`);
@@ -98,20 +98,20 @@ function AccountsContent() {
         </Button>
       </div>
 
-      <div className="rounded-xl border border-indigo-100 bg-indigo-50/40 p-4 space-y-3">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-indigo-100/70 pb-2.5">
+      <div className="rounded-xl border border-outline-variant bg-surface-container-low/40 p-4 space-y-3">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-outline-variant/30 pb-2.5">
           <h3 className="font-bold text-primary-sendlib text-sm">Gmail & Custom Domain Limits</h3>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs text-secondary">
-          <div className="bg-white/80 p-2.5 rounded-lg border border-indigo-100/60">
+          <div className="bg-surface p-2.5 rounded-lg border border-outline-variant/30">
             <span className="font-bold text-primary-sendlib block mb-0.5">Personal Gmail (yourproduct@gmail.com)</span>
             <span>Up to <strong className="text-primary-sendlib">{isPro ? "500 emails/day" : "200 emails/day"}</strong> per account{!isPro && " (500 on Pro)"}.</span>
           </div>
-          <div className="bg-white/80 p-2.5 rounded-lg border border-indigo-100/60">
+          <div className="bg-surface p-2.5 rounded-lg border border-outline-variant/30">
             <span className="font-bold text-primary-sendlib block mb-0.5">Google Workspace Custom Domain</span>
             <span>Up to <strong className="text-primary-sendlib">{isPro ? "2,000 emails/day" : "1,000 emails/day"}</strong>{!isPro && " (2,000 on Pro)"}.</span>
           </div>
-          <div className="bg-white/80 p-2.5 rounded-lg border border-indigo-100/60">
+          <div className="bg-surface p-2.5 rounded-lg border border-outline-variant/30">
             <span className="font-bold text-primary-sendlib block mb-0.5">Monthly Sending Limit</span>
             <span>Up to <strong className="text-primary-sendlib">{isPro ? "Unlimited" : "3,500 emails/month"}</strong>{!isPro && " (Unlimited on Pro)"}.</span>
           </div>
@@ -124,13 +124,13 @@ function AccountsContent() {
           <Skeleton className="h-24 w-full rounded-xl" />
         </div>
       ) : !accounts || accounts.length === 0 ? (
-        <div className="rounded-xl border border-[#e2e9b0]/60 bg-[#f7fae0]/35 p-8 text-center shadow-none">
-          <HugeiconsIcon icon={MailIcon} size={48} color='currentColor' strokeWidth={1.5} className="mx-auto mb-4 text-[#8a991a]" />
-          <h3 className="text-lg font-headline-md font-bold text-[#5b6a05] mb-1">No accounts connected</h3>
-          <p className="max-w-[420px] mx-auto mb-6 text-sm text-[#738210] leading-relaxed">Connect a Gmail account to start sending emails on its behalf.</p>
+        <div className="rounded-xl border border-outline-variant bg-surface p-8 text-center shadow-none">
+          <HugeiconsIcon icon={MailIcon} size={48} color='currentColor' strokeWidth={1.5} className="mx-auto mb-4 text-secondary/50" />
+          <h3 className="text-lg font-headline-md font-bold text-primary-sendlib mb-1">No accounts connected</h3>
+          <p className="max-w-[420px] mx-auto mb-6 text-sm text-secondary leading-relaxed">Connect a Gmail account to start sending emails on its behalf.</p>
           <Button 
             size="lg"
-            className="rounded-lg font-label-sm bg-[#5b6a05] hover:bg-[#5b6a05]/90 text-white shadow-sm transition-all active:scale-95 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed" 
+            className="rounded-lg font-label-sm bg-surface-container-low border border-outline-variant/60 hover:bg-surface-container text-white shadow-sm transition-all active:scale-95 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed" 
             onClick={() => setConnectConfirmOpen(true)}
             disabled={isConnecting}
           >
@@ -139,24 +139,24 @@ function AccountsContent() {
           </Button>
         </div>
       ) : (
-        <div className="rounded-xl border border-[#bbf3ee]/50 bg-[#e6fbf9]/15 overflow-hidden hover:bg-[#e6fbf9]/25 transition-colors">
+        <div className="rounded-xl border border-outline-variant/30 bg-surface-container-low/40 overflow-hidden hover:bg-surface-container-low transition-colors">
           <div className="overflow-x-auto">
             <table className="w-full text-left border-collapse">
               <thead>
-                <tr className="border-b border-[#bbf3ee]/50 bg-[#bbf3ee]/25">
-                  <th className="px-6 py-3.5 text-xs font-bold uppercase tracking-wider text-[#0f685c]">Gmail Address</th>
-                  <th className="px-6 py-3.5 text-xs font-bold uppercase tracking-wider text-[#0f685c]">Status</th>
-                  <th className="px-6 py-3.5 text-xs font-bold uppercase tracking-wider text-[#0f685c]">Connected</th>
-                  <th className="px-6 py-3.5 text-right text-xs font-bold uppercase tracking-wider text-[#0f685c] pr-6"></th>
+                <tr className="border-b border-outline-variant/30 bg-surface/50">
+                  <th className="px-6 py-3.5 text-xs font-bold uppercase tracking-wider text-primary-sendlib">Gmail Address</th>
+                  <th className="px-6 py-3.5 text-xs font-bold uppercase tracking-wider text-primary-sendlib">Status</th>
+                  <th className="px-6 py-3.5 text-xs font-bold uppercase tracking-wider text-primary-sendlib">Connected</th>
+                  <th className="px-6 py-3.5 text-right text-xs font-bold uppercase tracking-wider text-primary-sendlib pr-6"></th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-[#bbf3ee]/35">
+              <tbody className="divide-y divide-outline-variant/30">
                 {accounts.map((account) => (
-                  <tr key={account.id} className="hover:bg-[#bbf3ee]/15 transition-colors">
+                  <tr key={account.id} className="hover:bg-surface-container-low transition-colors">
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="flex items-center gap-2">
-                        <HugeiconsIcon icon={MailIcon} size={16} color='currentColor' strokeWidth={1.5} className="text-[#0d9488]" />
-                        <span className="font-bold text-[#044e45]">{redactEmail(account.email)}</span>
+                        <HugeiconsIcon icon={MailIcon} size={16} color='currentColor' strokeWidth={1.5} className="text-secondary" />
+                        <span className="font-bold text-primary-sendlib">{redactEmail(account.email)}</span>
                       </div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
@@ -175,7 +175,7 @@ function AccountsContent() {
                         </span>
                       )}
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-xs text-[#0f685c]">
+                    <td className="px-6 py-4 whitespace-nowrap text-xs text-secondary">
                       {new Date(account.connectedAt).toLocaleDateString()}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-right pr-6">
@@ -211,14 +211,14 @@ function AccountsContent() {
           <div className="flex flex-row gap-3 mt-4 pt-4 border-t border-outline-variant/60">
             <Button 
               variant="outline" 
-              className="flex-1 rounded-lg font-label-sm border border-outline-variant hover:bg-surface-container-low cursor-pointer" 
+              className="flex-1 rounded-lg font-label-sm border border-outline-variant hover:bg-surface-container-low text-on-background cursor-pointer" 
               onClick={() => setSuccessDialogOpen(false)}
             >
               Dismiss
             </Button>
             <Link href="/dashboard/keys" className="flex-1">
               <Button 
-                className="w-full rounded-lg font-label-sm bg-primary-sendlib hover:bg-primary-sendlib/90 text-white cursor-pointer" 
+                className="w-full rounded-lg font-label-sm bg-surface-container-low border border-outline-variant/60 hover:bg-surface-container text-white shadow-sm cursor-pointer" 
               >
                 Create API Key
               </Button>
@@ -255,13 +255,13 @@ function AccountsContent() {
           <div className="flex flex-row gap-3 mt-4 pt-4 border-t border-outline-variant/60">
             <Button 
               variant="outline" 
-              className="flex-1 rounded-lg font-label-sm border border-outline-variant hover:bg-surface-container-low cursor-pointer" 
+              className="flex-1 rounded-lg font-label-sm border border-outline-variant hover:bg-surface-container-low text-on-background cursor-pointer" 
               onClick={() => setConnectConfirmOpen(false)}
             >
               Cancel
             </Button>
             <Button 
-              className="flex-1 rounded-lg font-label-sm bg-primary-sendlib hover:bg-primary-sendlib/90 text-white cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed" 
+              className="flex-1 rounded-lg font-label-sm bg-surface-container-low border border-outline-variant/60 hover:bg-surface-container text-white cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed" 
               onClick={() => {
                 if (atAccountLimit) {
                   toast.error(`Account limit reached: ${maxAccounts} / ${maxAccounts} accounts connected.`);
@@ -287,7 +287,7 @@ function AccountsContent() {
       <Dialog open={!!disconnectEmail} onOpenChange={(open) => !open && setDisconnectEmail(null)}>
         <DialogContent className="sm:max-w-md">
           <DialogHeader className="mb-2">
-            <DialogTitle className="text-xl font-headline-md font-bold text-destructive">Disconnect Gmail Account</DialogTitle>
+            <DialogTitle className="text-xl font-headline-md font-bold text-primary-sendlib">Disconnect Gmail Account</DialogTitle>
             <DialogDescription className="text-secondary text-sm leading-relaxed mt-1">
               Are you sure you want to disconnect <strong className="font-bold text-on-background">{disconnectEmail}</strong>? Sendlib will no longer be able to send transactional emails on behalf of this account.
             </DialogDescription>
@@ -295,7 +295,7 @@ function AccountsContent() {
           <div className="flex flex-row gap-3 mt-4 pt-4 border-t border-outline-variant/60">
             <Button 
               variant="outline" 
-              className="flex-1 rounded-lg font-label-sm border border-outline-variant hover:bg-surface-container-low cursor-pointer" 
+              className="flex-1 rounded-lg font-label-sm border border-outline-variant hover:bg-surface-container-low text-on-background cursor-pointer" 
               onClick={() => setDisconnectEmail(null)}
             >
               Cancel

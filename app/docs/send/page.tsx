@@ -7,9 +7,14 @@ type Language = "curl" | "js" | "python" | "go" | "rust" | "php" | "net" | "java
 
 export default function BasicSendPage() {
   const [lang, setLang] = useState<Language>("curl");
-  const [apiUrl] = useState(() =>
-    typeof window !== "undefined" ? window.location.origin : "https://sendlib.samueltuoyo.com"
-  );
+  const [apiUrl, setApiUrl] = useState("https://sendlib.samueltuoyo.com");
+  
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      setApiUrl(window.location.origin);
+    }
+  }, []);
+
   const [isCopied, setIsCopied] = useState(false);
 
   const handleCopyCode = () => {
@@ -59,7 +64,7 @@ export default function BasicSendPage() {
           <div className="flex justify-between items-center mb-4 flex-wrap gap-2">
             <h3 className="text-xl font-bold text-primary-sendlib">Example Request</h3>
             <div className="flex items-center gap-2">
-              <div className="flex rounded-lg bg-white border border-outline-variant p-1 text-xs font-mono overflow-x-auto max-w-full">
+              <div className="flex rounded-lg bg-surface border border-outline-variant p-1 text-xs font-mono overflow-x-auto max-w-full">
                 {(["curl", "js", "python", "go", "rust", "php", "net", "java"] as Language[]).map((tab) => (
                   <button
                     key={tab}
@@ -88,14 +93,14 @@ export default function BasicSendPage() {
               </div>
               <button
                 onClick={handleCopyCode}
-                className="text-xs font-mono bg-white border border-outline-variant hover:bg-surface-container-low text-primary-sendlib px-3 py-1.5 rounded-lg transition-colors cursor-pointer"
+                className="text-xs font-mono bg-surface border border-outline-variant hover:bg-surface-container-low text-primary-sendlib px-3 py-1.5 rounded-lg transition-colors cursor-pointer"
               >
                 {isCopied ? "✓ Copied" : "Copy Code"}
               </button>
             </div>
           </div>
 
-          <pre className="p-4 bg-[#1d2b3e] border border-outline-variant/50 rounded-lg text-sm font-mono text-white/95 overflow-x-auto whitespace-pre leading-relaxed">
+          <pre className="p-4 bg-surface-container-high border border-outline-variant/50 rounded-lg text-sm font-mono text-white/95 overflow-x-auto whitespace-pre leading-relaxed">
             {lang === "curl" && (
               `curl -X POST ${apiUrl}/api/send \\
   -H "Authorization: Bearer YOUR_API_KEY" \\
@@ -280,38 +285,38 @@ System.out.println(response.body());`
           </pre>
         </div>
 
-        <div className="p-5 rounded-xl border border-outline-variant bg-[#1d2b3e]/[0.02] mt-8 space-y-2">
-          <h4 className="font-bold text-[#1d2b3e] text-base">Authentication Headers</h4>
-          <p className="text-sm text-[#75777d]">
+        <div className="p-5 rounded-xl border border-outline-variant bg-surface-container-low mt-8 space-y-2">
+          <h4 className="font-bold text-primary-sendlib text-base">Authentication Headers</h4>
+          <p className="text-sm text-secondary">
             You can authenticate your requests with Sendlib in two ways:
           </p>
-          <ul className="list-disc pl-5 text-sm text-[#75777d] space-y-2">
+          <ul className="list-disc pl-5 space-y-2 text-secondary">
             <li><strong>Authorization Header:</strong> Send your API key as a Bearer token: <code>Authorization: Bearer YOUR_API_KEY</code></li>
             <li><strong>Custom x-api-key Header:</strong> If your HTTP client or environment makes Bearer auth difficult, pass it directly: <code>x-api-key: YOUR_API_KEY</code></li>
           </ul>
         </div>
 
         <h3 className="text-xl font-bold text-primary-sendlib mt-8 mb-4">Request Body Parameters</h3>
-        <ul className="list-disc pl-5 space-y-4 text-[#75777d]">
+        <ul className="list-disc pl-5 space-y-4 text-secondary">
           <li>
             <strong>from</strong> (string, required): The connected Gmail email address you want to send this email from. 
             You can optionally include a custom display name by using the format <code>"Your Brand Name" &lt;yourproduct@gmail.com&gt;</code>. 
 
-            <div className="mt-4 mb-2 p-6 rounded-xl border border-[#d3c5ff]/40 bg-[#f7f5ff] space-y-4">
-              <div className="flex items-center gap-2 mb-2">
-                <span className="bg-[#2c1075] text-white text-xs font-bold px-2 py-1 rounded uppercase tracking-wider">Pro Tip</span>
-                <h4 className="font-bold text-[#2c1075] text-lg m-0">Look Professional with Display Names</h4>
+            <div className="mt-4 mb-2 p-6 rounded-xl border border-outline-variant/30 bg-surface-container-low/40 space-y-4">
+              <div className="flex items-center gap-3">
+                <span className="bg-primary-sendlib text-surface-container-lowest text-xs font-bold px-2 py-1 rounded uppercase tracking-wider">Pro Tip</span>
+                <h4 className="font-bold text-primary-sendlib text-lg m-0">Look Professional with Display Names</h4>
               </div>
-              <p className="text-sm text-[#463a5d]">
+              <p className="text-sm text-secondary">
                 By default, if you just send your email address (e.g. <code>yourproduct@gmail.com or in my case, samueltuoyo9082@gmail.com</code>), that is exactly what your recipients will see in their inbox. This can look unprofessional.
               </p>
-              <p className="text-sm text-[#463a5d]">
+              <p className="text-sm text-secondary">
                 Instead, we highly recommend adding a <strong>Display Name</strong>. Just format your address like this:
               </p>
-              <div className="rounded-lg overflow-hidden border border-[#d3c5ff]/60 shadow-sm my-4">
+              <div className="rounded-lg overflow-hidden border border-outline-variant/30 shadow-sm my-4">
                 <img src="/compare.png" alt="Comparison between using a display name and not using one" className="w-full h-auto block" />
               </div>
-              <p className="text-xs text-[#75777d] italic">
+              <p className="text-xs text-secondary italic">
                 <strong>Top:</strong> Format using <code>"Sendlib" &lt;samueltuoyo9082@gmail.com&gt;</code><br/>
                 <strong>Bottom:</strong> Format using just <code>samueltuoyo9082@gmail.com</code>
               </p>

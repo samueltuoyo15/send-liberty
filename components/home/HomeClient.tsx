@@ -5,14 +5,20 @@ import Link from "next/link";
 import Image from "next/image";
 import { useMe } from "@/hooks/useAuth";
 import { getCodeSnippet, CodeTab } from "@/utils/codeSnippets";
+import { toast } from "sonner";
 
 import TopNavBar from "@/components/home/TopNavBar";
 
 export default function HomeClient() {
   const { data: user } = useMe();
-  const [apiUrl] = useState(() =>
-    typeof window !== "undefined" ? window.location.origin : "https://sendlib.samueltuoyo.com"
-  );
+  const [apiUrl, setApiUrl] = useState("https://sendlib.samueltuoyo.com");
+  
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      setApiUrl(window.location.origin);
+    }
+  }, []);
+
   const [activeTab, setActiveTab] = useState<CodeTab>("curl");
   const [isExpanded, setIsExpanded] = useState(false);
   const [isCopied, setIsCopied] = useState(false);
@@ -42,41 +48,57 @@ export default function HomeClient() {
 
       <main className="flex-grow">
         {/* Hero Section */}
-        <section className="w-full relative overflow-hidden bg-[#1d2b3e]">
-          <Image
-            src="/forest_background/forest-background.webp"
-            alt="Sendlib Hero Background"
-            fill
-            priority
-            quality={100}
-            sizes="100vw"
-            className="object-cover object-top md:object-center pointer-events-none transition-opacity"
-          />
-          <div className="absolute inset-0 bg-gradient-to-b from-[#1d2b3e]/30 via-[#1d2b3e]/10 to-[#1d2b3e]/20 md:from-[#1d2b3e]/10 md:via-transparent md:to-[#1d2b3e]/20 pointer-events-none" />
-          <div className="max-w-7xl mx-auto px-margin-mobile md:px-margin-desktop pt-24 pb-xl md:pt-40 md:pb-32 grid md:grid-cols-2 gap-xl items-center relative z-10">
-            <div className="space-y-lg">
-              <h1 className="font-headline-lg-mobile md:font-headline-lg text-headline-lg-mobile md:text-headline-lg text-white font-extrabold drop-shadow-sm">
-                Send Transactional Emails to Your Customers Without Verifying a Single Domain
-              </h1>
-              <p className="font-body-lg text-body-lg max-w-[500px] text-white/95 leading-relaxed drop-shadow-sm">
-                The fastest way for founders and devs to send transactional emails to your customers (welcome messages, password resets, receipts) using their product's existing Gmail account. Zero domains to verify. Zero stress. Just connect and send.
-              </p>
-              <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-md pt-md">
-                {user ? (
-                  <Link href="/dashboard" className="bg-white hover:bg-white/95 text-primary-sendlib font-bold px-xl py-lg rounded-xl font-label-sm text-label-sm transition-all active:scale-95 shadow-lg text-center inline-block">
-                    Open Console
-                  </Link>
-                ) : (
-                  <Link href="/login" className="bg-white hover:bg-white/95 text-primary-sendlib font-bold px-xl py-lg rounded-xl font-label-sm text-label-sm transition-all active:scale-95 shadow-lg text-center inline-block">
-                    Get Started For Free
-                  </Link>
-                )}
-                <Link href="/docs" className="bg-white/10 hover:bg-white/20 text-white border border-white/25 px-xl py-lg rounded-xl font-label-sm text-label-sm transition-all active:scale-95 backdrop-blur-md text-center inline-block">
-                  Read Documentation
+        {/* Hero Section */}
+        <section className="w-full relative overflow-hidden bg-background-sendlib flex flex-col items-center justify-center pt-32 pb-24 md:pt-48 md:pb-32 px-margin-mobile md:px-margin-desktop text-center">
+          {/* Background: wrapper is oversized and rotated so the image waves run horizontally */}
+          <div
+            className="absolute pointer-events-none"
+            style={{
+              inset: "-50%",
+              transform: "rotate(-90deg)",
+            }}
+          >
+            <img
+              src="/hero-background.png"
+              alt=""
+              aria-hidden
+              style={{
+                width: "100%",
+                height: "100%",
+                objectFit: "cover",
+                objectPosition: "center",
+                opacity: 0.65,
+              }}
+            />
+          </div>
+          {/* Fade out to page background */}
+          <div className="absolute inset-0 pointer-events-none bg-gradient-to-b from-background-sendlib/20 via-transparent to-background-sendlib" />
+
+          <div className="relative z-10 max-w-4xl mx-auto flex flex-col items-center w-full">
+            <h1 className="font-headline-lg-mobile md:text-[64px] lg:text-[72px] md:leading-[1.1] text-white font-extrabold tracking-tight drop-shadow-sm mb-6">
+              Send Transactional Emails<br />Without Needing a Domain.
+            </h1>
+            
+            <p className="font-body-lg text-lg md:text-xl max-w-[600px] text-secondary leading-relaxed mb-10">
+              The fastest way for founders and devs to send transactional emails using their product's existing Gmail. Zero domains needed. Zero stress.
+            </p>
+
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-md pt-2 mb-16 w-full">
+              {user ? (
+                <Link href="/dashboard" className="bg-surface-container-low border border-outline-variant/60 hover:bg-surface-container text-white font-bold px-10 py-4 rounded-xl font-label-sm text-label-sm transition-all active:scale-95 shadow-lg text-center inline-block">
+                  Open Console
                 </Link>
-              </div>
+              ) : (
+                <Link href="/login" className="bg-surface-container-low border border-outline-variant/60 hover:bg-surface-container text-white font-bold px-10 py-4 rounded-xl font-label-sm text-label-sm transition-all active:scale-95 shadow-lg text-center inline-block">
+                  Get Started For Free
+                </Link>
+              )}
+              <Link href="/docs" className="bg-surface-container-lowest/10 hover:bg-surface-container-lowest/20 text-white border border-white/25 px-10 py-4 rounded-xl font-label-sm text-label-sm transition-all active:scale-95 backdrop-blur-md text-center inline-block">
+                Read Documentation
+              </Link>
             </div>
-            <div className="bg-[#090a0f] text-white rounded-2xl font-mono border border-zinc-800 overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.8)] flex flex-col transition-all hover:border-zinc-700">
+
+            <div className="w-full max-w-3xl mx-auto bg-[#090a0f] text-white rounded-2xl font-mono border border-zinc-800 overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.8)] flex flex-col transition-all hover:border-zinc-700 text-left">
               <div className="flex justify-between items-center px-4 py-3 bg-[#12131a] border-b border-zinc-800 gap-2">
                 <div className="flex items-center rounded-xl bg-[#07080c] border border-zinc-800/80 p-1 text-xs overflow-x-auto max-w-full flex-1 [ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
                   {(["curl", "js", "python", "go", "rust", "php", "net", "java"] as const).map((tab) => (
@@ -85,8 +107,8 @@ export default function HomeClient() {
                       onClick={() => setActiveTab(tab)}
                       className={`px-3 py-1 rounded-lg transition-all cursor-pointer whitespace-nowrap font-sans text-[11px] font-medium ${
                         activeTab === tab 
-                          ? "bg-white text-zinc-950 shadow-sm font-bold" 
-                          : "text-zinc-400 hover:text-zinc-200 hover:bg-white/5"
+                          ? "bg-zinc-800 text-white shadow-sm font-bold" 
+                          : "text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800/50"
                       }`}
                     >
                       {tab === "curl"
@@ -114,7 +136,7 @@ export default function HomeClient() {
                   {isCopied ? "✓ Copied" : "Copy Code"}
                 </button>
               </div>
-              <pre className="text-sm overflow-auto max-h-[360px] leading-relaxed text-zinc-200 p-6 custom-scrollbar font-mono">
+              <pre className="text-sm overflow-auto max-h-[360px] leading-relaxed text-white p-6 custom-scrollbar font-mono">
                 {getCodeSnippet(activeTab, isExpanded, apiUrl)}
               </pre>
               <div className="flex justify-between items-center border-t border-zinc-800 text-xs px-6 py-3 bg-[#12131a]">
@@ -130,23 +152,22 @@ export default function HomeClient() {
         </section>
 
         {/* Comparison Table */}
-        <section id="compare" className="py-16 md:py-24 bg-white border-b border-outline-variant/60">
+        <section id="compare" className="py-16 md:py-24 bg-surface-container-lowest border-b border-outline-variant/60">
           <div className="max-w-4xl mx-auto px-4 sm:px-6">
             <div className="flex flex-col items-center text-center mb-12 space-y-3 w-full">
-              <span className="px-4 py-1.5 rounded-full bg-primary-sendlib/10 text-primary-sendlib text-xs font-bold tracking-wide uppercase">Why Sendlib</span>
-              <h2 className="text-3xl md:text-4xl font-extrabold text-primary-sendlib">Stop verifying domains. Just send.</h2>
+              <h2 className="text-3xl md:text-4xl font-extrabold text-primary-sendlib">Stop worrying about domains. Just send.</h2>
               <p className="text-secondary w-full max-w-2xl mx-auto text-base leading-relaxed">
-                Traditional email APIs force you to configure DNS records and verify custom domains before sending a single email. Sendlib uses the Gmail account your product already has.
+                Traditional email APIs force you to configure DNS records and custom domains before sending a single email. Sendlib uses the Gmail account your product already has.
               </p>
             </div>
 
-            <div className="overflow-x-auto rounded-2xl border border-outline-variant shadow-sm bg-white">
+            <div className="overflow-x-auto rounded-2xl border border-outline-variant shadow-sm bg-surface-container-lowest">
               <table className="w-full text-sm text-left border-collapse">
                 <thead>
                   <tr className="bg-surface-container-low border-b border-outline-variant text-on-background">
                     <th className="px-6 py-4 font-bold text-secondary w-2/5">Feature</th>
                     <th className="px-6 py-4 text-center w-3/10 bg-primary-sendlib/5 border-x border-outline-variant/40">
-                      <span className="bg-primary-sendlib text-white text-xs font-extrabold px-3.5 py-1 rounded-full shadow-xs inline-block">Sendlib</span>
+                      <span className="bg-white text-black text-xs font-extrabold px-3.5 py-1 rounded-full shadow-xs inline-block">Sendlib</span>
                     </th>
                     <th className="px-6 py-4 text-center font-bold text-secondary w-3/10">Traditional Email APIs</th>
                   </tr>
@@ -196,10 +217,10 @@ export default function HomeClient() {
             <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto items-start">
 
               {/* Free Card */}
-              <div className="rounded-2xl border-2 border-primary-sendlib bg-white shadow-lg p-8 flex flex-col gap-6 relative">
+              <div className="rounded-2xl border-2 border-primary-sendlib bg-surface-container-lowest shadow-lg p-8 flex flex-col gap-6 relative">
                 {(!user || user.plan !== "pro") && (
                   <div className="absolute -top-3 left-6">
-                    <span className="bg-primary-sendlib text-white text-xs font-bold px-3 py-1 rounded-full tracking-wide">CURRENT PLAN</span>
+                    <span className="bg-white text-black text-xs font-bold px-3 py-1 rounded-full tracking-wide">CURRENT PLAN</span>
                   </div>
                 )}
                 <div>
@@ -232,14 +253,14 @@ export default function HomeClient() {
                 </ul>
                 <Link
                   href="/login"
-                  className="block w-full text-center bg-primary-sendlib hover:bg-primary-sendlib/90 text-white font-bold py-3 rounded-xl transition-all active:scale-95"
+                  className="block w-full text-center bg-surface-container-low border border-outline-variant/60 hover:bg-surface-container text-white font-bold py-3 rounded-xl transition-all active:scale-95"
                 >
                   Get Started Free
                 </Link>
               </div>
 
               {/* Pro Card */}
-              <div className="rounded-2xl border-2 border-primary-sendlib/80 bg-white shadow-xl p-8 flex flex-col gap-6 relative">
+              <div className="rounded-2xl border-2 border-primary-sendlib/80 bg-surface-container-lowest shadow-xl p-8 flex flex-col gap-6 relative">
                 <div className="absolute -top-3 left-6">
                   <span className="bg-emerald-600 text-white text-xs font-bold px-3 py-1 rounded-full tracking-wide">{user?.plan === "pro" ? "CURRENT PLAN" : "PRO PLAN"}</span>
                 </div>
@@ -264,6 +285,7 @@ export default function HomeClient() {
                     "5MB HTML body · 2MB text body",
                     "Up to 20 attachments · 10MB per file",
                     "90 days email log retention",
+                    "Batch email sending",
                   ].map((f) => (
                     <li key={f} className="flex items-start gap-2">
                       <svg className="w-4 h-4 mt-0.5 text-emerald-500 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" /></svg>
@@ -273,7 +295,7 @@ export default function HomeClient() {
                 </ul>
                 <Link
                   href={user ? "/dashboard/settings" : "/login"}
-                  className="block w-full text-center bg-primary-sendlib hover:bg-primary-sendlib/90 text-white font-bold py-3 rounded-xl transition-all active:scale-95 shadow-md"
+                  className="block w-full text-center bg-surface-container-low border border-outline-variant/60 hover:bg-surface-container text-white font-bold py-3 rounded-xl transition-all active:scale-95 shadow-md"
                 >
                   {user?.plan === "pro" ? "Manage Subscription" : user ? "Upgrade to Pro ($3.99/mo)" : "Get Started Pro ($3.99/mo)"}
                 </Link>
@@ -287,7 +309,6 @@ export default function HomeClient() {
         <section id="how-it-works" className="py-16 md:py-24 bg-surface">
           <div className="max-w-5xl mx-auto px-margin-mobile md:px-margin-desktop">
             <div className="text-center mb-12 space-y-3">
-              <span className="px-4 py-1.5 rounded-full bg-primary-sendlib/10 text-primary-sendlib text-xs font-bold inline-block tracking-wide uppercase">Get started in 60 seconds</span>
               <h2 className="text-3xl md:text-4xl font-extrabold text-primary-sendlib">Three steps, then you are sending</h2>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -296,22 +317,22 @@ export default function HomeClient() {
                   step: "01",
                   title: "Connect your Gmail",
                   body: "Sign in with Google OAuth. We never see your password, only an encrypted refresh token that you can revoke at any time.",
-                  color: "bg-[#eae3fc] border-[#d8cbf9] text-[#2e1065]",
-                  sub: "text-[#4c2d96]",
+                  color: "bg-surface-container border-outline-variant text-primary-sendlib",
+                  sub: "text-secondary",
                 },
                 {
                   step: "02",
                   title: "Generate an API key",
                   body: "Create a key in the dashboard. Scope it to specific origins if you want, or leave it open for server-side use.",
-                  color: "bg-[#cbf1ec] border-[#b0e8e0] text-[#064e45]",
-                  sub: "text-[#0f685c]",
+                  color: "bg-surface-container border-outline-variant text-primary-sendlib",
+                  sub: "text-secondary",
                 },
                 {
                   step: "03",
                   title: "POST /api/send",
                   body: "One JSON request from any language. No SDK, no library, no config file. Your email is in the inbox within seconds.",
-                  color: "bg-[#d7e6fc] border-[#bfd7fa] text-[#1e3a8a]",
-                  sub: "text-[#1d4ed8]",
+                  color: "bg-surface-container border-outline-variant text-primary-sendlib",
+                  sub: "text-secondary",
                 },
               ].map((item) => (
                 <div key={item.step} className={`rounded-2xl border p-8 flex flex-col gap-4 ${item.color}`}>
@@ -324,7 +345,7 @@ export default function HomeClient() {
             <div className="flex justify-center mt-10">
               <Link
                 href="/login"
-                className="bg-primary-sendlib hover:bg-primary-sendlib/90 text-white font-bold px-8 py-3.5 rounded-xl transition-all active:scale-95 shadow-md text-sm"
+                className="bg-surface-container-low border border-outline-variant/60 hover:bg-surface-container text-white font-bold px-8 py-3.5 rounded-xl transition-all active:scale-95 shadow-md text-sm"
               >
                 Start for free. No credit card required.
               </Link>
@@ -345,8 +366,8 @@ export default function HomeClient() {
             </div>
             
             <div className="space-y-6">
-              <div className="p-6 rounded-2xl border border-outline-variant bg-white/70 hover:bg-white transition-colors duration-300">
-                <h3 className="font-bold text-base text-[#1d2b3e] mb-2 flex items-center gap-2">
+              <div className="p-6 rounded-2xl border border-outline-variant bg-surface-container-lowest/70 hover:bg-surface-container-lowest transition-colors duration-300">
+                <h3 className="font-bold text-base text-on-background mb-2 flex items-center gap-2">
                   <span className="w-2 h-2 rounded-full bg-indigo-500"></span>
                   Do I need to verify my domain or configure DNS records?
                 </h3>
@@ -355,8 +376,8 @@ export default function HomeClient() {
                 </p>
               </div>
 
-              <div className="p-6 rounded-2xl border border-outline-variant bg-white/70 hover:bg-white transition-colors duration-300">
-                <h3 className="font-bold text-base text-[#1d2b3e] mb-2 flex items-center gap-2">
+              <div className="p-6 rounded-2xl border border-outline-variant bg-surface-container-lowest/70 hover:bg-surface-container-lowest transition-colors duration-300">
+                <h3 className="font-bold text-base text-on-background mb-2 flex items-center gap-2">
                   <span className="w-2 h-2 rounded-full bg-purple-500"></span>
                   Can I send from my custom domain (e.g. hello@mycompany.com)?
                 </h3>
@@ -365,8 +386,8 @@ export default function HomeClient() {
                 </p>
               </div>
 
-              <div className="p-6 rounded-2xl border border-outline-variant bg-white/70 hover:bg-white transition-colors duration-300">
-                <h3 className="font-bold text-base text-[#1d2b3e] mb-2 flex items-center gap-2">
+              <div className="p-6 rounded-2xl border border-outline-variant bg-surface-container-lowest/70 hover:bg-surface-container-lowest transition-colors duration-300">
+                <h3 className="font-bold text-base text-on-background mb-2 flex items-center gap-2">
                   <span className="w-2 h-2 rounded-full bg-emerald-500"></span>
                   Will my emails land in the inbox?
                 </h3>
@@ -375,8 +396,8 @@ export default function HomeClient() {
                 </p>
               </div>
 
-              <div className="p-6 rounded-2xl border border-outline-variant bg-white/70 hover:bg-white transition-colors duration-300">
-                <h3 className="font-bold text-base text-[#1d2b3e] mb-2 flex items-center gap-2">
+              <div className="p-6 rounded-2xl border border-outline-variant bg-surface-container-lowest/70 hover:bg-surface-container-lowest transition-colors duration-300">
+                <h3 className="font-bold text-base text-on-background mb-2 flex items-center gap-2">
                   <span className="w-2 h-2 rounded-full bg-pink-500"></span>
                   How does this compare to the free tier of Resend, Mailgun, or SendGrid?
                 </h3>
@@ -385,8 +406,8 @@ export default function HomeClient() {
                 </p>
               </div>
 
-              <div className="p-6 rounded-2xl border border-outline-variant bg-white/70 hover:bg-white transition-colors duration-300">
-                <h3 className="font-bold text-base text-[#1d2b3e] mb-2 flex items-center gap-2">
+              <div className="p-6 rounded-2xl border border-outline-variant bg-surface-container-lowest/70 hover:bg-surface-container-lowest transition-colors duration-300">
+                <h3 className="font-bold text-base text-on-background mb-2 flex items-center gap-2">
                   <span className="w-2 h-2 rounded-full bg-amber-500"></span>
                   Can I send attachments and CC/BCC recipients?
                 </h3>
@@ -395,8 +416,8 @@ export default function HomeClient() {
                 </p>
               </div>
               
-              <div className="p-6 rounded-2xl border border-outline-variant bg-white/70 hover:bg-white transition-colors duration-300">
-                <h3 className="font-bold text-base text-[#1d2b3e] mb-2 flex items-center gap-2">
+              <div className="p-6 rounded-2xl border border-outline-variant bg-surface-container-lowest/70 hover:bg-surface-container-lowest transition-colors duration-300">
+                <h3 className="font-bold text-base text-on-background mb-2 flex items-center gap-2">
                   <span className="w-2 h-2 rounded-full bg-blue-500"></span>
                   Is my Google account password secure?
                 </h3>
@@ -411,7 +432,7 @@ export default function HomeClient() {
 
 
         {/* CTA Section */}
-        <section className="w-full relative py-xl md:py-32 mt-xl overflow-hidden bg-[#1d2b3e]">
+        <section className="w-full relative py-xl md:py-32 mt-xl overflow-hidden bg-background-sendlib">
           <Image
             src="/forest_background/forest-background.webp"
             alt=""
@@ -421,22 +442,22 @@ export default function HomeClient() {
             className="object-cover object-center pointer-events-none"
             aria-hidden="true"
           />
-          <div className="absolute inset-0 bg-[#1d2b3e]/75 pointer-events-none" />
+          <div className="absolute inset-0 bg-background-sendlib/75 pointer-events-none" />
           {/* Blur blobs for premium aesthetic */}
           <div className="absolute top-1/2 left-1/4 -translate-y-1/2 w-64 h-64 bg-indigo-500/20 rounded-full blur-3xl pointer-events-none" />
           <div className="absolute top-1/2 right-1/4 -translate-y-1/2 w-64 h-64 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none" />
           
           <div className="relative z-10 max-w-5xl mx-auto px-margin-mobile md:px-margin-desktop text-center">
-            <h2 className="font-headline-lg text-headline-lg text-white mb-lg">Stop fighting your hosting provider. Start delivering to your customers.</h2>
+            <h2 className="font-headline-lg text-headline-lg text-white mb-lg">Stop fighting your email infrastructure. Start delivering to your customers.</h2>
             <p className="font-body-lg text-body-lg text-white/80 mb-xl max-w-2xl mx-auto">
               Join developers who have simplified their email delivery pipeline and reliably reach their customers. Start sending in seconds.
             </p>
             {user ? (
-              <Link href="/dashboard" className="bg-white text-primary-sendlib hover:bg-gray-100 px-xl py-lg rounded-xl font-label-sm text-label-sm transition-transform active:scale-95 shadow-sm inline-block">
+              <Link href="/dashboard" className="bg-surface-container-low border border-outline-variant/60 hover:bg-surface-container text-white px-xl py-lg rounded-xl font-label-sm text-label-sm transition-transform active:scale-95 shadow-sm inline-block font-bold">
                 Go to Dashboard
               </Link>
             ) : (
-              <Link href="/login" className="bg-white text-primary-sendlib hover:bg-gray-100 px-xl py-lg rounded-xl font-label-sm text-label-sm transition-transform active:scale-95 shadow-sm inline-block">
+              <Link href="/login" className="bg-surface-container-low border border-outline-variant/60 hover:bg-surface-container text-white px-xl py-lg rounded-xl font-label-sm text-label-sm transition-transform active:scale-95 shadow-sm inline-block font-bold">
                 Create Free Account
               </Link>
             )}
@@ -448,11 +469,7 @@ export default function HomeClient() {
       <footer className="w-full mt-auto bg-surface-container border-t border-outline-variant">
         <div className="flex flex-col md:flex-row justify-between items-center px-margin-mobile md:px-margin-desktop py-xl gap-md max-w-7xl mx-auto">
           <div className="flex flex-col gap-xs text-center md:text-left">
-            <img 
-              src="/logo.png" 
-              alt="Sendlib Logo" 
-              className="h-6 w-auto object-contain mx-auto md:mx-0"
-            />
+            <span className="text-xl font-headline-md font-bold tracking-tight text-white mx-auto md:mx-0">Sendlib</span>
             <p className="font-label-sm text-label-sm text-on-surface-variant">© 2026 Sendlib. All rights reserved.</p>
           </div>
           <div className="flex flex-wrap justify-center gap-md">

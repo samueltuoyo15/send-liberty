@@ -57,7 +57,7 @@ export default function LoginPage() {
             <div className="space-y-md">
               <button
                 onClick={() => { window.location.href = "/api/auth/github"; }}
-                className="w-full font-label-sm text-label-sm bg-primary-sendlib text-white h-12 flex items-center justify-center gap-md rounded-xl transition-transform active:scale-95 hover:bg-primary-sendlib/95 shadow-sm cursor-pointer"
+                className="w-full font-label-sm text-label-sm bg-primary-sendlib text-on-primary h-12 flex items-center justify-center gap-md rounded-xl transition-transform active:scale-95 hover:bg-primary-sendlib/95 shadow-sm cursor-pointer"
               >
                 <HugeiconsIcon icon={GithubIcon} className="w-5 h-5" />
                 Continue with GitHub
@@ -65,7 +65,7 @@ export default function LoginPage() {
 
               <button
                 onClick={() => { window.location.href = "/api/auth/google"; }}
-                className="w-full font-label-sm text-label-sm border border-outline-variant text-on-surface bg-white h-12 flex items-center justify-center gap-md rounded-xl transition-transform active:scale-95 hover:bg-surface-container-low cursor-pointer"
+                className="w-full font-label-sm text-label-sm border border-outline-variant text-on-surface bg-surface h-12 flex items-center justify-center gap-md rounded-xl transition-transform active:scale-95 hover:bg-surface-container-low cursor-pointer"
               >
                 <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none">
                   <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>

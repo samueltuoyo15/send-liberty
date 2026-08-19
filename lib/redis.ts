@@ -9,7 +9,7 @@ export function connectToRedis(): Redis {
       keyPrefix: "sendlib_",
       maxRetriesPerRequest: 2,
       connectTimeout: 5000,
-      commandTimeout: 2000,
+      commandTimeout: 10000,
       retryStrategy: (times) => {
         if (times > 5) return null;
         return Math.min(times * 200, 2000);

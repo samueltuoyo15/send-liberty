@@ -7,8 +7,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { useApiKeys, useGenerateApiKey, useDeleteApiKey } from "@/hooks/useApiKeys";
 import { useMe } from "@/hooks/useAuth";
 import { useState, useEffect, Suspense } from "react";
-import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetFooter } from "@/components/ui/sheet";
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { useSearchParams } from "next/navigation";
 import confetti from "canvas-confetti";
@@ -129,7 +128,7 @@ function KeysContent() {
         </div>
         <Button 
           size="lg"
-          className="rounded-lg font-label-sm bg-primary-sendlib hover:bg-primary-sendlib/90 text-white shadow-sm transition-all active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer" 
+          className="rounded-lg font-label-sm bg-surface-container-low border border-outline-variant/60 hover:bg-surface-container text-white shadow-sm transition-all active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer" 
           onClick={() => {
             if (!hasConnectedAccounts) {
               toast.error("Please connect at least one Gmail account first.");
@@ -155,33 +154,33 @@ function KeysContent() {
           <Skeleton className="h-24 w-full rounded-xl" />
         </div>
       ) : (
-        <div className="rounded-xl border border-[#d3c5ff]/50 bg-[#f0ebff]/15 overflow-hidden hover:bg-[#f0ebff]/25 transition-colors">
+        <div className="rounded-xl border border-outline-variant/30 bg-surface-container-low/40 overflow-hidden hover:bg-surface-container-low transition-colors">
           <div className="overflow-x-auto">
             <table className="w-full text-left border-collapse">
               <thead>
-                <tr className="border-b border-[#d3c5ff]/50 bg-[#d3c5ff]/25">
-                  <th className="px-6 py-3.5 text-xs font-bold uppercase tracking-wider text-[#4a358c]">Key Label</th>
-                  <th className="px-6 py-3.5 text-xs font-bold uppercase tracking-wider text-[#4a358c]">Key Prefix</th>
-                  <th className="px-6 py-3.5 text-xs font-bold uppercase tracking-wider text-[#4a358c]">Allowed Origins</th>
-                  <th className="px-6 py-3.5 text-xs font-bold uppercase tracking-wider text-[#4a358c]">Status</th>
-                  <th className="px-6 py-3.5 text-xs font-bold uppercase tracking-wider text-[#4a358c]">Created</th>
-                  <th className="px-6 py-3.5 text-right text-xs font-bold uppercase tracking-wider text-[#4a358c] pr-6"></th>
+                <tr className="border-b border-outline-variant/30 bg-surface/50">
+                  <th className="px-6 py-3.5 text-xs font-bold uppercase tracking-wider text-primary-sendlib">Key Label</th>
+                  <th className="px-6 py-3.5 text-xs font-bold uppercase tracking-wider text-primary-sendlib">Key Prefix</th>
+                  <th className="px-6 py-3.5 text-xs font-bold uppercase tracking-wider text-primary-sendlib">Allowed Origins</th>
+                  <th className="px-6 py-3.5 text-xs font-bold uppercase tracking-wider text-primary-sendlib">Status</th>
+                  <th className="px-6 py-3.5 text-xs font-bold uppercase tracking-wider text-primary-sendlib">Created</th>
+                  <th className="px-6 py-3.5 text-right text-xs font-bold uppercase tracking-wider text-primary-sendlib pr-6"></th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-[#d3c5ff]/35">
+              <tbody className="divide-y divide-outline-variant/30">
                 {!apiKeys || apiKeys.length === 0 ? (
                   <tr className="hover:bg-transparent">
                     <td colSpan={6} className="text-center py-10">
                       <div className="flex flex-col items-center justify-center max-w-[380px] mx-auto space-y-2.5">
-                        <HugeiconsIcon icon={Key01Icon} size={40} color='currentColor' strokeWidth={1.5} className="text-[#4a358c] opacity-40 mb-0.5" />
-                        <h4 className="text-base font-headline-md font-bold text-[#2c1075]">No API keys found</h4>
-                        <p className="text-xs text-[#4a358c]/80 leading-relaxed">
+                        <HugeiconsIcon icon={Key01Icon} size={40} color='currentColor' strokeWidth={1.5} className="text-secondary opacity-40 mb-0.5" />
+                        <h4 className="text-base font-headline-md font-bold text-primary-sendlib">No API keys found</h4>
+                        <p className="text-xs text-secondary leading-relaxed">
                           You haven&apos;t generated any API keys yet. Create one to start using the Sendlib API.
                         </p>
                         <div className="pt-1">
                           <Button 
                             size="sm"
-                            className="rounded-lg font-label-sm bg-[#5a36cf] hover:bg-[#5a36cf]/90 text-white shadow-sm px-3.5 h-8 cursor-pointer" 
+                            className="rounded-lg font-label-sm bg-surface-container-low border border-outline-variant/60 hover:bg-surface-container text-white shadow-sm px-3.5 h-8 cursor-pointer" 
                             onClick={() => setGenerateDialog(true)}
                             disabled={!hasConnectedAccounts}
                           >
@@ -193,15 +192,15 @@ function KeysContent() {
                   </tr>
                 ) : (
                   apiKeys.map((key) => (
-                    <tr key={key.id} className="hover:bg-[#d3c5ff]/15 transition-colors">
+                    <tr key={key.id} className="hover:bg-surface-container-low transition-colors">
                       <td className="px-6 py-4 whitespace-nowrap">
                         <div className="flex items-center gap-2">
-                          <HugeiconsIcon icon={Key01Icon} size={16} color='currentColor' strokeWidth={1.5} className="text-[#5a36cf]" />
-                          <span className="font-bold text-[#2c1075]">{key.name || "Default Key"}</span>
+                          <HugeiconsIcon icon={Key01Icon} size={16} color='currentColor' strokeWidth={1.5} className="text-secondary" />
+                          <span className="font-bold text-primary-sendlib">{key.name || "Default Key"}</span>
                         </div>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
-                        <code className="px-2 py-1 rounded bg-[#d3c5ff]/30 text-xs text-[#2c1075] font-mono">
+                        <code className="px-2 py-1 rounded bg-surface-container-high text-xs text-secondary font-mono">
                           ••••••••{key.keyPrefix}
                         </code>
                       </td>
@@ -254,18 +253,18 @@ function KeysContent() {
         </div>
       )}
 
-      {/* Generate API Key Slide-over Drawer */}
-      <Sheet open={generateDialog} onOpenChange={setGenerateDialog}>
-        <SheetContent side="right">
-          <SheetHeader className="p-0 mb-6">
-            <SheetTitle className="text-xl font-headline-md font-bold text-primary-sendlib">Generate New API Key</SheetTitle>
-            <SheetDescription className="text-secondary text-sm">
+      {/* Generate API Key Dialog */}
+      <Dialog open={generateDialog} onOpenChange={setGenerateDialog}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader className="mb-0">
+            <DialogTitle className="text-xl font-headline-md font-bold text-primary-sendlib">Generate New API Key</DialogTitle>
+            <DialogDescription className="text-secondary text-sm mt-1">
               Give your API key a label to help identify where it is used (e.g. Production Backend, Staging Server).
-            </SheetDescription>
-          </SheetHeader>
-          <div className="space-y-5">
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4">
             <div>
-              <label className="text-sm font-label-sm font-semibold text-on-background mb-2 block">
+              <label className="text-sm font-label-sm font-semibold text-on-background mb-1.5 block">
                 Key Label (Optional)
               </label>
               <Input
@@ -273,9 +272,9 @@ function KeysContent() {
                 value={keyLabel}
                 onChange={(e) => setKeyLabel(e.target.value)}
                 onKeyDown={(e) => e.key === "Enter" && handleGenerate()}
-                className="h-10 rounded-lg border border-outline-variant bg-surface-container-low px-3 text-sm focus-visible:border-primary-sendlib"
+                className="h-9 rounded-lg border border-outline-variant bg-surface-container-low px-3 text-sm text-on-background placeholder:text-secondary/70 focus-visible:border-primary-sendlib"
               />
-              <div className="flex justify-between mt-1.5 text-xs">
+              <div className="flex justify-between mt-1 text-[11px]">
                 <span className={keyLabel.length > 25 ? "text-destructive font-bold" : "text-secondary font-medium"}>
                   {keyLabel.length}/25 characters
                 </span>
@@ -285,64 +284,56 @@ function KeysContent() {
               </div>
             </div>
             <div>
-              <label className="text-sm font-label-sm font-semibold text-on-background mb-2 block">
+              <label className="text-sm font-label-sm font-semibold text-on-background mb-1.5 block">
                 Allowed Origins / Domains (Optional)
               </label>
               <textarea
-                placeholder="e.g.&#10;localhost:3000&#10;myapp.com&#10;sub.myapp.com"
+                placeholder="e.g.&#10;localhost:3000&#10;myapp.com"
                 value={allowedOriginsText}
                 onChange={(e) => setAllowedOriginsText(e.target.value)}
-                className="w-full rounded-lg border border-outline-variant bg-surface-container-low p-3 text-sm focus-visible:border-primary-sendlib outline-none min-h-[100px] font-mono placeholder:font-sans leading-relaxed"
+                className="w-full rounded-lg border border-outline-variant bg-surface-container-low p-2.5 text-sm text-on-background placeholder:text-secondary/70 focus-visible:border-primary-sendlib outline-none min-h-[80px] font-mono placeholder:font-sans leading-relaxed resize-none"
               />
-              <div className="flex justify-between mt-1.5 text-xs">
-                <span className={allowedOriginsText.length > 200 ? "text-destructive font-bold" : "text-secondary font-medium"}>
-                  {allowedOriginsText.length}/200 characters
-                </span>
-                {allowedOriginsText.length > 200 && (
-                  <span className="text-destructive font-bold">Exceeds limit</span>
-                )}
-              </div>
-              <p className="text-xs text-secondary mt-2 leading-relaxed">
+              <p className="text-[11px] text-secondary mt-1.5 leading-relaxed">
                 Restrict API requests to specific domains. If your key gets leaked, requests will still be blocked unless they originate from one of these domains. Note: Since origin headers can be spoofed by server-to-server requests, you must still keep your keys secure!
               </p>
             </div>
             {atKeyLimit && (
-              <div className="p-3.5 rounded-lg bg-destructive/10 border border-destructive/20 text-destructive text-xs font-semibold leading-relaxed">
+              <div className="p-3 rounded-lg bg-destructive/10 border border-destructive/20 text-destructive text-xs font-semibold leading-relaxed">
                 Key limit reached ({maxKeys} / {maxKeys} active keys used). Please revoke an existing key before creating a new one.
               </div>
             )}
           </div>
-          <SheetFooter className="p-0 mt-6 pt-4 border-t border-outline-variant flex-row gap-3">
-            <Button variant="outline" className="flex-1 rounded-lg font-label-sm border border-outline-variant" onClick={() => setGenerateDialog(false)}>
+          <div className="flex flex-row gap-3 pt-2">
+            <Button variant="outline" className="flex-1 rounded-lg font-label-sm border border-outline-variant hover:bg-surface-container-low text-on-background" onClick={() => setGenerateDialog(false)}>
               Cancel
             </Button>
             <Button 
-              className="flex-1 rounded-lg font-label-sm bg-primary-sendlib hover:bg-primary-sendlib/90 text-white disabled:opacity-50 disabled:cursor-not-allowed" 
+              className="flex-1 rounded-lg font-label-sm bg-surface-container-low border border-outline-variant/60 hover:bg-surface-container text-white disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer" 
               onClick={handleGenerate} 
               disabled={isGenerating || atKeyLimit || keyLabel.length > 25 || allowedOriginsText.length > 200}
             >
               {isGenerating ? "Generating..." : "Generate Key"}
             </Button>
-          </SheetFooter>
-        </SheetContent>
-      </Sheet>
+          </div>
+        </DialogContent>
+      </Dialog>
 
-      {/* Generated Key Display Slide-over Drawer */}
-      <Sheet open={!!newKeyDialog} onOpenChange={() => setNewKeyDialog(null)}>
-        <SheetContent side="right">
-          <SheetHeader className="p-0 mb-6">
-            <SheetTitle className="text-xl font-headline-md font-bold text-primary-sendlib">API Key Generated</SheetTitle>
-            <SheetDescription className="text-secondary text-sm">
+      {/* Generated Key Display Dialog */}
+      <Dialog open={!!newKeyDialog} onOpenChange={() => setNewKeyDialog(null)}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader className="mb-2">
+            <DialogTitle className="text-xl font-headline-md font-bold text-primary-sendlib">API Key Generated</DialogTitle>
+            <DialogDescription className="text-secondary text-sm">
               Copy this API key now. For security reasons, it will not be shown again.
-            </SheetDescription>
-          </SheetHeader>
+            </DialogDescription>
+          </DialogHeader>
           <div className="space-y-5">
             <div>
               <label className="text-sm font-label-sm font-semibold text-on-background mb-2 flex justify-between items-center">
                 <span>Your Secret API Key</span>
                 <span className="text-xs text-emerald-600 font-medium">Keep this key secret</span>
               </label>
-              <div className="relative font-mono bg-surface-container-low p-3.5 pr-12 rounded-lg text-sm break-all border border-outline-variant text-primary-sendlib selection:bg-primary-sendlib selection:text-white">
+              <div className="relative font-mono bg-surface-container-low p-3.5 pr-12 rounded-lg text-sm break-all border border-outline-variant text-primary-sendlib selection:bg-primary-sendlib selection:text-on-primary">
                 {newKeyDialog?.key}
                 <button
                   type="button"
@@ -359,9 +350,9 @@ function KeysContent() {
               </div>
             </div>
           </div>
-          <SheetFooter className="p-0 mt-6 pt-4 border-t border-outline-variant">
+          <div className="flex flex-row gap-3 mt-4 pt-4 border-t border-outline-variant/60">
             <Button 
-              className="w-full rounded-lg font-label-sm bg-primary-sendlib hover:bg-primary-sendlib/90 text-white py-2.5 cursor-pointer" 
+              className="w-full rounded-lg font-label-sm bg-surface-container-low border border-outline-variant/60 hover:bg-surface-container text-white py-2.5 cursor-pointer" 
               onClick={() => {
                 if (newKeyDialog?.key) {
                   copyToClipboard(newKeyDialog.key);
@@ -377,15 +368,15 @@ function KeysContent() {
               <HugeiconsIcon icon={Copy01Icon} size={16} color='currentColor' strokeWidth={1.5} className="mr-2" />
               Copy API Key & Close
             </Button>
-          </SheetFooter>
-        </SheetContent>
-      </Sheet>
+          </div>
+        </DialogContent>
+      </Dialog>
 
       {/* Delete API Key Confirmation Dialog */}
       <Dialog open={!!deleteKeyId} onOpenChange={(open) => !open && setDeleteKeyId(null)}>
         <DialogContent className="sm:max-w-md">
           <DialogHeader className="mb-2">
-            <DialogTitle className="text-xl font-headline-md font-bold text-destructive">Delete API Key</DialogTitle>
+            <DialogTitle className="text-xl font-headline-md font-bold text-primary-sendlib">Delete API Key</DialogTitle>
             <DialogDescription className="text-secondary text-sm leading-relaxed mt-1">
               Are you sure you want to delete this API key? This action is permanent and cannot be undone. Any applications using this key will immediately fail to authenticate.
             </DialogDescription>
@@ -393,7 +384,7 @@ function KeysContent() {
           <div className="flex flex-row gap-3 mt-4 pt-4 border-t border-outline-variant/60">
             <Button 
               variant="outline" 
-              className="flex-1 rounded-lg font-label-sm border border-outline-variant hover:bg-surface-container-low" 
+              className="flex-1 rounded-lg font-label-sm border border-outline-variant hover:bg-surface-container-low text-on-background" 
               onClick={() => setDeleteKeyId(null)}
             >
               Cancel

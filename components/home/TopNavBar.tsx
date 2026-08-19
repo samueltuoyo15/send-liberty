@@ -23,11 +23,11 @@ export default function TopNavBar() {
 
   return (
     <header 
-      className={`w-full fixed top-0 z-50 transition-all duration-300 border-b ${
-        isScrolled ? "border-outline-variant shadow-sm" : "border-transparent"
+      className={`w-full fixed top-0 z-50 transition-all duration-300 ${
+        isScrolled ? "shadow-sm" : ""
       }`}
       style={{ 
-        backgroundColor: isScrolled ? 'rgba(247, 249, 251, 0.75)' : 'transparent', 
+        backgroundColor: isScrolled ? 'rgba(2, 4, 3, 0.75)' : 'transparent', 
         backdropFilter: isScrolled ? 'blur(16px)' : 'blur(0px)', 
         WebkitBackdropFilter: isScrolled ? 'blur(16px)' : 'blur(0px)' 
       }}
@@ -37,36 +37,24 @@ export default function TopNavBar() {
           href="/" 
           className="flex items-center gap-2 transition-colors duration-300"
         >
-          <img 
-            src="/logo.png" 
-            alt="Sendlib Logo" 
-            className={`h-8 md:h-10 w-auto object-contain transition-all duration-300 ${
-              isScrolled ? "" : "brightness-0 invert"
-            }`}
-          />
+          <span className="text-xl font-headline-md font-bold tracking-tight text-white">Sendlib</span>
         </Link>
         <div className="hidden md:flex items-center gap-xl">
           <Link 
             href="#features" 
-            className={`font-body-md text-body-md transition-colors duration-300 ${
-              isScrolled ? "text-secondary hover:text-primary-sendlib" : "text-white/80 hover:text-white"
-            }`}
+            className="font-body-md text-body-md text-white/80 hover:text-white transition-colors duration-300"
           >
             Features
           </Link>
           <Link 
             href="#about-oauth" 
-            className={`font-body-md text-body-md transition-colors duration-300 ${
-              isScrolled ? "text-secondary hover:text-primary-sendlib" : "text-white/80 hover:text-white"
-            }`}
+            className="font-body-md text-body-md text-white/80 hover:text-white transition-colors duration-300"
           >
             About
           </Link>
           <Link 
             href="/docs" 
-            className={`font-body-md text-body-md transition-colors duration-300 ${
-              isScrolled ? "text-secondary hover:text-primary-sendlib" : "text-white/80 hover:text-white"
-            }`}
+            className="font-body-md text-body-md text-white/80 hover:text-white transition-colors duration-300"
           >
             API Docs
           </Link>
@@ -75,11 +63,7 @@ export default function TopNavBar() {
           {mounted && user ? (
             <Link 
               href="/dashboard" 
-              className={`px-lg py-sm rounded-xl font-label-sm text-label-sm transition-all duration-300 active:scale-95 inline-block ${
-                isScrolled 
-                  ? "bg-primary-sendlib text-white hover:bg-primary-sendlib/90" 
-                  : "bg-white text-primary-sendlib hover:bg-white/90"
-              }`}
+              className="px-lg py-sm rounded-xl font-label-sm text-label-sm transition-all duration-300 active:scale-95 inline-block bg-primary-sendlib text-on-primary hover:bg-primary-sendlib/90"
             >
               Dashboard
             </Link>
@@ -87,19 +71,13 @@ export default function TopNavBar() {
             <>
               <Link 
                 href="/login" 
-                className={`hidden sm:block font-label-sm text-label-sm transition-all duration-300 active:scale-95 px-lg py-sm ${
-                  isScrolled ? "text-primary-sendlib" : "text-white/80 hover:text-white"
-                }`}
+                className="hidden sm:block font-label-sm text-label-sm transition-all duration-300 active:scale-95 px-lg py-sm text-white/80 hover:text-white"
               >
                 Login
               </Link>
               <Link 
                 href="/login" 
-                className={`px-lg py-sm rounded-xl font-label-sm text-label-sm transition-all duration-300 active:scale-95 inline-block ${
-                  isScrolled 
-                    ? "bg-primary-sendlib text-white hover:bg-primary-sendlib/90" 
-                    : "bg-white text-primary-sendlib hover:bg-white/90"
-                }`}
+                className="px-lg py-sm rounded-xl font-label-sm text-label-sm transition-all duration-300 active:scale-95 inline-block bg-primary-sendlib text-on-primary hover:bg-primary-sendlib/90"
               >
                 Sign Up
               </Link>

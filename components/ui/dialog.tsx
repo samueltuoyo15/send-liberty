@@ -43,7 +43,7 @@ function DialogOverlay({
 function DialogContent({
   className,
   children,
-  showCloseButton = true,
+  showCloseButton = false,
   style,
   ...props
 }: DialogPrimitive.Popup.Props & {

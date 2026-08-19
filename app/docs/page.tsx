@@ -25,19 +25,19 @@ export default function DocsIntroduction() {
           Sendlib removes the friction of configuring ancient SMTP ports, storing risky App Passwords, and managing strict firewall rules. By using secure Google OAuth2 flows, you grant Sendlib temporary, revokable access to relay messages securely through your own connected Gmail accounts.
         </p>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
-           <div className="p-5 rounded-xl border border-outline-variant/60 bg-white">
+           <div className="p-5 rounded-xl border border-outline-variant/60 bg-surface-container-low">
               <h3 className="font-bold text-primary-sendlib mb-2">Secure by Default</h3>
               <p className="text-sm text-secondary">We never see your Google password. You use a standard Bearer API key to authorize request calls.</p>
            </div>
-           <div className="p-5 rounded-xl border border-outline-variant/60 bg-white">
+           <div className="p-5 rounded-xl border border-outline-variant/60 bg-surface-container-low">
               <h3 className="font-bold text-primary-sendlib mb-2">API-First Design</h3>
               <p className="text-sm text-secondary">Send transactional emails instantly from any cloud hosting environment with a single HTTP POST request.</p>
            </div>
-           <div className="p-5 rounded-xl border border-outline-variant/60 bg-white">
+           <div className="p-5 rounded-xl border border-outline-variant/60 bg-surface-container-low">
               <h3 className="font-bold text-primary-sendlib mb-2">Zero Domain Required (Custom Domains Supported)</h3>
               <p className="text-sm text-secondary">No DNS, MX, or SPF records needed. Connect @gmail.com or your custom domain Google Workspace account to send instantly.</p>
            </div>
-           <div className="p-5 rounded-xl border border-outline-variant/60 bg-white">
+           <div className="p-5 rounded-xl border border-outline-variant/60 bg-surface-container-low">
               <h3 className="font-bold text-primary-sendlib mb-2">High Daily Limits</h3>
               <p className="text-sm text-secondary">Send up to 200 emails/day on Free (500/day on Pro) for personal/product Gmail accounts, or up to 1,000 on Free (2,000/day on Pro) for Google Workspace.</p>
            </div>

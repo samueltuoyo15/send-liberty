@@ -3,6 +3,14 @@
 import { HugeiconsIcon } from '@hugeicons/react';
 import { UserIcon, PencilEdit01Icon, FloppyDiskIcon, Logout01Icon, Delete02Icon } from '@hugeicons/core-free-icons';
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { useMe, useUpdateProfile, useLogout } from "@/hooks/useAuth";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
@@ -29,7 +37,7 @@ export default function SettingsPage() {
   const [isCancelingSub, setIsCancelingSub] = useState(false);
   const [isRedirectingCheckout, setIsRedirectingCheckout] = useState(false);
   const [currencyModalOpen, setCurrencyModalOpen] = useState(false);
-  const [selectedCurrency, setSelectedCurrency] = useState("NGN");
+  const [selectedCurrency, setSelectedCurrency] = useState("NGN");  // Default to NGN since primary audience is Nigerian
   const router = useRouter();
 
   useEffect(() => {
@@ -129,7 +137,7 @@ export default function SettingsPage() {
           </p>
         </div>
         <Button 
-          className="rounded-lg font-label-sm bg-primary-sendlib hover:bg-primary-sendlib/90 text-white shadow-sm transition-all active:scale-95 px-4 py-2 cursor-pointer"
+          className="rounded-lg font-label-sm bg-surface-container-low border border-outline-variant/60 hover:bg-surface-container text-white shadow-sm transition-all active:scale-95 px-4 py-2 cursor-pointer"
           onClick={handleEditClick}
         >
           <HugeiconsIcon icon={PencilEdit01Icon} size={16} color='currentColor' strokeWidth={1.5} />
@@ -141,38 +149,38 @@ export default function SettingsPage() {
         {/* Left Column: Profile, Sign Out & Delete Account */}
         <div className="lg:col-span-6 space-y-6">
           {/* Profile Card */}
-          <div className="rounded-xl border border-[#ebdcd0]/60 bg-[#f4ebe1]/35 shadow-none p-6">
+          <div className="rounded-xl border border-outline-variant bg-surface-container-low/40 shadow-none p-6">
             <div className="flex items-center gap-2 mb-4">
-              <HugeiconsIcon icon={UserIcon} size={20} color='currentColor' strokeWidth={1.5} className="text-[#6d4d24]" />
-              <h3 className="font-headline-md font-bold text-lg text-[#6d4d24]">Profile</h3>
+              <HugeiconsIcon icon={UserIcon} size={20} color='currentColor' strokeWidth={1.5} className="text-secondary" />
+              <h3 className="font-headline-md font-bold text-lg text-primary-sendlib">Profile</h3>
             </div>
             {isLoading ? (
               <div className="space-y-4">
-                <Skeleton className="h-10 w-full rounded-lg bg-[#ebdcd0]/35" />
-                <Skeleton className="h-10 w-full rounded-lg bg-[#ebdcd0]/35" />
+                <Skeleton className="h-10 w-full rounded-lg bg-outline-variant/30" />
+                <Skeleton className="h-10 w-full rounded-lg bg-outline-variant/30" />
               </div>
             ) : (
               <div className="space-y-4">
                 <div>
-                  <label className="text-xs font-label-xs uppercase tracking-wider text-[#6d4d24]/80 mb-1.5 block font-semibold">
+                  <label className="text-xs font-label-xs uppercase tracking-wider text-secondary mb-1.5 block font-semibold">
                     Display Name
                   </label>
                   <input
                     type="text"
                     value={user?.displayName || ""}
                     disabled
-                    className="w-full rounded-lg border border-[#ebdcd0]/80 bg-white px-3.5 py-2.5 text-sm text-[#6d4d24] font-medium outline-none cursor-not-allowed opacity-80"
+                    className="w-full rounded-lg border border-outline-variant bg-surface px-3.5 py-2.5 text-sm text-secondary font-medium outline-none cursor-not-allowed opacity-80"
                   />
                 </div>
                 <div>
-                  <label className="text-xs font-label-xs uppercase tracking-wider text-[#6d4d24]/80 mb-1.5 block font-semibold">
+                  <label className="text-xs font-label-xs uppercase tracking-wider text-secondary mb-1.5 block font-semibold">
                     Email Address
                   </label>
                   <input
                     type="email"
                     value={user?.email || ""}
                     disabled
-                    className="w-full rounded-lg border border-[#ebdcd0]/80 bg-white px-3.5 py-2.5 text-sm text-[#6d4d24] font-medium outline-none cursor-not-allowed opacity-80"
+                    className="w-full rounded-lg border border-outline-variant bg-surface px-3.5 py-2.5 text-sm text-secondary font-medium outline-none cursor-not-allowed opacity-80"
                   />
                 </div>
               </div>
@@ -189,7 +197,7 @@ export default function SettingsPage() {
                 <HugeiconsIcon icon={CreditCardIcon} size={20} color='currentColor' strokeWidth={1.5} className="text-primary-sendlib" />
                 <h3 className="font-headline-md font-bold text-lg text-primary-sendlib">Plan & Billing</h3>
               </div>
-              <span className={`px-3 py-1 rounded-full text-xs font-bold text-white uppercase tracking-wider ${isCanceled ? 'bg-destructive/80' : 'bg-primary-sendlib'}`}>
+              <span className={`px-3 py-1 rounded-full text-xs font-bold text-white uppercase tracking-wider border border-outline-variant/60 ${isCanceled ? 'bg-destructive/80' : 'bg-surface-container-low'}`}>
                 {isPro ? (isCanceled ? "Pro Plan (Canceled)" : "Pro Plan Active") : "Free Plan"}
               </span>
             </div>
@@ -199,13 +207,13 @@ export default function SettingsPage() {
                 {isPro
                   ? isCanceled 
                     ? "Your Pro Plan has been canceled and will not renew. You still have access to Pro features until the end of your billing cycle."
-                    : "Your account is on the Pro Plan for just $3.99/month. You enjoy 300 req/min, up to 50 connected accounts, and 90 days of email log retention."
-                  : "You are currently on the Free Plan. Upgrade to Pro for $3.99/month to unlock 300 req/min, up to 50 connected accounts, and 90 days of log retention."}
+                    : "You're on the Pro Plan ($3.99/mo). You get 300 req/min, up to 50 connected accounts, 90-day log retention, and batch email sending."
+                  : "You are on the Free Plan. Upgrade to Pro for $3.99/month — unlock 300 req/min, 50 connected accounts, 90-day logs, and batch email sending to up to 1,000 recipients per call."}
               </p>
 
               {!isPro ? (
                 <Button
-                  className="font-label-sm rounded-lg bg-primary-sendlib hover:bg-primary-sendlib/90 text-white cursor-pointer active:scale-95 transition-all shadow-sm disabled:opacity-50"
+                  className="font-label-sm rounded-lg bg-surface-container-low border border-outline-variant/60 hover:bg-surface-container text-white cursor-pointer active:scale-95 transition-all shadow-sm disabled:opacity-50"
                   onClick={handleBachsCheckout}
                   disabled={isRedirectingCheckout}
                 >
@@ -329,7 +337,7 @@ export default function SettingsPage() {
             <Button variant="outline" className="flex-1 rounded-lg font-label-sm border border-outline-variant" onClick={() => setIsEditOpen(false)}>
               Cancel
             </Button>
-            <Button className="flex-1 rounded-lg font-label-sm bg-primary-sendlib hover:bg-primary-sendlib/90 text-white" onClick={handleSave} disabled={isUpdating || editName.length > 30 || !editName.trim()}>
+            <Button className="flex-1 rounded-lg font-label-sm bg-surface-container-low border border-outline-variant/60 hover:bg-surface-container text-white" onClick={handleSave} disabled={isUpdating || editName.length > 30 || !editName.trim()}>
               <HugeiconsIcon icon={FloppyDiskIcon} size={16} color='currentColor' strokeWidth={1.5} className="mr-2" />
               {isUpdating ? "Saving..." : "Save Changes"}
             </Button>
@@ -455,28 +463,28 @@ export default function SettingsPage() {
             <label className="text-xs font-label-xs uppercase tracking-wider text-on-background/60 mb-2 block font-semibold">
               Preferred Currency
             </label>
-            <select
-              value={selectedCurrency}
-              onChange={(e) => setSelectedCurrency(e.target.value)}
-              className="w-full rounded-lg border border-outline-variant bg-surface-container-low px-3.5 py-2.5 text-sm text-on-background font-medium outline-none cursor-pointer focus:border-primary-sendlib focus:ring-1 focus:ring-primary-sendlib/20 transition-colors appearance-none"
-              style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%236b7280' d='M6 8L1 3h10z'/%3E%3C/svg%3E")`, backgroundRepeat: 'no-repeat', backgroundPosition: 'right 14px center' }}
-            >
-              <option value="USD">USD</option>
-              <option value="NGN">NGN</option>
-              <option value="GHS" disabled className="text-gray-400">GHS - Coming Soon</option>
-            </select>
+            <Select value={selectedCurrency} onValueChange={(val) => setSelectedCurrency(val as string)}>
+              <SelectTrigger className="w-full rounded-lg border border-outline-variant bg-surface-container-low px-3.5 py-2.5 h-[42px] text-sm text-on-background font-medium outline-none cursor-pointer focus:border-primary-sendlib focus:ring-1 focus:ring-primary-sendlib/20 transition-colors">
+                <SelectValue placeholder="Select a currency" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="NGN">NGN – Nigerian Naira</SelectItem>
+                <SelectItem value="GHS">GHS – Ghanaian Cedi</SelectItem>
+                <SelectItem value="USD">USD – US Dollar</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
           <div className="flex flex-row gap-3 mt-2 pt-4 border-t border-outline-variant/60">
             <Button 
               variant="outline" 
-              className="flex-1 rounded-lg font-label-sm border border-outline-variant hover:bg-surface-container-low" 
+              className="flex-1 rounded-lg font-label-sm border border-outline-variant hover:bg-surface-container-low text-on-background" 
               onClick={() => setCurrencyModalOpen(false)}
               disabled={isUpdating}
             >
               Cancel
             </Button>
             <Button 
-              className="flex-1 rounded-lg font-label-sm bg-primary-sendlib hover:bg-primary-sendlib/90 text-white" 
+              className="flex-1 rounded-lg font-label-sm bg-surface-container-low border border-outline-variant/60 hover:bg-surface-container text-white" 
               onClick={handleCurrencySubmit}
               disabled={isUpdating}
             >

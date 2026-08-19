@@ -18,9 +18,9 @@ export function DocsPagination({ prev, next }: DocsPaginationProps) {
       {prev ? (
         <Link
           href={prev.href}
-          className="group flex flex-col items-start p-4 rounded-xl border border-outline-variant/60 bg-white hover:border-primary-sendlib/40 hover:bg-surface-container-low transition-all min-w-[160px]"
+          className="group flex flex-col items-start p-4 rounded-xl border border-outline-variant/60 bg-surface-container hover:bg-surface-container-high hover:border-outline-variant/80 transition-all min-w-[160px]"
         >
-          <span className="text-xs font-semibold text-[#75777d] flex items-center gap-1 group-hover:text-primary-sendlib transition-colors">
+          <span className="text-xs font-semibold text-secondary flex items-center gap-1 group-hover:text-white transition-colors">
             <HugeiconsIcon icon={ArrowLeft01Icon} size={14} color="currentColor" />
             Previous
           </span>
@@ -33,9 +33,9 @@ export function DocsPagination({ prev, next }: DocsPaginationProps) {
       {next ? (
         <Link
           href={next.href}
-          className="group flex flex-col items-end p-4 rounded-xl border border-outline-variant/60 bg-white hover:border-primary-sendlib/40 hover:bg-surface-container-low transition-all text-right min-w-[160px] ml-auto"
+          className="group flex flex-col items-end p-4 rounded-xl border border-outline-variant/60 bg-surface-container hover:bg-surface-container-high hover:border-outline-variant/80 transition-all text-right min-w-[160px] ml-auto"
         >
-          <span className="text-xs font-semibold text-[#75777d] flex items-center gap-1 group-hover:text-primary-sendlib transition-colors">
+          <span className="text-xs font-semibold text-secondary flex items-center gap-1 group-hover:text-white transition-colors">
             Next
             <HugeiconsIcon icon={ArrowRight01Icon} size={14} color="currentColor" />
           </span>

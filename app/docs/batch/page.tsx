@@ -1,0 +1,309 @@
+"use client";
+
+import { useState, useEffect } from "react";
+import { DocsPagination } from "@/components/docs/DocsPagination";
+
+export default function BatchSendPage() {
+  const [apiUrl, setApiUrl] = useState("https://sendlib.samueltuoyo.com");
+  
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      setApiUrl(window.location.origin);
+    }
+  }, []);
+
+  const [isCopied, setIsCopied] = useState(false);
+  const [isStatusCopied, setIsStatusCopied] = useState(false);
+
+  const sendSnippet = `curl -X POST ${apiUrl}/api/batch \\
+  -H "Authorization: Bearer YOUR_API_KEY" \\
+  -H "Content-Type: application/json" \\
+  -d '{
+    "from": "Your App <yourapp@gmail.com>",
+    "subject": "Hey {{name}}, big news!",
+    "html": "<p>Hi {{name}}, welcome to {{company}}!</p>",
+    "recipients": [
+      { "email": "john@example.com", "variables": { "name": "John", "company": "Acme" } },
+      { "email": "jane@example.com", "variables": { "name": "Jane", "company": "Beta" } }
+    ]
+  }'`;
+
+  const statusSnippet = `curl ${apiUrl}/api/batch/BATCH_ID \\
+  -H "Authorization: Bearer YOUR_API_KEY"`;
+
+  const copy = (text: string, setFn: (v: boolean) => void) => {
+    if (navigator.clipboard && window.isSecureContext) {
+      navigator.clipboard.writeText(text);
+    } else {
+      const ta = document.createElement("textarea");
+      ta.value = text;
+      ta.style.position = "fixed";
+      ta.style.left = "-999999px";
+      document.body.appendChild(ta);
+      ta.focus();
+      ta.select();
+      document.execCommand("copy");
+      ta.remove();
+    }
+    setFn(true);
+    setTimeout(() => setFn(false), 2000);
+  };
+
+  return (
+    <div className="max-w-3xl">
+      <div className="mb-10">
+        <div className="flex items-center gap-3 mb-4">
+          <h1 className="text-3xl font-bold tracking-tight text-primary-sendlib mb-4">Batch Email Sending</h1>
+          <span className="text-xs font-bold px-2 py-1 rounded-full bg-primary-sendlib text-on-primary uppercase tracking-wider mb-4">Pro</span>
+        </div>
+        <p className="text-secondary text-lg leading-relaxed">
+          <strong>You must be subscribed to Pro first.</strong> Send one email to hundreds of recipients in a single API call. Sendlib queues the job and delivers each email in the background, automatically respecting Gmail&apos;s rate limits.
+        </p>
+      </div>
+
+      <div className="space-y-10 text-secondary leading-relaxed">
+
+        {/* How it works */}
+        <div>
+          <h2 className="text-xl font-bold text-primary-sendlib mb-3">How it works</h2>
+          <p>
+            Unlike <code>/api/send</code> which delivers immediately and blocks until done, <code>/api/batch</code> accepts your full recipient list, creates a background job, and returns a <code>batchId</code> instantly. A background worker then sends each email one at a time, throttled to stay within Gmail&apos;s API limits. You poll <code>/api/batch/:id</code> to track progress.
+          </p>
+          <div className="mt-4 grid grid-cols-3 gap-3 text-center text-sm">
+            {[
+              { step: "1", label: "POST /api/batch", sub: "Returns batchId immediately" },
+              { step: "2", label: "Worker sends emails", sub: "Throttled, respects Gmail limits" },
+              { step: "3", label: "Poll for progress", sub: "GET /api/batch/:id" },
+            ].map((s) => (
+              <div key={s.step} className="p-4 rounded-xl border border-outline-variant bg-surface-container-low">
+                <div className="text-2xl font-black text-primary-sendlib mb-1">{s.step}</div>
+                <div className="font-bold text-on-background text-xs">{s.label}</div>
+                <div className="text-xs text-secondary mt-1">{s.sub}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Step 1 — Send the batch */}
+        <div>
+          <h2 className="text-xl font-bold text-primary-sendlib mb-3">Step 1: Send the batch</h2>
+          <div className="flex justify-between items-center mb-3">
+            <code className="text-sm font-mono text-primary-sendlib bg-primary-sendlib/5 px-3 py-1 rounded-lg border border-primary-sendlib/20">POST /api/batch</code>
+            <button
+              onClick={() => copy(sendSnippet, setIsCopied)}
+              className="text-xs font-mono bg-surface border border-outline-variant hover:bg-surface-container-low text-primary-sendlib px-3 py-1.5 rounded-lg transition-colors cursor-pointer"
+            >
+              {isCopied ? "✓ Copied" : "Copy"}
+            </button>
+          </div>
+          <pre className="p-4 bg-surface-container-high border border-outline-variant/50 rounded-lg text-sm font-mono text-white/95 overflow-x-auto whitespace-pre leading-relaxed">
+            {sendSnippet}
+          </pre>
+
+          <h3 className="text-base font-bold text-primary-sendlib mt-6 mb-3">Request body fields</h3>
+          <div className="overflow-x-auto rounded-xl border border-outline-variant">
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="border-b border-outline-variant bg-surface-variant/40">
+                  <th className="text-left px-4 py-3 font-semibold text-primary-sendlib">Field</th>
+                  <th className="text-left px-4 py-3 font-semibold text-primary-sendlib">Type</th>
+                  <th className="text-left px-4 py-3 font-semibold text-primary-sendlib">Required</th>
+                  <th className="text-left px-4 py-3 font-semibold text-primary-sendlib">Description</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-outline-variant/50 text-secondary">
+                {[
+                  { field: "from", type: "string", req: "Yes", desc: "Connected Gmail account to send from. Supports display name format: \"Brand <you@gmail.com>\"" },
+                  { field: "subject", type: "string", req: "Yes", desc: "Email subject. Supports {{variable}} interpolation." },
+                  { field: "recipients", type: "array", req: "Yes", desc: "List of recipient objects (see below). Max 450 for @gmail.com, 2,000 for Workspace." },
+                  { field: "html", type: "string", req: "one of", desc: "HTML email body. Supports {{variable}} interpolation." },
+                  { field: "text", type: "string", req: "one of", desc: "Plain text fallback body. Supports {{variable}} interpolation." },
+                  { field: "replyTo", type: "string", req: "Optional", desc: "Reply-to email address." },
+                ].map((r) => (
+                  <tr key={r.field} className="hover:bg-surface-variant/20 transition-colors">
+                    <td className="px-4 py-3 font-mono text-xs"><code>{r.field}</code></td>
+                    <td className="px-4 py-3 font-mono text-xs text-secondary">{r.type}</td>
+                    <td className="px-4 py-3 text-xs">{r.req}</td>
+                    <td className="px-4 py-3 text-xs">{r.desc}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
+          <h3 className="text-base font-bold text-primary-sendlib mt-5 mb-3">Recipient object</h3>
+          <div className="overflow-x-auto rounded-xl border border-outline-variant">
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="border-b border-outline-variant bg-surface-variant/40">
+                  <th className="text-left px-4 py-3 font-semibold text-primary-sendlib">Field</th>
+                  <th className="text-left px-4 py-3 font-semibold text-primary-sendlib">Type</th>
+                  <th className="text-left px-4 py-3 font-semibold text-primary-sendlib">Required</th>
+                  <th className="text-left px-4 py-3 font-semibold text-primary-sendlib">Description</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-outline-variant/50 text-secondary">
+                <tr className="hover:bg-surface-variant/20 transition-colors">
+                  <td className="px-4 py-3 font-mono text-xs"><code>email</code></td>
+                  <td className="px-4 py-3 font-mono text-xs">string</td>
+                  <td className="px-4 py-3 text-xs">Yes</td>
+                  <td className="px-4 py-3 text-xs">Recipient&apos;s email address.</td>
+                </tr>
+                <tr className="hover:bg-surface-variant/20 transition-colors">
+                  <td className="px-4 py-3 font-mono text-xs"><code>variables</code></td>
+                  <td className="px-4 py-3 font-mono text-xs">object</td>
+                  <td className="px-4 py-3 text-xs">Optional</td>
+                  <td className="px-4 py-3 text-xs">Key/value pairs used to personalise the subject, html, and text for this recipient via <code>{"{{key}}"}</code> placeholders.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <h3 className="text-base font-bold text-primary-sendlib mt-5 mb-2">Response: <code>202 Accepted</code></h3>
+          <pre className="p-4 bg-surface-container-high border border-outline-variant/50 rounded-lg text-sm font-mono text-white/95 overflow-x-auto whitespace-pre leading-relaxed">{`{
+  "success": true,
+  "batchId": "64f1a2b3c4d5e6f7a8b9c0d1",
+  "total": 2,
+  "status": "queued"
+}`}</pre>
+        </div>
+
+        {/* Step 2 — Poll progress */}
+        <div>
+          <h2 className="text-xl font-bold text-primary-sendlib mb-3">Step 2: Poll for progress</h2>
+          <div className="flex justify-between items-center mb-3">
+            <code className="text-sm font-mono text-primary-sendlib bg-primary-sendlib/5 px-3 py-1 rounded-lg border border-primary-sendlib/20">GET /api/batch/:batchId</code>
+            <button
+              onClick={() => copy(statusSnippet, setIsStatusCopied)}
+              className="text-xs font-mono bg-surface border border-outline-variant hover:bg-surface-container-low text-primary-sendlib px-3 py-1.5 rounded-lg transition-colors cursor-pointer"
+            >
+              {isStatusCopied ? "✓ Copied" : "Copy"}
+            </button>
+          </div>
+          <pre className="p-4 bg-surface-container-high border border-outline-variant/50 rounded-lg text-sm font-mono text-white/95 overflow-x-auto whitespace-pre leading-relaxed">
+            {statusSnippet}
+          </pre>
+
+          <h3 className="text-base font-bold text-primary-sendlib mt-5 mb-2">Response</h3>
+          <pre className="p-4 bg-surface-container-high border border-outline-variant/50 rounded-lg text-sm font-mono text-white/95 overflow-x-auto whitespace-pre leading-relaxed">{`{
+  "success": true,
+  "batchId": "64f1a2b3c4d5e6f7a8b9c0d1",
+  "status": "processing",
+  "total": 2,
+  "sent": 1,
+  "failed": 0,
+  "progress": 50,
+  "recipients": [
+    { "email": "john@example.com", "status": "sent", "messageId": "18b3f...", "error": null },
+    { "email": "jane@example.com", "status": "pending", "messageId": null, "error": null }
+  ]
+}`}</pre>
+
+          <h3 className="text-base font-bold text-primary-sendlib mt-5 mb-3">Job statuses</h3>
+          <div className="overflow-x-auto rounded-xl border border-outline-variant">
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="border-b border-outline-variant bg-surface-variant/40">
+                  <th className="text-left px-4 py-3 font-semibold text-primary-sendlib">Status</th>
+                  <th className="text-left px-4 py-3 font-semibold text-primary-sendlib">Meaning</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-outline-variant/50 text-secondary">
+                {[
+                  { s: "queued", m: "Job created, waiting for the worker to pick it up." },
+                  { s: "processing", m: "Worker is actively sending emails." },
+                  { s: "paused_limit_reached", m: "Gmail daily sending limit reached. Job will automatically resume when quota resets." },
+                  { s: "done", m: "All recipients have been processed. Check sent / failed counts." },
+                  { s: "failed", m: "Unexpected internal error. Contact support." },
+                ].map((r) => (
+                  <tr key={r.s} className="hover:bg-surface-variant/20 transition-colors">
+                    <td className="px-4 py-3 font-mono text-xs"><code>{r.s}</code></td>
+                    <td className="px-4 py-3 text-xs">{r.m}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        {/* Limits */}
+        <div>
+          <h2 className="text-xl font-bold text-primary-sendlib mb-3">Limits</h2>
+          <div className="overflow-x-auto rounded-xl border border-outline-variant">
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="border-b border-outline-variant bg-surface-variant/40">
+                  <th className="text-left px-4 py-3 font-semibold text-primary-sendlib">Limit</th>
+                  <th className="text-left px-4 py-3 font-semibold text-primary-sendlib">Value</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-outline-variant/50 text-secondary">
+                {[
+                  { l: "Max recipients: @gmail.com account", v: "450 per batch" },
+                  { l: "Max recipients: Google Workspace account", v: "2,000 per batch" },
+                  { l: "Duplicate emails in same batch", v: "Auto-deduplicated" },
+                  { l: "Attachments", v: "Not supported (see below)" },
+                  { l: "Job history retention", v: "90 days, then auto-deleted" },
+                ].map((r) => (
+                  <tr key={r.l} className="hover:bg-surface-variant/20 transition-colors">
+                    <td className="px-4 py-3 text-xs">{r.l}</td>
+                    <td className="px-4 py-3 font-bold text-primary-sendlib text-xs">{r.v}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          <p className="text-xs text-secondary mt-3">
+            The recipient cap matches Gmail&apos;s own daily sending limit for the connected account. If your batch hits the daily limit mid-send (e.g., you already sent emails earlier today), the job status will change to <code>paused_limit_reached</code>. You do not need to do anything! Sendlib automatically tracks Gmail&apos;s 24-hour rolling quota and will automatically resume sending the remaining recipients as soon as your limit resets. To send to more people immediately without waiting, connect additional Gmail accounts and split batches across them using different <code>from</code> addresses.
+          </p>
+        </div>
+
+        {/* Why no attachments */}
+        <div className="p-5 rounded-xl border border-outline-variant bg-surface-container-low">
+          <h3 className="font-bold text-on-background text-base mb-2">Why can&apos;t I send attachments in a batch?</h3>
+          <p className="text-sm text-secondary">
+            Attachments are intentionally not supported on <code>/api/batch</code>. If you attach a file to a batch of 500 emails, Sendlib would have to base64-encode and upload that file 500 separate times to Gmail&apos;s API. That is extremely slow, memory-intensive, and would burn through your daily quota much faster than expected.
+          </p>
+          <p className="text-sm text-secondary mt-3">
+            The right approach is to <strong>host your file</strong> somewhere (e.g. your own server, AWS S3, Google Drive, or any CDN) and include a download link in your <code>html</code> or <code>text</code> body. Your recipients get the same experience, and your batch sends are fast.
+          </p>
+        </div>
+
+        {/* Error responses */}
+        <div>
+          <h2 className="text-xl font-bold text-primary-sendlib mb-3">Error responses</h2>
+          <div className="overflow-x-auto rounded-xl border border-outline-variant">
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="border-b border-outline-variant bg-surface-variant/40">
+                  <th className="text-left px-4 py-3 font-semibold text-primary-sendlib">Status</th>
+                  <th className="text-left px-4 py-3 font-semibold text-primary-sendlib">Reason</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-outline-variant/50 text-secondary">
+                {[
+                  { s: "401", r: "Missing or invalid API key." },
+                  { s: "403", r: "Free plan: upgrade to Pro to use batch sending." },
+                  { s: "400", r: "Validation error: check the message field for details." },
+                  { s: "413", r: "HTML or text body exceeds the size limit." },
+                  { s: "429", r: "Rate limit exceeded: check the Retry-After header." },
+                  { s: "500", r: "Internal server error." },
+                ].map((r) => (
+                  <tr key={r.s} className="hover:bg-surface-variant/20 transition-colors">
+                    <td className="px-4 py-3 font-mono text-xs font-bold text-primary-sendlib"><code>{r.s}</code></td>
+                    <td className="px-4 py-3 text-xs">{r.r}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </div>
+
+      <DocsPagination
+        prev={{ title: "Basic Send", href: "/docs/send" }}
+      />
+    </div>
+  );
+}

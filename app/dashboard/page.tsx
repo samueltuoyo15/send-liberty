@@ -93,7 +93,7 @@ export default function DashboardPage() {
         >
           <Button 
             size="lg"
-            className="flex-1 sm:flex-initial rounded-lg font-label-sm bg-primary-sendlib hover:bg-primary-sendlib/90 text-white shadow-sm transition-all active:scale-95 group cursor-pointer" 
+            className="flex-1 sm:flex-initial rounded-lg font-label-sm bg-surface-container-low border border-outline-variant/60 hover:bg-surface-container text-white shadow-sm transition-all active:scale-95 group cursor-pointer" 
             onClick={() => {
               setConnectConfirmOpen(true);
             }}
@@ -106,7 +106,7 @@ export default function DashboardPage() {
             <Button 
               size="lg"
               variant="outline" 
-              className="w-full rounded-lg font-label-sm border border-outline-variant bg-white text-primary-sendlib shadow-xs hover:bg-surface-container-low transition-all active:scale-95 cursor-pointer"
+              className="w-full rounded-lg font-label-sm border border-outline-variant bg-surface text-primary-sendlib shadow-xs hover:bg-surface-container-low transition-all active:scale-95 cursor-pointer"
             >
               <HugeiconsIcon icon={Key01Icon} size={16} color='currentColor' strokeWidth={1.5} />
               <span className="ml-2">Generate Key</span>
@@ -116,94 +116,124 @@ export default function DashboardPage() {
       </div>
 
       {/* Main Stats Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
           className="md:col-span-1"
         >
-          <Card className="h-full border-[#d3c5ff]/60 bg-[#f0ebff]/60 shadow-none hover:bg-[#f0ebff]/85 transition-colors rounded-xl">
-            <CardHeader className="pb-2 flex flex-row items-center justify-between">
-              <CardTitle className="text-xs font-label-xs uppercase tracking-wider text-[#4a358c]/80">Emails Sent</CardTitle>
-              <HugeiconsIcon icon={FileTypeIcon} size={18} color='currentColor' strokeWidth={1.5} className="text-[#5a36cf]" />
-            </CardHeader>
-            <CardContent>
+          <Card className="h-full border-0 ring-0 bg-surface shadow-none hover:bg-surface-container-low transition-all rounded-xl relative overflow-hidden">
+            <CardContent className="p-6 h-full flex items-center justify-between">
               {isLoadingLogs ? (
-                <div className="space-y-3">
-                  <Skeleton className="h-10 w-24 bg-[#d3c5ff]/35" />
-                  <Skeleton className="h-3 w-32 bg-[#d3c5ff]/35" />
+                <div className="space-y-3 w-full">
+                  <Skeleton className="h-5 w-24 bg-outline-variant/20" />
+                  <Skeleton className="h-10 w-24 bg-outline-variant/20" />
+                  <Skeleton className="h-3 w-32 bg-outline-variant/20" />
                 </div>
               ) : (
                 <>
-                  <div className="text-4xl font-headline-md font-bold tracking-tight text-[#2c1075]">
-                    {totalEmailsSent.toLocaleString()}
+                  <div className="flex flex-col h-full justify-between z-10 space-y-4">
+                    <div className="flex items-center gap-3">
+                      <div className="w-11 h-11 rounded-xl bg-surface-container-low border border-outline-variant/60 flex items-center justify-center text-primary-sendlib shadow-inner">
+                        <HugeiconsIcon icon={FileTypeIcon} size={22} color='currentColor' strokeWidth={1.5} />
+                      </div>
+                      <div className="flex flex-col">
+                        <span className="text-sm font-label-sm font-bold text-on-background">Emails Sent</span>
+                        <span className="text-xs text-secondary mt-0.5">Total outbound</span>
+                      </div>
+                    </div>
+                    <div className="text-4xl font-headline-md font-bold tracking-tight text-on-background">
+                      {totalEmailsSent.toLocaleString()}
+                    </div>
+                    <div className="text-xs text-secondary font-medium flex items-center gap-1.5">
+                      <span className="flex items-center gap-1 px-1.5 py-0.5 bg-emerald-500/10 text-emerald-400 rounded-md">
+                        <HugeiconsIcon icon={CheckmarkCircle01Icon} size={12} color='currentColor' strokeWidth={1.5} /> Active
+                      </span> 
+                      <span className="opacity-70">this week</span>
+                    </div>
                   </div>
-                  <div className="text-xs text-[#4a358c] mt-3 font-medium flex flex-col gap-1">
-                    <span className="flex items-center gap-1.5">
-                      <HugeiconsIcon icon={CheckmarkCircle01Icon} size={14} color='currentColor' strokeWidth={1.5} className="text-[#5a36cf]" /> Relay API is fully active
-                    </span>
+                  
+                  {/* Right side sparkline */}
+                  <div className="w-[120px] h-[70px] opacity-100 z-0 hidden sm:block relative">
+                    <svg viewBox="0 0 120 70" className="w-full h-full overflow-visible">
+                      <defs>
+                        <linearGradient id="sparkline-gradient-1" x1="0" y1="0" x2="0" y2="1">
+                          <stop offset="0%" stopColor="#10b981" stopOpacity="0.25" />
+                          <stop offset="100%" stopColor="#10b981" stopOpacity="0" />
+                        </linearGradient>
+                      </defs>
+                      {/* Area */}
+                      <path d="M0,50 C20,50 30,35 50,40 C70,45 80,25 100,30 C110,32 115,20 120,20 L120,70 L0,70 Z" fill="url(#sparkline-gradient-1)" />
+                      {/* Line */}
+                      <path d="M0,50 C20,50 30,35 50,40 C70,45 80,25 100,30 C110,32 115,20 120,20" fill="none" stroke="#10b981" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+                      {/* Point */}
+                      <circle cx="120" cy="20" r="3.5" fill="#020403" stroke="#10b981" strokeWidth="2.5" />
+                    </svg>
                   </div>
-                </>
-              )}
-            </CardContent>
-          </Card>
-        </motion.div>
-        
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2 }}
-        >
-          <Card className="h-full border-[#bbf3ee]/60 bg-[#e6fbf9]/60 shadow-none hover:bg-[#e6fbf9]/85 transition-colors rounded-xl">
-            <CardHeader className="pb-2 flex flex-row items-center justify-between">
-              <CardTitle className="text-xs font-label-xs uppercase tracking-wider text-[#136e63]">Active API Keys</CardTitle>
-              <HugeiconsIcon icon={Key01Icon} size={18} color='currentColor' strokeWidth={1.5} className="text-[#0fa290]" />
-            </CardHeader>
-            <CardContent>
-              {isLoadingKeys ? (
-                <div className="space-y-3">
-                  <Skeleton className="h-10 w-16 bg-[#bbf3ee]/35" />
-                  <Skeleton className="h-3 w-3/4 bg-[#bbf3ee]/35" />
-                </div>
-              ) : (
-                <>
-                  <div className="text-4xl font-headline-md font-bold tracking-tight text-[#044e45]">{activeKeysCount}</div>
-                  <p className="text-sm text-[#136e63] mt-3 font-medium flex items-center gap-1.5">
-                    <HugeiconsIcon icon={CheckmarkCircle01Icon} size={14} color='currentColor' strokeWidth={1.5} className="text-[#0fa290]" /> {activeKeysCount > 0 ? "Keys are active" : "No active keys"}
-                  </p>
                 </>
               )}
             </CardContent>
           </Card>
         </motion.div>
 
+
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3 }}
         >
-          <Card className="h-full border-[#ffd0e3]/60 bg-[#fff0f6]/60 shadow-none hover:bg-[#fff0f6]/85 transition-colors rounded-xl">
-            <CardHeader className="pb-2 flex flex-row items-center justify-between">
-              <CardTitle className="text-xs font-label-xs uppercase tracking-wider text-[#a61b58]/80">Connected Gmails</CardTitle>
-              <HugeiconsIcon icon={MailIcon} size={18} color='currentColor' strokeWidth={1.5} className="text-[#d62272]" />
-            </CardHeader>
-            <CardContent>
+          <Card className="h-full border-0 ring-0 bg-surface shadow-none hover:bg-surface-container-low transition-all rounded-xl relative overflow-hidden">
+            <CardContent className="p-6 h-full flex items-center justify-between">
               {isLoadingAccounts ? (
-                <div className="space-y-3">
-                  <Skeleton className="h-10 w-12 bg-[#ffd0e3]/35" />
-                  <Skeleton className="h-3 w-full bg-[#ffd0e3]/35" />
+                <div className="space-y-3 w-full">
+                  <Skeleton className="h-5 w-32 bg-outline-variant/20" />
+                  <Skeleton className="h-10 w-12 bg-outline-variant/20" />
+                  <Skeleton className="h-3 w-full bg-outline-variant/20" />
                 </div>
               ) : (
                 <>
-                  <div className="text-4xl font-headline-md font-bold tracking-tight text-[#780536]">{connectedGmailsCount}</div>
-                  <p className="text-sm text-[#a61b58] mt-3 font-medium truncate">
-                    {connectedGmailsCount === 0 
-                      ? "None connected" 
-                      : connectedGmailsCount === 1 
-                        ? redactEmail(gmailAccounts?.find(g => g.connected)?.email) 
-                        : `${connectedGmailsCount} accounts connected`}
-                  </p>
+                  <div className="flex flex-col h-full justify-between z-10 space-y-4">
+                    <div className="flex items-center gap-3">
+                      <div className="w-11 h-11 rounded-xl bg-surface-container-low border border-outline-variant/60 flex items-center justify-center text-primary-sendlib shadow-inner">
+                        <HugeiconsIcon icon={MailIcon} size={22} color='currentColor' strokeWidth={1.5} />
+                      </div>
+                      <div className="flex flex-col">
+                        <span className="text-sm font-label-sm font-bold text-on-background">Connected Gmails</span>
+                        <span className="text-xs text-secondary mt-0.5">Active relays</span>
+                      </div>
+                    </div>
+                    <div className="text-4xl font-headline-md font-bold tracking-tight text-on-background">
+                      {connectedGmailsCount}
+                    </div>
+                    <div className="text-xs text-secondary font-medium flex items-center gap-1.5">
+                      <span className="flex items-center gap-1 px-1.5 py-0.5 bg-emerald-500/10 text-emerald-400 rounded-md">
+                        <HugeiconsIcon icon={CheckmarkCircle01Icon} size={12} color='currentColor' strokeWidth={1.5} /> Active
+                      </span> 
+                      <span className="opacity-70 truncate max-w-[120px]">
+                        {connectedGmailsCount === 0 
+                          ? "None connected" 
+                          : connectedGmailsCount === 1 
+                            ? redactEmail(gmailAccounts?.find(g => g.connected)?.email) 
+                            : `${connectedGmailsCount} accounts`}
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Right side sparkline */}
+                  <div className="w-[120px] h-[70px] opacity-100 z-0 hidden sm:block relative">
+                    <svg viewBox="0 0 120 70" className="w-full h-full overflow-visible">
+                      <defs>
+                        <linearGradient id="sparkline-gradient-2" x1="0" y1="0" x2="0" y2="1">
+                          <stop offset="0%" stopColor="#10b981" stopOpacity="0.25" />
+                          <stop offset="100%" stopColor="#10b981" stopOpacity="0" />
+                        </linearGradient>
+                      </defs>
+                      <path d="M0,60 C30,60 40,40 60,45 C80,50 90,30 120,25 L120,70 L0,70 Z" fill="url(#sparkline-gradient-2)" />
+                      <path d="M0,60 C30,60 40,40 60,45 C80,50 90,30 120,25" fill="none" stroke="#10b981" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+                      <circle cx="120" cy="25" r="3.5" fill="#020403" stroke="#10b981" strokeWidth="2.5" />
+                    </svg>
+                  </div>
                 </>
               )}
             </CardContent>
@@ -212,21 +242,21 @@ export default function DashboardPage() {
       </div>
 
       {/* Analytics Section */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-stretch">
+      <div className="grid grid-cols-1 gap-6 items-stretch">
         {/* Sending Volume Bar Chart */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3 }}
-          className="lg:col-span-2 flex flex-col"
+          className="flex flex-col"
         >
-          <Card className="h-full flex flex-col border-[#1d2b3e]/15 bg-[#1d2b3e]/[0.02] shadow-none rounded-xl overflow-hidden hover:bg-[#1d2b3e]/[0.04] transition-colors">
+          <Card className="h-full flex flex-col border border-outline-variant bg-surface shadow-none rounded-xl overflow-hidden hover:bg-surface-container-low transition-colors">
             <CardHeader className="flex flex-row items-center justify-between pb-3">
               <div>
-                <CardTitle className="text-lg font-headline-md font-bold text-[#1d2b3e]">Send Volume</CardTitle>
+                <CardTitle className="text-lg font-headline-md font-bold text-primary-sendlib">Send Volume</CardTitle>
                 <p className="text-xs text-secondary mt-0.5">Email relay traffic for the last 7 days</p>
               </div>
-              <div className="flex items-center gap-4 text-xs font-semibold text-[#1d2b3e]/85">
+              <div className="flex items-center gap-4 text-xs font-semibold text-secondary">
                 <div className="flex items-center gap-1.5">
                   <span className="w-2.5 h-2.5 rounded bg-indigo-500"></span>
                   <span>Sent</span>
@@ -240,20 +270,20 @@ export default function DashboardPage() {
             <CardContent className="flex-1 p-6 pt-2 flex flex-col justify-between">
               {isLoadingAnalytics ? (
                 <div className="h-[220px] flex items-center justify-center">
-                  <Skeleton className="w-full h-full rounded-lg bg-[#1d2b3e]/10" />
+                  <Skeleton className="w-full h-full rounded-lg bg-outline-variant/10" />
                 </div>
               ) : (
                 <div className="w-full relative">
                   <svg viewBox="0 0 600 220" className="w-full h-auto overflow-visible">
                     {/* Horizontal Grid Lines */}
-                    <line x1="50" y1="40" x2="560" y2="40" stroke="#1d2b3e" strokeWidth="1" strokeDasharray="3 3" opacity="0.1" />
-                    <line x1="50" y1="110" x2="560" y2="110" stroke="#1d2b3e" strokeWidth="1" strokeDasharray="3 3" opacity="0.1" />
-                    <line x1="50" y1="180" x2="560" y2="180" stroke="#1d2b3e" strokeWidth="1.5" opacity="0.15" />
+                    <line x1="50" y1="40" x2="560" y2="40" stroke="currentColor" strokeWidth="1" strokeDasharray="3 3" opacity="0.1" className="text-outline-variant" />
+                    <line x1="50" y1="110" x2="560" y2="110" stroke="currentColor" strokeWidth="1" strokeDasharray="3 3" opacity="0.1" className="text-outline-variant" />
+                    <line x1="50" y1="180" x2="560" y2="180" stroke="currentColor" strokeWidth="1.5" opacity="0.15" className="text-outline-variant" />
 
                     {/* Y-Axis Value Labels */}
-                    <text x="35" y="44" className="text-[10px] font-bold font-mono fill-[#1d2b3e]/65 text-right">{maxVal}</text>
-                    <text x="35" y="114" className="text-[10px] font-bold font-mono fill-[#1d2b3e]/65 text-right">{Math.round(maxVal / 2)}</text>
-                    <text x="35" y="184" className="text-[10px] font-bold font-mono fill-[#1d2b3e]/65 text-right">0</text>
+                    <text x="35" y="44" className="text-[10px] font-bold font-mono fill-secondary/65 text-right">{maxVal}</text>
+                    <text x="35" y="114" className="text-[10px] font-bold font-mono fill-secondary/65 text-right">{Math.round(maxVal / 2)}</text>
+                    <text x="35" y="184" className="text-[10px] font-bold font-mono fill-secondary/65 text-right">0</text>
 
                     {/* Render Columns */}
                     {volume.map((day, idx) => {
@@ -278,9 +308,9 @@ export default function DashboardPage() {
                             y="20"
                             width={colWidth}
                             height="170"
-                            fill="#1d2b3e"
+                            fill="currentColor"
                             opacity="0"
-                            className="hover:opacity-[0.03] transition-opacity duration-200"
+                            className="text-white hover:opacity-[0.05] transition-opacity duration-200"
                             rx="8"
                           />
 
@@ -313,7 +343,7 @@ export default function DashboardPage() {
                             x={colCenter}
                             y="198"
                             textAnchor="middle"
-                            className="text-[10px] font-bold font-mono fill-[#1d2b3e]/60"
+                            className="text-[10px] font-bold font-mono fill-secondary"
                           >
                             {day.label}
                           </text>
@@ -325,8 +355,9 @@ export default function DashboardPage() {
                               y={Math.min(failedY - 45, 120)}
                               width="90"
                               height="35"
-                              fill="#1d2b3e"
+                              fill="#1a1a1a"
                               rx="6"
+                              className="stroke-outline-variant stroke-1"
                             />
                             <text
                               x={colCenter}
@@ -354,16 +385,16 @@ export default function DashboardPage() {
           transition={{ delay: 0.35 }}
           className="flex flex-col"
         >
-          <Card className="h-full flex flex-col border-[#1d2b3e]/15 bg-[#1d2b3e]/[0.02] shadow-none rounded-xl overflow-hidden hover:bg-[#1d2b3e]/[0.04] transition-colors">
+          <Card className="h-full flex flex-col border border-outline-variant bg-surface shadow-none rounded-xl overflow-hidden hover:bg-surface-container-low transition-colors">
             <CardHeader className="pb-3">
-              <CardTitle className="text-lg font-headline-md font-bold text-[#1d2b3e]">Daily Cap Usage</CardTitle>
+              <CardTitle className="text-lg font-headline-md font-bold text-primary-sendlib">Daily Cap Usage</CardTitle>
               <p className="text-xs text-secondary mt-0.5">Google daily relay limits per connected account</p>
             </CardHeader>
             <CardContent className="flex-1 p-6 pt-2 flex flex-col justify-center space-y-4">
               {isLoadingAnalytics ? (
                 <div className="space-y-4">
-                  <Skeleton className="h-12 w-full rounded-lg bg-[#1d2b3e]/10" />
-                  <Skeleton className="h-12 w-full rounded-lg bg-[#1d2b3e]/10" />
+                  <Skeleton className="h-12 w-full rounded-lg bg-outline-variant/10" />
+                  <Skeleton className="h-12 w-full rounded-lg bg-outline-variant/10" />
                 </div>
               ) : caps.length === 0 ? (
                 <div className="text-center py-6 text-sm text-secondary italic">
@@ -376,17 +407,17 @@ export default function DashboardPage() {
                   return (
                     <div key={account.email} className="space-y-2">
                       <div className="flex justify-between items-center text-xs">
-                        <span className="font-bold text-[#1d2b3e]">{redactEmail(account.email)}</span>
+                        <span className="font-bold text-primary-sendlib">{redactEmail(account.email)}</span>
                         <span className="font-bold font-mono text-secondary">
                           {account.sentCount} / {account.limit}
                         </span>
                       </div>
                       
                       {/* Progress Bar */}
-                      <div className="w-full h-2.5 rounded-full bg-[#1d2b3e]/10 overflow-hidden">
+                      <div className="w-full h-2.5 rounded-full bg-outline-variant/30 overflow-hidden">
                         <div
                           className={`h-full rounded-full transition-all duration-500 ${
-                            isHigh ? "bg-rose-500" : "bg-[#1d2b3e]"
+                            isHigh ? "bg-rose-500" : "bg-primary-sendlib"
                           }`}
                           style={{ width: `${pct}%` }}
                         />
@@ -415,13 +446,13 @@ export default function DashboardPage() {
            transition={{ delay: 0.4 }}
            className={`${totalEmailsSent > 0 ? "lg:col-span-3" : "lg:col-span-2"} flex flex-col`}
         >
-          <Card className="h-full flex flex-col border-[#1d2b3e]/15 bg-[#1d2b3e]/[0.02] shadow-none rounded-xl overflow-hidden hover:bg-[#1d2b3e]/[0.04] transition-colors">
+          <Card className="h-full flex flex-col border border-outline-variant bg-surface shadow-none rounded-xl overflow-hidden hover:bg-surface-container-low transition-colors">
             <CardHeader className="flex flex-row items-center justify-between pb-4">
-              <CardTitle className="text-lg font-headline-md font-bold text-[#1d2b3e]">Recent Email Logs</CardTitle>
+              <CardTitle className="text-lg font-headline-md font-bold text-primary-sendlib">Recent Email Logs</CardTitle>
               <Button 
                 variant="ghost" 
                 size="sm" 
-                className="font-semibold h-8 w-8 p-0 text-[#1d2b3e]/75 hover:text-[#1d2b3e] hover:bg-[#1d2b3e]/10 rounded-lg cursor-pointer"
+                className="font-semibold h-8 w-8 p-0 text-secondary hover:text-primary-sendlib hover:bg-surface-container-low rounded-lg cursor-pointer"
                 onClick={() => refetchLogs()}
               >
                 <HugeiconsIcon 
@@ -429,49 +460,49 @@ export default function DashboardPage() {
                   size={16} 
                   color='currentColor' 
                   strokeWidth={1.5} 
-                  className={isFetchingLogs ? "animate-spin text-[#1d2b3e]" : "text-[#1d2b3e]/80"} 
+                  className={isFetchingLogs ? "animate-spin text-primary-sendlib" : "text-secondary"} 
                 />
               </Button>
             </CardHeader>
             <CardContent className="p-0 flex-1">
               <Table>
-                <TableHeader className="bg-[#1d2b3e]/5 border-y border-[#1d2b3e]/10">
-                  <TableRow className="border-[#1d2b3e]/10 hover:bg-transparent">
-                    <TableHead className="font-label-sm font-bold pl-6 text-[#1d2b3e]">From</TableHead>
-                    <TableHead className="font-label-sm font-bold text-[#1d2b3e]">To</TableHead>
-                    <TableHead className="font-label-sm font-bold text-[#1d2b3e]">Subject</TableHead>
-                    <TableHead className="font-label-sm font-bold text-[#1d2b3e]">Status</TableHead>
-                    <TableHead className="font-label-sm font-bold text-right pr-6 text-[#1d2b3e]">Date</TableHead>
+                <TableHeader className="bg-surface border-y border-outline-variant/30">
+                  <TableRow className="border-outline-variant/30 hover:bg-transparent">
+                    <TableHead className="font-label-sm font-bold pl-6 text-primary-sendlib">From</TableHead>
+                    <TableHead className="font-label-sm font-bold text-primary-sendlib">To</TableHead>
+                    <TableHead className="font-label-sm font-bold text-primary-sendlib">Subject</TableHead>
+                    <TableHead className="font-label-sm font-bold text-primary-sendlib">Status</TableHead>
+                    <TableHead className="font-label-sm font-bold text-right pr-6 text-primary-sendlib">Date</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
                   {isLoadingLogs || isFetchingLogs ? (
                     Array.from({ length: 3 }).map((_, i) => (
-                      <TableRow key={i} className="border-[#1d2b3e]/10">
-                        <TableCell className="pl-6 py-4"><Skeleton className="h-5 w-24 bg-[#1d2b3e]/10" /></TableCell>
-                        <TableCell><Skeleton className="h-5 w-24 bg-[#1d2b3e]/10" /></TableCell>
-                        <TableCell><Skeleton className="h-5 w-32 bg-[#1d2b3e]/10" /></TableCell>
-                        <TableCell><Skeleton className="h-5 w-16 bg-[#1d2b3e]/10" /></TableCell>
-                        <TableCell className="pr-6"><Skeleton className="h-4 w-20 ml-auto bg-[#1d2b3e]/10" /></TableCell>
+                      <TableRow key={i} className="border-outline-variant/30">
+                        <TableCell className="pl-6 py-4"><Skeleton className="h-5 w-24 bg-outline-variant/20" /></TableCell>
+                        <TableCell><Skeleton className="h-5 w-24 bg-outline-variant/20" /></TableCell>
+                        <TableCell><Skeleton className="h-5 w-32 bg-outline-variant/20" /></TableCell>
+                        <TableCell><Skeleton className="h-5 w-16 bg-outline-variant/20" /></TableCell>
+                        <TableCell className="pr-6"><Skeleton className="h-4 w-20 ml-auto bg-outline-variant/20" /></TableCell>
                       </TableRow>
                     ))
                   ) : emailLogs.length === 0 ? (
                     <TableRow>
                       <TableCell colSpan={5} className="text-center py-10">
                         <div className="flex flex-col items-center justify-center max-w-[380px] mx-auto space-y-2.5">
-                          <HugeiconsIcon icon={FileTypeIcon} size={40} color='currentColor' strokeWidth={1.5} className="text-[#1d2b3e] opacity-40 mb-0.5" />
-                          <h4 className="text-base font-headline-md font-bold text-[#1d2b3e]">No email logs found</h4>
-                          <p className="text-xs text-[#1d2b3e]/80 leading-relaxed">
+                          <HugeiconsIcon icon={FileTypeIcon} size={40} color='currentColor' strokeWidth={1.5} className="text-primary-sendlib opacity-40 mb-0.5" />
+                          <h4 className="text-base font-headline-md font-bold text-primary-sendlib">No email logs found</h4>
+                          <p className="text-xs text-secondary leading-relaxed">
                             Sent emails will appear here automatically once you send through the Sendlib API.
                           </p>
                           <div className="pt-1 flex items-center gap-2.5">
                             <Link href="/docs/send">
-                               <Button variant="outline" size="sm" className="rounded-lg font-label-sm border border-[#1d2b3e]/30 bg-white text-[#1d2b3e] shadow-xs hover:bg-[#1d2b3e]/5 px-3.5 h-8">
+                               <Button variant="outline" size="sm" className="rounded-lg font-label-sm border border-outline-variant bg-surface text-primary-sendlib shadow-xs hover:bg-surface-container-low px-3.5 h-8">
                                  View API Docs
                                </Button>
                             </Link>
                             <Link href="/dashboard/keys?generate=true">
-                               <Button size="sm" className="rounded-lg font-label-sm bg-[#1d2b3e] hover:bg-[#1d2b3e]/90 text-white shadow-sm px-3.5 h-8">
+                               <Button size="sm" className="rounded-lg font-label-sm bg-surface-container-low border border-outline-variant/60 hover:bg-surface-container text-white shadow-sm px-3.5 h-8">
                                  Get API Key
                                </Button>
                             </Link>
@@ -480,15 +511,15 @@ export default function DashboardPage() {
                       </TableCell>
                     </TableRow>
                   ) : (
-                    emailLogs.map((log: EmailLog) => (
-                      <TableRow key={log.id} className="border-[#1d2b3e]/10 transition-colors hover:bg-[#1d2b3e]/5 group">
-                        <TableCell className="pl-6 py-4 font-mono text-xs text-[#1d2b3e]/70 whitespace-nowrap">
+                    emailLogs.map((log: EmailLog, index: number) => (
+                      <TableRow key={log.id || index} className="border-outline-variant/30 transition-colors hover:bg-surface-container-low group">
+                        <TableCell className="pl-6 py-4 font-mono text-xs text-secondary whitespace-nowrap">
                           {log.from ? redactEmail(log.from) : "—"}
                         </TableCell>
-                        <TableCell className="py-4 font-bold text-sm text-[#1d2b3e] whitespace-nowrap">
+                        <TableCell className="py-4 font-bold text-sm text-primary-sendlib whitespace-nowrap">
                           {redactEmail(log.to)}
                         </TableCell>
-                        <TableCell className="py-4 text-xs text-[#1d2b3e]/75 truncate max-w-[150px]" title={log.subject}>
+                        <TableCell className="py-4 text-xs text-secondary truncate max-w-[150px]" title={log.subject}>
                           {log.subject}
                         </TableCell>
                         <TableCell>
@@ -496,7 +527,7 @@ export default function DashboardPage() {
                             variant={log.status === "sent" ? "outline" : "secondary"} 
                             className={`
                               font-semibold rounded-md tracking-wider text-[10px] border-border
-                              ${log.status === "failed" ? "bg-destructive/10 text-destructive border-transparent" : "bg-[#e6fbf9]/60 text-emerald-700 border-[#bbf3ee] dark:bg-emerald-500/10 dark:text-emerald-400 dark:border-emerald-500/20"}
+                              ${log.status === "failed" ? "bg-destructive/10 text-destructive border-transparent" : "bg-emerald-500/10 text-emerald-400 border-emerald-500/20"}
                             `}
                           >
                             {log.status === "sent" && <HugeiconsIcon icon={CheckmarkCircle01Icon} size={12} color='currentColor' strokeWidth={1.5} className="mr-1" />}
@@ -504,7 +535,7 @@ export default function DashboardPage() {
                             {log.status}
                           </Badge>
                         </TableCell>
-                        <TableCell className="text-sm text-[#1d2b3e]/80 font-medium text-right pr-6">
+                        <TableCell className="text-sm text-secondary font-medium text-right pr-6">
                           {new Date(log.createdAt).toLocaleDateString()} {new Date(log.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                         </TableCell>
                       </TableRow>
@@ -524,24 +555,24 @@ export default function DashboardPage() {
             transition={{ delay: 0.5 }}
             className="flex flex-col"
           >
-            <Card className="h-full flex flex-col border-[#1d2b3e]/15 bg-[#1d2b3e]/[0.02] shadow-none rounded-xl hover:bg-[#1d2b3e]/[0.04] transition-colors">
+            <Card className="h-full flex flex-col border border-outline-variant bg-surface shadow-none rounded-xl hover:bg-surface-container-low transition-colors">
               <CardHeader className="pb-3">
-                <CardTitle className="text-xs font-label-xs uppercase tracking-wider text-[#1d2b3e]/80">Setup Guide</CardTitle>
+                <CardTitle className="text-xs font-label-xs uppercase tracking-wider text-secondary">Setup Guide</CardTitle>
               </CardHeader>
               <CardContent className="flex-1 flex flex-col justify-center pb-6 px-6 space-y-0 gap-1">
                 {/* Step 1 */}
                 <div className="flex gap-4 items-start">
                   <div className="flex flex-col items-center shrink-0">
                     <div className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold transition-colors duration-300 z-10 ${
-                      connectedGmailsCount > 0 ? "bg-[#1d2b3e] text-white" : "border border-[#1d2b3e]/35 bg-white text-[#1d2b3e]"
+                      connectedGmailsCount > 0 ? "bg-primary-sendlib text-surface-container-lowest" : "border border-outline-variant bg-surface text-primary-sendlib"
                     }`}>
                       1
                     </div>
-                    <div className={`w-0.5 h-10 my-1 transition-colors duration-300 ${connectedGmailsCount > 0 ? "bg-[#1d2b3e]" : "bg-[#1d2b3e]/20"}`} />
+                    <div className={`w-0.5 h-10 my-1 transition-colors duration-300 ${connectedGmailsCount > 0 ? "bg-primary-sendlib" : "bg-outline-variant/30"}`} />
                   </div>
                   <div className="pt-0.5">
-                    <h4 className={`font-bold text-sm transition-colors duration-300 ${connectedGmailsCount > 0 ? "text-[#1d2b3e]" : "text-[#1d2b3e]/80"}`}>Connect Gmail</h4>
-                    <p className="text-xs text-[#1d2b3e]/70 mt-0.5 leading-snug">Authorize your Google account for sending.</p>
+                    <h4 className={`font-bold text-sm transition-colors duration-300 ${connectedGmailsCount > 0 ? "text-primary-sendlib" : "text-secondary"}`}>Connect Gmail</h4>
+                    <p className="text-xs text-secondary mt-0.5 leading-snug">Authorize your Google account for sending.</p>
                   </div>
                 </div>
 
@@ -549,15 +580,15 @@ export default function DashboardPage() {
                 <div className="flex gap-4 items-start">
                   <div className="flex flex-col items-center shrink-0">
                     <div className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold transition-colors duration-300 z-10 ${
-                      activeKeysCount > 0 ? "bg-[#1d2b3e] text-white" : "border border-[#1d2b3e]/35 bg-white text-[#1d2b3e]"
+                      activeKeysCount > 0 ? "bg-primary-sendlib text-surface-container-lowest" : "border border-outline-variant bg-surface text-primary-sendlib"
                     }`}>
                       2
                     </div>
-                    <div className={`w-0.5 h-10 my-1 transition-colors duration-300 ${activeKeysCount > 0 ? "bg-[#1d2b3e]" : "bg-[#1d2b3e]/20"}`} />
+                    <div className={`w-0.5 h-10 my-1 transition-colors duration-300 ${activeKeysCount > 0 ? "bg-primary-sendlib" : "bg-outline-variant/30"}`} />
                   </div>
                   <div className="pt-0.5">
-                    <h4 className={`font-bold text-sm transition-colors duration-300 ${activeKeysCount > 0 ? "text-[#1d2b3e]" : "text-[#1d2b3e]/80"}`}>Get API Key</h4>
-                    <p className="text-xs text-[#1d2b3e]/70 mt-0.5 leading-snug">Generate a secret key to authenticate your requests.</p>
+                    <h4 className={`font-bold text-sm transition-colors duration-300 ${activeKeysCount > 0 ? "text-primary-sendlib" : "text-secondary"}`}>Get API Key</h4>
+                    <p className="text-xs text-secondary mt-0.5 leading-snug">Generate a secret key to authenticate your requests.</p>
                   </div>
                 </div>
 
@@ -565,14 +596,14 @@ export default function DashboardPage() {
                 <div className="flex gap-4 items-start">
                   <div className="flex flex-col items-center shrink-0">
                     <div className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold transition-colors duration-300 z-10 ${
-                      totalEmailsSent > 0 ? "bg-[#1d2b3e] text-white" : "border border-[#1d2b3e]/35 bg-white text-[#1d2b3e]"
+                      totalEmailsSent > 0 ? "bg-primary-sendlib text-surface-container-lowest" : "border border-outline-variant bg-surface text-primary-sendlib"
                     }`}>
                       3
                     </div>
                   </div>
                   <div className="pt-0.5">
-                    <h4 className={`font-bold text-sm transition-colors duration-300 ${totalEmailsSent > 0 ? "text-[#1d2b3e]" : "text-[#1d2b3e]/80"}`}>Send transactional emails</h4>
-                    <p className="text-xs text-[#1d2b3e]/70 mt-0.5 leading-snug">Use our REST API to send transactional emails seamlessly.</p>
+                    <h4 className={`font-bold text-sm transition-colors duration-300 ${totalEmailsSent > 0 ? "text-primary-sendlib" : "text-secondary"}`}>Send transactional emails</h4>
+                    <p className="text-xs text-secondary mt-0.5 leading-snug">Use our REST API to send transactional emails seamlessly.</p>
                   </div>
                 </div>
               </CardContent>
@@ -593,14 +624,14 @@ export default function DashboardPage() {
           <div className="space-y-5">
             <div>
               <label className="text-sm font-label-sm font-semibold text-on-background mb-2 block">Your API Key</label>
-              <div className="font-mono bg-surface-container-low p-3.5 rounded-lg text-sm break-all border border-outline-variant text-primary-sendlib selection:bg-primary-sendlib selection:text-white">
+              <div className="font-mono bg-surface-container-low p-3.5 rounded-lg text-sm break-all border border-outline-variant text-primary-sendlib selection:bg-primary-sendlib selection:text-on-primary">
                 {newKeyDialog?.key}
               </div>
             </div>
           </div>
           <SheetFooter className="p-0 mt-6 pt-4 border-t border-outline-variant">
             <Button 
-              className="w-full rounded-lg font-label-sm bg-primary-sendlib hover:bg-primary-sendlib/90 text-white py-2.5" 
+              className="w-full rounded-lg font-label-sm bg-surface-container-low border border-outline-variant/60 hover:bg-surface-container text-white py-2.5" 
               onClick={async () => {
                 try {
                   await navigator.clipboard.writeText(newKeyDialog?.key || "");
@@ -647,7 +678,7 @@ export default function DashboardPage() {
               Cancel
             </Button>
             <Button 
-              className="flex-1 rounded-lg font-label-sm bg-primary-sendlib hover:bg-primary-sendlib/90 text-white cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed" 
+              className="flex-1 rounded-lg font-label-sm bg-surface-container-low border border-outline-variant/60 hover:bg-surface-container text-white cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed" 
               onClick={() => {
                 if (!agreeTerms) {
                   toast.error("Please agree to the transactional usage terms first.");
@@ -676,7 +707,7 @@ export default function DashboardPage() {
               You&apos;ve successfully connected your Gmail account! Next up: Generate an API Key to authorize email requests from your app.
             </DialogDescription>
           </DialogHeader>
-          <div className="flex flex-row gap-3 mt-4 pt-4 border-t border-[#1d2b3e]/10">
+          <div className="flex flex-row gap-3 mt-4 pt-4 border-t border-outline-variant/30">
             <Button 
               variant="outline" 
               className="flex-1 rounded-lg font-label-sm border border-outline-variant hover:bg-surface-container-low cursor-pointer" 
@@ -686,7 +717,7 @@ export default function DashboardPage() {
             </Button>
             <Link href="/dashboard/keys" className="flex-1">
               <Button 
-                className="w-full rounded-lg font-label-sm bg-primary-sendlib hover:bg-primary-sendlib/90 text-white cursor-pointer" 
+                className="w-full rounded-lg font-label-sm bg-surface-container-low border border-outline-variant/60 hover:bg-surface-container text-white cursor-pointer" 
               >
                 Go to API Keys
               </Button>

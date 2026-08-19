@@ -7,6 +7,13 @@ import { FileTypeIcon, Search01Icon, CheckmarkCircle01Icon, CancelCircleIcon } f
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { useEmailLogs, EmailLog } from "@/hooks/useEmailLogs";
 import { useGmailAccounts } from "@/hooks/useGmailAccounts";
@@ -41,10 +48,10 @@ export default function LogsPage() {
             View the recent history of all emails sent via your API keys.
           </p>
         </div>
-        <div className="flex flex-col sm:flex-row items-center gap-3 w-full xl:w-auto">
+        <div className="flex flex-col sm:flex-row sm:items-center gap-3">
           {/* Search bar */}
-          <div className="flex items-center gap-2 bg-surface-container-low border border-outline-variant rounded-lg px-3 h-10 shadow-xs focus-within:border-primary-sendlib focus-within:bg-white transition-colors w-full sm:w-72">
-            <HugeiconsIcon icon={Search01Icon} size={16} color='currentColor' strokeWidth={1.5} className="text-secondary" />
+          <div className="flex items-center gap-2 bg-surface-container-low border border-outline-variant rounded-lg px-3 h-10 shadow-xs focus-within:border-primary-sendlib focus-within:bg-surface-container-high transition-colors w-full sm:w-72">
+            <HugeiconsIcon icon={Search01Icon} size={16} color='currentColor' strokeWidth={1.5} className="text-secondary shrink-0" />
             <input 
               value={search}
               onChange={(e) => {
@@ -57,35 +64,31 @@ export default function LogsPage() {
           </div>
 
           {/* Status selector */}
-          <select
-            value={status}
-            onChange={(e) => {
-              setStatus(e.target.value);
-              setPage(1);
-            }}
-            className="bg-surface-container-low border border-outline-variant rounded-lg px-3 h-10 text-sm outline-none text-secondary focus:border-primary-sendlib focus:bg-white transition-colors w-full sm:w-40 cursor-pointer"
-          >
-            <option value="">All Statuses</option>
-            <option value="sent">Sent</option>
-            <option value="failed">Failed</option>
-          </select>
+          <Select value={status} onValueChange={(val) => { setStatus(val as string); setPage(1); }}>
+            <SelectTrigger className="w-full sm:w-40 bg-surface-container-low border border-outline-variant rounded-lg px-3 h-10 text-sm outline-none text-secondary focus:border-primary-sendlib focus:bg-surface-container-high transition-colors cursor-pointer">
+              <SelectValue placeholder="All Statuses" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All Statuses</SelectItem>
+              <SelectItem value="sent">Sent</SelectItem>
+              <SelectItem value="failed">Failed</SelectItem>
+            </SelectContent>
+          </Select>
 
           {/* From account selector */}
-          <select
-            value={fromEmail}
-            onChange={(e) => {
-              setFromEmail(e.target.value);
-              setPage(1);
-            }}
-            className="bg-surface-container-low border border-outline-variant rounded-lg px-3 h-10 text-sm outline-none text-secondary focus:border-primary-sendlib focus:bg-white transition-colors w-full sm:w-56 cursor-pointer"
-          >
-            <option value="">All Senders</option>
-            {accounts?.map((acc) => (
-              <option key={acc.id} value={acc.email}>
-                {acc.email}
-              </option>
-            ))}
-          </select>
+          <Select value={fromEmail} onValueChange={(val) => { setFromEmail(val as string); setPage(1); }}>
+            <SelectTrigger className="w-full sm:w-56 bg-surface-container-low border border-outline-variant rounded-lg px-3 h-10 text-sm outline-none text-secondary focus:border-primary-sendlib focus:bg-surface-container-high transition-colors cursor-pointer">
+              <SelectValue placeholder="All Accounts" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All Accounts</SelectItem>
+              {accounts?.map((acc) => (
+                <SelectItem key={acc.id} value={acc.email}>
+                  {acc.email}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
         </div>
       </div>
 
@@ -152,7 +155,7 @@ export default function LogsPage() {
                           </Button>
                         </Link>
                         <Link href="/dashboard/keys?generate=true">
-                          <Button className="rounded-lg font-label-sm bg-primary-sendlib hover:bg-primary-sendlib/90 text-white shadow-sm px-4">
+                          <Button className="rounded-lg font-label-sm bg-surface-container-low border border-outline-variant/60 hover:bg-surface-container text-white shadow-sm px-4">
                             Get API Key
                           </Button>
                         </Link>

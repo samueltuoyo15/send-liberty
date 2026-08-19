@@ -20,7 +20,7 @@ export default function QuickstartPage() {
 
       <div className="space-y-8">
         {/* Step 1 */}
-        <div className="p-6 rounded-xl border border-outline-variant/60 bg-white">
+        <div className="p-6 rounded-xl border border-outline-variant/60 bg-surface-container-low">
           <h3 className="text-xl font-bold text-primary-sendlib mb-2 flex items-center gap-2">
             <span className="w-6 h-6 rounded-md bg-indigo-500/10 text-indigo-600 flex items-center justify-center text-xs font-bold">1</span>
             Connect your Gmail
@@ -31,7 +31,7 @@ export default function QuickstartPage() {
         </div>
 
         {/* Step 2 */}
-        <div className="p-6 rounded-xl border border-outline-variant/60 bg-white">
+        <div className="p-6 rounded-xl border border-outline-variant/60 bg-surface-container-low">
           <h3 className="text-xl font-bold text-primary-sendlib mb-2 flex items-center gap-2">
             <span className="w-6 h-6 rounded-md bg-indigo-500/10 text-indigo-600 flex items-center justify-center text-xs font-bold">2</span>
             Generate an API Key
@@ -42,13 +42,13 @@ export default function QuickstartPage() {
         </div>
 
         {/* Step 3 */}
-        <div className="p-6 rounded-xl border border-outline-variant/60 bg-white">
+        <div className="p-6 rounded-xl border border-outline-variant/60 bg-surface-container-low">
           <h3 className="text-xl font-bold text-primary-sendlib mb-2 flex items-center gap-2">
             <span className="w-6 h-6 rounded-md bg-indigo-500/10 text-indigo-600 flex items-center justify-center text-xs font-bold">3</span>
             Send your first email
           </h3>
           <p className="text-secondary mb-4">Make a standard HTTP POST request from your application:</p>
-          <pre className="p-4 bg-[#1d2b3e] border border-outline-variant/50 rounded-lg text-sm font-mono text-white/90 whitespace-pre-wrap">
+          <pre className="p-4 bg-surface-container-high border border-outline-variant/50 rounded-lg text-sm font-mono text-white/90 whitespace-pre-wrap">
 {`curl -X POST ${apiUrl}/api/send \\
   -H "Authorization: Bearer YOUR_API_KEY" \\
   -H "Content-Type: application/json" \\
