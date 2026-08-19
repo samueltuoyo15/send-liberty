@@ -218,7 +218,7 @@ export default function DashboardLayout({
             <Button variant="ghost" size="icon" className="text-on-surface-variant cursor-pointer -ml-2" onClick={closeMobileMenu}>
               <HugeiconsIcon icon={Cancel01Icon} size={20} color='currentColor' strokeWidth={1.5} />
             </Button>
-            <span className="text-lg font-headline-md font-bold tracking-tight text-primary-sendlib">Sendlib</span>
+            <Link href="/" className="text-lg font-headline-md font-bold tracking-tight text-primary-sendlib hover:opacity-80 transition-opacity cursor-pointer">Sendlib</Link>
           </div>
           
           {/* Avatar in mobile nav */}

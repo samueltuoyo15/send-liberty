@@ -195,9 +195,9 @@ export default function SettingsPage() {
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center gap-2">
                 <HugeiconsIcon icon={CreditCardIcon} size={20} color='currentColor' strokeWidth={1.5} className="text-primary-sendlib" />
-                <h3 className="font-headline-md font-bold text-lg text-primary-sendlib">Plan & Billing</h3>
+                <h3 className="font-headline-md font-bold text-base text-primary-sendlib">Plan & Billing</h3>
               </div>
-              <span className={`px-3 py-1 rounded-full text-xs font-bold text-white uppercase tracking-wider border border-outline-variant/60 ${isCanceled ? 'bg-destructive/80' : 'bg-surface-container-low'}`}>
+              <span className={`px-2 py-1 rounded-full text-[10px] font-bold text-white uppercase tracking-wider border border-outline-variant/60 ${isCanceled ? 'bg-red-500/80' : 'bg-surface-container-low'}`}>
                 {isPro ? (isCanceled ? "Pro Plan (Canceled)" : "Pro Plan Active") : "Free Plan"}
               </span>
             </div>
@@ -228,14 +228,14 @@ export default function SettingsPage() {
                     <Button
                       variant="outline"
                       size="sm"
-                      className="rounded-lg border-destructive/40 text-destructive hover:bg-destructive/10 text-xs font-bold cursor-pointer"
+                      className="rounded-lg border-red-500/40 text-red-500 hover:bg-red-500/10 text-xs font-bold cursor-pointer"
                       onClick={() => setCancelSubConfirmOpen(true)}
                     >
                       Cancel Subscription
                     </Button>
                   )}
                   {user?.lastPaymentAt && (
-                    <span className="text-xs font-medium text-secondary">
+                    <span className="text-[10px] font-medium text-secondary">
                       {isCanceled ? "Cancels on: " : "Renews on: "}
                       {new Date(new Date(user.lastPaymentAt).setMonth(new Date(user.lastPaymentAt).getMonth() + 1)).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
                     </span>
@@ -248,20 +248,20 @@ export default function SettingsPage() {
           {/* Account Actions */}
           <div className="grid grid-cols-1 gap-6">
             {/* Sign Out Card */}
-            <div className="rounded-xl border border-destructive/20 bg-destructive/[0.01] shadow-none p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div className="rounded-xl border border-red-500/20 bg-red-500/[0.01] shadow-none p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
               <div>
                 <div className="flex items-center gap-2 mb-1">
-                  <HugeiconsIcon icon={Logout01Icon} size={18} color='currentColor' strokeWidth={1.5} className="text-destructive" />
-                  <h3 className="font-headline-md font-bold text-base text-destructive">Sign Out</h3>
+                  <HugeiconsIcon icon={Logout01Icon} size={18} color='currentColor' strokeWidth={1.5} className="text-red-500" />
+                  <h3 className="font-headline-md font-bold text-base text-red-500">Sign Out</h3>
                 </div>
                 <p className="text-sm text-secondary leading-relaxed">
                   Sign out of your Sendlib account on this device.
                 </p>
               </div>
               <Button 
-                variant="destructive"
+                variant="outline"
                 size="sm"
-                className="rounded-lg font-label-sm w-full sm:w-auto shrink-0 cursor-pointer"
+                className="rounded-lg font-label-sm w-full sm:w-auto shrink-0 cursor-pointer border-red-500/20 text-red-500 hover:bg-red-500/10"
                 onClick={() => setSignOutConfirmOpen(true)}
               >
                 Sign Out
@@ -269,20 +269,20 @@ export default function SettingsPage() {
             </div>
 
             {/* Delete Account Card */}
-            <div className="rounded-xl border border-destructive/40 bg-destructive/[0.03] shadow-none p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div className="rounded-xl border border-red-500/40 bg-red-500/[0.03] shadow-none p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
               <div>
                 <div className="flex items-center gap-2 mb-1">
-                  <HugeiconsIcon icon={Delete02Icon} size={18} color='currentColor' strokeWidth={1.5} className="text-destructive" />
-                  <h3 className="font-headline-md font-bold text-base text-destructive">Delete Account</h3>
+                  <HugeiconsIcon icon={Delete02Icon} size={18} color='currentColor' strokeWidth={1.5} className="text-red-500" />
+                  <h3 className="font-headline-md font-bold text-base text-red-500">Delete Account</h3>
                 </div>
                 <p className="text-sm text-secondary leading-relaxed">
                   Permanently delete account, keys & logs. Cannot be undone.
                 </p>
               </div>
               <Button 
-                variant="destructive"
+                variant="outline"
                 size="sm"
-                className="rounded-lg font-label-sm w-full sm:w-auto shrink-0 cursor-pointer"
+                className="rounded-lg font-label-sm w-full sm:w-auto shrink-0 cursor-pointer border-red-500/40 text-red-500 hover:bg-red-500/10"
                 onClick={() => setDeleteAccountOpen(true)}
               >
                 Delete Account

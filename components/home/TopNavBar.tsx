@@ -75,7 +75,7 @@ export default function TopNavBar() {
           {mounted && user ? (
             <Link 
               href="/dashboard" 
-              className="px-lg py-sm rounded-xl font-label-sm text-label-sm transition-all duration-300 active:scale-95 inline-block bg-primary-sendlib text-on-primary hover:bg-primary-sendlib/90"
+              className="px-lg py-sm rounded-xl font-label-sm text-label-sm transition-all duration-300 active:scale-95 inline-block bg-white text-black hover:bg-white/90 font-bold"
             >
               Dashboard
             </Link>
@@ -89,7 +89,7 @@ export default function TopNavBar() {
               </Link>
               <Link 
                 href="/login" 
-                className="px-lg py-sm rounded-xl font-label-sm text-label-sm transition-all duration-300 active:scale-95 inline-block bg-primary-sendlib text-on-primary hover:bg-primary-sendlib/90"
+                className="px-lg py-sm rounded-xl font-label-sm text-label-sm transition-all duration-300 active:scale-95 inline-block bg-white text-black hover:bg-white/90 font-bold"
               >
                 Sign Up
               </Link>
