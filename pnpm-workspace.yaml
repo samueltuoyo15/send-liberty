@@ -1,0 +1,4 @@
+allowBuilds:
+  argon2: true
+  sharp: true
+  unrs-resolver: true
