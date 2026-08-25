@@ -104,7 +104,7 @@ export default function HomeClient() {
   };
 
   return (
-    <div className="w=full flex flex-col min-h-screen bg-background-sendlib text-on-background font-body-md overflow-x-hidden">
+    <div className="w-full flex flex-col min-h-screen bg-background-sendlib text-on-background font-body-md overflow-x-hidden">
       <TopNavBar />
 
       <main className="flex-grow overflow-x-hidden">
