@@ -337,6 +337,7 @@ System.out.println(response.body());`
 
       <DocsPagination
         prev={{ title: "API Keys", href: "/docs/keys" }}
+        next={{ title: "Templates", href: "/docs/templates" }}
       />
     </div>
   );

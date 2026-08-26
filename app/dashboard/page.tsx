@@ -55,7 +55,11 @@ export default function DashboardPage() {
   const totalEmailsSent = logsData?.meta?.total ?? 0;
   const volume = analytics?.volume ?? [];
   const caps = analytics?.caps ?? [];
-  const maxVal = Math.max(...volume.map(d => d.sent + d.failed), 10);
+  const maxVal = Math.max(...volume.map(d => d.sent + d.failed), 1);
+  const weekSent = volume.reduce((sum, d) => sum + d.sent, 0);
+  const weekFailed = volume.reduce((sum, d) => sum + d.failed, 0);
+  const weekTotal = weekSent + weekFailed;
+  const successRate = weekTotal === 0 ? 100 : Math.round((weekSent / weekTotal) * 100);
 
   useEffect(() => {
     if (!isLoadingAccounts && connectedGmailsCount > 0 && activeKeysCount === 0) {
@@ -114,362 +118,135 @@ export default function DashboardPage() {
         </motion.div>
       </div>
 
-      {/* Main Stats Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.1 }}
-          className="md:col-span-1"
-        >
-          <Card className="h-full border-0 ring-0 bg-surface shadow-none hover:bg-surface-container-low transition-all rounded-xl relative overflow-hidden">
-            <CardContent className="p-6 h-full flex items-center justify-between">
-              {isLoadingLogs ? (
-                <div className="space-y-3 w-full">
-                  <Skeleton className="h-5 w-24 bg-outline-variant/20" />
-                  <Skeleton className="h-10 w-24 bg-outline-variant/20" />
-                  <Skeleton className="h-3 w-32 bg-outline-variant/20" />
-                </div>
-              ) : (
-                <>
-                  <div className="flex flex-col h-full justify-between z-10 space-y-4">
-                    <div className="flex items-center gap-3">
-                      <div className="w-11 h-11 rounded-xl bg-surface-container-low border border-outline-variant/60 flex items-center justify-center text-primary-sendlib shadow-inner">
-                        <HugeiconsIcon icon={FileTypeIcon} size={22} color='currentColor' strokeWidth={1.5} />
-                      </div>
-                      <div className="flex flex-col">
-                        <span className="text-sm font-label-sm font-bold text-on-background">Emails Sent</span>
-                        <span className="text-xs text-secondary mt-0.5">Total outbound</span>
-                      </div>
-                    </div>
-                    <div className="text-4xl font-headline-md font-bold tracking-tight text-on-background">
-                      {totalEmailsSent.toLocaleString()}
-                    </div>
-                    <div className="text-xs text-secondary font-medium flex items-center gap-1.5">
-                      <span className="flex items-center gap-1 px-1.5 py-0.5 bg-emerald-500/10 text-emerald-400 rounded-md">
-                        <HugeiconsIcon icon={CheckmarkCircle01Icon} size={12} color='currentColor' strokeWidth={1.5} /> Active
-                      </span> 
-                      <span className="opacity-70">this week</span>
-                    </div>
-                  </div>
-                  
-                  {/* Right side circular chart */}
-                  <div className="w-[70px] h-[70px] opacity-100 z-0 relative mr-4">
-                    <svg viewBox="0 0 100 100" className="w-full h-full transform -rotate-90">
-                      <circle cx="50" cy="50" r="38" fill="transparent" stroke="currentColor" strokeWidth="12" className="text-outline-variant/10" />
-                      <circle 
-                        cx="50" cy="50" r="38" 
-                        fill="transparent" 
-                        stroke="currentColor" 
-                        strokeWidth="12" 
-                        strokeDasharray={2 * Math.PI * 38}
-                        strokeDashoffset={(2 * Math.PI * 38) * (1 - Math.min(totalEmailsSent / 500, 1))}
-                        strokeLinecap="round"
-                        className="text-emerald-500 transition-all duration-1000 ease-out" 
-                      />
-                    </svg>
-                  </div>
-                </>
-              )}
-            </CardContent>
-          </Card>
-        </motion.div>
-
-
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3 }}
-        >
-          <Card className="h-full border-0 ring-0 bg-surface shadow-none hover:bg-surface-container-low transition-all rounded-xl relative overflow-hidden">
-            <CardContent className="p-6 h-full flex items-center justify-between">
-              {isLoadingAccounts ? (
-                <div className="space-y-3 w-full">
-                  <Skeleton className="h-5 w-32 bg-outline-variant/20" />
-                  <Skeleton className="h-10 w-12 bg-outline-variant/20" />
-                  <Skeleton className="h-3 w-full bg-outline-variant/20" />
-                </div>
-              ) : (
-                <>
-                  <div className="flex flex-col h-full justify-between z-10 space-y-4">
-                    <div className="flex items-center gap-3">
-                      <div className="w-11 h-11 rounded-xl bg-surface-container-low border border-outline-variant/60 flex items-center justify-center text-primary-sendlib shadow-inner">
-                        <HugeiconsIcon icon={MailIcon} size={22} color='currentColor' strokeWidth={1.5} />
-                      </div>
-                      <div className="flex flex-col">
-                        <span className="text-sm font-label-sm font-bold text-on-background">Connected Gmails</span>
-                        <span className="text-xs text-secondary mt-0.5">Active relays</span>
-                      </div>
-                    </div>
-                    <div className="text-4xl font-headline-md font-bold tracking-tight text-on-background">
-                      {connectedGmailsCount}
-                    </div>
-                    <div className="text-xs text-secondary font-medium flex items-center gap-1.5">
-                      <span className="flex items-center gap-1 px-1.5 py-0.5 bg-emerald-500/10 text-emerald-400 rounded-md">
-                        <HugeiconsIcon icon={CheckmarkCircle01Icon} size={12} color='currentColor' strokeWidth={1.5} /> Active
-                      </span> 
-                      <span className="opacity-70 truncate max-w-[120px]">
-                        {connectedGmailsCount === 0 
-                          ? "None connected" 
-                          : connectedGmailsCount === 1 
-                            ? redactEmail(gmailAccounts?.find(g => g.connected)?.email) 
-                            : `${connectedGmailsCount} accounts`}
-                      </span>
-                    </div>
-                  </div>
-
-                  {/* Right side mini bar chart */}
-                  <div className="w-[120px] h-[70px] opacity-100 z-0 relative">
-                    <svg viewBox="0 0 120 70" className="w-full h-full overflow-visible">
-                      <g className="text-emerald-500">
-                        {/* Tracks */}
-                        <rect x="0" y="0" width="8" height="70" className="fill-outline-variant/10" rx="4" />
-                        <rect x="18" y="0" width="8" height="70" className="fill-outline-variant/10" rx="4" />
-                        <rect x="36" y="0" width="8" height="70" className="fill-outline-variant/10" rx="4" />
-                        <rect x="54" y="0" width="8" height="70" className="fill-outline-variant/10" rx="4" />
-                        <rect x="72" y="0" width="8" height="70" className="fill-outline-variant/10" rx="4" />
-                        <rect x="90" y="0" width="8" height="70" className="fill-outline-variant/10" rx="4" />
-                        <rect x="108" y="0" width="8" height="70" className="fill-outline-variant/10" rx="4" />
-
-                        {/* Dynamic Bars based on volume data */}
-                        {volume.map((day, idx) => {
-                          const maxVol = Math.max(...volume.map(d => d.sent + d.failed), 10);
-                          const total = day.sent + day.failed;
-                          // Scale total to a max height of 60 (out of 70 track height)
-                          const height = Math.max(4, (total / maxVol) * 60);
-                          const y = 70 - height;
-                          return (
-                            <rect key={day.date} x={idx * 18} y={y} width="8" height={height} fill="currentColor" rx="4" />
-                          );
-                        })}
-                      </g>
-                    </svg>
-                  </div>
-                </>
-              )}
-            </CardContent>
-          </Card>
-        </motion.div>
+      {/* Compact metrics */}
+      <div className="grid grid-cols-2 xl:grid-cols-4 gap-3">
+        {[
+          { label: "Emails sent", value: isLoadingLogs ? null : totalEmailsSent.toLocaleString(), hint: "All time" },
+          { label: "Gmail accounts", value: isLoadingAccounts ? null : String(connectedGmailsCount), hint: connectedGmailsCount === 1 ? redactEmail(gmailAccounts?.find(g => g.connected)?.email) : "Connected relays" },
+          { label: "Last 7 days", value: isLoadingAnalytics ? null : weekSent.toLocaleString(), hint: `${weekFailed} failed` },
+          { label: "Delivery", value: isLoadingAnalytics ? null : `${successRate}%`, hint: weekTotal === 0 ? "No traffic yet" : "Sent vs failed" },
+        ].map((stat) => (
+          <div key={stat.label} className="rounded-xl border border-outline-variant bg-surface px-4 py-3.5">
+            <p className="text-[11px] font-semibold uppercase tracking-wider text-secondary">{stat.label}</p>
+            {stat.value === null ? (
+              <Skeleton className="h-7 w-16 mt-1.5 bg-outline-variant/20" />
+            ) : (
+              <p className="text-2xl font-headline-md font-bold tracking-tight text-on-background mt-1 tabular-nums">{stat.value}</p>
+            )}
+            <p className="text-[11px] text-secondary mt-1 truncate">{stat.hint}</p>
+          </div>
+        ))}
       </div>
 
-      {/* Analytics Section */}
-      <div className="grid grid-cols-1 gap-6 items-stretch">
-        {/* Sending Volume Bar Chart */}
+      {/* Volume + caps */}
+      <div className="grid grid-cols-1 lg:grid-cols-5 gap-4 items-stretch">
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.35 }}
-          className="flex flex-col order-2"
+          transition={{ delay: 0.1 }}
+          className="lg:col-span-3"
         >
-          <Card className="h-full flex flex-col border border-outline-variant bg-surface shadow-none rounded-xl overflow-hidden hover:bg-surface-container-low transition-colors">
-            <CardHeader className="flex flex-row items-center justify-between pb-3">
+          <Card className="h-full border border-outline-variant bg-surface shadow-none rounded-xl">
+            <CardHeader className="flex flex-row items-start justify-between gap-3 pb-2 px-5 pt-4">
               <div>
-                <CardTitle className="text-lg font-headline-md font-bold text-primary-sendlib">Send Volume</CardTitle>
-                <p className="text-xs text-secondary mt-0.5">Email relay traffic for the last 7 days</p>
+                <CardTitle className="text-sm font-headline-md font-bold text-primary-sendlib">Send Volume</CardTitle>
+                <p className="text-[11px] text-secondary mt-0.5">Last 7 days</p>
               </div>
-              <div className="flex items-center gap-4 text-xs font-semibold text-secondary">
-                <div className="flex items-center gap-1.5">
-                  <span className="w-2.5 h-2.5 rounded bg-emerald-500"></span>
-                  <span>Sent</span>
-                </div>
-                <div className="flex items-center gap-1.5">
-                  <span className="w-2.5 h-2.5 rounded bg-sky-400"></span>
-                  <span>Failed</span>
-                </div>
+              <div className="flex items-center gap-3 text-[11px] font-semibold text-secondary">
+                <span className="inline-flex items-center gap-1.5"><span className="w-2 h-2 rounded-sm bg-emerald-500" />Sent</span>
+                <span className="inline-flex items-center gap-1.5"><span className="w-2 h-2 rounded-sm bg-sky-400" />Failed</span>
               </div>
             </CardHeader>
-            <CardContent className="flex-1 p-6 pt-2 flex flex-col justify-between">
+            <CardContent className="px-5 pb-4 pt-1">
               {isLoadingAnalytics ? (
-                <div className="h-[220px] flex items-center justify-center">
-                  <Skeleton className="w-full h-full rounded-lg bg-outline-variant/10" />
-                </div>
+                <Skeleton className="h-[148px] w-full rounded-lg bg-outline-variant/10" />
               ) : (
-                <div className="w-full relative">
-                  <svg viewBox="0 0 600 220" className="w-full h-auto overflow-visible">
-                    {/* Horizontal Grid Lines */}
-                    <line x1="50" y1="40" x2="560" y2="40" stroke="currentColor" strokeWidth="1" strokeDasharray="3 3" opacity="0.1" className="text-outline-variant" />
-                    <line x1="50" y1="110" x2="560" y2="110" stroke="currentColor" strokeWidth="1" strokeDasharray="3 3" opacity="0.1" className="text-outline-variant" />
-                    <line x1="50" y1="180" x2="560" y2="180" stroke="currentColor" strokeWidth="1.5" opacity="0.15" className="text-outline-variant" />
-
-                    {/* Y-Axis Value Labels */}
-                    <text x="35" y="44" className="text-[10px] font-bold font-mono fill-secondary/65 text-right">{maxVal}</text>
-                    <text x="35" y="114" className="text-[10px] font-bold font-mono fill-secondary/65 text-right">{Math.round(maxVal / 2)}</text>
-                    <text x="35" y="184" className="text-[10px] font-bold font-mono fill-secondary/65 text-right">0</text>
-
-                    {/* Render Columns */}
-                    {volume.map((day, idx) => {
-                      const colWidth = 510 / 7;
-                      const colCenter = 60 + idx * colWidth + colWidth / 2;
-                      
-                      // Scale factor (140px max height)
-                      const scale = 140 / maxVal;
-                      const sentHeight = day.sent * scale;
-                      const failedHeight = day.failed * scale;
-                      
-                      // Positions
-                      const sentY = 180 - sentHeight;
-                      const failedY = sentY - failedHeight;
-                      const barWidth = 14;
-
-                      return (
-                        <g key={day.date} className="group/bar cursor-pointer">
-                          {/* Background Hover Highlight Column */}
-                          <rect
-                            x={colCenter - colWidth / 2}
-                            y="20"
-                            width={colWidth}
-                            height="170"
-                            fill="currentColor"
-                            opacity="0"
-                            className="text-white hover:opacity-[0.03] transition-opacity duration-200"
-                            rx="8"
-                          />
-
-                          {/* Bar Track (Light background pill) */}
-                          <rect
-                            x={colCenter - barWidth / 2}
-                            y="40"
-                            width={barWidth}
-                            height="140"
-                            fill="currentColor"
-                            className="text-outline-variant/20"
-                            rx="7"
-                          />
-
-                          {/* Sent Bar (Emerald) */}
-                          {day.sent > 0 && (
-                            <rect
-                              x={colCenter - barWidth / 2}
-                              y={sentY}
-                              width={barWidth}
-                              height={sentHeight}
-                              fill="#10b981"
-                              rx={day.failed > 0 ? 0 : 7}
-                              className={day.failed > 0 ? "[clip-path:inset(0_0_7px_0_round_0_0_7px_7px)]" : ""}
-                            />
-                          )}
-
-                          {/* Failed Bar (Sky) */}
-                          {day.failed > 0 && (
-                            <rect
-                              x={colCenter - barWidth / 2}
-                              y={failedY}
-                              width={barWidth}
-                              height={failedHeight}
-                              fill="#38bdf8"
-                              rx="7"
-                            />
-                          )}
-
-                          {/* Date Label */}
-                          <text
-                            x={colCenter}
-                            y="198"
-                            textAnchor="middle"
-                            className="text-[10px] font-bold font-mono fill-secondary"
-                          >
-                            {day.label}
-                          </text>
-
-                          {/* Value Tooltip Hover Box (Custom SVG overlay) */}
-                          <g className="opacity-0 group-hover/bar:opacity-100 transition-opacity duration-200 pointer-events-none">
-                            <rect
-                              x={colCenter - 45}
-                              y={Math.min(failedY - 45, 120)}
-                              width="90"
-                              height="35"
-                              fill="#1a1a1a"
-                              rx="6"
-                              className="stroke-outline-variant stroke-1"
-                            />
-                            <text
-                              x={colCenter}
-                              y={Math.min(failedY - 28, 137)}
-                              textAnchor="middle"
-                              className="text-[9px] font-bold fill-white font-mono"
-                            >
-                              Sent: {day.sent} | Fail: {day.failed}
-                            </text>
-                          </g>
-                        </g>
-                      );
-                    })}
-                  </svg>
+                <div className="flex gap-3">
+                  <div className="flex flex-col justify-between h-[120px] text-[10px] font-mono text-secondary/70 py-0.5 tabular-nums">
+                    <span>{maxVal}</span>
+                    <span>{Math.round(maxVal / 2)}</span>
+                    <span>0</span>
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <div className="relative h-[120px] border-b border-outline-variant/40">
+                      <div className="absolute inset-x-0 top-0 border-t border-dashed border-outline-variant/25" />
+                      <div className="absolute inset-x-0 top-1/2 border-t border-dashed border-outline-variant/25" />
+                      <div className="absolute inset-0 flex items-end gap-1.5 sm:gap-2.5 px-1">
+                        {volume.map((day) => {
+                          const total = day.sent + day.failed;
+                          const colH = total === 0 ? 0 : Math.max(4, (total / maxVal) * 120);
+                          const sentH = total === 0 ? 0 : (day.sent / total) * colH;
+                          const failH = total === 0 ? 0 : colH - sentH;
+                          return (
+                            <div key={day.date} className="group relative flex-1 h-full flex items-end justify-center">
+                              <div className="w-full max-w-[22px] h-full rounded-sm bg-outline-variant/10 overflow-hidden flex flex-col justify-end">
+                                {failH > 0 && <div className="w-full bg-sky-400" style={{ height: failH }} />}
+                                {sentH > 0 && <div className="w-full bg-emerald-500" style={{ height: sentH }} />}
+                              </div>
+                              <div className="pointer-events-none absolute -top-1 left-1/2 -translate-x-1/2 -translate-y-full opacity-0 group-hover:opacity-100 transition-opacity z-10">
+                                <div className="whitespace-nowrap rounded-md border border-outline-variant bg-surface-container-lowest px-2 py-1 text-[10px] font-mono text-on-background shadow-lg">
+                                  {day.sent} sent · {day.failed} failed
+                                </div>
+                              </div>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </div>
+                    <div className="flex gap-1.5 sm:gap-2.5 px-1 mt-1.5">
+                      {volume.map((day) => (
+                        <div key={day.date} className="flex-1 text-center text-[10px] font-mono text-secondary truncate">
+                          {day.label}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
                 </div>
               )}
             </CardContent>
           </Card>
         </motion.div>
 
-        {/* Daily Cap Progress meters */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3 }}
-          className="flex flex-col order-1"
+          transition={{ delay: 0.15 }}
+          className="lg:col-span-2"
         >
-          <Card className="h-full flex flex-col border border-outline-variant bg-surface shadow-none rounded-xl overflow-hidden hover:bg-surface-container-low transition-colors">
-            <CardHeader className="pb-3">
-              <CardTitle className="text-lg font-headline-md font-bold text-primary-sendlib">Daily Cap Usage</CardTitle>
-              <p className="text-xs text-secondary mt-0.5">Google daily relay limits per connected account</p>
+          <Card className="h-full border border-outline-variant bg-surface shadow-none rounded-xl overflow-hidden">
+            <CardHeader className="pb-2 px-5 pt-4">
+              <CardTitle className="text-sm font-headline-md font-bold text-primary-sendlib">Daily Cap</CardTitle>
+              <p className="text-[11px] text-secondary mt-0.5">Per connected Gmail, resets UTC midnight</p>
             </CardHeader>
-            <CardContent className="flex-1 p-6 pt-2">
+            <CardContent className="px-5 pb-4 pt-1">
               {isLoadingAnalytics ? (
-                <div className="space-y-4">
-                  <Skeleton className="h-24 w-full rounded-lg bg-outline-variant/10" />
+                <div className="space-y-3">
+                  <Skeleton className="h-10 w-full bg-outline-variant/10" />
+                  <Skeleton className="h-10 w-full bg-outline-variant/10" />
                 </div>
               ) : caps.length === 0 ? (
-                <div className="text-center py-6 text-sm text-secondary italic">
-                  No Gmail accounts connected.
-                </div>
+                <p className="text-xs text-secondary py-6 text-center">No Gmail accounts connected.</p>
               ) : (
-                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                <div className="space-y-3">
                   {caps.map((account) => {
                     const pct = Math.min((account.sentCount / account.limit) * 100, 100);
                     const isHigh = pct >= 80;
-                    const radius = 38;
-                    const circumference = 2 * Math.PI * radius;
-                    const offset = circumference - (pct / 100) * circumference;
-
                     return (
-                      <div key={account.email} className="bg-surface-container-lowest border border-outline-variant/50 rounded-xl p-4 flex flex-col items-center justify-center text-center shadow-sm hover:shadow-md hover:border-outline-variant transition-all">
-                        
-                        <div className="relative w-28 h-28 mb-3">
-                          <svg viewBox="0 0 100 100" className="w-full h-full transform -rotate-90">
-                            {/* Background Track */}
-                            <circle cx="50" cy="50" r={radius} fill="transparent" stroke="currentColor" strokeWidth="10" className="text-outline-variant/20" />
-                            {/* Progress Ring */}
-                            <circle 
-                              cx="50" cy="50" r={radius} 
-                              fill="transparent" 
-                              stroke="currentColor" 
-                              strokeWidth="10" 
-                              strokeDasharray={circumference}
-                              strokeDashoffset={offset}
-                              strokeLinecap="round"
-                              className={isHigh ? "text-rose-500 transition-all duration-1000 ease-out" : "text-emerald-500 transition-all duration-1000 ease-out"} 
-                            />
-                          </svg>
-                          <div className="absolute inset-0 flex items-center justify-center flex-col pt-1">
-                            <span className="text-2xl font-bold font-mono text-on-background tracking-tighter">
-                              {Math.round(pct)}<span className="text-sm font-medium text-secondary ml-[2px]">%</span>
-                            </span>
-                          </div>
-                        </div>
-                        
-                        <span className="font-bold text-xs text-primary-sendlib truncate w-full mb-1.5" title={account.email}>
-                          {redactEmail(account.email)}
-                        </span>
-                        
-                        <div className="flex items-center gap-1.5 mb-2.5">
-                          <span className="text-[10px] font-bold text-secondary bg-surface-container px-2 py-0.5 rounded-full border border-outline-variant/30">
-                            {account.sentCount} / {account.limit}
+                      <div key={account.email} className="space-y-1.5">
+                        <div className="flex items-center justify-between gap-2">
+                          <span className="text-xs font-semibold text-primary-sendlib truncate" title={account.email}>
+                            {redactEmail(account.email)}
+                          </span>
+                          <span className="text-[10px] font-mono text-secondary shrink-0">
+                            {account.sentCount}/{account.limit}
                           </span>
                         </div>
-                        
-                        <span className="font-bold uppercase tracking-widest text-[8px] text-secondary/60">
-                          {account.limit === 2000 ? "WORKSPACE" : "PERSONAL"}
-                        </span>
+                        <div className="h-1.5 rounded-full bg-outline-variant/20 overflow-hidden">
+                          <div
+                            className={`h-full rounded-full ${isHigh ? "bg-rose-500" : "bg-emerald-500"}`}
+                            style={{ width: `${Math.max(pct, pct > 0 ? 2 : 0)}%` }}
+                          />
+                        </div>
                       </div>
                     );
                   })}
@@ -479,6 +256,7 @@ export default function DashboardPage() {
           </Card>
         </motion.div>
       </div>
+
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-stretch">
         {/* Recent Logs List */}
@@ -491,6 +269,10 @@ export default function DashboardPage() {
           <Card className="h-full flex flex-col border border-outline-variant bg-surface shadow-none rounded-xl overflow-hidden hover:bg-surface-container-low transition-colors">
             <CardHeader className="flex flex-row items-center justify-between pb-4">
               <CardTitle className="text-lg font-headline-md font-bold text-primary-sendlib">Recent Email Logs</CardTitle>
+              <div className="flex items-center gap-1">
+                <Link href="/dashboard/debugger" className="text-xs font-semibold text-secondary hover:text-primary-sendlib px-2">
+                  Debugger
+                </Link>
               <Button 
                 variant="ghost" 
                 size="sm" 
@@ -505,6 +287,7 @@ export default function DashboardPage() {
                   className={isFetchingLogs ? "animate-spin text-primary-sendlib" : "text-secondary"} 
                 />
               </Button>
+              </div>
             </CardHeader>
             <CardContent className="p-0 flex-1">
               <Table>
@@ -543,9 +326,9 @@ export default function DashboardPage() {
                                  View API Docs
                                </Button>
                             </Link>
-                            <Link href="/dashboard/keys?generate=true">
+                            <Link href="/dashboard/templates">
                                <Button size="sm" className="rounded-lg font-label-sm bg-surface-container-low border border-outline-variant/60 hover:bg-surface-container text-white shadow-sm px-3.5 h-8">
-                                 Get API Key
+                                 Templates
                                </Button>
                             </Link>
                           </div>

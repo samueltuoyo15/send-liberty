@@ -503,7 +503,7 @@ System.out.println(response.body());`
       </div>
 
       <DocsPagination
-        prev={{ title: "Basic Send", href: "/docs/send" }}
+        prev={{ title: "Debugger", href: "/docs/debugger" }}
       />
     </div>
   );

@@ -25,6 +25,8 @@ const DOC_SECTIONS = [
     title: "Sending Emails",
     links: [
       { name: "Basic Send", href: "/docs/send", icon: MailIcon },
+      { name: "Templates", href: "/docs/templates", icon: FileTypeIcon },
+      { name: "Debugger", href: "/docs/debugger", icon: ZapIcon },
       { name: "Batch Send", href: "/docs/batch", icon: MailUpload01Icon },
     ],
   },

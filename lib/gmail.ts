@@ -10,10 +10,24 @@ import MailComposer from "nodemailer/lib/mail-composer";
 import mongoose from "mongoose";
 import crypto from "crypto";
 import dns from "dns";
+import type { DebugIssue, DebugReport, DebugStep } from "@/lib/emailDebugger";
+import { buildDebugReport } from "@/lib/emailDebugger";
 
 // Fix for Zeabur DNS resolution issue (IPv4 only)
 dns.setDefaultResultOrder("ipv4first");
-const { GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, GMAIL_CALLBACK_URL, JWT_SECRET } = process.env;
+const { GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, JWT_SECRET } = process.env;
+
+function getGmailCallbackUrl(): string {
+  const explicit = process.env.GMAIL_CALLBACK_URL?.trim();
+  if (explicit) return explicit.replace(/\/$/, "");
+
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL?.replace(/\/$/, "");
+  if (appUrl) return `${appUrl}/api/gmail/callback`;
+
+  throw new Error(
+    "Gmail OAuth redirect URI is missing. Set GMAIL_CALLBACK_URL (e.g. http://localhost:3000/api/gmail/callback) or NEXT_PUBLIC_APP_URL."
+  );
+}
 
 export function buildGoogleAuthUrl(params: Record<string, string>): string {
   const base = "https://accounts.google.com/o/oauth2/v2/auth";
@@ -61,9 +75,10 @@ export function verifyGmailState(state: string): string {
 }
 
 export function getGmailAuthUrl(userId: string): string {
+  const redirectUri = getGmailCallbackUrl();
   return buildGoogleAuthUrl({
     client_id: GOOGLE_CLIENT_ID!,
-    redirect_uri: GMAIL_CALLBACK_URL!,
+    redirect_uri: redirectUri,
     response_type: "code",
     access_type: "offline",
     prompt: "consent select_account",
@@ -81,7 +96,7 @@ export async function handleGmailCallback(code: string, userId: string) {
       code,
       client_id: GOOGLE_CLIENT_ID!,
       client_secret: GOOGLE_CLIENT_SECRET!,
-      redirect_uri: GMAIL_CALLBACK_URL!,
+      redirect_uri: getGmailCallbackUrl(),
       grant_type: "authorization_code",
     }).toString(),
     { headers: { "Content-Type": "application/x-www-form-urlencoded" } }
@@ -148,12 +163,33 @@ export type GmailSendOptions = {
     content: string;
     type?: string;
   }[];
+  templateSlug?: string;
+  debug?: {
+    issues?: DebugIssue[];
+    htmlBytes?: number;
+    templateSlug?: string;
+    preSteps?: DebugStep[];
+  };
 };
+
+function finalizeDebug(
+  options: GmailSendOptions,
+  extraSteps: DebugStep[],
+): DebugReport | undefined {
+  if (!options.debug && extraSteps.length === 0) return undefined;
+  return buildDebugReport({
+    issues: options.debug?.issues ?? [],
+    steps: [...(options.debug?.preSteps ?? []), ...extraSteps],
+    html: options.html,
+    text: options.text,
+    templateSlug: options.templateSlug ?? options.debug?.templateSlug,
+  });
+}
 
 export async function sendGmailEmail(
   userId: string,
   options: GmailSendOptions
-): Promise<{ messageId: string | null }> {
+): Promise<{ messageId: string | null; debug?: DebugReport }> {
   await connectDB();
 
   let lookupEmail = options.from;
@@ -308,6 +344,11 @@ export async function sendGmailEmail(
     const expiresAt = new Date();
     expiresAt.setDate(expiresAt.getDate() + (options.retentionDays ?? 5));
 
+    const debug = finalizeDebug(options, [
+      { key: "gmail", label: "Gmail accepted request", ok: true, detail: `Queued through ${senderEmail}.` },
+      { key: "sent", label: "Message sent", ok: true, detail: result.data.id ? `Message ID ${result.data.id}.` : "Gmail accepted the message." },
+    ]);
+
     await EmailLog.create({
       userId,
       apiKeyId: options.apiKeyId,
@@ -317,12 +358,14 @@ export async function sendGmailEmail(
       status: "sent",
       provider: "gmail",
       messageId: result.data.id ?? null,
+      templateSlug: options.templateSlug,
+      debug,
       expiresAt,
     });
 
     await User.findByIdAndUpdate(userId, { $inc: { monthlySentCount: 1 } });
 
-    return { messageId: result.data.id ?? null };
+    return { messageId: result.data.id ?? null, debug };
   } catch (err: unknown) {
     let errMsg = "Unknown error";
     if (isAxiosError(err)) {
@@ -332,6 +375,10 @@ export async function sendGmailEmail(
     }
     const expiresAt = new Date();
     expiresAt.setDate(expiresAt.getDate() + (options.retentionDays ?? 5));
+    const debug = finalizeDebug(options, [
+      { key: "gmail", label: "Gmail accepted request", ok: false, detail: errMsg },
+      { key: "sent", label: "Message sent", ok: false, detail: "Gmail rejected the message." },
+    ]);
     await EmailLog.create({
       userId,
       apiKeyId: options.apiKeyId,
@@ -341,6 +388,8 @@ export async function sendGmailEmail(
       status: "failed",
       provider: "gmail",
       error: errMsg,
+      templateSlug: options.templateSlug,
+      debug,
       expiresAt,
     });
     throw new Error(`Failed to send email via Gmail: ${errMsg}`);
