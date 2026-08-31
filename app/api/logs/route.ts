@@ -52,14 +52,17 @@ export async function GET(req: NextRequest) {
         .sort({ createdAt: -1 })
         .skip(skip)
         .limit(limit)
-        .select("from to subject status provider messageId error apiKeyId createdAt")
+        .select("from to subject status provider messageId error apiKeyId templateSlug debug createdAt")
         .lean(),
       EmailLog.countDocuments(query),
     ]);
 
     return NextResponse.json({
       success: true,
-      data: logs,
+      data: logs.map((log) => ({
+        ...log,
+        id: log._id.toString(),
+      })),
       meta: { page, limit, total, totalPages: Math.ceil(total / limit), retentionDays },
     });
   } catch (err) {

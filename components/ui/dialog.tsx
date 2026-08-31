@@ -45,21 +45,28 @@ function DialogContent({
   children,
   showCloseButton = false,
   style,
+  align = "center",
   ...props
 }: DialogPrimitive.Popup.Props & {
   showCloseButton?: boolean
+  align?: "center" | "top"
 }) {
   return (
     <DialogPortal>
       <DialogOverlay />
       <DialogPrimitive.Popup
         data-slot="dialog-content"
-        className="fixed inset-0 z-50 flex items-center justify-center p-4 outline-none"
+        className={cn(
+          "fixed inset-0 z-50 flex justify-center outline-none pointer-events-none",
+          align === "center"
+            ? "items-center p-4"
+            : "items-start px-4 pt-[min(12vh,5.5rem)] pb-8"
+        )}
         {...props}
       >
         <div
           className={cn(
-            "relative flex flex-col gap-5 rounded-xl bg-surface-container-lowest p-6 text-sm border border-outline-variant shadow-lg outline-none dialog-popup-animate w-full",
+            "relative pointer-events-auto flex flex-col gap-5 rounded-xl bg-surface-container-lowest p-6 text-sm border border-outline-variant shadow-lg outline-none dialog-popup-animate w-full",
             className
           )}
           style={{ 
@@ -75,8 +82,9 @@ function DialogContent({
               render={
                 <Button
                   variant="ghost"
-                  className="absolute top-4 right-4"
+                  className="absolute top-3.5 right-3.5 z-10 h-8 w-8 rounded-lg border border-outline-variant/70 bg-surface-container-low text-secondary hover:text-primary-sendlib hover:bg-surface-container cursor-pointer"
                   size="icon-sm"
+                  title="Close"
                 />
               }
             >

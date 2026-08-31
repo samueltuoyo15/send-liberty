@@ -14,7 +14,9 @@ import {
   Menu01Icon,
   Cancel01Icon,
   Search01Icon,
-  ArrowLeftDoubleIcon
+  ArrowLeftDoubleIcon,
+  Layout01Icon,
+  SearchVisualIcon,
 } from '@hugeicons/core-free-icons';
 import { Button } from "@/components/ui/button";
 import { useMe, useLogout } from "@/hooks/useAuth";
@@ -68,6 +70,8 @@ export default function DashboardLayout({
     { name: "Overview", href: "/dashboard", icon: BarChartIcon },
     { name: "Gmail Accounts", href: "/dashboard/accounts", icon: MailIcon },
     { name: "API Keys", href: "/dashboard/keys", icon: Key01Icon },
+    { name: "Templates", href: "/dashboard/templates", icon: Layout01Icon },
+    { name: "Debugger", href: "/dashboard/debugger", icon: SearchVisualIcon },
     { name: "Email Logs", href: "/dashboard/logs", icon: FileTypeIcon },
     { name: "Settings", href: "/dashboard/settings", icon: Settings01Icon },
   ];
@@ -85,7 +89,7 @@ export default function DashboardLayout({
         </div>
         <nav className="flex-1 px-4 py-6 space-y-1.5 overflow-y-auto">
           {navigation.map((item) => {
-            const isActive = pathname === item.href;
+            const isActive = item.href === "/dashboard" ? pathname === "/dashboard" : pathname.startsWith(item.href);
             return (
               <Link
                 key={item.href}
@@ -200,10 +204,6 @@ export default function DashboardLayout({
           </div>
         </main>
         
-        {/* Search Modal */}
-        <SearchModal />
-
-        {/* Search Modal */}
         <SearchModal />
       </div>
 
@@ -250,7 +250,7 @@ export default function DashboardLayout({
         
         <div className="px-4 py-6 space-y-1.5 overflow-y-auto flex-1">
           {navigation.map((item) => {
-            const isActive = pathname === item.href;
+            const isActive = item.href === "/dashboard" ? pathname === "/dashboard" : pathname.startsWith(item.href);
             return (
               <Link
                 key={item.href}

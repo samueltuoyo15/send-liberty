@@ -3,9 +3,13 @@ import { connectDB } from "@/lib/db";
 import { sendGmailEmail } from "@/lib/gmail";
 import ApiKey, { IApiKey } from "@/models/ApiKey";
 import User from "@/models/User";
+import GmailAccount from "@/models/GmailAccount";
+import EmailTemplate from "@/models/EmailTemplate";
 import argon2 from "argon2";
 import mongoose from "mongoose";
 import { rateLimit } from "@/lib/rateLimit";
+import { interpolate, isValidSlug } from "@/lib/templates";
+import { analyzeHtmlIssues, type DebugStep } from "@/lib/emailDebugger";
 
 const MAX_SUBJECT_LENGTH = 998;
 const MAX_RECIPIENTS = 50;
@@ -137,14 +141,16 @@ export async function POST(req: NextRequest) {
     const body = await req.json();
     const {
       to: rawTo,
-      subject,
-      html,
-      text,
+      subject: rawSubject,
+      html: rawHtml,
+      text: rawText,
       replyTo,
       cc: rawCc,
       bcc: rawBcc,
-      from,
+      from: rawFrom,
       attachments,
+      template: templateSlug,
+      data: templateData,
     } = body as {
       to?: unknown;
       subject?: unknown;
@@ -155,18 +161,115 @@ export async function POST(req: NextRequest) {
       bcc?: string | string[];
       from?: string;
       attachments?: { filename: string; content: string; type?: string }[];
+      template?: string;
+      data?: Record<string, unknown>;
     };
+
+    const preSteps: DebugStep[] = [
+      { key: "received", label: "Request received", ok: true, detail: "POST /api/send accepted." },
+    ];
+
+    let from = rawFrom;
+    let subject = rawSubject;
+    let html = rawHtml;
+    let text = rawText;
+    let usedTemplateSlug: string | undefined;
+    let missingVars: string[] = [];
+    let unresolvedVars: string[] = [];
+
+    if (templateSlug) {
+      const slug = String(templateSlug).trim().toLowerCase();
+      if (!isValidSlug(slug)) {
+        return NextResponse.json(
+          { success: false, message: "Invalid template slug. Use lowercase letters, numbers, and hyphens." },
+          { status: 400 }
+        );
+      }
+      const tpl = await EmailTemplate.findOne({
+        userId: new mongoose.Types.ObjectId(authenticatedUserId),
+        slug,
+      });
+      if (!tpl) {
+        return NextResponse.json(
+          { success: false, message: `Unknown template '${slug}'. Create it in Dashboard → Templates, or omit template and send html/subject instead.` },
+          { status: 404 }
+        );
+      }
+      const data = templateData && typeof templateData === "object" && !Array.isArray(templateData)
+        ? templateData
+        : {};
+      const subjectOut = interpolate(tpl.subject, data);
+      const htmlOut = interpolate(tpl.html, data);
+      missingVars = [...new Set([...subjectOut.missing, ...htmlOut.missing])];
+      unresolvedVars = [...new Set([...subjectOut.unresolved, ...htmlOut.unresolved])];
+      if (missingVars.length > 0) {
+        return NextResponse.json(
+          {
+            success: false,
+            message: `Template '${slug}' is missing data for: ${missingVars.map((v) => `{{${v}}}`).join(", ")}. Pass them in the data object.`,
+            missing: missingVars,
+          },
+          { status: 400 }
+        );
+      }
+      subject = subjectOut.result;
+      html = htmlOut.result;
+      usedTemplateSlug = slug;
+      preSteps.push({
+        key: "template",
+        label: "Template rendered",
+        ok: true,
+        detail: `Built from ${slug}.`,
+      });
+      preSteps.push({
+        key: "variables",
+        label: "Variables resolved",
+        ok: unresolvedVars.length === 0,
+        detail: unresolvedVars.length === 0
+          ? (tpl.variables.length ? `Filled ${tpl.variables.join(", ")}.` : "No variables in this template.")
+          : `Still unresolved: ${unresolvedVars.map((v) => `{{${v}}}`).join(", ")}.`,
+      });
+    } else {
+      preSteps.push({
+        key: "template",
+        label: "Template rendered",
+        ok: true,
+        skipped: true,
+        detail: "Custom html/text used — no template.",
+      });
+      preSteps.push({
+        key: "variables",
+        label: "Variables resolved",
+        ok: true,
+        skipped: true,
+        detail: "No template variables to fill.",
+      });
+    }
+
+    if (!from) {
+      const firstAccount = await GmailAccount.findOne({
+        userId: new mongoose.Types.ObjectId(authenticatedUserId),
+        connected: true,
+      }).sort({ createdAt: 1 });
+      if (!firstAccount) {
+        return NextResponse.json(
+          { success: false, message: "No connected Gmail account. Connect one in the dashboard, or pass from." },
+          { status: 400 }
+        );
+      }
+      from = firstAccount.gmailEmail;
+    }
 
     // --- Required fields ---
     if (!rawTo || !subject || !from) {
       return NextResponse.json(
-        { success: false, message: "Missing required fields: from, to, subject." },
+        { success: false, message: templateSlug ? "Missing required fields: to (and from if you have multiple Gmail accounts)." : "Missing required fields: from, to, subject." },
         { status: 400 }
       );
     }
     if (!html && !text) {
       return NextResponse.json(
-        { success: false, message: "Either html or text body is required." },
+        { success: false, message: "Either html or text body is required (or send a template)." },
         { status: 400 }
       );
     }
@@ -262,6 +365,20 @@ export async function POST(req: NextRequest) {
     }
 
     const retentionDays = plan === "pro" ? 90 : 5;
+    const issues = analyzeHtmlIssues({
+      html,
+      text,
+      subject: subjectStr,
+      to: toArr,
+      from,
+      cc: ccArr,
+      bcc: bccArr,
+      missingVars,
+      unresolvedVars,
+      maxHtmlBytes: planLimits.maxHtmlBytes,
+      templateSlug: usedTemplateSlug,
+    });
+
     const result = await sendGmailEmail(authenticatedUserId, {
       to: toArr.length === 1 ? toArr[0] : toArr,
       subject: subjectStr,
@@ -275,10 +392,27 @@ export async function POST(req: NextRequest) {
       apiKeyId: apiKeyId || undefined,
       retentionDays,
       plan: plan as "free" | "pro",
+      templateSlug: usedTemplateSlug,
+      debug: {
+        issues,
+        htmlBytes: Buffer.byteLength(html || text || "", "utf8"),
+        templateSlug: usedTemplateSlug,
+        preSteps,
+      },
     });
 
     return NextResponse.json(
-      { success: true, messageId: result.messageId },
+      {
+        success: true,
+        messageId: result.messageId,
+        debug: result.debug
+          ? {
+              health: result.debug.health,
+              warnings: result.debug.issues.filter((i) => i.severity === "warning").length,
+              issues: result.debug.issues,
+            }
+          : undefined,
+      },
       {
         headers: {
           "X-RateLimit-Limit": String(rl.limit),

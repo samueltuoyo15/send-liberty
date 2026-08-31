@@ -19,8 +19,8 @@ import {
   FileTypeIcon, 
   Settings01Icon,
   CreditCardIcon,
-  BankIcon,
-  UserGroupIcon
+  Layout01Icon,
+  SearchVisualIcon
 } from "@hugeicons/core-free-icons";
 
 export function SearchModal() {
@@ -71,6 +71,22 @@ export function SearchModal() {
             <div className="flex flex-col">
               <span>API Keys</span>
               <span className="text-xs text-secondary/70">Generate and revoke API keys for your applications</span>
+            </div>
+          </CommandItem>
+
+          <CommandItem onSelect={() => runCommand(() => router.push("/dashboard/templates"))}>
+            <HugeiconsIcon icon={Layout01Icon} size={16} color="currentColor" strokeWidth={1.5} className="mr-2 text-secondary" />
+            <div className="flex flex-col">
+              <span>Templates</span>
+              <span className="text-xs text-secondary/70">Build welcome, OTP, invoice, and reset emails</span>
+            </div>
+          </CommandItem>
+
+          <CommandItem onSelect={() => runCommand(() => router.push("/dashboard/debugger"))}>
+            <HugeiconsIcon icon={SearchVisualIcon} size={16} color="currentColor" strokeWidth={1.5} className="mr-2 text-secondary" />
+            <div className="flex flex-col">
+              <span>Debugger</span>
+              <span className="text-xs text-secondary/70">Trace send steps, variables, and HTML warnings</span>
             </div>
           </CommandItem>
           

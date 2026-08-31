@@ -12,6 +12,14 @@ export interface EmailLog {
   messageId?: string;
   error?: string;
   apiKeyId?: string;
+  templateSlug?: string;
+  debug?: {
+    health: "healthy" | "warnings" | "failed";
+    steps: { key: string; label: string; ok: boolean; skipped?: boolean; detail: string }[];
+    issues: { severity: "warning" | "error"; code: string; title: string; hint: string }[];
+    htmlBytes?: number;
+    templateSlug?: string;
+  };
   createdAt: string;
 }
 

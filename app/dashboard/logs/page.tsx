@@ -18,6 +18,7 @@ import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from "
 import { useEmailLogs, EmailLog } from "@/hooks/useEmailLogs";
 import { useGmailAccounts } from "@/hooks/useGmailAccounts";
 import { redactEmail } from "@/utils/redact";
+import { DebugPipeline, HealthBadge } from "@/components/debugger/DebugPipeline";
 
 export default function LogsPage() {
   const [page, setPage] = useState(1);
@@ -329,6 +330,16 @@ export default function LogsPage() {
                   </div>
                 )}
               </div>
+
+              {selectedLog.debug && (
+                <div className="space-y-3">
+                  <div className="flex items-center justify-between">
+                    <h4 className="text-xs font-bold uppercase tracking-wider text-secondary">Debugger</h4>
+                    <HealthBadge health={selectedLog.debug.health} />
+                  </div>
+                  <DebugPipeline report={selectedLog.debug} />
+                </div>
+              )}
             </div>
           )}
         </SheetContent>
